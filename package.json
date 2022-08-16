@@ -60,7 +60,9 @@
         "vscode": "^1.63.1"
     },
     "categories": [
-        "Programming Languages"
+        "Debuggers",
+        "Programming Languages",
+        "Formatters"
     ],
     "main": "extension.js",
     "browser": "extension.browser.js",

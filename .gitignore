@@ -5,3 +5,4 @@ test.src
 node_modules
 extension.browser.js
 extension.js
+*.vsix
