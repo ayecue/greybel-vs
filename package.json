@@ -1,0 +1,292 @@
+{
+    "name": "greybel-vs",
+    "displayName": "Greybel VS",
+    "description": "Toolkit for GreyScript.",
+    "publisher": "ayecue",
+    "author": {
+        "name": "ayecue",
+        "email": "soerenwehmeier@googlemail.com"
+    },
+    "icon": "icon.png",
+    "version": "1.0.0",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:ayecue/greybel-vs.git"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.16.10",
+        "@babel/plugin-transform-runtime": "^7.16.8",
+        "@babel/preset-env": "^7.16.8",
+        "@rollup/plugin-babel": "^5.3.0",
+        "@rollup/plugin-commonjs": "^21.0.1",
+        "@rollup/plugin-json": "^4.1.0",
+        "@rollup/plugin-node-resolve": "^13.1.3",
+        "@types/node": "^12.12.0",
+        "@types/vscode": "^1.63.1",
+        "@typescript-eslint/eslint-plugin": "^5.27.1",
+        "@typescript-eslint/parser": "^5.27.1",
+        "@vscode/test-electron": "^2.0.3",
+        "@vscode/test-web": "^0.0.19",
+        "eslint": "^8.17.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-config-standard": "^17.0.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-promise": "^6.0.0",
+        "eslint-plugin-security": "^1.5.0",
+        "eslint-plugin-simple-import-sort": "^7.0.0",
+        "rollup": "^2.64.0",
+        "rollup-plugin-node-polyfills": "^0.2.1",
+        "rollup-plugin-terser": "^7.0.2",
+        "source-map-support": "^0.5.12",
+        "typescript": "^4.5.4"
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "npm run compile:ts && npm run compile:node && npm run compile:browser",
+        "compile:ts": "tsc -p ./",
+        "compile:node": "rollup --config rollup.config.node.js",
+        "compile:browser": "rollup --config rollup.config.browser.js",
+        "compile:extension": "vsce package",
+        "lint": "eslint ./src/**/*.ts",
+        "lint:fix": "eslint --fix ./src/**/*.ts",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile",
+        "test:browser": "npm run compile:ts && npm run compile:browser && vscode-test-web --extensionDevelopmentPath=. ."
+    },
+    "homepage": "https://github.com/ayecue/greybel-vs",
+    "engines": {
+        "vscode": "^1.63.1"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "main": "extension.js",
+    "browser": "extension.browser.js",
+    "qna": "false",
+    "bugs": {
+        "url": "https://github.com/ayecue/greybel-vs/issues"
+    },
+    "activationEvents": [
+        "onLanguage:greyscript"
+    ],
+    "contributes": {
+        "menus": {
+            "editor/title/run": [
+                {
+                    "command": "greybel.debug.runEditorContents",
+                    "when": "resourceLangId == greyscript",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "greybel.debug.debugEditorContents",
+                    "when": "resourceLangId == greyscript",
+                    "group": "navigation@2"
+                }
+            ],
+            "editor/context": [
+                {
+                    "command": "greybel.refresh",
+                    "when": "resourceLangId == greyscript",
+                    "group": "navigation"
+                },
+                {
+                    "command": "greybel.minify",
+                    "when": "resourceLangId == greyscript",
+                    "group": "navigation"
+                },
+                {
+                    "command": "greybel.build",
+                    "when": "resourceLangId == greyscript",
+                    "group": "navigation"
+                },
+                {
+                    "command": "greybel.gotoError",
+                    "when": "resourceLangId == greyscript",
+                    "group": "navigation"
+                }
+            ],
+            "commandPalette": [
+                {
+                    "command": "greybel.debug.debugEditorContents",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.debug.runEditorContents",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.minify",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.build",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.gotoError",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.refresh",
+                    "when": "resourceLangId == greyscript"
+                }
+            ]
+        },
+        "languages": [
+            {
+                "id": "greyscript",
+                "aliases": [
+                    "GreyScript",
+                    "greyscript"
+                ],
+                "extensions": [
+                    ".src",
+                    ".gs"
+                ],
+                "configuration": "./language.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "greyscript",
+                "scopeName": "source.src",
+                "path": "./syntaxes/greyscript.tmLanguage.json"
+            }
+        ],
+        "commands": [
+            {
+                "command": "greybel.gotoError",
+                "title": "Greybel: Goto Error"
+            },
+            {
+                "command": "greybel.build",
+                "title": "Greybel: Build"
+            },
+            {
+                "command": "greybel.minify",
+                "title": "Greybel: Minify"
+            },
+            {
+                "command": "greybel.refresh",
+                "title": "Greybel: Refresh"
+            },
+            {
+                "command": "greybel.debug.debugEditorContents",
+                "title": "Debug File",
+                "category": "Mock Debug",
+                "enablement": "!inDebugMode",
+                "icon": "$(debug-alt)"
+            },
+            {
+                "command": "greybel.debug.runEditorContents",
+                "title": "Run File",
+                "category": "Mock Debug",
+                "enablement": "!inDebugMode",
+                "icon": "$(play)"
+            }
+        ],
+        "configuration": {
+            "title": "Greybel VS",
+            "properties": {
+                "greybel.autocomplete": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable Greybel autocomplete."
+                },
+                "greybel.hoverdocs": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable Greybel hover tooltips."
+                },
+                "greybel.transpiler.uglify": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable uglify."
+                },
+                "greybel.transpiler.dlo": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Disable literals optimization."
+                },
+                "greybel.transpiler.dno": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Disable namespaces optimization."
+                },
+                "greybel.installer": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Generate installer when building."
+                }
+            }
+        },
+        "breakpoints": [
+            {
+                "language": "greyscript"
+            }
+        ],
+        "debuggers": [
+            {
+                "type": "greyscript",
+                "languages": [
+                    "greyscript"
+                ],
+                "label": "Greybel Debug",
+                "program": "./out/debug/adapter.js",
+                "runtime": "node",
+                "configurationAttributes": {
+                    "launch": {
+                        "required": [
+                            "program"
+                        ],
+                        "properties": {
+                            "program": {
+                                "type": "string",
+                                "description": "Absolute path to a text file.",
+                                "default": "${command:AskForProgramName}"
+                            }
+                        }
+                    }
+                },
+                "initialConfigurations": [
+                    {
+                        "type": "greyscript",
+                        "request": "launch",
+                        "name": "Ask for file name",
+                        "program": "${command:AskForProgramName}"
+                    }
+                ],
+                "configurationSnippets": [
+                    {
+                        "label": "Greybel Debug: Launch",
+                        "description": "A new configuration for 'debugging' a user selected greyscript file.",
+                        "body": {
+                            "type": "greyscript",
+                            "request": "launch",
+                            "name": "Ask for file name",
+                            "program": "^\"\\${command:AskForProgramName}\""
+                        }
+                    }
+                ],
+                "variables": {
+                    "AskForProgramName": "greybel.debug.getProgramName"
+                }
+            }
+        ]
+    },
+    "dependencies": {
+        "@vscode/debugadapter": "^1.51.1",
+        "@vscode/debugprotocol": "^1.51.0",
+        "greybel-core": "^0.3.1",
+        "greybel-gh-mock-intrinsics": "^1.0.9",
+        "greybel-interpreter": "^1.1.2",
+        "greybel-intrinsics": "^1.0.8",
+        "greybel-transpiler": "^0.3.2",
+        "greyscript-core": "^0.2.9",
+        "greyscript-meta": "^1.0.1",
+        "text-encoder-lite": "^2.0.0"
+    },
+    "browserslist": "> 0.25%, not dead"
+}
