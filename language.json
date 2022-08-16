@@ -27,7 +27,7 @@
     },
     "indentationRules": {
         "increaseIndentPattern": "(then|function\\([^)]+\\)|else|(while|for)[^;\\n]+)",
-        "decreaseIndentPattern": "end (if|function|for|while)"
+        "decreaseIndentPattern": "(else|end (if|function|for|while))"
     },
     "onEnterRules": [
         {
