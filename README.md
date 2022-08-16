@@ -59,3 +59,5 @@ Gives you information about syntax errors in your code.
 ## Additional information
 
 This extension is completly based on [greybel-js](https://github.com/ayecue/greybel-js).
+
+[Sloth icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/sloth)
