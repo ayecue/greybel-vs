@@ -1,0 +1,44 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@4.1
+
+commands:
+  build:  
+    steps:
+      - run:
+          name: Install vsce
+          command: npm install vsce
+      - run:
+          name: Install deps
+          command: npm ci
+      - run:
+          name: Build extension
+          command: npm run compile:extension
+
+jobs:
+  build:  
+    docker:
+      - image: cimg/node:15.1
+    steps:
+      - checkout
+      - node/install-packages
+      - build
+  build-and-publish:  
+    docker:
+      - image: cimg/node:15.1
+    steps:
+      - checkout
+      - node/install-packages
+      - build
+      - run:
+          name: Determining package version
+          command: echo 'export PACKAGE_VERSION=$(node -pe "require(\"./package.json\").version")' >> $BASH_ENV
+      - run:
+          name: Publish extension
+          command: ./node_modules/.bin/vsce publish -p ${VSCE_TOKEN} ${PACKAGE_VERSION}
+
+workflows:
+  main: 
+    jobs:
+      - build-and-publish

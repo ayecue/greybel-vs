@@ -48,7 +48,7 @@
         "compile:ts": "tsc -p ./",
         "compile:node": "rollup --config rollup.config.node.js",
         "compile:browser": "rollup --config rollup.config.browser.js",
-        "compile:extension": "vsce package",
+        "compile:extension": "vsce package --out extension.vsix",
         "lint": "eslint ./src/**/*.ts",
         "lint:fix": "eslint --fix ./src/**/*.ts",
         "watch": "tsc -watch -p ./",
