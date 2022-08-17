@@ -310,11 +310,11 @@ export class GreybelDebugSession extends LoggingDebugSession {
     const opc = me._runtime.globalContext.getLastActive();
     const variables: DebugProtocol.Variable[] = [];
     const setVariables = (current: OperationContext, ref: number) => {
-      current.scope.value.forEach((item: any, name: string) => {
+      current.scope.value.forEach((item: CustomValue, name: string) => {
         const v: DebugProtocol.Variable = {
           name,
           value: item.toString(),
-          type: item.getType(),
+          type: item.getCustomType(),
           variablesReference: ref,
           evaluateName: '$' + name
         };
@@ -324,10 +324,10 @@ export class GreybelDebugSession extends LoggingDebugSession {
     };
 
     if (opc && opc.type !== ContextType.Global) {
-      setVariables(opc, 1);
+      setVariables(opc, 0);
     }
 
-    setVariables(me._runtime.globalContext, 1);
+    setVariables(me._runtime.globalContext, 0);
 
     response.body = {
       variables

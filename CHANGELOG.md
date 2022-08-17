@@ -13,3 +13,10 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - minor type resolve improvements
+
+## [1.0.2] - 17-08-2022
+
+### Changed
+
+- fix broken scope variables in debugger view
+- set variable reference to zero to prevent infinite inheritance
