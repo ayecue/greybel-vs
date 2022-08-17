@@ -11,14 +11,14 @@ import {
   ASTMemberExpression
 } from 'greybel-core';
 import { ASTType } from 'greyscript-core';
-import { Position, TextDocument } from 'vscode';
-
 import {
   getDefinition,
   getDefinitions,
   SignatureDefinition,
   SignatureDefinitionArg
 } from 'greyscript-meta';
+import { Position, TextDocument } from 'vscode';
+
 import * as ASTScraper from './ast-scraper';
 import ASTStringify from './ast-stringify';
 import { getDocumentAST } from './document-manager';
@@ -348,21 +348,6 @@ export class LookupHelper {
     const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
     const name = item.name;
     const root = me.lookupScope(outer);
-    // const wrappingAssignment = me.lookupAssignment(outer);
-
-    // is wrapped by assignment; needs refining
-    /* if (wrappingAssignment) {
-      const { variable, init } = wrappingAssignment;
-
-      if (
-        (variable.start.character <= item.start.character &&
-          variable.end.character >= item.start.character) ||
-        (variable.start.character <= item.end.character &&
-          variable.end.character >= item.end.character)
-      ) {
-        return me.lookupTypeInfo({ closest: init, outer });
-      }
-    } */
 
     // resolve path
     if (
@@ -370,6 +355,9 @@ export class LookupHelper {
       previous?.type === ASTType.IndexExpression
     ) {
       return me.resolvePath(previous, outer.slice(0, -1));
+      // special behavior for params
+    } else if (name === 'params') {
+      return new TypeInfo(name, ['list']);
     }
 
     // check for default namespace
@@ -416,6 +404,10 @@ export class LookupHelper {
         closest: init,
         outer: [root, lastAssignment]
       });
+
+      if (initMeta instanceof TypeInfoWithDefinition) {
+        return new TypeInfo(name, initMeta.definition.returns);
+      }
 
       return initMeta || new TypeInfo(name, ['any']);
     }

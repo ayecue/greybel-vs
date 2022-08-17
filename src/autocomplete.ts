@@ -1,5 +1,10 @@
 import { ASTCallExpression } from 'greybel-core';
 import { ASTType } from 'greyscript-core';
+import {
+  getDefinitions,
+  SignatureDefinitionArg,
+  SignatureDefinitionContainer
+} from 'greyscript-meta';
 import vscode, {
   CancellationToken,
   CompletionContext,
@@ -17,11 +22,6 @@ import vscode, {
   TextDocument
 } from 'vscode';
 
-import {
-  getDefinitions,
-  SignatureDefinitionArg,
-  SignatureDefinitionContainer
-} from 'greyscript-meta';
 import {
   LookupHelper,
   TypeInfo,
@@ -202,11 +202,13 @@ export function activate(_context: ExtensionContext) {
         const signatureInfo = new SignatureInformation(
           `(${item.type}) ${item.label} (${argValues}): ${returnValues}`
         );
-        const params: ParameterInformation[] = args.map((argItem: SignatureDefinitionArg) => {
-          return new ParameterInformation(
-            `${argItem.label}${argItem.opt ? '?' : ''}: ${argItem.type}`
-          );
-        });
+        const params: ParameterInformation[] = args.map(
+          (argItem: SignatureDefinitionArg) => {
+            return new ParameterInformation(
+              `${argItem.label}${argItem.opt ? '?' : ''}: ${argItem.type}`
+            );
+          }
+        );
 
         signatureInfo.parameters = params;
         signatureHelp.signatures.push(signatureInfo);

@@ -41,11 +41,14 @@ export function clearDocumentAST(document: TextDocument): void {
 }
 
 export function getLastDocumentASTErrors(document: TextDocument): Error[] {
-  return lastErrorsMap.get(document.fileName) || createDocumentAST(document).errors;
+  return (
+    lastErrorsMap.get(document.fileName) || createDocumentAST(document).errors
+  );
 }
 
 export function getDocumentAST(document: TextDocument): ASTBase {
   return (
-    activeDocumentASTMap.get(document.fileName) || createDocumentAST(document).chunk
+    activeDocumentASTMap.get(document.fileName) ||
+    createDocumentAST(document).chunk
   );
 }

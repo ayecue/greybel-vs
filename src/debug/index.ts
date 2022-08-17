@@ -19,7 +19,6 @@ export function activate(
       'greybel.debug.runEditorContents',
       (resource: Uri) => {
         let targetResource = resource;
-        console.log("TEEST", targetResource);
         if (!targetResource && vscode.window.activeTextEditor) {
           targetResource = vscode.window.activeTextEditor.document.uri;
         }
