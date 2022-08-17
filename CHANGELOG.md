@@ -20,3 +20,9 @@ All notable changes to this project will be documented in this file.
 
 - fix broken scope variables in debugger view
 - set variable reference to zero to prevent infinite inheritance
+
+## [1.0.3] - 17-08-2022
+
+### Changed
+
+- fix indexes intrinsic for lists and strings
