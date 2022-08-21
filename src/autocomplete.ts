@@ -99,7 +99,7 @@ export function activate(_context: ExtensionContext) {
         }
 
         // get all default methods
-        const defaultDefinitions = getDefinitions(['default']);
+        const defaultDefinitions = getDefinitions(['general']);
         const completionItems: CompletionItem[] = [
           ...convertDefinitionsToCompletionList(
             defaultDefinitions,

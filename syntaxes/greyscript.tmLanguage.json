@@ -17,7 +17,7 @@
 		},
 		{
 			"name": "support.class.greyscript",
-			"match": "\\b(aptClient|computer|crypto|file|ftpShell|metaLib|metaMail|metaxploit|netSession|port|router|shell)\\b"
+			"match": "\\b(aptClient|computer|crypto|file|ftpShell|metaLib|metaMail|metaxploit|netSession|port|router|shell|blockchain|service|subWallet|wallet|coin)\\b"
 		},
 		{
 			"name": "support.function.aptClient.greyscript",
@@ -78,6 +78,26 @@
 		{
 			"name": "support.function.string.greyscript",
 			"match": "\\.(remove|hasIndex|indexOf|lastIndexOf|split|replace|trim|indexes|code|len|lower|upper|val|values|to_int)\\b"
+		},
+		{
+			"name": "support.function.blockchain.greyscript",
+			"match": "\\.(coin_price|show_history|amount_mined|get_coin|login_wallet|create_wallet|delete_coin)\\b"
+		},
+		{
+			"name": "support.function.service.greyscript",
+			"match": "\\.(install_service|start_service|stop_service)\\b"
+		},
+		{
+			"name": "support.function.coin.greyscript",
+			"match": "\\.(set_cycle_mining|get_cycle_mining|get_reward|set_reward|transaction|create_subwallet|get_subwallet|get_subwallets|set_address|get_address|get_mined_coins)\\b"
+		},
+		{
+			"name": "support.function.wallet.greyscript",
+			"match": "\\.(list_coins|get_balance|buy_coin|sell_coin|get_pending_trade|cancel_pending_trade|get_global_offers|list_global_coins|show_nodes|reset_password|get_pin)\\b"
+		},
+		{
+			"name": "support.function.subWallet.greyscript",
+			"match": "\\.(get_balance|set_info|get_info|delete|get_user|last_transaction|mining|check_password|wallet_username)\\b"
 		},
 		{
 			"name": "support.function.greyscript",

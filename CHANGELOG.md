@@ -26,3 +26,12 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - fix indexes intrinsic for lists and strings
+
+## [1.0.4] - 21-08-2022
+
+### Changed
+
+- add idx local during for loop
+- add placeholders for blockhain, coin, service, wallet, subWallet
+- improved meta information
+- added methods to sytnax language
