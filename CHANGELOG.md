@@ -35,3 +35,10 @@ All notable changes to this project will be documented in this file.
 - add placeholders for blockhain, coin, service, wallet, subWallet
 - improved meta information
 - added methods to sytnax language
+
+## [1.0.5] - 22-08-2022
+
+### Changed
+
+- fix range behavior in case of from > to
+- improved meta information

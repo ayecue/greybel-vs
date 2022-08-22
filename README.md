@@ -1,6 +1,10 @@
 # greybel-vs
 
-GreyScript toolkit for [Grey Hack](https://greyhackgame.com).
+GreyScript toolkit for [Grey Hack](https://greyhackgame.com). Includes highlighting, interpreter and among other features.
+
+Based on [greybel-js](https://github.com/ayecue/greybel-js).
+
+If you need some GreyScript API information you can also checkout [greyscript-meta](https://greyscript-meta.netlify.app/).
 
 ## Usage
 
@@ -10,7 +14,7 @@ Commands available (`CTRL+SHIFT+P`):
 - `Greybel: Build` - [info](#build)
 - `Greybel: Goto Error` - [info](#goto-error)
 - `Greybel: Minify` - [info](#minify)
-- `Greybel: Refresh` - [info](#goto-error)
+- `Greybel: Refresh` - [info](#refresh)
 
 ## Features
 
@@ -27,6 +31,10 @@ Commands available (`CTRL+SHIFT+P`):
 ### Goto Error
 
 Highlights the next existing syntax error.
+
+### Refresh
+
+Refresh AST cache.
 
 ### Minify
 
@@ -56,8 +64,6 @@ Gives you informations about functions/types.
 
 Gives you information about syntax errors in your code.
 
-## Additional information
-
-This extension is completly based on [greybel-js](https://github.com/ayecue/greybel-js).
+## Copyright
 
 [Sloth icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/sloth)
