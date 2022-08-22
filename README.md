@@ -1,6 +1,6 @@
 # greybel-vs
 
-GreyScript toolkit for [Grey Hack](https://greyhackgame.com). Includes highlighting, interpreter and among other features.
+GreyScript toolkit for [Grey Hack](https://greyhackgame.com). Includes highlighting and interpreter among other features.
 
 Based on [greybel-js](https://github.com/ayecue/greybel-js).
 
