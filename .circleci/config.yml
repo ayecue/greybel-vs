@@ -48,6 +48,7 @@ workflows:
   conditional-workflow:
     when:
       and:
-        - << pipeline.vcs.is_pull_request >>
+        - not:
+          - equal: [main, << pipeline.git.branch >>]
     jobs:
       - build
