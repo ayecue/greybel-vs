@@ -24,7 +24,11 @@ jobs:
       - checkout
       - node/install-packages
       - build
-  build-and-publish:  
+  build-and-publish:
+    filters:
+      branches:
+        only:
+          - main 
     docker:
       - image: cimg/node:15.1
     steps:
