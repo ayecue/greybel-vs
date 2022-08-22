@@ -41,11 +41,13 @@ jobs:
 workflows:
   main:
     when:
-      - equal: [main, << pipeline.git.branch >>]
+      and:
+        - equal: [main, << pipeline.git.branch >>]
     jobs:
       - build-and-publish
   conditional-workflow:
     when:
+      and:
         - << pipeline.vcs.is_pull_request >>
     jobs:
       - build
