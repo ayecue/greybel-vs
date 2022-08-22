@@ -1,4 +1,4 @@
-import { Transpiler } from 'greybel-transpiler';
+import { BuildType, Transpiler } from 'greybel-transpiler';
 import vscode, {
   ExtensionContext,
   Range,
@@ -9,7 +9,7 @@ import vscode, {
 import { TranspilerResourceProvider } from './resource';
 
 export function activate(context: ExtensionContext) {
-  async function minify(
+  async function transform(
     editor: TextEditor,
     _edit: TextEditorEdit,
     _args: any[]
@@ -19,7 +19,7 @@ export function activate(context: ExtensionContext) {
 
       if (!isSaved) {
         vscode.window.showErrorMessage(
-          'You cannot minify a file which does not exist in the file system.',
+          'You cannot transform a file which does not exist in the file system.',
           { modal: false }
         );
         return;
@@ -28,12 +28,29 @@ export function activate(context: ExtensionContext) {
 
     try {
       const config = vscode.workspace.getConfiguration('greybel');
+      const buildTypeFromConfig = config.get('transpiler.buildType');
+      const environmentVariablesFromConfig =
+        config.get<object>('transpiler.environmentVariables') || {};
+      const excludedNamespacesFromConfig =
+        config.get<string[]>('transpiler.excludedNamespaces') || [];
+      let buildType = BuildType.DEFAULT;
+
+      if (buildTypeFromConfig === 'Uglify') {
+        buildType = BuildType.UGLIFY;
+      } else if (buildTypeFromConfig === 'Beautify') {
+        buildType = BuildType.BEAUTIFY;
+      }
+
       const result = await new Transpiler({
         target: editor.document.fileName,
         resourceHandler: new TranspilerResourceProvider().getHandler(),
-        uglify: config.get('transpiler.uglify'),
+        buildType,
+        environmentVariables: new Map(
+          Object.entries(environmentVariablesFromConfig)
+        ),
         disableLiteralsOptimization: config.get('transpiler.dlo'),
-        disableNamespacesOptimization: config.get('transpiler.dno')
+        disableNamespacesOptimization: config.get('transpiler.dno'),
+        excludedNamespaces: excludedNamespacesFromConfig
       }).parse();
 
       const firstLine = editor.document.lineAt(0);
@@ -44,13 +61,13 @@ export function activate(context: ExtensionContext) {
         editBuilder.replace(textRange, result[editor.document.fileName]);
       });
 
-      vscode.window.showInformationMessage('Minifying done.', { modal: false });
+      vscode.window.showInformationMessage('Transform done.', { modal: false });
     } catch (err: any) {
       vscode.window.showErrorMessage(err.message, { modal: false });
     }
   }
 
   context.subscriptions.push(
-    vscode.commands.registerTextEditorCommand('greybel.minify', minify)
+    vscode.commands.registerTextEditorCommand('greybel.transform', transform)
   );
 }

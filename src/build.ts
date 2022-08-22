@@ -1,4 +1,8 @@
-import { Transpiler, TranspilerParseResult } from 'greybel-transpiler';
+import {
+  BuildType,
+  Transpiler,
+  TranspilerParseResult
+} from 'greybel-transpiler';
 // @ts-ignore: No type definitions
 import { TextEncoderLite as TextEncoder } from 'text-encoder-lite';
 import vscode, {
@@ -218,12 +222,28 @@ export function activate(context: ExtensionContext) {
     try {
       const config = vscode.workspace.getConfiguration('greybel');
       const target = editor.document.fileName;
+      const environmentVariablesFromConfig =
+        config.get<object>('transpiler.environmentVariables') || {};
+      const excludedNamespacesFromConfig =
+        config.get<string[]>('transpiler.excludedNamespaces') || [];
+      let buildType = BuildType.DEFAULT;
+
+      if (config.get('transpiler.uglify')) {
+        buildType = BuildType.UGLIFY;
+      } else if (config.get('transpiler.beautify')) {
+        buildType = BuildType.BEAUTIFY;
+      }
+
       const result = await new Transpiler({
         target,
         resourceHandler: new TranspilerResourceProvider().getHandler(),
-        uglify: config.get('transpiler.uglify'),
+        buildType,
+        environmentVariables: new Map(
+          Object.entries(environmentVariablesFromConfig)
+        ),
         disableLiteralsOptimization: config.get('transpiler.dlo'),
-        disableNamespacesOptimization: config.get('transpiler.dno')
+        disableNamespacesOptimization: config.get('transpiler.dno'),
+        excludedNamespaces: excludedNamespacesFromConfig
       }).parse();
 
       const rootPath = vscode.workspace.rootPath

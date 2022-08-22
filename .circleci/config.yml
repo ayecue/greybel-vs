@@ -24,7 +24,7 @@ jobs:
       - checkout
       - node/install-packages
       - build
-  build-and-publish:  
+  build-and-publish: 
     docker:
       - image: cimg/node:15.1
     steps:
@@ -39,6 +39,12 @@ jobs:
           command: ./node_modules/.bin/vsce publish -p ${VSCE_TOKEN} ${PACKAGE_VERSION}
 
 workflows:
-  main: 
+  main:
+    when:
+      and:
+        - equal: [main, << pipeline.git.branch >>]
     jobs:
       - build-and-publish
+  test:
+    jobs:
+      - build

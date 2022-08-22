@@ -42,3 +42,18 @@ All notable changes to this project will be documented in this file.
 
 - fix range behavior in case of from > to
 - improved meta information
+
+## [1.0.6] - 22-08-2022
+
+### Changed
+
+- minor readme fix
+
+## [1.0.7] - 22-08-2022
+
+### Changed
+
+- add beautify
+- add option to define environment variables
+- add option to define excluded namespaces
+- rename minify to transform for proper naming

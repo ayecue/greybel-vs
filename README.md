@@ -1,6 +1,6 @@
 # greybel-vs
 
-GreyScript toolkit for [Grey Hack](https://greyhackgame.com). Includes highlighting and interpreter among other features.
+GreyScript toolkit for [Grey Hack](https://greyhackgame.com). Includes highlighting and interpreter among other features. Checkout the [changelog](https://github.com/ayecue/greybel-vs/blob/main/CHANGELOG.md) to get information on the latest changes.
 
 Based on [greybel-js](https://github.com/ayecue/greybel-js).
 
@@ -13,14 +13,26 @@ Automatically detects `.gs` and `.src` files.
 Commands available (`CTRL+SHIFT+P`):
 - `Greybel: Build` - [info](#build)
 - `Greybel: Goto Error` - [info](#goto-error)
-- `Greybel: Minify` - [info](#minify)
+- `Greybel: Transform` - [info](#transform)
 - `Greybel: Refresh` - [info](#refresh)
+
+Do not forget to setup your plugin to your needs. Following settings are available:
+
+- Activate/Deactivate
+    - Autocomplete
+    - Hoverdocs
+    - Installer
+- Transpiler specific
+    - Build type
+    - Disable literals optimization
+    - Disable namespaces optimization
+    - Excluded namespaces when optimizing
 
 ## Features
 
 - Syntax Highlighting
 - [Goto Error](#goto-error)
-- [Minify](#minify)
+- [Transform](#transform)
 - [Build](#build)
 - [Interpreter](#interpreter)
 - [Debugger](#debugger)
@@ -36,13 +48,29 @@ Highlights the next existing syntax error.
 
 Refresh AST cache.
 
-### Minify
+### Transform
 
-Minifies file. More details [here](https://github.com/ayecue/greybel-js#features).
+Transform output depends on build type. Currently available types:
+- Default (active by default): Nothing special
+- Uglify: Minifies code
+- Beautify: Beautifies code
+
+You can also define environment variables which you can use via `#envar environmentVariableName`.
+
+More details [here](https://github.com/ayecue/greybel-js#features).
 
 ### Build
 
-Build your files and put them into a `build` folder. It's also able to minfiy and bundle your files. More details [here](https://github.com/ayecue/greybel-js#transpiler).
+Build your files and put them into a `build` folder.
+
+Building output depends on build type. Currently available types:
+- Default (active by default): Nothing special
+- Uglify: Minifies code
+- Beautify: Beautifies code
+
+You can also define environment variables which you can use via `#envar environmentVariableName`.
+
+More details [here](https://github.com/ayecue/greybel-js#transpiler).
 
 ### Interpreter
 
