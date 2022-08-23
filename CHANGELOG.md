@@ -68,7 +68,7 @@ All notable changes to this project will be documented in this file.
 - change circle ci config
 - update readme
 
-## [1.0.9] - 22-08-2022
+## [1.0.9] - 23-08-2022
 
 ### Changed
 
