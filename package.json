@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.0.9",
+    "version": "1.1.0",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -80,7 +80,16 @@
         "url": "https://github.com/ayecue/greybel-vs/issues"
     },
     "activationEvents": [
-        "onLanguage:greyscript"
+        "onLanguage:greyscript",
+        "onCommand:greybel.debug.runEditorContents",
+        "onCommand:greybel.debug.debugEditorContents",
+        "onCommand:greybel.gotoError",
+        "onCommand:greybel.build",
+        "onCommand:greybel.transform",
+        "onCommand:greybel.minify",
+        "onCommand:greybel.beautify",
+        "onCommand:greybel.api",
+        "onCommand:greybel.refresh"
     ],
     "contributes": {
         "menus": {

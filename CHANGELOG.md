@@ -79,3 +79,9 @@ All notable changes to this project will be documented in this file.
 - add envar to syntax
 - add shortcut for minify and beautify
 - add GreyScript API browser
+
+## [1.1.0] - 23-08-2022
+
+### Changed
+
+- add more activation events in order to fix web extension
