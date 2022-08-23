@@ -6,3 +6,5 @@ node_modules
 extension.browser.js
 extension.js
 *.vsix
+api.view.css
+api.view.js

@@ -14,7 +14,10 @@ Commands available (`CTRL+SHIFT+P`):
 - `Greybel: Build` - [info](#build)
 - `Greybel: Goto Error` - [info](#goto-error)
 - `Greybel: Transform` - [info](#transform)
+- `Greybel: Minify` - Shortcut for [info](#transform). Will use minifiy as build type.
+- `Greybel: Beautify` - Shortcut for [info](#transform). Will use beautify as build type.
 - `Greybel: Refresh` - [info](#refresh)
+- `Greybel: API` - [info](#api-browser)
 
 Do not forget to setup your plugin to your needs. Following settings are available:
 
@@ -39,6 +42,7 @@ Do not forget to setup your plugin to your needs. Following settings are availab
 - [Autocompletion](#autocompletion)
 - [Hover Tooltips](#hover-tooltips)
 - [Diagnostics](#diagnostics)
+- [API Browser](#api-browser)
 
 ### Goto Error
 
@@ -91,6 +95,10 @@ Gives you informations about functions/types.
 ### Diagnostics
 
 Gives you information about syntax errors in your code.
+
+### API Browser
+
+API Browser for GreyScript. Version of [greyscript-meta](https://greyscript-meta.netlify.app/) in Visual Studio Code.
 
 ## Copyright
 

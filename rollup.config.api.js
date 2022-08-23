@@ -5,39 +5,40 @@ const { babel } = require('@rollup/plugin-babel');
 const { terser } = require('rollup-plugin-terser');
 const json = require('@rollup/plugin-json');
 const nodePolyfills = require('rollup-plugin-node-polyfills');
+const externalGlobals  = require('rollup-plugin-external-globals');
 
 const options = {
-    input: 'out/extension.js',
+    input: 'out/api/view.js',
     output: {
-        file: 'extension.browser.js',
-        name: 'greyscript',
-        exports: 'named',
-        format: 'iife',
-        globals: {
-            'vscode': 'require(\'vscode\')'
-        }
+        file: 'api.view.js',
+        format: 'iife'
     },
+    external: ['react', 'react-dom'],
     plugins: [
-        json(),
-        commonjs({
-            esmExternals: ['vscode']
+        externalGlobals({
+            'react': 'React',
+            'react-dom': 'ReactDOM'
         }),
+        json(),
+        commonjs(),
         nodePolyfills(),
         nodeResolve({
+            browser: true,
             preferBuiltins: false
         }),
         babel({
-            presets: ['@babel/preset-env'],
+            presets: ['@babel/preset-react', '@babel/preset-env', {
+                exclude: "transform-typeof-symbol"
+            }],
             babelHelpers: 'runtime',
             plugins: [
                 ["@babel/plugin-transform-runtime", {
-                    "regenerator": true
+                    regenerator: true
                 }]
             ]
         }),
         terser()
-    ],
-    external: ['vscode']
+    ]
 };
 
 export default options;
