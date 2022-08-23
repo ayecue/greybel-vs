@@ -1,5 +1,6 @@
 import { ExtensionContext } from 'vscode';
 
+import { activate as activateAPI } from './api';
 import { activate as activateAutocomplete } from './autocomplete';
 import { activate as activateBuild } from './build';
 import { activate as activateDebug } from './debug';
@@ -18,6 +19,7 @@ export function activate(context: ExtensionContext) {
   activateTransform(context);
   activateNextError(context);
   activateDiagnostic(context);
+  activateAPI(context);
 }
 
 export function deactivate() {}

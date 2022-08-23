@@ -53,7 +53,29 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- rename minify to transform for proper naming
+
+### Added
+
 - add beautify
 - add option to define environment variables
 - add option to define excluded namespaces
-- rename minify to transform for proper naming
+
+## [1.0.8] - 22-08-2022
+
+### Changed
+
+- change circle ci config
+- update readme
+
+## [1.0.9] - 23-08-2022
+
+### Changed
+
+- fix browser rollup build
+
+### Added
+
+- add envar to syntax
+- add shortcut for minify and beautify
+- add GreyScript API browser

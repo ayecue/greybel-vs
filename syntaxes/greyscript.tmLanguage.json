@@ -9,7 +9,7 @@
 		},
 		{
 			"name": "keyword.control.greyscript",
-			"match": "#(include|import)"
+			"match": "#(include|import|envar)"
 		},
 		{
 			"name": "support.type.greyscript",

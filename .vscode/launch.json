@@ -28,7 +28,7 @@
 				"--extensionDevelopmentKind=web"
 			],
 			"outFiles": [
-				"${workspaceFolder}/out/extension.browser.js"
+				"${workspaceFolder}/extension.browser.js"
 			],
 			"preLaunchTask": "npm: compile"
 		},

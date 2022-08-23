@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -17,11 +17,15 @@
         "@babel/core": "^7.16.10",
         "@babel/plugin-transform-runtime": "^7.16.8",
         "@babel/preset-env": "^7.16.8",
+        "@babel/preset-react": "^7.18.6",
+        "@monaco-editor/loader": "^1.3.2",
         "@rollup/plugin-babel": "^5.3.0",
         "@rollup/plugin-commonjs": "^21.0.1",
         "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^13.1.3",
         "@types/node": "^12.12.0",
+        "@types/react": "^18.0.17",
+        "@types/react-dom": "^18.0.6",
         "@types/vscode": "^1.63.1",
         "@typescript-eslint/eslint-plugin": "^5.27.1",
         "@typescript-eslint/parser": "^5.27.1",
@@ -36,7 +40,10 @@
         "eslint-plugin-promise": "^6.0.0",
         "eslint-plugin-security": "^1.5.0",
         "eslint-plugin-simple-import-sort": "^7.0.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
         "rollup": "^2.64.0",
+        "rollup-plugin-external-globals": "^0.6.1",
         "rollup-plugin-node-polyfills": "^0.2.1",
         "rollup-plugin-terser": "^7.0.2",
         "source-map-support": "^0.5.12",
@@ -44,11 +51,13 @@
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
-        "compile": "npm run compile:ts && npm run compile:node && npm run compile:browser",
+        "compile": "npm run compile:ts && npm run compile:node && npm run compile:browser && npm run compile:api && npm run move:stylesheet",
         "compile:ts": "tsc -p ./",
         "compile:node": "rollup --config rollup.config.node.js",
         "compile:browser": "rollup --config rollup.config.browser.js",
         "compile:extension": "vsce package --out extension.vsix",
+        "compile:api": "rollup --config rollup.config.api.js",
+        "move:stylesheet": "cp src/api/index.css ./api.view.css",
         "lint": "eslint ./src/**/*.ts",
         "lint:fix": "eslint --fix ./src/**/*.ts",
         "watch": "tsc -watch -p ./",
@@ -99,6 +108,21 @@
                     "group": "navigation"
                 },
                 {
+                    "command": "greybel.minify",
+                    "when": "resourceLangId == greyscript",
+                    "group": "navigation"
+                },
+                {
+                    "command": "greybel.beautify",
+                    "when": "resourceLangId == greyscript",
+                    "group": "navigation"
+                },
+                {
+                    "command": "greybel.api",
+                    "when": "resourceLangId == greyscript",
+                    "group": "navigation"
+                },
+                {
                     "command": "greybel.build",
                     "when": "resourceLangId == greyscript",
                     "group": "navigation"
@@ -120,6 +144,18 @@
                 },
                 {
                     "command": "greybel.transform",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.minify",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.beautify",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.api",
                     "when": "resourceLangId == greyscript"
                 },
                 {
@@ -169,6 +205,18 @@
             {
                 "command": "greybel.transform",
                 "title": "Greybel: Transform"
+            },
+            {
+                "command": "greybel.minify",
+                "title": "Greybel: Minify"
+            },
+            {
+                "command": "greybel.beautify",
+                "title": "Greybel: Beautify"
+            },
+            {
+                "command": "greybel.api",
+                "title": "Greybel: API"
             },
             {
                 "command": "greybel.refresh",
@@ -302,7 +350,8 @@
         "greybel-intrinsics": "^1.1.1",
         "greybel-transpiler": "^0.4.0",
         "greyscript-core": "^0.2.9",
-        "greyscript-meta": "^1.0.9",
+        "greyscript-meta": "^1.1.1",
+        "react-string-replace": "^1.1.0",
         "text-encoder-lite": "^2.0.0"
     },
     "browserslist": "> 0.25%, not dead"
