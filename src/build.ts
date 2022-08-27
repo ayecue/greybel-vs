@@ -43,7 +43,7 @@ function createFolderLine(folder: string): string[] {
       'd=c.File(h+"' + parent + '/' + target + '")',
       'if (d == null) then c.create_folder(h+"' +
         parent +
-        '", "/' +
+        '","/' +
         target +
         '")'
     ]);
@@ -76,12 +76,12 @@ function createFileLine(file: string, isNew?: boolean): string {
   } else {
     if (isRootDirectory(folder)) {
       output = output.concat([
-        'f = c.File(h + "/' + base + '")',
+        'f=c.File(h+"/' + base + '")',
         'if (f == null) then',
-        'c.touch(h, "' + base + '")',
-        'f = c.File(h + "/' + base + '")',
+        'c.touch(h,"' + base + '")',
+        'f=c.File(h+"/' + base + '")',
         'end if',
-        'l = f.get_content.split(char(10))'
+        'l=f.get_content.split(char(10))'
       ]);
     } else {
       output = output.concat([
@@ -103,7 +103,7 @@ function createCodeInsertLine(line: string): string {
     .replace(/"/g, '""')
     .replace(/^import_code\(/i, 'import" + "_" + "code(');
 
-  return 'p(l, "' + parsed + '")';
+  return 'p(l,"' + parsed + '")';
 }
 
 function createSetContentLine(): string {
