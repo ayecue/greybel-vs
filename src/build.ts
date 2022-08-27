@@ -222,15 +222,16 @@ export function activate(context: ExtensionContext) {
     try {
       const config = vscode.workspace.getConfiguration('greybel');
       const target = editor.document.fileName;
+      const buildTypeFromConfig = config.get('transpiler.buildType');
       const environmentVariablesFromConfig =
         config.get<object>('transpiler.environmentVariables') || {};
       const excludedNamespacesFromConfig =
         config.get<string[]>('transpiler.excludedNamespaces') || [];
       let buildType = BuildType.DEFAULT;
 
-      if (config.get('transpiler.uglify')) {
+      if (buildTypeFromConfig === 'Uglify') {
         buildType = BuildType.UGLIFY;
-      } else if (config.get('transpiler.beautify')) {
+      } else if (buildTypeFromConfig === 'Beautify') {
         buildType = BuildType.BEAUTIFY;
       }
 

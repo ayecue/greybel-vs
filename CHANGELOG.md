@@ -85,3 +85,4 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - add more activation events in order to fix web extension
+- use `transpiler.buildType` as for build type
