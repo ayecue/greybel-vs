@@ -79,3 +79,18 @@ All notable changes to this project will be documented in this file.
 - add envar to syntax
 - add shortcut for minify and beautify
 - add GreyScript API browser
+
+## [1.1.0] - 27-08-2022
+
+### Changed
+
+- use `transpiler.buildType` as for build type
+- remove uneccessary whitespaces from build
+- use direct transpiler for transform
+- change browser bundle type to cjs
+- disable build and api command in web
+
+### Added
+
+- add environment variables to settings in README.md
+- add more activation events in order to fix web extension

@@ -12,7 +12,7 @@ const options = {
         file: 'extension.browser.js',
         name: 'greyscript',
         exports: 'named',
-        format: 'iife',
+        format: 'cjs',
         globals: {
             'vscode': 'require(\'vscode\')'
         }

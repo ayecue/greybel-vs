@@ -1,4 +1,4 @@
-import { BuildType, Transpiler } from 'greybel-transpiler';
+import { BuildType, DirectTranspiler } from 'greybel-transpiler';
 import vscode, {
   ExtensionContext,
   Range,
@@ -42,9 +42,8 @@ export function activate(context: ExtensionContext) {
         buildType = BuildType.BEAUTIFY;
       }
 
-      const result = await new Transpiler({
-        target: editor.document.fileName,
-        resourceHandler: new TranspilerResourceProvider().getHandler(),
+      const result = new DirectTranspiler({
+        code: editor.document.getText(),
         buildType: specificBuildType || buildType,
         environmentVariables: new Map(
           Object.entries(environmentVariablesFromConfig)
@@ -59,7 +58,7 @@ export function activate(context: ExtensionContext) {
       const textRange = new Range(firstLine.range.start, lastLine.range.end);
 
       editor.edit(function (editBuilder: TextEditorEdit) {
-        editBuilder.replace(textRange, result[editor.document.fileName]);
+        editBuilder.replace(textRange, result);
       });
 
       vscode.window.showInformationMessage('Transform done.', { modal: false });
