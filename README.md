@@ -29,6 +29,7 @@ Do not forget to setup your plugin to your needs. Following settings are availab
     - Build type
     - Disable literals optimization
     - Disable namespaces optimization
+    - Environment variables
     - Excluded namespaces when optimizing
 
 ## Features
