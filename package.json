@@ -30,7 +30,7 @@
         "@typescript-eslint/eslint-plugin": "^5.27.1",
         "@typescript-eslint/parser": "^5.27.1",
         "@vscode/test-electron": "^2.0.3",
-        "@vscode/test-web": "^0.0.19",
+        "@vscode/test-web": "^0.0.29",
         "eslint": "^8.17.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-config-standard": "^17.0.0",
@@ -80,16 +80,7 @@
         "url": "https://github.com/ayecue/greybel-vs/issues"
     },
     "activationEvents": [
-        "onLanguage:greyscript",
-        "onCommand:greybel.debug.runEditorContents",
-        "onCommand:greybel.debug.debugEditorContents",
-        "onCommand:greybel.gotoError",
-        "onCommand:greybel.build",
-        "onCommand:greybel.transform",
-        "onCommand:greybel.minify",
-        "onCommand:greybel.beautify",
-        "onCommand:greybel.api",
-        "onCommand:greybel.refresh"
+        "onLanguage:greyscript"
     ],
     "contributes": {
         "menus": {
@@ -128,12 +119,12 @@
                 },
                 {
                     "command": "greybel.api",
-                    "when": "resourceLangId == greyscript",
+                    "when": "resourceLangId == greyscript && !isWeb",
                     "group": "navigation"
                 },
                 {
                     "command": "greybel.build",
-                    "when": "resourceLangId == greyscript",
+                    "when": "resourceLangId == greyscript && !isWeb",
                     "group": "navigation"
                 },
                 {
@@ -165,11 +156,11 @@
                 },
                 {
                     "command": "greybel.api",
-                    "when": "resourceLangId == greyscript"
+                    "when": "resourceLangId == greyscript && !isWeb"
                 },
                 {
                     "command": "greybel.build",
-                    "when": "resourceLangId == greyscript"
+                    "when": "resourceLangId == greyscript && !isWeb"
                 },
                 {
                     "command": "greybel.gotoError",
@@ -209,7 +200,8 @@
             },
             {
                 "command": "greybel.build",
-                "title": "Greybel: Build"
+                "title": "Greybel: Build",
+                "when": "!isWeb"
             },
             {
                 "command": "greybel.transform",
@@ -225,7 +217,8 @@
             },
             {
                 "command": "greybel.api",
-                "title": "Greybel: API"
+                "title": "Greybel: API",
+                "when": "!isWeb"
             },
             {
                 "command": "greybel.refresh",
@@ -292,7 +285,8 @@
                 "greybel.installer": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Generate installer when building."
+                    "description": "Generate installer when building.",
+                    "when": "!isWeb"
                 }
             }
         },

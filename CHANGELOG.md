@@ -87,6 +87,8 @@ All notable changes to this project will be documented in this file.
 - use `transpiler.buildType` as for build type
 - remove uneccessary whitespaces from build
 - use direct transpiler for transform
+- change browser bundle type to cjs
+- disable build and api command in web
 
 ### Added
 

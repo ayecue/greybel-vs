@@ -8,3 +8,4 @@ extension.js
 *.vsix
 api.view.css
 api.view.js
+.vscode-test-web
