@@ -287,6 +287,11 @@
                     "default": true,
                     "description": "Generate installer when building.",
                     "when": "!isWeb"
+                },
+                "greybel.transpiler.installer.maxChars": {
+                    "type": "number",
+                    "default": 155000,
+                    "description": "Amount of characters allowed in one file before splitting when creating installer."
                 }
             }
         },

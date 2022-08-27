@@ -268,10 +268,12 @@ export function activate(context: ExtensionContext) {
       });
 
       if (config.get('installer')) {
+        const maxChars = config.get<number>('transpiler.installer.maxChars') || 155000;
+
         vscode.window.showInformationMessage('Creating installer.', {
           modal: false
         });
-        createInstaller(result, target, rootPath, 75000);
+        createInstaller(result, target, rootPath, maxChars);
       }
 
       vscode.window.showInformationMessage(

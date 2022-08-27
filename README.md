@@ -31,6 +31,8 @@ Do not forget to setup your plugin to your needs. Following settings are availab
     - Disable namespaces optimization
     - Environment variables
     - Excluded namespaces when optimizing
+- Installer specific
+    - Define max characters per file
 
 ## Features
 
