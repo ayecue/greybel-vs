@@ -56,6 +56,7 @@ export function activate(_context: ExtensionContext) {
         _token: CancellationToken,
         _ctx: CompletionContext
       ) {
+        documentParseQueue.refresh(document);
         const currentRange = new Range(position.translate(0, -1), position);
 
         const helper = new LookupHelper(document);
@@ -138,7 +139,6 @@ export function activate(_context: ExtensionContext) {
         _ctx: SignatureHelpContext
       ): ProviderResult<SignatureHelp> {
         documentParseQueue.refresh(document);
-
         const helper = new LookupHelper(document);
         const astResult = helper.lookupAST(position);
 
