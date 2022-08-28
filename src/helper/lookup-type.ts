@@ -21,7 +21,7 @@ import { Position, TextDocument } from 'vscode';
 
 import * as ASTScraper from './ast-scraper';
 import ASTStringify from './ast-stringify';
-import { getDocumentAST } from './document-manager';
+import documentParseQueue from './document-manager';
 
 export class TypeInfo {
   label: string;
@@ -174,7 +174,7 @@ export class LookupHelper {
 
   lookupAST(position: Position): LookupASTResult | null {
     const me = this;
-    const chunk = getDocumentAST(me.document) as ASTChunk;
+    const chunk = documentParseQueue.get(me.document).document as ASTChunk;
 
     // gather all wrapping ASTs
     const outer = ASTScraper.findEx((item: ASTBase, _level: number) => {

@@ -5,16 +5,12 @@ import vscode, {
   TextDocumentChangeEvent
 } from 'vscode';
 
-import {
-  clearDocumentAST,
-  createDocumentAST,
-  getLastDocumentASTErrors
-} from './helper/document-manager';
+import documentParseQueue from './helper/document-manager';
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 function lookupErrors(document: TextDocument): Diagnostic[] {
-  const errors = getLastDocumentASTErrors(document);
+  const errors = documentParseQueue.get(document).errors;
 
   return errors.map((err: any) => {
     let line = -1;
@@ -36,14 +32,17 @@ function lookupErrors(document: TextDocument): Diagnostic[] {
 export function activate(context: ExtensionContext) {
   const collection = vscode.languages.createDiagnosticCollection('greyscript');
 
-  function updateDiagnosticCollection(document: TextDocument) {
-    createDocumentAST(document);
+  documentParseQueue.on('parsed', (document: TextDocument) => {
     const err = lookupErrors(document);
     collection.set(document.uri, err);
+  });
+
+  function updateDiagnosticCollection(document: TextDocument) {
+    documentParseQueue.update(document);
   }
 
   function clearDiagnosticCollection(document: TextDocument) {
-    clearDocumentAST(document);
+    documentParseQueue.clear(document);
     collection.delete(document.uri);
   }
 

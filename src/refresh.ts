@@ -1,6 +1,6 @@
 import vscode, { ExtensionContext, TextEditor, TextEditorEdit } from 'vscode';
 
-import { createDocumentAST } from './helper/document-manager';
+import documentParseQueue from './helper/document-manager';
 
 export function activate(context: ExtensionContext) {
   async function refresh(
@@ -8,7 +8,7 @@ export function activate(context: ExtensionContext) {
     _edit: TextEditorEdit,
     _args: any[]
   ) {
-    createDocumentAST(editor.document);
+    documentParseQueue.refresh(editor.document);
   }
 
   context.subscriptions.push(

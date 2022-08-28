@@ -28,6 +28,8 @@ import {
   TypeInfoWithDefinition
 } from './helper/lookup-type';
 
+import documentParseQueue from './helper/document-manager';
+
 export const convertDefinitionsToCompletionList = (
   definitions: SignatureDefinitionContainer,
   _range: Range
@@ -135,6 +137,8 @@ export function activate(_context: ExtensionContext) {
         _token: CancellationToken,
         _ctx: SignatureHelpContext
       ): ProviderResult<SignatureHelp> {
+        documentParseQueue.refresh(document);
+
         const helper = new LookupHelper(document);
         const astResult = helper.lookupAST(position);
 
