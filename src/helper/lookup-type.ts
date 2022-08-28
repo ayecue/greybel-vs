@@ -118,11 +118,10 @@ export class LookupHelper {
           skip: true
         };
       } else if (item.type === ASTType.AssignmentStatement) {
-        const { variable, init } = item as ASTAssignmentStatement;
+        const { variable } = item as ASTAssignmentStatement;
         const identifierName = ASTStringify(variable);
-        const initName = ASTStringify(init);
 
-        if (identifierName === identifier && initName !== identifier) {
+        if (identifierName === identifier) {
           return {
             valid: true
           };
