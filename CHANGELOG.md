@@ -101,6 +101,7 @@ All notable changes to this project will be documented in this file.
 
 - find all identifier now only lookups left side in assignment
 - fix autocomplete + hoverdocs flag in settings
+- update greyscript-meta package, contains updated descriptions + responsive styles
 
 ### Added
 

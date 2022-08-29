@@ -57,7 +57,7 @@
         "compile:browser": "rollup --config rollup.config.browser.js",
         "compile:extension": "vsce package --out extension.vsix",
         "compile:api": "rollup --config rollup.config.api.js",
-        "move:stylesheet": "cp src/api/index.css ./api.view.css",
+        "move:stylesheet": "cp node_modules/greyscript-meta/web/index.css ./api.view.css",
         "lint": "eslint ./src/**/*.ts",
         "lint:fix": "eslint --fix ./src/**/*.ts",
         "watch": "tsc -watch -p ./",
@@ -368,7 +368,7 @@
         "greybel-intrinsics": "^1.1.1",
         "greybel-transpiler": "^0.4.0",
         "greyscript-core": "^0.2.9",
-        "greyscript-meta": "^1.1.1",
+        "greyscript-meta": "^1.1.3",
         "react-string-replace": "^1.1.0",
         "text-encoder-lite": "^2.0.0"
     },
