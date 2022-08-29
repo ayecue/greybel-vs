@@ -37,24 +37,9 @@ export function activate(context: ExtensionContext) {
     collection.set(document.uri, err);
   });
 
-  function updateDiagnosticCollection(document: TextDocument) {
-    documentParseQueue.update(document);
-  }
-
-  function clearDiagnosticCollection(document: TextDocument) {
-    documentParseQueue.clear(document);
+  documentParseQueue.on('cleared', (document: TextDocument) => {
     collection.delete(document.uri);
-  }
+  });
 
-  context.subscriptions.push(
-    collection,
-    vscode.workspace.onDidOpenTextDocument(updateDiagnosticCollection),
-    vscode.workspace.onDidChangeTextDocument(
-      (event: TextDocumentChangeEvent) => {
-        updateDiagnosticCollection(event.document);
-      }
-    ),
-    vscode.workspace.onDidSaveTextDocument(updateDiagnosticCollection),
-    vscode.workspace.onDidCloseTextDocument(clearDiagnosticCollection)
-  );
+  context.subscriptions.push(collection);
 }

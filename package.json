@@ -252,6 +252,11 @@
                     "default": true,
                     "description": "Enable Greybel hover tooltips."
                 },
+                "greybel.diagnostic": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable Greybel diagnostic."
+                },
                 "greybel.transpiler.buildType": {
                     "type": "string",
                     "enum": [
@@ -260,12 +265,14 @@
                         "Beautify"
                     ],
                     "default": "Default",
-                    "description": "Build type."
+                    "description": "Build type.",
+                    "scope": "resource"
                 },
                 "greybel.transpiler.environmentVariables": {
                     "type": "object",
                     "default": {},
-                    "description": "Environment variables."
+                    "description": "Environment variables.",
+                    "scope": "resource"
                 },
                 "greybel.transpiler.dlo": {
                     "type": "boolean",
@@ -280,17 +287,20 @@
                 "greybel.transpiler.excludedNamespaces": {
                     "type": "array",
                     "default": [],
-                    "description": "Excluded namespaces regarding optimization."
+                    "description": "Excluded namespaces regarding optimization.",
+                    "scope": "resource"
                 },
                 "greybel.installer": {
                     "type": "boolean",
                     "default": true,
                     "description": "Generate installer when building.",
-                    "when": "!isWeb"
+                    "when": "!isWeb",
+                    "scope": "resource"
                 },
                 "greybel.transpiler.installer.maxChars": {
                     "type": "number",
                     "default": 155000,
+                    "minimum": 1000,
                     "description": "Amount of characters allowed in one file before splitting when creating installer."
                 }
             }

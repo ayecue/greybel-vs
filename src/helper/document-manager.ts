@@ -104,6 +104,7 @@ export class DocumentParseQueue extends EventEmitter {
 
   clear(document: TextDocument): void {
     this.results.delete(document.fileName);
+    this.emit('cleared', document);
   }
 }
 

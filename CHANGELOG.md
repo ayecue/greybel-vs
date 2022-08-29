@@ -100,8 +100,10 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - find all identifier now only lookups left side in assignment
+- fix autocomplete + hoverdocs flag in settings
 
 ### Added
 
 - add `transpiler.installer.maxChars` option to define when the installer should split the file
 - add queue for AST parsing to improve CPU usage
+- add flag to enable/disable diagnostics
