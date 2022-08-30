@@ -102,6 +102,8 @@ All notable changes to this project will be documented in this file.
 - find all identifier now only lookups left side in assignment
 - fix autocomplete + hoverdocs flag in settings
 - update greyscript-meta package, contains updated descriptions + responsive styles
+- update parser and interpreter to support any value as map key, thanks to [@xephael](https://github.com/xephael)
+- update parser to improve performance regarding automcompletion and hover, generates map of references per line
 
 ### Added
 
