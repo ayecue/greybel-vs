@@ -117,7 +117,7 @@ export function activate(_context: ExtensionContext) {
         // get all identifer available in scope
         completionItems.push(
           ...helper
-            .findAllAvailableIdentifier(astResult.outer)
+            .findAllAvailableIdentifier(astResult.closest)
             .map((property: string) => {
               return new CompletionItem(property, CompletionItemKind.Function);
             })
@@ -166,7 +166,7 @@ export function activate(_context: ExtensionContext) {
           return;
         }
 
-        const root = helper.lookupScope(astResult.outer);
+        const root = helper.lookupScope(astResult.closest);
         const item = helper.lookupTypeInfo({
           closest: rootCallExpression,
           outer: root ? [root] : []
@@ -179,8 +179,8 @@ export function activate(_context: ExtensionContext) {
         // figure out argument position
         const astArgs = rootCallExpression.arguments;
         const selectedIndex = astArgs.findIndex((argItem) => {
-          const leftIndex = argItem.start.character - 1;
-          const rightIndex = argItem.end.character;
+          const leftIndex = argItem.start!.character - 1;
+          const rightIndex = argItem.end!.character;
 
           return (
             leftIndex <= position.character && rightIndex >= position.character

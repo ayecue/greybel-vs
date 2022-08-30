@@ -10,7 +10,7 @@ import {
   ASTLiteral,
   ASTMemberExpression
 } from 'greybel-core';
-import { ASTType } from 'greyscript-core';
+import { ASTType, ASTBaseBlockWithScope } from 'greyscript-core';
 import {
   getDefinition,
   getDefinitions,
@@ -56,131 +56,77 @@ export class LookupHelper {
     this.document = document;
   }
 
-  findAllAvailableIdentifier(outer: LookupOuter): string[] {
-    const me = this;
-    const root = me.lookupScope(outer);
+  findAllAvailableIdentifier(item: ASTBase): string[] {
+    const scopes = this.lookupScopes(item);
+    const result: string[] = [];
 
-    if (!root) {
-      return [];
+    for (const scope of scopes) {
+      result.push(...scope.namespaces);
     }
 
-    const identifier = [];
-
-    identifier.push(
-      ...ASTScraper.findEx((item: ASTBase, level: number) => {
-        if (item.type === ASTType.FunctionDeclaration && level > 0) {
-          return {
-            skip: true
-          };
-        } else if (item.type === ASTType.AssignmentStatement) {
-          return {
-            valid: true
-          };
-        }
-      }, root)
-    );
-
-    me.lookupScopes(outer).forEach((scope) => {
-      identifier.push(
-        ...ASTScraper.findEx((item: ASTBase, level: number) => {
-          if (item.type === ASTType.FunctionDeclaration && level > 0) {
-            return {
-              skip: true
-            };
-          } else if (item.type === ASTType.AssignmentStatement) {
-            return {
-              valid: true
-            };
-          }
-        }, scope)
-      );
-    });
-
-    return identifier.map((item: ASTBase) => {
-      return ASTStringify((item as ASTAssignmentStatement).variable);
-    });
+    return result;
   }
 
   findAllAssignmentsOfIdentifier(
     identifier: string,
-    root: ASTBase,
-    end?: Position
-  ): ASTBase[] {
-    return ASTScraper.findEx((item: ASTBase, level: number) => {
-      if (end && item.start.line - 1 >= end.line) {
-        return {
-          exit: true
-        };
-      }
+    root: ASTBase
+  ): ASTAssignmentStatement[] {
+    const assignments = this.lookupAssignments(root);
+    const result: ASTAssignmentStatement[] = []; 
 
-      if (item.type === ASTType.FunctionDeclaration && level > 0) {
-        return {
-          skip: true
-        };
-      } else if (item.type === ASTType.AssignmentStatement) {
-        const { variable } = item as ASTAssignmentStatement;
-        const identifierName = ASTStringify(variable);
+    for (const item of assignments) {
+      const current = ASTStringify(item.variable);
 
-        if (identifierName === identifier) {
-          return {
-            valid: true
-          };
-        }
-      }
-    }, root);
-  }
-
-  lookupAssignment(outer: LookupOuter): ASTAssignmentStatement | null {
-    // lookup closest wrapping assignment
-    for (let index = outer.length - 1; index >= 0; index--) {
-      const type = outer[index]?.type;
-
-      if (type === ASTType.AssignmentStatement) {
-        return outer[index] as ASTAssignmentStatement;
-      }
-    }
-
-    return null;
-  }
-
-  lookupScope(outer: LookupOuter): ASTBase | null {
-    // lookup closest wrapping scope
-    for (let index = outer.length - 1; index >= 0; index--) {
-      const type = outer[index]?.type;
-
-      if (type === ASTType.FunctionDeclaration || type === ASTType.Chunk) {
-        return outer[index];
-      }
-    }
-
-    return null;
-  }
-
-  lookupScopes(outer: LookupOuter): ASTBase[] {
-    const result: ASTBase[] = [];
-
-    // lookup closest wrapping scope
-    for (let index = outer.length - 1; index >= 0; index--) {
-      const type = outer[index]?.type;
-
-      if (type === ASTType.FunctionDeclaration || type === ASTType.Chunk) {
-        result.push(outer[index]);
+      if (current === identifier) {
+        result.push(item);
       }
     }
 
     return result;
   }
 
-  lookupAST(position: Position): LookupASTResult | null {
+  lookupAssignments(item: ASTBase): ASTAssignmentStatement[] {
+    // lookup closest wrapping assignment
+    const scopes = this.lookupScopes(item);
+    const result: ASTAssignmentStatement[] = [];
+
+    for (const scope of scopes) {
+      result.push(...(scope.assignments as ASTAssignmentStatement[]));
+    }
+
+    return result;
+  }
+
+  lookupScope(item: ASTBase): ASTBaseBlockWithScope | null {
+    return item.scope || null;
+  }
+
+  lookupScopes(item: ASTBase): ASTBaseBlockWithScope[] {
+    const result: ASTBaseBlockWithScope[] = [];
+    let current = item.scope;
+
+    while (current) {
+      result.push(current);
+      current = current.scope;
+    }
+
+    return result;
+  }
+
+  lookupAST(position: Position): LookupASTResult  | null {
     const me = this;
     const chunk = documentParseQueue.get(me.document).document as ASTChunk;
+    const lineItem = chunk.lines.get(position.line + 1);
 
-    // gather all wrapping ASTs
+    if (!lineItem) {
+      return null;
+    }
+
     const outer = ASTScraper.findEx((item: ASTBase, _level: number) => {
-      const startLine = item.start.line - 1;
-      const startCharacter = item.start.character - 1;
-      const endLine = item.end.line - 1;
-      const endCharacter = item.end.character - 1;
+      const startLine = item.start!.line - 1;
+      const startCharacter = item.start!.character - 1;
+      const endLine = item.end!.line - 1;
+      const endCharacter = item.end!.character - 1;
 
       if (startLine > position.line) {
         return {
@@ -215,7 +161,7 @@ export class LookupHelper {
       return {
         valid: startLine <= position.line && endLine >= position.line
       };
-    }, chunk) as LookupOuter;
+    }, lineItem) as LookupOuter;
     // get closest AST
     const closest = outer.pop();
 
@@ -346,7 +292,7 @@ export class LookupHelper {
     const me = this;
     const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
     const name = item.name;
-    const root = me.lookupScope(outer);
+    const root = me.lookupScope(item);
 
     // resolve path
     if (
@@ -392,8 +338,7 @@ export class LookupHelper {
     // gather all available assignments in scope with certain namespace
     const assignments = this.findAllAssignmentsOfIdentifier(
       name,
-      root,
-      new Position(item.end.line, item.end.character)
+      root
     );
     const lastAssignment = assignments.pop();
 
