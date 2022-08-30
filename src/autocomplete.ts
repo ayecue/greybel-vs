@@ -22,13 +22,12 @@ import vscode, {
   TextDocument
 } from 'vscode';
 
+import documentParseQueue from './helper/document-manager';
 import {
   LookupHelper,
   TypeInfo,
   TypeInfoWithDefinition
 } from './helper/lookup-type';
-
-import documentParseQueue from './helper/document-manager';
 
 export const convertDefinitionsToCompletionList = (
   definitions: SignatureDefinitionContainer,

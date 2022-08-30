@@ -6,8 +6,6 @@ import vscode, {
   TextEditorEdit
 } from 'vscode';
 
-import { TranspilerResourceProvider } from './resource';
-
 export function activate(context: ExtensionContext) {
   async function transform(
     editor: TextEditor,

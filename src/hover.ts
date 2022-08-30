@@ -39,8 +39,6 @@ export function activate(_context: ExtensionContext) {
       const helper = new LookupHelper(document);
       const astResult = helper.lookupAST(position);
 
-      console.log(astResult);
-
       if (!astResult) {
         return;
       }

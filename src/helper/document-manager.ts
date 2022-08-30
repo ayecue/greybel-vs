@@ -87,6 +87,7 @@ export class DocumentParseQueue extends EventEmitter {
   }
 
   update(document: TextDocument): boolean {
+    console.log('request update');
     const fileName = document.fileName;
 
     if (this.queue.has(fileName)) {

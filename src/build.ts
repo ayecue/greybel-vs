@@ -268,7 +268,8 @@ export function activate(context: ExtensionContext) {
       });
 
       if (config.get('installer')) {
-        const maxChars = config.get<number>('transpiler.installer.maxChars') || 155000;
+        const maxChars =
+          config.get<number>('transpiler.installer.maxChars') || 155000;
 
         vscode.window.showInformationMessage('Creating installer.', {
           modal: false

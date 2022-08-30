@@ -245,7 +245,9 @@ export class GreybelDebugSession extends LoggingDebugSession {
       if (opc.stackItem) {
         me.sendErrorResponse(response, {
           id: 1001,
-          format: `Runtime error: ${err.message} at line ${opc.stackItem.start!.line}:${opc.stackItem.start!.character} in ${opc.target}`,
+          format: `Runtime error: ${err.message} at line ${
+            opc.stackItem.start!.line
+          }:${opc.stackItem.start!.character} in ${opc.target}`,
           showUser: true
         });
       } else if (hasOwnProperty.call(err, 'line')) {

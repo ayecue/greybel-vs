@@ -10,7 +10,7 @@ import {
   ASTLiteral,
   ASTMemberExpression
 } from 'greybel-core';
-import { ASTType, ASTBaseBlockWithScope } from 'greyscript-core';
+import { ASTBaseBlockWithScope, ASTType } from 'greyscript-core';
 import {
   getDefinition,
   getDefinitions,
@@ -72,7 +72,7 @@ export class LookupHelper {
     root: ASTBase
   ): ASTAssignmentStatement[] {
     const assignments = this.lookupAssignments(root);
-    const result: ASTAssignmentStatement[] = []; 
+    const result: ASTAssignmentStatement[] = [];
 
     for (const item of assignments) {
       const current = ASTStringify(item.variable);
@@ -113,7 +113,7 @@ export class LookupHelper {
     return result;
   }
 
-  lookupAST(position: Position): LookupASTResult  | null {
+  lookupAST(position: Position): LookupASTResult | null {
     const me = this;
     const chunk = documentParseQueue.get(me.document).document as ASTChunk;
     const lineItem = chunk.lines.get(position.line + 1);
@@ -300,6 +300,16 @@ export class LookupHelper {
       previous?.type === ASTType.IndexExpression
     ) {
       return me.resolvePath(previous, outer.slice(0, -1));
+      // assignment to var
+    } else if (previous?.type === ASTType.AssignmentStatement) {
+      const assignmentStatement = previous as ASTAssignmentStatement;
+
+      if (assignmentStatement.init !== item) {
+        return me.lookupTypeInfo({
+          closest: assignmentStatement.init,
+          outer: [previous]
+        });
+      }
       // special behavior for params
     } else if (name === 'params') {
       return new TypeInfo(name, ['list']);
@@ -336,10 +346,7 @@ export class LookupHelper {
     }
 
     // gather all available assignments in scope with certain namespace
-    const assignments = this.findAllAssignmentsOfIdentifier(
-      name,
-      root
-    );
+    const assignments = this.findAllAssignmentsOfIdentifier(name, root);
     const lastAssignment = assignments.pop();
 
     if (lastAssignment) {
