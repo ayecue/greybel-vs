@@ -94,3 +94,19 @@ All notable changes to this project will be documented in this file.
 
 - add environment variables to settings in README.md
 - add more activation events in order to fix web extension
+
+## [1.1.1] - 31-08-2022
+
+### Changed
+
+- find all identifier now only lookups left side in assignment
+- fix autocomplete + hoverdocs flag in settings
+- update greyscript-meta package, contains updated descriptions + responsive styles
+- update parser and interpreter to support any value as map key, thanks to [@xephael](https://github.com/xephael)
+- update parser to improve performance regarding automcompletion and hover, generates map of references per line
+
+### Added
+
+- add `transpiler.installer.maxChars` option to define when the installer should split the file
+- add queue for AST parsing to improve CPU usage
+- add flag to enable/disable diagnostics

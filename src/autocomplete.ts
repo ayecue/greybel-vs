@@ -22,6 +22,7 @@ import vscode, {
   TextDocument
 } from 'vscode';
 
+import documentParseQueue from './helper/document-manager';
 import {
   LookupHelper,
   TypeInfo,
@@ -54,6 +55,7 @@ export function activate(_context: ExtensionContext) {
         _token: CancellationToken,
         _ctx: CompletionContext
       ) {
+        documentParseQueue.refresh(document);
         const currentRange = new Range(position.translate(0, -1), position);
 
         const helper = new LookupHelper(document);
@@ -114,7 +116,7 @@ export function activate(_context: ExtensionContext) {
         // get all identifer available in scope
         completionItems.push(
           ...helper
-            .findAllAvailableIdentifier(astResult.outer)
+            .findAllAvailableIdentifier(astResult.closest)
             .map((property: string) => {
               return new CompletionItem(property, CompletionItemKind.Function);
             })
@@ -135,6 +137,7 @@ export function activate(_context: ExtensionContext) {
         _token: CancellationToken,
         _ctx: SignatureHelpContext
       ): ProviderResult<SignatureHelp> {
+        documentParseQueue.refresh(document);
         const helper = new LookupHelper(document);
         const astResult = helper.lookupAST(position);
 
@@ -162,7 +165,7 @@ export function activate(_context: ExtensionContext) {
           return;
         }
 
-        const root = helper.lookupScope(astResult.outer);
+        const root = helper.lookupScope(astResult.closest);
         const item = helper.lookupTypeInfo({
           closest: rootCallExpression,
           outer: root ? [root] : []
@@ -175,8 +178,8 @@ export function activate(_context: ExtensionContext) {
         // figure out argument position
         const astArgs = rootCallExpression.arguments;
         const selectedIndex = astArgs.findIndex((argItem) => {
-          const leftIndex = argItem.start.character - 1;
-          const rightIndex = argItem.end.character;
+          const leftIndex = argItem.start!.character - 1;
+          const rightIndex = argItem.end!.character;
 
           return (
             leftIndex <= position.character && rightIndex >= position.character

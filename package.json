@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -57,7 +57,7 @@
         "compile:browser": "rollup --config rollup.config.browser.js",
         "compile:extension": "vsce package --out extension.vsix",
         "compile:api": "rollup --config rollup.config.api.js",
-        "move:stylesheet": "cp src/api/index.css ./api.view.css",
+        "move:stylesheet": "cp node_modules/greyscript-meta/web/index.css ./api.view.css",
         "lint": "eslint ./src/**/*.ts",
         "lint:fix": "eslint --fix ./src/**/*.ts",
         "watch": "tsc -watch -p ./",
@@ -252,6 +252,11 @@
                     "default": true,
                     "description": "Enable Greybel hover tooltips."
                 },
+                "greybel.diagnostic": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable Greybel diagnostic."
+                },
                 "greybel.transpiler.buildType": {
                     "type": "string",
                     "enum": [
@@ -260,12 +265,14 @@
                         "Beautify"
                     ],
                     "default": "Default",
-                    "description": "Build type."
+                    "description": "Build type.",
+                    "scope": "resource"
                 },
                 "greybel.transpiler.environmentVariables": {
                     "type": "object",
                     "default": {},
-                    "description": "Environment variables."
+                    "description": "Environment variables.",
+                    "scope": "resource"
                 },
                 "greybel.transpiler.dlo": {
                     "type": "boolean",
@@ -280,13 +287,21 @@
                 "greybel.transpiler.excludedNamespaces": {
                     "type": "array",
                     "default": [],
-                    "description": "Excluded namespaces regarding optimization."
+                    "description": "Excluded namespaces regarding optimization.",
+                    "scope": "resource"
                 },
                 "greybel.installer": {
                     "type": "boolean",
                     "default": true,
                     "description": "Generate installer when building.",
-                    "when": "!isWeb"
+                    "when": "!isWeb",
+                    "scope": "resource"
+                },
+                "greybel.transpiler.installer.maxChars": {
+                    "type": "number",
+                    "default": 155000,
+                    "minimum": 1000,
+                    "description": "Amount of characters allowed in one file before splitting when creating installer."
                 }
             }
         },
@@ -347,13 +362,13 @@
     "dependencies": {
         "@vscode/debugadapter": "^1.51.1",
         "@vscode/debugprotocol": "^1.51.0",
-        "greybel-core": "^0.3.1",
-        "greybel-gh-mock-intrinsics": "^1.1.2",
-        "greybel-interpreter": "^1.1.3",
-        "greybel-intrinsics": "^1.1.1",
-        "greybel-transpiler": "^0.4.0",
-        "greyscript-core": "^0.2.9",
-        "greyscript-meta": "^1.1.1",
+        "greybel-core": "^0.4.3",
+        "greybel-gh-mock-intrinsics": "^1.1.5",
+        "greybel-interpreter": "^1.1.7",
+        "greybel-intrinsics": "^1.1.5",
+        "greybel-transpiler": "^0.5.2",
+        "greyscript-core": "^0.3.6",
+        "greyscript-meta": "^1.1.3",
         "react-string-replace": "^1.1.0",
         "text-encoder-lite": "^2.0.0"
     },

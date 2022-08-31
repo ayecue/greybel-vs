@@ -245,7 +245,9 @@ export class GreybelDebugSession extends LoggingDebugSession {
       if (opc.stackItem) {
         me.sendErrorResponse(response, {
           id: 1001,
-          format: `Runtime error: ${err.message} at line ${opc.stackItem.start.line}:${opc.stackItem.start.character} in ${opc.target}`,
+          format: `Runtime error: ${err.message} at line ${
+            opc.stackItem.start!.line
+          }:${opc.stackItem.start!.character} in ${opc.target}`,
           showUser: true
         });
       } else if (hasOwnProperty.call(err, 'line')) {
@@ -310,9 +312,9 @@ export class GreybelDebugSession extends LoggingDebugSession {
     const opc = me._runtime.globalContext.getLastActive();
     const variables: DebugProtocol.Variable[] = [];
     const setVariables = (current: OperationContext, ref: number) => {
-      current.scope.value.forEach((item: CustomValue, name: string) => {
+      current.scope.value.forEach((item: CustomValue, name: CustomValue) => {
         const v: DebugProtocol.Variable = {
-          name,
+          name: name.toString(),
           value: item.toString(),
           type: item.getCustomType(),
           variablesReference: ref,
@@ -446,7 +448,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
           index: index++,
           name: stackItem.type, // use a word of the line as the stackframe name
           file: current.target,
-          line: stackItem.start.line,
+          line: stackItem.start!.line,
           column: 0
         };
 
@@ -569,7 +571,7 @@ class GrebyelDebugger extends Debugger {
       this.session.breakpoints.get(operationContext.target) || [];
     const actualBreakpoint = breakpoints.find(
       (bp: DebugProtocol.Breakpoint) => {
-        return bp.line === operationContext.stackItem?.start.line;
+        return bp.line === operationContext.stackItem?.start!.line;
       }
     ) as DebugProtocol.Breakpoint;
 

@@ -32,6 +32,7 @@ export function activate(context: ExtensionContext) {
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
           <title>GreyScript API</title>
+          <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
           <link rel="stylesheet" type="text/css" href="${panel.webview.asWebviewUri(
             indexStylesheet
           )}">

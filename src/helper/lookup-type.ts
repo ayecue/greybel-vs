@@ -10,7 +10,7 @@ import {
   ASTLiteral,
   ASTMemberExpression
 } from 'greybel-core';
-import { ASTType } from 'greyscript-core';
+import { ASTBaseBlockWithScope, ASTType } from 'greyscript-core';
 import {
   getDefinition,
   getDefinitions,
@@ -21,7 +21,7 @@ import { Position, TextDocument } from 'vscode';
 
 import * as ASTScraper from './ast-scraper';
 import ASTStringify from './ast-stringify';
-import { getDocumentAST } from './document-manager';
+import documentParseQueue from './document-manager';
 
 export class TypeInfo {
   label: string;
@@ -56,117 +56,58 @@ export class LookupHelper {
     this.document = document;
   }
 
-  findAllAvailableIdentifier(outer: LookupOuter): string[] {
-    const me = this;
-    const root = me.lookupScope(outer);
+  findAllAvailableIdentifier(item: ASTBase): string[] {
+    const scopes = this.lookupScopes(item);
+    const result: string[] = [];
 
-    if (!root) {
-      return [];
+    for (const scope of scopes) {
+      result.push(...scope.namespaces);
     }
 
-    const identifier = [];
-
-    identifier.push(
-      ...ASTScraper.findEx((item: ASTBase, level: number) => {
-        if (item.type === ASTType.FunctionDeclaration && level > 0) {
-          return {
-            skip: true
-          };
-        } else if (item.type === ASTType.AssignmentStatement) {
-          return {
-            valid: true
-          };
-        }
-      }, root)
-    );
-
-    me.lookupScopes(outer).forEach((scope) => {
-      identifier.push(
-        ...ASTScraper.findEx((item: ASTBase, level: number) => {
-          if (item.type === ASTType.FunctionDeclaration && level > 0) {
-            return {
-              skip: true
-            };
-          } else if (item.type === ASTType.AssignmentStatement) {
-            return {
-              valid: true
-            };
-          }
-        }, scope)
-      );
-    });
-
-    return identifier.map((item: ASTBase) => {
-      return ASTStringify((item as ASTAssignmentStatement).variable);
-    });
+    return result;
   }
 
   findAllAssignmentsOfIdentifier(
     identifier: string,
-    root: ASTBase,
-    end?: Position
-  ): ASTBase[] {
-    return ASTScraper.findEx((item: ASTBase, level: number) => {
-      if (end && item.start.line - 1 >= end.line) {
-        return {
-          exit: true
-        };
-      }
+    root: ASTBase
+  ): ASTAssignmentStatement[] {
+    const assignments = this.lookupAssignments(root);
+    const result: ASTAssignmentStatement[] = [];
 
-      if (item.type === ASTType.FunctionDeclaration && level > 0) {
-        return {
-          skip: true
-        };
-      } else if (item.type === ASTType.AssignmentStatement) {
-        const { variable, init } = item as ASTAssignmentStatement;
-        const identifierName = ASTStringify(variable);
-        const initName = ASTStringify(init);
+    for (const item of assignments) {
+      const current = ASTStringify(item.variable);
 
-        if (identifierName === identifier && initName !== identifier) {
-          return {
-            valid: true
-          };
-        }
+      if (current === identifier) {
+        result.push(item);
       }
-    }, root);
+    }
+
+    return result;
   }
 
-  lookupAssignment(outer: LookupOuter): ASTAssignmentStatement | null {
+  lookupAssignments(item: ASTBase): ASTAssignmentStatement[] {
     // lookup closest wrapping assignment
-    for (let index = outer.length - 1; index >= 0; index--) {
-      const type = outer[index]?.type;
+    const scopes = this.lookupScopes(item);
+    const result: ASTAssignmentStatement[] = [];
 
-      if (type === ASTType.AssignmentStatement) {
-        return outer[index] as ASTAssignmentStatement;
-      }
+    for (const scope of scopes) {
+      result.push(...(scope.assignments as ASTAssignmentStatement[]));
     }
 
-    return null;
+    return result;
   }
 
-  lookupScope(outer: LookupOuter): ASTBase | null {
-    // lookup closest wrapping scope
-    for (let index = outer.length - 1; index >= 0; index--) {
-      const type = outer[index]?.type;
-
-      if (type === ASTType.FunctionDeclaration || type === ASTType.Chunk) {
-        return outer[index];
-      }
-    }
-
-    return null;
+  lookupScope(item: ASTBase): ASTBaseBlockWithScope | null {
+    return item.scope || null;
   }
 
-  lookupScopes(outer: LookupOuter): ASTBase[] {
-    const result: ASTBase[] = [];
+  lookupScopes(item: ASTBase): ASTBaseBlockWithScope[] {
+    const result: ASTBaseBlockWithScope[] = [];
+    let current = item.scope;
 
-    // lookup closest wrapping scope
-    for (let index = outer.length - 1; index >= 0; index--) {
-      const type = outer[index]?.type;
-
-      if (type === ASTType.FunctionDeclaration || type === ASTType.Chunk) {
-        result.push(outer[index]);
-      }
+    while (current) {
+      result.push(current);
+      current = current.scope;
     }
 
     return result;
@@ -174,14 +115,18 @@ export class LookupHelper {
 
   lookupAST(position: Position): LookupASTResult | null {
     const me = this;
-    const chunk = getDocumentAST(me.document) as ASTChunk;
+    const chunk = documentParseQueue.get(me.document).document as ASTChunk;
+    const lineItem = chunk.lines.get(position.line + 1);
 
-    // gather all wrapping ASTs
+    if (!lineItem) {
+      return null;
+    }
+
     const outer = ASTScraper.findEx((item: ASTBase, _level: number) => {
-      const startLine = item.start.line - 1;
-      const startCharacter = item.start.character - 1;
-      const endLine = item.end.line - 1;
-      const endCharacter = item.end.character - 1;
+      const startLine = item.start!.line - 1;
+      const startCharacter = item.start!.character - 1;
+      const endLine = item.end!.line - 1;
+      const endCharacter = item.end!.character - 1;
 
       if (startLine > position.line) {
         return {
@@ -216,7 +161,7 @@ export class LookupHelper {
       return {
         valid: startLine <= position.line && endLine >= position.line
       };
-    }, chunk) as LookupOuter;
+    }, lineItem) as LookupOuter;
     // get closest AST
     const closest = outer.pop();
 
@@ -347,7 +292,7 @@ export class LookupHelper {
     const me = this;
     const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
     const name = item.name;
-    const root = me.lookupScope(outer);
+    const root = me.lookupScope(item);
 
     // resolve path
     if (
@@ -355,6 +300,16 @@ export class LookupHelper {
       previous?.type === ASTType.IndexExpression
     ) {
       return me.resolvePath(previous, outer.slice(0, -1));
+      // assignment to var
+    } else if (previous?.type === ASTType.AssignmentStatement) {
+      const assignmentStatement = previous as ASTAssignmentStatement;
+
+      if (assignmentStatement.init !== item) {
+        return me.lookupTypeInfo({
+          closest: assignmentStatement.init,
+          outer: [previous]
+        });
+      }
       // special behavior for params
     } else if (name === 'params') {
       return new TypeInfo(name, ['list']);
@@ -391,11 +346,7 @@ export class LookupHelper {
     }
 
     // gather all available assignments in scope with certain namespace
-    const assignments = this.findAllAssignmentsOfIdentifier(
-      name,
-      root,
-      new Position(item.end.line, item.end.character)
-    );
+    const assignments = this.findAllAssignmentsOfIdentifier(name, root);
     const lastAssignment = assignments.pop();
 
     if (lastAssignment) {

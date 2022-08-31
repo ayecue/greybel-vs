@@ -1,20 +1,11 @@
-import vscode, {
-  Diagnostic,
-  ExtensionContext,
-  TextDocument,
-  TextDocumentChangeEvent
-} from 'vscode';
+import vscode, { Diagnostic, ExtensionContext, TextDocument } from 'vscode';
 
-import {
-  clearDocumentAST,
-  createDocumentAST,
-  getLastDocumentASTErrors
-} from './helper/document-manager';
+import documentParseQueue from './helper/document-manager';
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 function lookupErrors(document: TextDocument): Diagnostic[] {
-  const errors = getLastDocumentASTErrors(document);
+  const errors = documentParseQueue.get(document).errors;
 
   return errors.map((err: any) => {
     let line = -1;
@@ -36,26 +27,14 @@ function lookupErrors(document: TextDocument): Diagnostic[] {
 export function activate(context: ExtensionContext) {
   const collection = vscode.languages.createDiagnosticCollection('greyscript');
 
-  function updateDiagnosticCollection(document: TextDocument) {
-    createDocumentAST(document);
+  documentParseQueue.on('parsed', (document: TextDocument) => {
     const err = lookupErrors(document);
     collection.set(document.uri, err);
-  }
+  });
 
-  function clearDiagnosticCollection(document: TextDocument) {
-    clearDocumentAST(document);
+  documentParseQueue.on('cleared', (document: TextDocument) => {
     collection.delete(document.uri);
-  }
+  });
 
-  context.subscriptions.push(
-    collection,
-    vscode.workspace.onDidOpenTextDocument(updateDiagnosticCollection),
-    vscode.workspace.onDidChangeTextDocument(
-      (event: TextDocumentChangeEvent) => {
-        updateDiagnosticCollection(event.document);
-      }
-    ),
-    vscode.workspace.onDidSaveTextDocument(updateDiagnosticCollection),
-    vscode.workspace.onDidCloseTextDocument(clearDiagnosticCollection)
-  );
+  context.subscriptions.push(collection);
 }
