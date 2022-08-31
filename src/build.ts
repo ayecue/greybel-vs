@@ -188,7 +188,7 @@ function createInstaller(
 
     openFile(item.pseudoFilepath);
 
-    while (line) {
+    while (line !== undefined) {
       addLine(item.pseudoFilepath, line);
       line = lines.shift();
     }

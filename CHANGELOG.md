@@ -110,3 +110,9 @@ All notable changes to this project will be documented in this file.
 - add `transpiler.installer.maxChars` option to define when the installer should split the file
 - add queue for AST parsing to improve CPU usage
 - add flag to enable/disable diagnostics
+
+## [1.1.2] - 31-08-2022
+
+### Changed
+
+- fix installer randomly stopping parsing file, [@xephael](https://github.com/xephael)
