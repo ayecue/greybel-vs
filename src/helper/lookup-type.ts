@@ -105,6 +105,10 @@ export class LookupHelper {
     const result: ASTBaseBlockWithScope[] = [];
     let current = item.scope;
 
+    if (item instanceof ASTBaseBlockWithScope) {
+      result.push(item);
+    }
+
     while (current) {
       result.push(current);
       current = current.scope;
@@ -209,7 +213,7 @@ export class LookupHelper {
     }
   }
 
-  resolvePath(item: ASTBase, _outer: LookupOuter): TypeInfo | null {
+  resolvePath(item: ASTBase): TypeInfo | null {
     const me = this;
     let base: ASTBase | null = item;
     const traversalPath = [];
@@ -239,7 +243,8 @@ export class LookupHelper {
 
           // resolve first identifier
           if (!currentMetaInfo) {
-            currentMetaInfo = me.resolveIdentifier(identifer);
+            currentMetaInfo =
+              me.resolveIdentifier(identifer) || new TypeInfo(name, ['any']);
             break;
           }
 
@@ -299,9 +304,21 @@ export class LookupHelper {
       previous?.type === ASTType.MemberExpression ||
       previous?.type === ASTType.IndexExpression
     ) {
-      return me.resolvePath(previous, outer.slice(0, -1));
-      // assignment to var
-    } else if (previous?.type === ASTType.AssignmentStatement) {
+      return me.resolvePath(previous);
+    }
+
+    // special behavior for global variables
+    switch (name) {
+      case 'params':
+        return new TypeInfo(name, ['list:string']);
+      case 'globals':
+        return new TypeInfo(name, ['map:any']);
+      case 'locals':
+        return new TypeInfo(name, ['map:any']);
+    }
+
+    // assignment to var
+    if (previous?.type === ASTType.AssignmentStatement) {
       const assignmentStatement = previous as ASTAssignmentStatement;
 
       if (assignmentStatement.init !== item) {
@@ -310,9 +327,6 @@ export class LookupHelper {
           outer: [previous]
         });
       }
-      // special behavior for params
-    } else if (name === 'params') {
-      return new TypeInfo(name, ['list']);
     }
 
     // check for default namespace
@@ -326,34 +340,19 @@ export class LookupHelper {
       return new TypeInfo(name, ['any']);
     }
 
-    // get arguments if inside function
-    if (root.type === ASTType.FunctionDeclaration) {
-      const fnBlockMeta = me.resolveFunctionDeclaration(
-        root as ASTFunctionStatement
-      );
-
-      if (!fnBlockMeta) {
-        return new TypeInfo(name, ['any']);
-      }
-
-      const args = fnBlockMeta.definition.arguments || [];
-
-      for (const argMeta of args) {
-        if (argMeta.label === name) {
-          return new TypeInfo(argMeta.label, [argMeta.type]);
-        }
-      }
-    }
-
     // gather all available assignments in scope with certain namespace
-    const assignments = this.findAllAssignmentsOfIdentifier(name, root);
-    const lastAssignment = assignments.pop();
+    const assignments = this.findAllAssignmentsOfIdentifier(name, root).filter(
+      (assignment) => {
+        return assignment.start!.line < item.start!.line;
+      }
+    );
+    const lastAssignment = assignments[0];
 
     if (lastAssignment) {
       const { init } = lastAssignment as ASTAssignmentStatement;
       const initMeta = me.lookupTypeInfo({
         closest: init,
-        outer: [root, lastAssignment]
+        outer: [lastAssignment]
       });
 
       if (initMeta instanceof TypeInfoWithDefinition) {
@@ -401,25 +400,20 @@ export class LookupHelper {
     });
   }
 
-  resolveCallStatement(
-    item: ASTCallStatement,
-    outer: LookupOuter = []
-  ): TypeInfo | null {
+  resolveCallStatement(item: ASTCallStatement): TypeInfo | null {
     const { expression } = item;
-    return this.lookupTypeInfo({ closest: expression, outer });
+    return this.lookupTypeInfo({ closest: expression, outer: [item] });
   }
 
-  resolveCallExpression(
-    item: ASTCallExpression,
-    outer: LookupOuter = []
-  ): TypeInfo | null {
+  resolveCallExpression(item: ASTCallExpression): TypeInfo | null {
     const { base } = item;
-    const newOuter = outer.concat([item]);
-    return this.lookupTypeInfo({ closest: base, outer: newOuter });
+    return this.lookupTypeInfo({ closest: base, outer: [item] });
   }
 
   resolveDefault(item: ASTBase): TypeInfo | null {
     switch (item.type) {
+      case ASTType.NilLiteral:
+        return new TypeInfo((item as ASTLiteral).raw.toString(), ['null']);
       case ASTType.StringLiteral:
         return new TypeInfo((item as ASTLiteral).raw.toString(), ['string']);
       case ASTType.NumericLiteral:
@@ -447,16 +441,17 @@ export class LookupHelper {
         return me.resolveIdentifier(closest as ASTIdentifier, outer);
       case ASTType.MemberExpression:
       case ASTType.IndexExpression:
-        return me.resolvePath(closest, outer);
+        return me.resolvePath(closest);
       case ASTType.FunctionDeclaration:
         return me.resolveFunctionDeclaration(
           closest as ASTFunctionStatement,
           outer
         );
       case ASTType.CallStatement:
-        return me.resolveCallStatement(closest as ASTCallStatement, outer);
+        return me.resolveCallStatement(closest as ASTCallStatement);
       case ASTType.CallExpression:
-        return me.resolveCallExpression(closest as ASTCallExpression, outer);
+        return me.resolveCallExpression(closest as ASTCallExpression);
+      case ASTType.NilLiteral:
       case ASTType.StringLiteral:
       case ASTType.NumericLiteral:
       case ASTType.BooleanLiteral:

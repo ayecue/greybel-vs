@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { ASTBase, Parser } from 'greybel-core';
+import { ASTBase, ASTChunkAdvanced, Parser } from 'greybel-core';
 import { TextDocument } from 'vscode';
 
 export interface ParseResult {
@@ -70,6 +70,19 @@ export class DocumentParseQueue extends EventEmitter {
   }
 
   private create(document: TextDocument): ParseResult {
+    const content = document.getText();
+    const parser = new Parser(content, {
+      unsafe: true
+    });
+    const chunk = parser.parseChunk();
+
+    if ((chunk as ASTChunkAdvanced).body?.length > 0) {
+      return {
+        document: chunk,
+        errors: parser.errors
+      };
+    }
+
     try {
       const strictParser = new Parser(document.getText());
       const strictChunk = strictParser.parseChunk();
