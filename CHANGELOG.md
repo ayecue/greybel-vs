@@ -122,3 +122,10 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - remove wrapper boilerplate from main, [@xephael](https://github.com/xephael)
+
+## [1.1.4] - 31-08-2022
+
+### Changed
+
+- update greyscript-meta, added missing general functions
+- update core, added missing natives
