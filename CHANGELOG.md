@@ -102,7 +102,7 @@ All notable changes to this project will be documented in this file.
 - find all identifier now only lookups left side in assignment
 - fix autocomplete + hoverdocs flag in settings
 - update greyscript-meta package, contains updated descriptions + responsive styles
-- update parser and interpreter to support any value as map key, thanks to [@xephael](https://github.com/xephael)
+- update parser and interpreter to support any value as map key, thanks for reporting to [@xephael](https://github.com/xephael)
 - update parser to improve performance regarding automcompletion and hover, generates map of references per line
 
 ### Added
@@ -121,7 +121,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- remove wrapper boilerplate from main, [@xephael](https://github.com/xephael)
+- remove wrapper boilerplate from main, thanks for reporting to [@xephael](https://github.com/xephael)
 
 ## [1.1.4] - 31-08-2022
 
@@ -137,3 +137,10 @@ All notable changes to this project will be documented in this file.
 
 - improve automcompletion + hoverdocs after core update
 - use unsafe flag on document manager
+
+## [1.1.6] - 08-09-2022
+
+### Changed
+
+- fix line count inside multiline strings, thanks for reporting to [@xephael](https://github.com/xephael)
+- fix slice operator parsing, thanks for reporting to [@xephael](https://github.com/xephael)
