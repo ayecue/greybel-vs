@@ -144,3 +144,16 @@ All notable changes to this project will be documented in this file.
 
 - fix line count inside multiline strings, thanks for reporting to [@xephael](https://github.com/xephael)
 - fix slice operator parsing, thanks for reporting to [@xephael](https://github.com/xephael)
+
+## [1.1.7] - 10-09-2022
+
+### Changed
+
+- update meta package which involves a few fixed return types and two missing methods in the file type
+- transpiler won't add the module boilerplate header if there are no actual modules
+- globals declaration in header won't be added if there are no literal optimizations
+- fix behavior of pop intrinsic for map
+- remove meta_info from file intrinsics
+- add allow_import polyfill in file intrinsics
+- add default value info in hoverdocs
+- add obfuscation flag
