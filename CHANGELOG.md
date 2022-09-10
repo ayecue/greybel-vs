@@ -157,3 +157,9 @@ All notable changes to this project will be documented in this file.
 - add allow_import polyfill in file intrinsics
 - add default value info in hoverdocs
 - add obfuscation flag
+
+## [1.1.8] - 10-09-2022
+
+### Changed
+
+- update meta package, minor fix for run code feature
