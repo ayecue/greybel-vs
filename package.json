@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -290,6 +290,11 @@
                     "description": "Excluded namespaces regarding optimization.",
                     "scope": "resource"
                 },
+                "greybel.transpiler.obfuscation": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Allow special characters when uglifying."
+                },
                 "greybel.installer": {
                     "type": "boolean",
                     "default": true,
@@ -301,7 +306,8 @@
                     "type": "number",
                     "default": 155000,
                     "minimum": 1000,
-                    "description": "Amount of characters allowed in one file before splitting when creating installer."
+                    "description": "Amount of characters allowed in one file before splitting when creating installer.",
+                    "when": "!isWeb"
                 }
             }
         },
@@ -362,13 +368,13 @@
     "dependencies": {
         "@vscode/debugadapter": "^1.51.1",
         "@vscode/debugprotocol": "^1.51.0",
-        "greybel-core": "^0.4.6",
-        "greybel-gh-mock-intrinsics": "^1.1.7",
-        "greybel-interpreter": "^1.1.9",
-        "greybel-intrinsics": "^1.1.7",
-        "greybel-transpiler": "^0.5.6",
-        "greyscript-core": "^0.4.0",
-        "greyscript-meta": "^1.1.4",
+        "greybel-core": "^0.4.7",
+        "greybel-gh-mock-intrinsics": "^1.1.8",
+        "greybel-interpreter": "^1.2.0",
+        "greybel-intrinsics": "^1.1.8",
+        "greybel-transpiler": "^0.6.0",
+        "greyscript-core": "^0.4.1",
+        "greyscript-meta": "^1.1.5",
         "react-string-replace": "^1.1.0",
         "text-encoder-lite": "^2.0.0"
     },

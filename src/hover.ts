@@ -130,7 +130,7 @@ export function activate(_context: ExtensionContext) {
           const argValues = args
             .map(
               (item) =>
-                `${item.label}${item.opt ? '?' : ''}: ${formatType(item.type)}`
+                `${item.label}${item.opt ? '?' : ''}: ${formatType(item.type)}${item.default ? ` = ${item.default}` : ''}`
             )
             .join(', ');
 

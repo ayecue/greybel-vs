@@ -32,6 +32,7 @@ export function activate(context: ExtensionContext) {
         config.get<object>('transpiler.environmentVariables') || {};
       const excludedNamespacesFromConfig =
         config.get<string[]>('transpiler.excludedNamespaces') || [];
+      const obfuscation = config.get<boolean>('transpiler.obfuscation');
       let buildType = BuildType.DEFAULT;
 
       if (buildTypeFromConfig === 'Uglify') {
@@ -46,6 +47,7 @@ export function activate(context: ExtensionContext) {
         environmentVariables: new Map(
           Object.entries(environmentVariablesFromConfig)
         ),
+        obfuscation,
         disableLiteralsOptimization: config.get('transpiler.dlo'),
         disableNamespacesOptimization: config.get('transpiler.dno'),
         excludedNamespaces: excludedNamespacesFromConfig
