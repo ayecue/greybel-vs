@@ -302,11 +302,12 @@
                     "when": "!isWeb",
                     "scope": "resource"
                 },
-                "greybel.installer.maxChars": {
+                "greybel.transpiler.installer.maxChars": {
                     "type": "number",
                     "default": 155000,
                     "minimum": 1000,
-                    "description": "Amount of characters allowed in one file before splitting when creating installer."
+                    "description": "Amount of characters allowed in one file before splitting when creating installer.",
+                    "when": "!isWeb"
                 }
             }
         },

@@ -269,9 +269,9 @@ export function activate(context: ExtensionContext) {
         vscode.workspace.fs.writeFile(fullPath, new TextEncoder().encode(code));
       });
 
-      if (config.get('installer')) {
+      if (config.get('greybel.installer')) {
         const maxChars =
-          config.get<number>('installer.maxChars') || 155000;
+          config.get<number>('transpiler.installer.maxChars') || 155000;
 
         vscode.window.showInformationMessage('Creating installer.', {
           modal: false
