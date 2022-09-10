@@ -290,6 +290,11 @@
                     "description": "Excluded namespaces regarding optimization.",
                     "scope": "resource"
                 },
+                "greybel.transpiler.obfuscation": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Allow special characters when uglifying."
+                },
                 "greybel.installer": {
                     "type": "boolean",
                     "default": true,
@@ -297,7 +302,7 @@
                     "when": "!isWeb",
                     "scope": "resource"
                 },
-                "greybel.transpiler.installer.maxChars": {
+                "greybel.installer.maxChars": {
                     "type": "number",
                     "default": 155000,
                     "minimum": 1000,
