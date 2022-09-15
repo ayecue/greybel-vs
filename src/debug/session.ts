@@ -417,6 +417,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
     args: DebugProtocol.EvaluateArguments
   ): Promise<void> {
     try {
+      this._runtime.debugger.setBreakpoint(false);
       await this._runtime.injectInLastContext(args.expression);
 
       response.body = {
@@ -428,6 +429,8 @@ export class GreybelDebugSession extends LoggingDebugSession {
         result: err.toString(),
         variablesReference: 0
       };
+    } finally {
+      this._runtime.debugger.setBreakpoint(true);
     }
 
     this.sendResponse(response);

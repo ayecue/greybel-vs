@@ -163,3 +163,11 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - update meta package, minor fix for run code feature
+
+## [1.1.9] - 15-09-2022
+
+### Changed
+
+- minor fix for file.get_content, return empty string instead of undefined, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
+- add sort key logic in sort intrinsic, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
+- deactivate breakpoint for evaluation during active breakpoint in debugger
