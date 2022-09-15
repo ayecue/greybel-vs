@@ -171,3 +171,4 @@ All notable changes to this project will be documented in this file.
 - minor fix for file.get_content, return empty string instead of undefined, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
 - add sort key logic in sort intrinsic, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
 - deactivate breakpoint for evaluation during active breakpoint in debugger
+- keep pending state after injection
