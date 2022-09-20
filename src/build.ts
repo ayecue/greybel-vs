@@ -253,7 +253,7 @@ export function activate(context: ExtensionContext) {
         ? Uri.file(vscode.workspace.rootPath)
         : Uri.joinPath(Uri.file(editor.document.fileName), '..');
       const buildPath = Uri.joinPath(rootPath, './build');
-      const targetRoot = Uri.joinPath(Uri.file(target), '..');
+      const targetRootSegments = Uri.joinPath(Uri.file(target), '..').path.split('/');
 
       try {
         await vscode.workspace.fs.delete(buildPath, { recursive: true });
@@ -263,8 +263,25 @@ export function activate(context: ExtensionContext) {
 
       await vscode.workspace.fs.createDirectory(buildPath);
 
+      const getRelativePath = (path: string) => {
+        const pathSegments = path.split(PseudoFS.sep);
+        const filtered = [];
+  
+        for (const segment of targetRootSegments) {
+          const current = pathSegments.shift();
+  
+          if (current !== segment) {
+            break;
+          }
+  
+          filtered.push(current);
+        }
+  
+        return path.replace(`${filtered.join(PseudoFS.sep)}`, '.');
+      };
+
       Object.entries(result).forEach(([file, code]) => {
-        const relativePath = file.replace(targetRoot.fsPath, '.');
+        const relativePath = getRelativePath(file);
         const fullPath = Uri.joinPath(buildPath, relativePath);
         vscode.workspace.fs.writeFile(fullPath, new TextEncoder().encode(code));
       });

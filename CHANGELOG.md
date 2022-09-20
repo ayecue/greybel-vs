@@ -170,5 +170,14 @@ All notable changes to this project will be documented in this file.
 
 - minor fix for file.get_content, return empty string instead of undefined, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
 - add sort key logic in sort intrinsic, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
+- add missing tan intrinsics
+- add same errors in basic intrinsics as in ms
+- use asap for nextTick behavior in interpreter
+- implement format_columns logic
+- implement format_columns logic
+- improve output handler logic
 - deactivate breakpoint for evaluation during active breakpoint in debugger
 - keep pending state after injection
+- update api browser with latest meta version
+- support nested import_code
+- support outer imports using ".."

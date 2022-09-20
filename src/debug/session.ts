@@ -21,7 +21,9 @@ import {
   Defaults,
   HandlerContainer,
   Interpreter,
-  OperationContext
+  KeyEvent,
+  OperationContext,
+  OutputHandler
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import vscode from 'vscode';
@@ -64,73 +66,67 @@ export class GreybelDebugSession extends LoggingDebugSession {
 
     // this debugger uses zero-based lines and columns
     const me = this;
-    const vsAPI = new Map();
+    
 
-    vsAPI.set(
-      'print',
-      CustomFunction.createExternal(
-        'print',
-        (
-          _ctx: OperationContext,
-          _self: CustomValue,
-          args: Map<string, CustomValue>
-        ): Promise<CustomValue> => {
-          me._messageQueue?.print(args.get('value')?.toString() || '');
-          return Promise.resolve(Defaults.Void);
-        }
-      ).addArgument('value')
-    );
-
-    vsAPI.set(
-      'exit',
-      CustomFunction.createExternal(
-        'exit',
-        (
-          _ctx: OperationContext,
-          _self: CustomValue,
-          args: Map<string, CustomValue>
-        ): Promise<CustomValue> => {
-          me._messageQueue?.print(args.get('value')?.toString() || '');
-          me._runtime.exit();
-          return Promise.resolve(Defaults.Void);
-        }
-      ).addArgument('value')
-    );
-
-    vsAPI.set(
-      'user_input',
-      CustomFunction.createExternal(
-        'user_input',
-        async (
-          _ctx: OperationContext,
-          _self: CustomValue,
-          args: Map<string, CustomValue>
-        ): Promise<CustomValue> => {
-          const message = args.get('message')?.toString();
-          // const isPassword = args.get('isPassword')?.toTruthy();
-
-          return new Promise((resolve) => {
-            vscode.window
-              .showInputBox({
-                title: 'user_input',
-                prompt: message,
-                ignoreFocusOut: true
-              })
-              .then(
-                (value: any) => {
-                  resolve(new CustomString(value.toString()));
-                },
-                (_value: any) => {
-                  resolve(Defaults.Void);
-                }
-              );
+    const VSOutputHandler = class extends OutputHandler {
+      print(message: string) {
+        me._messageQueue?.print(message);
+      }
+  
+      clear() {
+        //TODO: add clear
+      }
+  
+      progress(timeout: number): Promise<void> {
+        //TODO: add progress
+        const startTime = Date.now();
+        const max = 20;
+  
+        return new Promise((resolve, _reject) => {
+          const interval = setInterval(() => {
+            const currentTime = Date.now();
+            const elapsed = currentTime - startTime;
+  
+            if (elapsed > timeout) {
+              clearInterval(interval);
+              resolve();
+              return;
+            }
+  
+            const elapsedPercentage = (100 * elapsed) / timeout;
+            const progress = Math.floor((elapsedPercentage * max) / 100);
+            const right = max - progress;
+  
           });
-        }
-      )
-        .addArgument('message')
-        .addArgument('isPassword')
-        .addArgument('anyKey')
-    );
+        });
+      }
+  
+      waitForInput(_isPassword: boolean): Promise<string> {
+        return new Promise((resolve) => {
+          vscode.window
+            .showInputBox({
+              title: 'user_input',
+              ignoreFocusOut: true
+            })
+            .then(
+              (value: any) => {
+                resolve(value.toString());
+              },
+              (_value: any) => {
+                resolve('');
+              }
+            );
+        });
+      }
+  
+      waitForKeyPress(): Promise<KeyEvent> {
+        //TODO: add key press
+        return Promise.resolve({
+          keyCode: 13,
+          code: 'Enter'
+        });
+      }
+    };
 
     me.setDebuggerLinesStartAt1(false);
     me.setDebuggerColumnsStartAt1(false);
@@ -138,10 +134,11 @@ export class GreybelDebugSession extends LoggingDebugSession {
     this._messageQueue = null;
     this._runtime = new Interpreter({
       handler: new HandlerContainer({
-        resourceHandler: new InterpreterResourceProvider()
+        resourceHandler: new InterpreterResourceProvider(),
+        outputHandler: new VSOutputHandler()
       }),
       debugger: new GrebyelDebugger(me),
-      api: initIntrinsics(initGHIntrinsics(vsAPI))
+      api: initIntrinsics(initGHIntrinsics())
     });
   }
 
