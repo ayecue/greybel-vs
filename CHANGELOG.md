@@ -179,5 +179,6 @@ All notable changes to this project will be documented in this file.
 - deactivate breakpoint for evaluation during active breakpoint in debugger
 - keep pending state after injection
 - update api browser with latest meta version
+- update parser with removed ";" checks
 - support nested import_code
 - support outer imports using ".."
