@@ -1,8 +1,13 @@
 import { LoggingDebugSession, OutputEvent } from '@vscode/debugadapter';
 import { DebugProtocol } from '@vscode/debugprotocol';
 
+export interface MessageBufferItem {
+  message: string;
+  line?: number;
+}
+
 export default class MessageQueue {
-  private buffer: string[];
+  private buffer: MessageBufferItem[];
   private pending: boolean;
   private ending: boolean;
   private session: LoggingDebugSession;
@@ -16,21 +21,31 @@ export default class MessageQueue {
 
   private digest() {
     const me = this;
-    const message = me.buffer.shift();
+    const item = me.buffer.shift();
 
-    if (!message) {
+    if (!item) {
       me.pending = false;
       return;
     }
 
     me.pending = true;
 
-    const e: DebugProtocol.OutputEvent = new OutputEvent(`${message}\n`);
+    const e: DebugProtocol.OutputEvent = new OutputEvent(
+      `${item.message}\n`,
+      'stdout'
+    );
+
+    e.body.line = item.line;
+
     me.session.sendEvent(e);
 
     process.nextTick(() => {
       me.digest();
     });
+  }
+
+  clear() {
+    this.print({ message: '\n'.repeat(20) });
   }
 
   private update() {
@@ -43,14 +58,14 @@ export default class MessageQueue {
     me.digest();
   }
 
-  public print(message: string): MessageQueue {
+  public print(item: MessageBufferItem): MessageQueue {
     const me = this;
 
-    if (typeof message !== 'string') {
+    if (typeof item !== 'object') {
       return me;
     }
 
-    me.buffer.push(message);
+    me.buffer.push(item);
     me.update();
 
     return me;

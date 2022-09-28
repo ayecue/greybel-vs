@@ -14,11 +14,8 @@ import { DebugProtocol } from '@vscode/debugprotocol';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   ContextType,
-  CustomFunction,
-  CustomString,
   CustomValue,
   Debugger,
-  Defaults,
   HandlerContainer,
   Interpreter,
   KeyEvent,
@@ -26,8 +23,10 @@ import {
   OutputHandler
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
-import vscode from 'vscode';
+import vscode, { CancellationToken, Progress } from 'vscode';
 
+import createKeyEventView from '../helper/key-event-view';
+import transform from '../helper/text-mesh-transform';
 import { InterpreterResourceProvider, PseudoFS } from '../resource';
 import MessageQueue from './message-queue';
 
@@ -66,41 +65,58 @@ export class GreybelDebugSession extends LoggingDebugSession {
 
     // this debugger uses zero-based lines and columns
     const me = this;
-    
 
     const VSOutputHandler = class extends OutputHandler {
       print(message: string) {
-        me._messageQueue?.print(message);
+        const transformed = transform(message);
+        const opc = me._runtime.apiContext.getLastActive();
+        let line;
+
+        if (opc.stackItem) {
+          line = opc.stackItem.start?.line;
+        }
+
+        me._messageQueue?.print({ message: transformed, line });
       }
-  
+
       clear() {
-        //TODO: add clear
+        me._messageQueue?.clear();
       }
-  
-      progress(timeout: number): Promise<void> {
-        //TODO: add progress
+
+      async progress(timeout: number): Promise<void> {
         const startTime = Date.now();
-        const max = 20;
-  
-        return new Promise((resolve, _reject) => {
-          const interval = setInterval(() => {
-            const currentTime = Date.now();
-            const elapsed = currentTime - startTime;
-  
-            if (elapsed > timeout) {
-              clearInterval(interval);
-              resolve();
-              return;
-            }
-  
-            const elapsedPercentage = (100 * elapsed) / timeout;
-            const progress = Math.floor((elapsedPercentage * max) / 100);
-            const right = max - progress;
-  
-          });
-        });
+
+        await vscode.window.withProgress(
+          {
+            location: vscode.ProgressLocation.Notification,
+            title: 'Pending function...'
+          },
+          (
+            progress: Progress<{ increment: number }>,
+            _token: CancellationToken
+          ): Thenable<void> => {
+            progress.report({ increment: 0 });
+
+            return new Promise((resolve, _reject) => {
+              const interval = setInterval(() => {
+                const currentTime = Date.now();
+                const elapsed = currentTime - startTime;
+
+                if (elapsed > timeout) {
+                  clearInterval(interval);
+                  resolve();
+                  return;
+                }
+
+                const elapsedPercentage = (100 * elapsed) / timeout;
+
+                progress.report({ increment: elapsedPercentage });
+              });
+            });
+          }
+        );
       }
-  
+
       waitForInput(_isPassword: boolean): Promise<string> {
         return new Promise((resolve) => {
           vscode.window
@@ -118,12 +134,12 @@ export class GreybelDebugSession extends LoggingDebugSession {
             );
         });
       }
-  
+
       waitForKeyPress(): Promise<KeyEvent> {
-        //TODO: add key press
-        return Promise.resolve({
-          keyCode: 13,
-          code: 'Enter'
+        return new Promise((resolve) => {
+          createKeyEventView((event: KeyEvent) => {
+            resolve(event);
+          });
         });
       }
     };

@@ -10,7 +10,7 @@ export function activate(context: ExtensionContext) {
     const panel = vscode.window.createWebviewPanel(
       'greyScriptAPI',
       'GreyScript API',
-      vscode.ViewColumn.One,
+      vscode.ViewColumn.Beside,
       {
         enableScripts: true,
         localResourceRoots: [Uri.file(context.extensionPath)]
