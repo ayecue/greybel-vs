@@ -256,7 +256,7 @@ export function activate(context: ExtensionContext) {
       const targetRootSegments = Uri.joinPath(
         Uri.file(target),
         '..'
-      ).path.split('/');
+      ).fsPath.split(PseudoFS.sep);
 
       try {
         await vscode.workspace.fs.delete(buildPath, { recursive: true });
