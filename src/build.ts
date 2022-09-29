@@ -115,13 +115,6 @@ function createImportList(
   mainTarget: string
 ): any[] {
   const pseudoRoot = PseudoFS.dirname(mainTarget) || '';
-  const list = [
-    {
-      filepath: mainTarget,
-      pseudoFilepath: PseudoFS.basename(mainTarget),
-      content: parseResult[mainTarget]
-    }
-  ];
   const imports = Object.entries(parseResult).map(([target, code]) => {
     return {
       filepath: target,
@@ -130,7 +123,7 @@ function createImportList(
     };
   });
 
-  return list.concat(imports);
+  return imports;
 }
 
 function createInstaller(
