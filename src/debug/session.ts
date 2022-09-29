@@ -14,18 +14,19 @@ import { DebugProtocol } from '@vscode/debugprotocol';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   ContextType,
-  CustomFunction,
-  CustomString,
   CustomValue,
   Debugger,
-  Defaults,
   HandlerContainer,
   Interpreter,
-  OperationContext
+  KeyEvent,
+  OperationContext,
+  OutputHandler
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
-import vscode from 'vscode';
+import vscode, { CancellationToken, Progress } from 'vscode';
 
+import createKeyEventView from '../helper/key-event-view';
+import transform from '../helper/text-mesh-transform';
 import { InterpreterResourceProvider, PseudoFS } from '../resource';
 import MessageQueue from './message-queue';
 
@@ -64,73 +65,84 @@ export class GreybelDebugSession extends LoggingDebugSession {
 
     // this debugger uses zero-based lines and columns
     const me = this;
-    const vsAPI = new Map();
 
-    vsAPI.set(
-      'print',
-      CustomFunction.createExternal(
-        'print',
-        (
-          _ctx: OperationContext,
-          _self: CustomValue,
-          args: Map<string, CustomValue>
-        ): Promise<CustomValue> => {
-          me._messageQueue?.print(args.get('value')?.toString() || '');
-          return Promise.resolve(Defaults.Void);
+    const VSOutputHandler = class extends OutputHandler {
+      print(message: string) {
+        const transformed = transform(message);
+        const opc = me._runtime.apiContext.getLastActive();
+        let line;
+
+        if (opc.stackItem) {
+          line = opc.stackItem.start?.line;
         }
-      ).addArgument('value')
-    );
 
-    vsAPI.set(
-      'exit',
-      CustomFunction.createExternal(
-        'exit',
-        (
-          _ctx: OperationContext,
-          _self: CustomValue,
-          args: Map<string, CustomValue>
-        ): Promise<CustomValue> => {
-          me._messageQueue?.print(args.get('value')?.toString() || '');
-          me._runtime.exit();
-          return Promise.resolve(Defaults.Void);
-        }
-      ).addArgument('value')
-    );
+        me._messageQueue?.print({ message: transformed, line });
+      }
 
-    vsAPI.set(
-      'user_input',
-      CustomFunction.createExternal(
-        'user_input',
-        async (
-          _ctx: OperationContext,
-          _self: CustomValue,
-          args: Map<string, CustomValue>
-        ): Promise<CustomValue> => {
-          const message = args.get('message')?.toString();
-          // const isPassword = args.get('isPassword')?.toTruthy();
+      clear() {
+        me._messageQueue?.clear();
+      }
 
-          return new Promise((resolve) => {
-            vscode.window
-              .showInputBox({
-                title: 'user_input',
-                prompt: message,
-                ignoreFocusOut: true
-              })
-              .then(
-                (value: any) => {
-                  resolve(new CustomString(value.toString()));
-                },
-                (_value: any) => {
-                  resolve(Defaults.Void);
+      async progress(timeout: number): Promise<void> {
+        const startTime = Date.now();
+
+        await vscode.window.withProgress(
+          {
+            location: vscode.ProgressLocation.Notification,
+            title: 'Pending function...'
+          },
+          (
+            progress: Progress<{ increment: number }>,
+            _token: CancellationToken
+          ): Thenable<void> => {
+            progress.report({ increment: 0 });
+
+            return new Promise((resolve, _reject) => {
+              const interval = setInterval(() => {
+                const currentTime = Date.now();
+                const elapsed = currentTime - startTime;
+
+                if (elapsed > timeout) {
+                  clearInterval(interval);
+                  resolve();
+                  return;
                 }
-              );
+
+                const elapsedPercentage = (100 * elapsed) / timeout;
+
+                progress.report({ increment: elapsedPercentage });
+              });
+            });
+          }
+        );
+      }
+
+      waitForInput(_isPassword: boolean): Promise<string> {
+        return new Promise((resolve) => {
+          vscode.window
+            .showInputBox({
+              title: 'user_input',
+              ignoreFocusOut: true
+            })
+            .then(
+              (value: any) => {
+                resolve(value.toString());
+              },
+              (_value: any) => {
+                resolve('');
+              }
+            );
+        });
+      }
+
+      waitForKeyPress(): Promise<KeyEvent> {
+        return new Promise((resolve) => {
+          createKeyEventView((event: KeyEvent) => {
+            resolve(event);
           });
-        }
-      )
-        .addArgument('message')
-        .addArgument('isPassword')
-        .addArgument('anyKey')
-    );
+        });
+      }
+    };
 
     me.setDebuggerLinesStartAt1(false);
     me.setDebuggerColumnsStartAt1(false);
@@ -138,10 +150,11 @@ export class GreybelDebugSession extends LoggingDebugSession {
     this._messageQueue = null;
     this._runtime = new Interpreter({
       handler: new HandlerContainer({
-        resourceHandler: new InterpreterResourceProvider()
+        resourceHandler: new InterpreterResourceProvider(),
+        outputHandler: new VSOutputHandler()
       }),
       debugger: new GrebyelDebugger(me),
-      api: initIntrinsics(initGHIntrinsics(vsAPI))
+      api: initIntrinsics(initGHIntrinsics())
     });
   }
 
@@ -417,6 +430,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
     args: DebugProtocol.EvaluateArguments
   ): Promise<void> {
     try {
+      this._runtime.debugger.setBreakpoint(false);
       await this._runtime.injectInLastContext(args.expression);
 
       response.body = {
@@ -428,6 +442,8 @@ export class GreybelDebugSession extends LoggingDebugSession {
         result: err.toString(),
         variablesReference: 0
       };
+    } finally {
+      this._runtime.debugger.setBreakpoint(true);
     }
 
     this.sendResponse(response);

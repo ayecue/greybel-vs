@@ -31,6 +31,6 @@
 				"${workspaceFolder}/extension.browser.js"
 			],
 			"preLaunchTask": "npm: compile"
-		},
+		}
     ]
 }
