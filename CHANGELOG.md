@@ -164,7 +164,7 @@ All notable changes to this project will be documented in this file.
 
 - update meta package, minor fix for run code feature
 
-## [1.1.9] - 28-09-2022
+## [1.1.9] - 29-09-2022
 
 ### Changed
 
