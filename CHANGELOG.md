@@ -198,3 +198,9 @@ All notable changes to this project will be documented in this file.
 - fix [List can be different even if the same](https://github.com/ayecue/greybel-js/issues/32), thanks for reporting [@brahermoon](https://github.com/brahermoon)
 - add __isa logic for maps
 - minor TextMesh Pro support for output
+
+## [1.4.4] - 01-10-2022
+
+- fix shuffle intrinsic for maps
+- fix possible overflow in core parser
+- fix kernel_version intrinsic
