@@ -199,7 +199,9 @@ All notable changes to this project will be documented in this file.
 - add __isa logic for maps
 - minor TextMesh Pro support for output
 
-## [1.4.4] - 01-10-2022
+## [1.2.0] - 01-10-2022
+
+### Changed
 
 - fix shuffle intrinsic for maps
 - fix possible overflow in core parser
