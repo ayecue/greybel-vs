@@ -14,10 +14,11 @@ import {
   ASTListConstructorExpression,
   ASTMapConstructorExpression,
   ASTMemberExpression,
+  ASTParenthesisExpression,
   ASTReturnStatement,
   ASTUnaryExpression,
   ASTWhileStatement
-} from 'greybel-core';
+} from 'greyscript-core';
 
 export interface ScraperMap {
   [key: string]: (item: any, level: number) => void;
@@ -27,6 +28,9 @@ const getScraperMap = function (
   visit: (o: ASTBase, level: number) => any
 ): ScraperMap {
   return {
+    ParenthesisExpression: (item: ASTParenthesisExpression, level: number) => {
+      visit(item.expression, level);
+    },
     AssignmentStatement: function (
       item: ASTAssignmentStatement,
       level: number
