@@ -58,6 +58,8 @@ Refresh AST cache.
 
 ### Transform
 
+Transforms currently selected file.
+
 Transform output depends on build type. Currently available types:
 - Default (active by default): Nothing special
 - Uglify: Minifies code
