@@ -6,6 +6,8 @@ Based on [greybel-js](https://github.com/ayecue/greybel-js).
 
 If you need some GreyScript API information you can also checkout [greyscript-meta](https://greyscript-meta.netlify.app/).
 
+Supports newest version `0.8.4478a` (experimental).
+
 ## Usage
 
 Automatically detects `.gs` and `.src` files.
