@@ -230,3 +230,5 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - fix outer behavior
+- fix token end for hover tooltip
+- support multiple statements at same line for hover tooltips
