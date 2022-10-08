@@ -213,3 +213,12 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - update core in env script builder
+
+## [1.2.2] - 07-10-2022
+
+- rework parser/lexer to support newest version (might introduced some new bugs, please report if you find anything)
+- implement outer, get_custom_object, log, bitXor, bitAnd, bitOr, insert, yield
+- optimize transpiler output, removed unnecessary parenthesis
+- update meta with new descriptions
+- drop support for scuffed if syntax
+- drop support for bugged index call

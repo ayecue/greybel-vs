@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
-import { ASTBase, ASTChunkAdvanced, Parser } from 'greybel-core';
+import { ASTChunkAdvanced, Parser } from 'greybel-core';
+import { ASTBase } from 'greyscript-core';
 import { TextDocument } from 'vscode';
 
 export interface ParseResult {

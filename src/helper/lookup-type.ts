@@ -1,6 +1,7 @@
 import {
   ASTAssignmentStatement,
   ASTBase,
+  ASTBaseBlockWithScope,
   ASTCallExpression,
   ASTCallStatement,
   ASTChunk,
@@ -8,9 +9,9 @@ import {
   ASTIdentifier,
   ASTIndexExpression,
   ASTLiteral,
-  ASTMemberExpression
-} from 'greybel-core';
-import { ASTBaseBlockWithScope, ASTType } from 'greyscript-core';
+  ASTMemberExpression,
+  ASTType
+} from 'greyscript-core';
 import {
   getDefinition,
   getDefinitions,
