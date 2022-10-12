@@ -232,3 +232,9 @@ All notable changes to this project will be documented in this file.
 - fix outer behavior
 - fix token end for hover tooltip
 - support multiple statements at same line for hover tooltips
+
+## [1.2.4] - 12-10-2022
+
+### Changed
+
+- fix parser exception when a combination of block and comment on the same line appears, thanks for reporting to [@xephael](https://github.com/xephael)
