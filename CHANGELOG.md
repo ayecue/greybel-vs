@@ -238,3 +238,11 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - fix parser exception when a combination of block and comment on the same line appears, thanks for reporting to [@xephael](https://github.com/xephael)
+
+## [1.2.5] - 16-10-2022
+
+### Changed
+
+- filter current connected wifi from list which is presented when looking for close wifis
+- minor fix in used_ports intrinsic which caused unwanted behavior
+- service ports are closer to ingame service port numbers
