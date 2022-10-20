@@ -55,17 +55,17 @@ Jumps to the next existing syntax error.
 ### Transform
 
 Transforms selected file into one of three possible output types:
-- Default (active by default): Minor optimization
-- Uglify: Minifies code
-- Beautify: Beautifies code
+- Default (active by default): Minor optimizations
+- Uglify: Minified
+- Beautify: Beautified
 
-It will also fill environment values with it's value which you can define in the configuration of this extension.
+It will also fill environment values with it's value which you are able to define in the configuration of this extension.
 
 More details [here](https://github.com/ayecue/greybel-js#transpiler).
 
 ### Build
 
-Transforms and bundles your files which makes it easier to import them into GreyHack. As described in [transform section](#transform) it as three possible transformation types and supports environment variables as well.
+Transforms and bundles your files which makes it easier to import them into GreyHack. As described in the [transform section](#transform) it has three possible transformation types and supports environment variables as well.
 
 Keep in mind to activate the installer to enable bundling in case you are using `import_code` in your code.
 
