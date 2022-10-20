@@ -1,12 +1,10 @@
 # greybel-vs
 
-GreyScript toolkit for [Grey Hack](https://greyhackgame.com). Includes highlighting and interpreter among other features. Checkout the [changelog](https://github.com/ayecue/greybel-vs/blob/main/CHANGELOG.md) to get information on the latest changes.
+GreyScript toolkit for [Grey Hack](https://greyhackgame.com). Includes highlighting, code execution, bundling and minifying among other features. Checkout the [changelog](https://github.com/ayecue/greybel-vs/blob/main/CHANGELOG.md) to get information on the latest changes.
 
 Based on [greybel-js](https://github.com/ayecue/greybel-js).
 
 If you need some GreyScript API information you can also checkout [greyscript-meta](https://greyscript-meta.netlify.app/).
-
-Supports newest version `0.8.4478a` (experimental).
 
 ## Usage
 
@@ -52,41 +50,34 @@ Do not forget to setup your plugin to your needs. Following settings are availab
 
 ### Goto Error
 
-Highlights the next existing syntax error.
-
-### Refresh
-
-Refresh AST cache.
+Jumps to the next existing syntax error.
 
 ### Transform
 
-Transforms currently selected file.
-
-Transform output depends on build type. Currently available types:
-- Default (active by default): Nothing special
+Transforms selected file into one of three possible output types:
+- Default (active by default): Minor optimization
 - Uglify: Minifies code
 - Beautify: Beautifies code
 
-You can also define environment variables which you can use via `#envar environmentVariableName`.
+It will also fill environment values with it's value which you can define in the configuration of this extension.
 
-More details [here](https://github.com/ayecue/greybel-js#features).
+More details [here](https://github.com/ayecue/greybel-js#transpiler).
 
 ### Build
 
-Build your files and put them into a `build` folder.
+Transforms and bundles your files which makes it easier to import them into GreyHack. As described in [transform section](#transform) it as three possible transformation types and supports environment variables as well.
 
-Building output depends on build type. Currently available types:
-- Default (active by default): Nothing special
-- Uglify: Minifies code
-- Beautify: Beautifies code
-
-You can also define environment variables which you can use via `#envar environmentVariableName`.
+Keep in mind to activate the installer to enable bundling in case you are using `import_code` in your code.
 
 More details [here](https://github.com/ayecue/greybel-js#transpiler).
 
 ### Interpreter
 
-Enables you to execute code, it includes all intrinsics Grey Hack would too (DISCLAIMER: Don't expect 1:1 behaviour since this is a custom implementation, more information [here](https://github.com/ayecue/greybel-js#interpreter), if you notice unexpected behaviour please report it)
+Executes GreyScript code. Almost all intrinsics are fully supported. To get more information which intrinsics are supported [click here](https://github.com/ayecue/greybel-js#greyscript-api-support).
+
+It also features a [mock environment](https://github.com/ayecue/greybel-js#local-environment) and [debugger](#debugger).
+
+More details [here](https://github.com/ayecue/greybel-js#interpreter).
 
 ### Debugger
 
@@ -107,6 +98,10 @@ Gives you information about syntax errors in your code.
 ### API Browser
 
 API Browser for GreyScript. Version of [greyscript-meta](https://greyscript-meta.netlify.app/) in Visual Studio Code.
+
+### Refresh
+
+Will refresh the AST Cache which is used for diagnostics, hover tooltips and autocompletion.
 
 ## Copyright
 
