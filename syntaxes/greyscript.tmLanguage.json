@@ -5,7 +5,7 @@
 	"patterns": [
 		{
 			"name": "keyword.control.greyscript",
-			"match": "\\b(if|then|return|end|else|function|and|or|in|not|continue|break|while|for|new|from)\\b"
+			"match": "\\b(if|then|return|end|else|function|and|or|in|not|continue|break|while|for|new|from|isa)\\b"
 		},
 		{
 			"name": "keyword.control.greyscript",
@@ -110,6 +110,10 @@
 		{
 			"name": "variable.language.self.greyscript",
 			"match": "\\b(self)\\b"
+		},
+		{
+			"name": "variable.language.super.greyscript",
+			"match": "\\b(super)\\b"
 		},
 		{
 			"name": "constant.language.greyscript",

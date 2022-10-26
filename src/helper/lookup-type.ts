@@ -142,7 +142,7 @@ export class LookupHelper {
         }
 
         return {
-          valid: 
+          valid:
             startLine <= position.line &&
             startCharacter <= position.character &&
             endLine >= position.line &&
