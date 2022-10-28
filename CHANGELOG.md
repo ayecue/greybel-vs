@@ -257,3 +257,9 @@ All notable changes to this project will be documented in this file.
 - exclude super and isa from uglify
 - improve function declaration uglify
 - improve interpreter map __isa logic
+
+## [1.2.7] - 28-10-2022
+
+### Changed
+
+- update meta
