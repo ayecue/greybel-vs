@@ -36,8 +36,8 @@ export function activate(context: ExtensionContext) {
           <link rel="stylesheet" type="text/css" href="${panel.webview.asWebviewUri(
             indexStylesheet
           )}">
-        <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
       </head>
       <body>
         <div id="root">
