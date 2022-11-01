@@ -263,3 +263,9 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - update meta
+
+## [1.2.8] - 01-11-2022
+
+### Changed
+
+- use proper context in super call
