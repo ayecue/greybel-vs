@@ -269,3 +269,10 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - use proper context in super call
+
+## [1.2.9] - 04-11-2022
+
+### Changed
+
+- allow empty string in split
+- use regexp in split
