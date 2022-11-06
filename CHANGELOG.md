@@ -284,3 +284,10 @@ All notable changes to this project will be documented in this file.
 - fix state forwarding in context
 - interfaces use maps instead of custom interface
 - revert regexp in split
+
+## [1.3.1] - 06-11-2022
+
+### Changed
+
+- fix router intrinsics in regards of forwarded ports
+- fix bug in meta lib overflow
