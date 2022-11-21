@@ -10,6 +10,7 @@ import { activate as activateNextError } from './next-error';
 import { activate as activateRefresh } from './refresh';
 import { activate as activateSubscriptions } from './subscriptions';
 import { activate as activateTransform } from './transform';
+import { activate as activateDefinition } from './definition';
 
 export function activate(context: ExtensionContext) {
   const config = vscode.workspace.getConfiguration('greybel');
@@ -29,6 +30,7 @@ export function activate(context: ExtensionContext) {
   activateBuild(context);
   activateTransform(context);
   activateNextError(context);
+  activateDefinition(context);
 
   if (config.get<boolean>('diagnostic')) {
     activateDiagnostic(context);
