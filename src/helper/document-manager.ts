@@ -1,9 +1,10 @@
 import EventEmitter from 'events';
 import { ASTChunkAdvanced, Parser } from 'greybel-core';
 import { ASTBase } from 'greyscript-core';
-import { TextDocument } from 'vscode';
+import vscode, { TextDocument } from 'vscode';
 
 export interface ParseResult {
+  textDocument: TextDocument;
   document: ASTBase | null;
   errors: Error[];
 }
@@ -79,6 +80,7 @@ export class DocumentParseQueue extends EventEmitter {
 
     if ((chunk as ASTChunkAdvanced).body?.length > 0) {
       return {
+        textDocument: document,
         document: chunk,
         errors: parser.errors
       };
@@ -89,11 +91,13 @@ export class DocumentParseQueue extends EventEmitter {
       const strictChunk = strictParser.parseChunk();
 
       return {
+        textDocument: document,
         document: strictChunk,
         errors: []
       };
     } catch (err: any) {
       return {
+        textDocument: document,
         document: null,
         errors: [err]
       };
@@ -115,6 +119,11 @@ export class DocumentParseQueue extends EventEmitter {
     this.resume();
 
     return true;
+  }
+
+  async open(target: string): Promise<ParseResult> {
+    const textDocument = await vscode.workspace.openTextDocument(target);
+    return this.get(textDocument);
   }
 
   get(document: TextDocument): ParseResult {
