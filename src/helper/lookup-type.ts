@@ -83,6 +83,24 @@ export class LookupHelper {
       }
     }
 
+    if (root instanceof ASTChunk) {
+      const scopes: ASTBaseBlockWithScope[] = [root, ...root.scopes];
+
+      for (const item of scopes) {
+        for (const item of assignments) {
+          const current = ASTStringify(item.variable);
+
+          if (!current.startsWith('globals.')) {
+            continue;
+          }
+
+          if (current.replace(/^globals./, '') === identifier) {
+            result.push(item);
+          }
+        }
+      }
+    }
+
     return result;
   }
 
