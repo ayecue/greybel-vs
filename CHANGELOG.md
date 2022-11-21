@@ -291,3 +291,10 @@ All notable changes to this project will be documented in this file.
 
 - fix router intrinsics in regards of forwarded ports
 - fix bug in meta lib overflow
+
+## [1.3.2] - 22-11-2022
+
+### Changed
+
+- implement definitions provider
+- use lru cache
