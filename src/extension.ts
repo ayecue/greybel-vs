@@ -10,6 +10,7 @@ import { activate as activateHover } from './hover';
 import { activate as activateNextError } from './next-error';
 import { activate as activateRefresh } from './refresh';
 import { activate as activateSubscriptions } from './subscriptions';
+import { activate as activateSymbol } from './symbol';
 import { activate as activateTransform } from './transform';
 
 export function activate(context: ExtensionContext) {
@@ -31,6 +32,7 @@ export function activate(context: ExtensionContext) {
   activateTransform(context);
   activateNextError(context);
   activateDefinition(context);
+  activateSymbol(context);
 
   if (config.get<boolean>('diagnostic')) {
     activateDiagnostic(context);
