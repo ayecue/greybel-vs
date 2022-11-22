@@ -298,3 +298,5 @@ All notable changes to this project will be documented in this file.
 
 - implement definitions provider
 - use lru cache
+- implement document symbol provider
+- implement workspace symbol provider
