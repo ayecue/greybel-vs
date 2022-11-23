@@ -125,7 +125,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
               ignoreFocusOut: true
             })
             .then(
-              (value: any) => {
+              (value: string = '') => {
                 resolve(value.toString());
               },
               (_value: any) => {
