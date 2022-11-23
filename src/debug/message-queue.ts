@@ -1,9 +1,15 @@
-import { LoggingDebugSession, OutputEvent } from '@vscode/debugadapter';
-import { DebugProtocol } from '@vscode/debugprotocol';
+import { LoggingDebugSession } from '@vscode/debugadapter';
+import chalk from 'chalk';
+import vscode, { Terminal } from 'vscode';
 
 export interface MessageBufferItem {
   message: string;
   line?: number;
+}
+
+export enum MessageCodes {
+  Clear = '\x1b[2J\x1b[3J\x1b[;H',
+  NewLine = '\r\n'
 }
 
 export default class MessageQueue {
@@ -11,12 +17,31 @@ export default class MessageQueue {
   private pending: boolean;
   private ending: boolean;
   private session: LoggingDebugSession;
+  private terminal: Terminal;
+  private writeEmitter: vscode.EventEmitter<string>;
 
   public constructor(session: LoggingDebugSession) {
     this.buffer = [];
     this.pending = false;
     this.ending = false;
     this.session = session;
+    this.writeEmitter = new vscode.EventEmitter<string>();
+    this.terminal = vscode.window.createTerminal({
+      name: `greybel`,
+      pty: {
+        onDidWrite: this.writeEmitter.event,
+        open: () => {
+          /* noop */
+        },
+        close: () => {
+          /* noop */
+        },
+        handleInput: (_data: string) => {
+          /* noop */
+        }
+      }
+    });
+    this.terminal.show(true);
   }
 
   private digest() {
@@ -29,15 +54,11 @@ export default class MessageQueue {
     }
 
     me.pending = true;
-
-    const e: DebugProtocol.OutputEvent = new OutputEvent(
-      `${item.message}\n`,
-      'stdout'
+    me.writeEmitter.fire(
+      `${chalk.red('myTest').replace('\u001B', '\x1b')} ${item.message}${
+        MessageCodes.NewLine
+      }`
     );
-
-    e.body.line = item.line;
-
-    me.session.sendEvent(e);
 
     process.nextTick(() => {
       me.digest();
@@ -45,7 +66,7 @@ export default class MessageQueue {
   }
 
   clear() {
-    this.print({ message: '\n'.repeat(20) });
+    this.writeEmitter.fire(MessageCodes.Clear);
   }
 
   private update() {
@@ -83,6 +104,8 @@ export default class MessageQueue {
     if (!me.pending && me.buffer.length > 0) {
       me.digest();
     }
+
+    me.terminal.dispose();
 
     return me;
   }

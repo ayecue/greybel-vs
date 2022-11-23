@@ -368,7 +368,7 @@
     "dependencies": {
         "@vscode/debugadapter": "^1.51.1",
         "@vscode/debugprotocol": "^1.51.0",
-        "ansis": "^1.5.5",
+        "ansi-styles": "git+https://github.com/ayecue/ansi-styles.git",
         "css-color-names": "^1.0.1",
         "greybel-core": "^0.6.4",
         "greybel-gh-mock-intrinsics": "^1.6.2",

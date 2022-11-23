@@ -1,4 +1,4 @@
-import ansis from 'ansis';
+import ansiStyles from 'ansi-styles';
 import cssColorNames from 'css-color-names';
 import transform, { Tag, TagRecord } from 'text-mesh-transformer';
 
@@ -14,7 +14,11 @@ function useColor(color: string | undefined, content: string): string {
     color = item;
   }
 
-  return ansis.hex(color)(content);
+  const ansiColorCode = ansiStyles.hexToAnsi256(color);
+  const open = ansiStyles.color.ansi256(ansiColorCode);
+  const close = ansiStyles.color.close;
+
+  return `${open}${content}${close}`;
 }
 
 function useBgColor(color: string | undefined, content: string): string {
@@ -27,7 +31,11 @@ function useBgColor(color: string | undefined, content: string): string {
     color = item;
   }
 
-  return ansis.bgHex(color)(content);
+  const ansiColorCode = ansiStyles.hexToAnsi256(color);
+  const open = ansiStyles.bgColor.ansi256(ansiColorCode);
+  const close = ansiStyles.bgColor.close;
+
+  return `${open}${content}${close}`;
 }
 
 function wrapWithTag(openTag: TagRecord, content: string): string {
@@ -35,13 +43,13 @@ function wrapWithTag(openTag: TagRecord, content: string): string {
     case Tag.Color:
       return useColor(openTag.value, content);
     case Tag.Underline:
-      return ansis.underline(content);
+      return `${ansiStyles.underline.open}${content}${ansiStyles.underline.close}`;
     case Tag.Italic:
-      return ansis.italic(content);
+      return `${ansiStyles.italic.open}${content}${ansiStyles.italic.close}`;
     case Tag.Bold:
-      return ansis.bold(content);
+      return `${ansiStyles.bold.open}${content}${ansiStyles.bold.close}`;
     case Tag.Strikethrough:
-      return ansis.strikethrough(content);
+      return `${ansiStyles.strikethrough.open}${content}${ansiStyles.strikethrough.close}`;
     case Tag.Mark:
       return useBgColor(openTag.value, content);
     case Tag.Lowercase:
