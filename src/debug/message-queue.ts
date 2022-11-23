@@ -54,11 +54,7 @@ export default class MessageQueue {
     }
 
     me.pending = true;
-    me.writeEmitter.fire(
-      `${chalk.red('myTest').replace('\u001B', '\x1b')} ${item.message}${
-        MessageCodes.NewLine
-      }`
-    );
+    me.writeEmitter.fire(`${item.message}${MessageCodes.NewLine}`);
 
     process.nextTick(() => {
       me.digest();
