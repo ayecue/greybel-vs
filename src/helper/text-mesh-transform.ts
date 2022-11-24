@@ -1,8 +1,13 @@
-import ansiStyles from 'ansi-styles';
+import {
+  AnotherAnsiProvider,
+  EscapeSequence,
+  ModifierType
+} from 'another-ansi';
 import cssColorNames from 'css-color-names';
 import transform, { Tag, TagRecord } from 'text-mesh-transformer';
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
+const provider = new AnotherAnsiProvider(EscapeSequence.Hex);
 
 function useColor(color: string | undefined, content: string): string {
   if (!color) return content;
@@ -14,11 +19,7 @@ function useColor(color: string | undefined, content: string): string {
     color = item;
   }
 
-  const ansiColorCode = ansiStyles.hexToAnsi256(color);
-  const open = ansiStyles.color.ansi256(ansiColorCode);
-  const close = ansiStyles.color.close;
-
-  return `${open}${content}${close}`;
+  return provider.colorWithHex(color, content);
 }
 
 function useBgColor(color: string | undefined, content: string): string {
@@ -31,11 +32,7 @@ function useBgColor(color: string | undefined, content: string): string {
     color = item;
   }
 
-  const ansiColorCode = ansiStyles.hexToAnsi256(color);
-  const open = ansiStyles.bgColor.ansi256(ansiColorCode);
-  const close = ansiStyles.bgColor.close;
-
-  return `${open}${content}${close}`;
+  return provider.bgColorWithHex(color, content);
 }
 
 function wrapWithTag(openTag: TagRecord, content: string): string {
@@ -43,13 +40,13 @@ function wrapWithTag(openTag: TagRecord, content: string): string {
     case Tag.Color:
       return useColor(openTag.value, content);
     case Tag.Underline:
-      return `${ansiStyles.underline.open}${content}${ansiStyles.underline.close}`;
+      return provider.modify(ModifierType.Underline, content);
     case Tag.Italic:
-      return `${ansiStyles.italic.open}${content}${ansiStyles.italic.close}`;
+      return provider.modify(ModifierType.Italic, content);
     case Tag.Bold:
-      return `${ansiStyles.bold.open}${content}${ansiStyles.bold.close}`;
+      return provider.modify(ModifierType.Bold, content);
     case Tag.Strikethrough:
-      return `${ansiStyles.strikethrough.open}${content}${ansiStyles.strikethrough.close}`;
+      return provider.modify(ModifierType.Strikethrough, content);
     case Tag.Mark:
       return useBgColor(openTag.value, content);
     case Tag.Lowercase:

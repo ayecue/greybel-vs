@@ -1,5 +1,4 @@
 import { LoggingDebugSession } from '@vscode/debugadapter';
-import chalk from 'chalk';
 import vscode, { Terminal } from 'vscode';
 
 export interface MessageBufferItem {
