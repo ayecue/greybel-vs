@@ -1,5 +1,6 @@
 import { LoggingDebugSession } from '@vscode/debugadapter';
-import vscode, { Terminal } from 'vscode';
+
+import PseudoTerminal from '../helper/pseudo-terminal';
 
 export interface MessageBufferItem {
   message: string;
@@ -16,31 +17,14 @@ export default class MessageQueue {
   private pending: boolean;
   private ending: boolean;
   private session: LoggingDebugSession;
-  private terminal: Terminal;
-  private writeEmitter: vscode.EventEmitter<string>;
+  private terminal: PseudoTerminal;
 
   public constructor(session: LoggingDebugSession) {
     this.buffer = [];
     this.pending = false;
     this.ending = false;
     this.session = session;
-    this.writeEmitter = new vscode.EventEmitter<string>();
-    this.terminal = vscode.window.createTerminal({
-      name: `greybel`,
-      pty: {
-        onDidWrite: this.writeEmitter.event,
-        open: () => {
-          /* noop */
-        },
-        close: () => {
-          /* noop */
-        },
-        handleInput: (_data: string) => {
-          /* noop */
-        }
-      }
-    });
-    this.terminal.show(true);
+    this.terminal = new PseudoTerminal('greybel');
   }
 
   private digest() {
@@ -53,7 +37,7 @@ export default class MessageQueue {
     }
 
     me.pending = true;
-    me.writeEmitter.fire(`${item.message}${MessageCodes.NewLine}`);
+    me.terminal.print(item.message);
 
     process.nextTick(() => {
       me.digest();
@@ -61,7 +45,7 @@ export default class MessageQueue {
   }
 
   clear() {
-    this.writeEmitter.fire(MessageCodes.Clear);
+    this.terminal.clear();
   }
 
   private update() {
