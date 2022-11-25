@@ -100,32 +100,32 @@
                 {
                     "command": "greybel.refresh",
                     "when": "resourceLangId == greyscript",
-                    "group": "navigation"
+                    "group": "z_commands"
                 },
                 {
                     "command": "greybel.transform",
                     "when": "resourceLangId == greyscript",
-                    "group": "navigation"
+                    "group": "1_modification"
                 },
                 {
                     "command": "greybel.minify",
                     "when": "resourceLangId == greyscript",
-                    "group": "navigation"
+                    "group": "1_modification"
                 },
                 {
                     "command": "greybel.beautify",
                     "when": "resourceLangId == greyscript",
-                    "group": "navigation"
+                    "group": "1_modification"
                 },
                 {
                     "command": "greybel.api",
                     "when": "resourceLangId == greyscript && !isWeb",
-                    "group": "navigation"
+                    "group": "z_commands"
                 },
                 {
                     "command": "greybel.build",
                     "when": "resourceLangId == greyscript && !isWeb",
-                    "group": "navigation"
+                    "group": "1_modification"
                 },
                 {
                     "command": "greybel.gotoError",
