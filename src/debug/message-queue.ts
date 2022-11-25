@@ -17,7 +17,7 @@ export default class MessageQueue {
   private pending: boolean;
   private ending: boolean;
   private session: LoggingDebugSession;
-  private terminal: PseudoTerminal;
+  terminal: PseudoTerminal;
 
   public constructor(session: LoggingDebugSession) {
     this.buffer = [];
