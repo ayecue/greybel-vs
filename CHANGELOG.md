@@ -300,3 +300,7 @@ All notable changes to this project will be documented in this file.
 - use lru cache
 - implement document symbol provider
 - implement workspace symbol provider
+- fix runtime error when canceling input
+- implement pseudo terminal to support colors, bgColors and text formatting
+- use correct categories for items in context menu
+- add snippet command
