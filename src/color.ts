@@ -1,4 +1,4 @@
-import { ASTChunk, ASTLiteral, ASTBase, ASTType } from 'greyscript-core';
+import { ASTChunk, ASTLiteral, ASTBase, ASTType, ASTPosition } from 'greyscript-core';
 import vscode, {
   CancellationToken,
   Color,
@@ -12,6 +12,32 @@ import vscode, {
 } from 'vscode';
 import colorConvert from 'color-convert';
 import documentParseQueue from './helper/document-manager';
+
+enum ColorType {
+  Black = 'black',
+  Blue = 'blue',
+  Green = 'green',
+  Orange = 'orange',
+  Purple = 'purple',
+  Red = 'red',
+  White = 'white',
+  Yellow = 'yellow'
+}
+
+const ColorMap: {
+  [key in ColorType]: string
+} = {
+  black: '#000000',
+  blue: '#0000FF',
+  green: '#00FF00',
+  orange: '#FF8800',
+  purple: '#CC8899',
+  red: '#FF0000',
+  white: '#FFFFFF',
+  yellow: '#FFFF00'
+};
+
+const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 export function activate(_context: ExtensionContext) {
   vscode.languages.registerColorProvider('greyscript', {
@@ -32,6 +58,21 @@ export function activate(_context: ExtensionContext) {
         .literals
         .filter((literal: ASTBase) => (literal as ASTLiteral).type === ASTType.StringLiteral) as ASTLiteral[];
       const result: ColorInformation[] = [];
+      const getRange = ({ 
+        match,
+        markup,
+        value,
+        astPosition, lineIndex
+      }: {
+        match: RegExpExecArray, markup: string, value: string, astPosition: ASTPosition, lineIndex: number
+      }): Range => {
+        const colorStartIndex = match.index + markup.indexOf('=') + 1;
+        const colorEndIndex = colorStartIndex + value.length;
+        const colorStart = new Position(astPosition.line + lineIndex - 1, astPosition.character + colorStartIndex);
+        const colorEnd = new Position(astPosition.line + lineIndex - 1, astPosition.character + colorEndIndex);
+
+        return new Range(colorStart, colorEnd);
+      }
 
       for (let index = 0; index < allAvailableStrings.length; index++) {
         const strLiteral = allAvailableStrings[index];
@@ -51,13 +92,20 @@ export function activate(_context: ExtensionContext) {
 
             if (value.startsWith('#')) {
               const [red, green, blue] = colorConvert.hex.rgb(value.slice(1));
-              const colorStartIndex = match.index + markup.indexOf('#');
-              const colorEndIndex = colorStartIndex + value.length;
-              const colorStart = new Position(start.line + lineIndex - 1, start.character + colorStartIndex);
-              const colorEnd = new Position(start.line + lineIndex - 1, start.character + colorEndIndex);
 
               result.push({
-                range: new Range(colorStart, colorEnd),
+                range: getRange({
+                  match, markup, value, astPosition: start, lineIndex
+                }),
+                color: new Color(red / 255, green  / 255, blue  / 255, 0)
+              });
+            } else if (hasOwnProperty.call(ColorMap, value)) {
+              const [red, green, blue] = colorConvert.hex.rgb(ColorMap[value as ColorType].slice(1));
+
+              result.push({
+                range: getRange({
+                  match, markup, value, astPosition: start, lineIndex
+                }),
                 color: new Color(red / 255, green  / 255, blue  / 255, 0)
               });
             }
