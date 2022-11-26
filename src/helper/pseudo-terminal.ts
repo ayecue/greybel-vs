@@ -8,6 +8,7 @@ export default class PseudoTerminal {
   private terminal: Terminal;
   private writeEmitter: vscode.EventEmitter<string>;
   private emitter: EventEmitter;
+  private closed: boolean;
 
   // eslint-disable-next-line no-use-before-define
   static activeTerminals: Set<PseudoTerminal> = new Set<PseudoTerminal>();
@@ -19,6 +20,7 @@ export default class PseudoTerminal {
   public constructor(name: string) {
     this.emitter = new EventEmitter();
     this.writeEmitter = new vscode.EventEmitter<string>();
+    this.closed = false;
     this.terminal = vscode.window.createTerminal({
       name,
       pty: {
@@ -27,7 +29,8 @@ export default class PseudoTerminal {
           /* noop */
         },
         close: () => {
-          /* noop */
+          this.closed = true;
+          this.emitter.emit('close');
         },
         handleInput: (input: string) => {
           this.emitter.emit('input', input);
@@ -39,16 +42,28 @@ export default class PseudoTerminal {
   }
 
   waitForInput(isPassword: boolean = false): Promise<string> {
+    if (this.closed) return Promise.resolve('');
+
+    this.focus();
+
     return new Promise((resolve) => {
       let buffer = '';
-      const callback = (input: string) => {
+      const clear = () => {
+        this.emitter.removeListener('close', onClose);
+        this.emitter.removeListener('input', onInput);
+      };
+      const onClose = () => {
+        clear();
+        resolve('');
+      };
+      const onInput = (input: string) => {
         const code = input.charCodeAt(0);
 
         switch (code) {
           // enter
           case 13: {
+            clear();
             resolve(buffer);
-            this.emitter.removeListener('input', callback);
             break;
           }
           // backspace
@@ -65,13 +80,32 @@ export default class PseudoTerminal {
         }
       };
 
-      this.emitter.addListener('input', callback);
+      this.emitter.addListener('close', onClose);
+      this.emitter.addListener('input', onInput);
     });
   }
 
   waitForKeyPress(): Promise<string> {
+    if (this.closed) return Promise.resolve(String.fromCharCode(13));
+
+    this.focus();
+
     return new Promise((resolve) => {
-      this.emitter.once('input', resolve);
+      const clear = () => {
+        this.emitter.removeListener('close', onClose);
+        this.emitter.removeListener('input', onInput);
+      };
+      const onInput = (input: string) => {
+        clear();
+        resolve(input);
+      };
+      const onClose = () => {
+        clear();
+        resolve('');
+      };
+
+      this.emitter.addListener('input', onInput);
+      this.emitter.addListener('close', onClose);
     });
   }
 
