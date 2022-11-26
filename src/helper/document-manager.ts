@@ -28,7 +28,8 @@ export class DocumentParseQueue extends EventEmitter {
   constructor(parseTimeout: number = DOCUMENT_PARSE_QUEUE_PARSE_TIMEOUT) {
     super();
     this.results = new LRU({
-      ttl: 1000 * 60 * 20
+      ttl: 1000 * 60 * 20,
+      ttlAutopurge: true
     });
     this.queue = new Map();
     this.interval = null;
