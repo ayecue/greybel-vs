@@ -13,6 +13,7 @@ import { activate as activateSubscriptions } from './subscriptions';
 import { activate as activateSymbol } from './symbol';
 import { activate as activateTransform } from './transform';
 import { activate as activateSnippets } from './snippet';
+import { activate as activateColor } from './color';
 
 export function activate(context: ExtensionContext) {
   const config = vscode.workspace.getConfiguration('greybel');
@@ -41,6 +42,7 @@ export function activate(context: ExtensionContext) {
 
   activateAPI(context);
   activateSnippets(context);
+  activateColor(context);
 }
 
 export function deactivate() {}
