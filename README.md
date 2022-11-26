@@ -18,6 +18,7 @@ Commands available (`CTRL+SHIFT+P`):
 - `Greybel: Beautify` - Shortcut for [info](#transform). Will use beautify as build type.
 - `Greybel: Refresh` - [info](#refresh)
 - `Greybel: API` - [info](#api-browser)
+- `Greybel: Snippets` - [info](#snippets)
 
 Do not forget to setup your plugin to your needs. Following settings are available:
 
@@ -38,7 +39,6 @@ Do not forget to setup your plugin to your needs. Following settings are availab
 ## Features
 
 - Syntax Highlighting
-- [Goto Error](#goto-error)
 - [Transform](#transform)
 - [Build](#build)
 - [Interpreter](#interpreter)
@@ -47,10 +47,8 @@ Do not forget to setup your plugin to your needs. Following settings are availab
 - [Hover Tooltips](#hover-tooltips)
 - [Diagnostics](#diagnostics)
 - [API Browser](#api-browser)
-
-### Goto Error
-
-Jumps to the next existing syntax error.
+- [Snippets](#snippets)
+- [Goto Error](#goto-error)
 
 ### Transform
 
@@ -102,6 +100,10 @@ API Browser for GreyScript. Version of [greyscript-meta](https://greyscript-meta
 ### Refresh
 
 Will refresh the AST Cache which is used for diagnostics, hover tooltips and autocompletion.
+
+### Goto Error
+
+Jumps to the next existing syntax error.
 
 ## Copyright
 

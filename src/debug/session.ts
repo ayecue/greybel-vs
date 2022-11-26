@@ -23,7 +23,7 @@ import {
   OutputHandler
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
-import vscode, { CancellationToken, Progress } from 'vscode';
+import vscode from 'vscode';
 
 import PseudoTerminal from '../helper/pseudo-terminal';
 import transform from '../helper/text-mesh-transform';
@@ -553,6 +553,30 @@ export class GreybelDebugSession extends LoggingDebugSession {
     };
 
     this.sendResponse(response);
+  }
+
+  protected stepInRequest(
+    _response: DebugProtocol.StepInResponse,
+    _args: DebugProtocol.StepInArguments,
+    _request?: DebugProtocol.Request | undefined
+  ): void {
+    vscode.window.showErrorMessage('Step in is not supported.');
+  }
+
+  protected stepOutRequest(
+    _response: DebugProtocol.StepOutResponse,
+    _args: DebugProtocol.StepOutArguments,
+    _request?: DebugProtocol.Request | undefined
+  ): void {
+    vscode.window.showErrorMessage('Step out is not supported.');
+  }
+
+  protected stepBackRequest(
+    _response: DebugProtocol.StepBackResponse,
+    _args: DebugProtocol.StepBackArguments,
+    _request?: DebugProtocol.Request | undefined
+  ): void {
+    vscode.window.showErrorMessage('Step back is not supported.');
   }
 }
 
