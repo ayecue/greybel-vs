@@ -21,6 +21,7 @@ Commands available (`CTRL+SHIFT+P`):
 - `Greybel: Snippets` - [info](#snippets)
 
 You can also access most of the commands via the context menu:
+
 ![Context Menu](/assets/context-menu.png?raw=true "ContextMenu")
 
 Do not forget to setup your plugin to your needs. Following settings are available:
