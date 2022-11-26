@@ -115,7 +115,11 @@ Enables you to set breakpoints, run code in a breakpoint context, jump to the ne
 
 Keep in mind to set the breakpoint on a none empty line. Otherwise it will just skip that breakpoint.
 
-![Active breakpoint](/active-assets/breakpoint.png?raw=true "Active breakpoint")
+![Active breakpoint](/assets/active-breakpoint.png?raw=true "Active breakpoint")
+
+A repl is also available while executing the script or having an active breakpoint.
+
+![REPL](/assets/repl.png?raw=true "REPL")
 
 ### API Browser
 
