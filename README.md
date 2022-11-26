@@ -56,6 +56,7 @@ Do not forget to setup your plugin to your needs. Following settings are availab
     - [Diagnostics](#diagnostics-provider)
     - [Symbol](#symbol-provider)
     - [Definition](#definition-provider)
+    - [Colorpicker](#colorpicker-provider)
 
 ### Transform
 
