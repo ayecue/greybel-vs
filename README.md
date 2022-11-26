@@ -168,6 +168,10 @@ Shows definitions in the currently active file and it's dependencies.
 
 ![Definition](/assets/definition-provider.png?raw=true "Definition")
 
+#### Colorpicker Provider
+
+Shows colorpicker if you got color or mark tags.
+
 ## Copyright
 
 [Sloth icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/sloth)

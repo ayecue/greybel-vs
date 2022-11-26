@@ -304,3 +304,5 @@ All notable changes to this project will be documented in this file.
 - implement pseudo terminal to support colors, bgColors and text formatting
 - use correct categories for items in context menu
 - add snippet command
+- implement color picker
+- decrease parse timeout
