@@ -98,11 +98,11 @@ It also features a [mock environment](https://github.com/ayecue/greybel-js#local
 
 ![Start debug](/assets/start-debug.png?raw=true "Start debug")
 
-After you started the debugger it will give you a prompt to input the parameters for this scripts.
+After you pressed run a prompt will appear to input the parameters for the execution.
 
 ![Enter params](/assets/params.png?raw=true "Enter params")
 
-Since the latest update it also supports colors in the console via a pseudo terminal. Also inputing data is much more convinient since there won't be any popups anymore instead you can use the pseudo terminal.
+Since the latest update it also supports colors in the console via a pseudo terminal. Also inputing data is much more convinient now since there won't be any popups anymore instead you can use the pseudo terminal.
 
 ![Pseudo Terminal](/assets/pseudo-terminal.png?raw=true "Pseudo Terminal")
 
