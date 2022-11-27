@@ -51,8 +51,8 @@ export function activate(_context: ExtensionContext) {
       }];
     },
 
-    provideDocumentColors(document: TextDocument, _token: CancellationToken): ProviderResult<ColorInformation[]> {
-      const parseResult = documentParseQueue.get(document);
+    async provideDocumentColors(document: TextDocument, _token: CancellationToken): Promise<ColorInformation[]> {
+      const parseResult = await documentParseQueue.next(document);
       const chunk = parseResult.document as ASTChunk;
       const allAvailableStrings = chunk
         .literals
@@ -107,6 +107,13 @@ export function activate(_context: ExtensionContext) {
                   match, markup, value, astPosition: start, lineIndex
                 }),
                 color: new Color(red / 255, green  / 255, blue  / 255, 0)
+              });
+            } else {
+              result.push({
+                range: getRange({
+                  match, markup, value, astPosition: start, lineIndex
+                }),
+                color: new Color(0, 0, 0, 1)
               });
             }
           }

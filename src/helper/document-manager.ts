@@ -5,6 +5,7 @@ import LRU from 'lru-cache';
 import vscode, { TextDocument } from 'vscode';
 
 export interface ParseResult {
+  content: string;
   textDocument: TextDocument;
   document: ASTBase | null;
   errors: Error[];
@@ -72,6 +73,7 @@ export class DocumentParseQueue extends EventEmitter {
     this.results.set(key, result);
     this.emit('parsed', document, result);
     this.queue.delete(key);
+
     return result;
   }
 
@@ -84,6 +86,7 @@ export class DocumentParseQueue extends EventEmitter {
 
     if ((chunk as ASTChunkAdvanced).body?.length > 0) {
       return {
+        content,
         textDocument: document,
         document: chunk,
         errors: parser.errors
@@ -95,12 +98,14 @@ export class DocumentParseQueue extends EventEmitter {
       const strictChunk = strictParser.parseChunk();
 
       return {
+        content,
         textDocument: document,
         document: strictChunk,
         errors: []
       };
     } catch (err: any) {
       return {
+        content,
         textDocument: document,
         document: null,
         errors: [err]
@@ -110,8 +115,13 @@ export class DocumentParseQueue extends EventEmitter {
 
   update(document: TextDocument): boolean {
     const fileName = document.fileName;
+    const content = document.getText();
 
     if (this.queue.has(fileName)) {
+      return false;
+    }
+
+    if (this.results.get(fileName)?.content === content) {
       return false;
     }
 
@@ -132,6 +142,31 @@ export class DocumentParseQueue extends EventEmitter {
 
   get(document: TextDocument): ParseResult {
     return this.results.get(document.fileName) || this.refresh(document);
+  }
+
+  next(document: TextDocument, timeout: number = 5000): Promise<ParseResult> {
+    const me = this;
+
+    if (me.queue.has(document.fileName)) {
+      return new Promise((resolve) => {
+        const onTimeout = () => {
+          me.removeListener('parsed', onParse);
+          resolve(me.get(document));
+        };
+        const onParse = (evDocument: TextDocument) => {
+          if (evDocument.fileName === document.fileName) {
+            me.removeListener('parsed', onParse);
+            clearTimeout(timer);
+            resolve(me.get(document));
+          }
+        };
+        const timer = setTimeout(onTimeout, timeout);
+
+        me.addListener('parsed', onParse);
+      });
+    }
+
+    return Promise.resolve(me.get(document));
   }
 
   clear(document: TextDocument): void {
