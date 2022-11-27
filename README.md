@@ -60,7 +60,7 @@ Do not forget to setup your plugin to your needs. Following settings are availab
 
 ### Transform
 
-Transforms active text document into one of three possible output types:
+Transforms the content of the active text document into one of three possible output types:
 - Default (active by default): Minor optimizations
 - Uglify: Minified
 - Beautify: Beautified
