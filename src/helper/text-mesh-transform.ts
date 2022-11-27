@@ -1,8 +1,13 @@
-import ansis from 'ansis';
+import {
+  AnotherAnsiProvider,
+  EscapeSequence,
+  ModifierType
+} from 'another-ansi';
 import cssColorNames from 'css-color-names';
 import transform, { Tag, TagRecord } from 'text-mesh-transformer';
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
+const provider = new AnotherAnsiProvider(EscapeSequence.Hex);
 
 function useColor(color: string | undefined, content: string): string {
   if (!color) return content;
@@ -14,7 +19,7 @@ function useColor(color: string | undefined, content: string): string {
     color = item;
   }
 
-  return ansis.hex(color)(content);
+  return provider.colorWithHex(color, content);
 }
 
 function useBgColor(color: string | undefined, content: string): string {
@@ -27,7 +32,7 @@ function useBgColor(color: string | undefined, content: string): string {
     color = item;
   }
 
-  return ansis.bgHex(color)(content);
+  return provider.bgColorWithHex(color, content);
 }
 
 function wrapWithTag(openTag: TagRecord, content: string): string {
@@ -35,13 +40,13 @@ function wrapWithTag(openTag: TagRecord, content: string): string {
     case Tag.Color:
       return useColor(openTag.value, content);
     case Tag.Underline:
-      return ansis.underline(content);
+      return provider.modify(ModifierType.Underline, content);
     case Tag.Italic:
-      return ansis.italic(content);
+      return provider.modify(ModifierType.Italic, content);
     case Tag.Bold:
-      return ansis.bold(content);
+      return provider.modify(ModifierType.Bold, content);
     case Tag.Strikethrough:
-      return ansis.strikethrough(content);
+      return provider.modify(ModifierType.Strikethrough, content);
     case Tag.Mark:
       return useBgColor(openTag.value, content);
     case Tag.Lowercase:

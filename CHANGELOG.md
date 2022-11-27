@@ -291,3 +291,20 @@ All notable changes to this project will be documented in this file.
 
 - fix router intrinsics in regards of forwarded ports
 - fix bug in meta lib overflow
+
+## [1.3.2] - 27-11-2022
+
+### Changed
+
+- implement definitions provider
+- use lru cache
+- implement document symbol provider
+- implement workspace symbol provider
+- fix runtime error when canceling input
+- implement pseudo terminal to support colors, bgColors and text formatting
+- use correct categories for items in context menu
+- add snippet command
+- implement color picker
+- decrease parse timeout
+- fix automcomplete not working in certain cases as expected
+- optimized ast document cache

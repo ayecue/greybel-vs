@@ -29,8 +29,7 @@ import {
 } from './helper/lookup-type';
 
 export const convertDefinitionsToCompletionList = (
-  definitions: SignatureDefinitionContainer,
-  _range: Range
+  definitions: SignatureDefinitionContainer
 ): CompletionItem[] => {
   const completionItems: CompletionItem[] = [];
   const keys = Object.keys(definitions);
@@ -42,6 +41,35 @@ export const convertDefinitionsToCompletionList = (
   }
 
   return completionItems;
+};
+
+export const getCompletionList = (helper: LookupHelper, item: ASTBase): CompletionList | null => {
+  const base = helper.lookupBase(item);
+  const typeInfo = helper.resolvePath(base!);
+
+  if (typeInfo instanceof TypeInfoWithDefinition) {
+    const definitions = getDefinitions(
+      typeInfo.definition.returns
+    );
+    const completionItems: CompletionItem[] = [
+      ...convertDefinitionsToCompletionList(definitions)
+    ];
+
+    if (completionItems.length > 0) {
+      return new CompletionList(completionItems);
+    }
+  } else if (typeInfo instanceof TypeInfo) {
+    const definitions = getDefinitions(typeInfo.type);
+    const completionItems: CompletionItem[] = [
+      ...convertDefinitionsToCompletionList(definitions)
+    ];
+
+    if (completionItems.length > 0) {
+      return new CompletionList(completionItems);
+    }
+  }
+
+  return null;
 };
 
 export function activate(_context: ExtensionContext) {
@@ -61,37 +89,22 @@ export function activate(_context: ExtensionContext) {
         const astResult = helper.lookupAST(position);
 
         if (astResult) {
-          const { outer } = astResult;
+          const { closest, outer } = astResult;
           const previous = outer.length > 0 ? outer[1] : undefined;
 
           if (
             previous?.type === ASTType.MemberExpression ||
             previous?.type === ASTType.IndexExpression
           ) {
-            const base = helper.lookupBase(previous);
-            const previousTypeInfo = helper.resolvePath(base!);
-
-            if (previousTypeInfo instanceof TypeInfoWithDefinition) {
-              const definitions = getDefinitions(
-                previousTypeInfo.definition.returns
-              );
-              const completionItems: CompletionItem[] = [
-                ...convertDefinitionsToCompletionList(definitions, currentRange)
-              ];
-
-              if (completionItems.length > 0) {
-                return new CompletionList(completionItems);
-              }
-            } else if (previousTypeInfo instanceof TypeInfo) {
-              const definitions = getDefinitions(previousTypeInfo.type);
-              const completionItems: CompletionItem[] = [
-                ...convertDefinitionsToCompletionList(definitions, currentRange)
-              ];
-
-              if (completionItems.length > 0) {
-                return new CompletionList(completionItems);
-              }
-            }
+            const list = getCompletionList(helper, previous);
+            if (list) return list;
+          } else if (
+            document.getText(currentRange) === '.' &&
+            closest?.type === ASTType.MemberExpression ||
+            closest?.type === ASTType.IndexExpression
+          ) {
+            const list = getCompletionList(helper, closest);
+            if (list) return list;
           }
         }
 
@@ -99,8 +112,7 @@ export function activate(_context: ExtensionContext) {
         const defaultDefinitions = getDefinitions(['general']);
         const completionItems: CompletionItem[] = [
           ...convertDefinitionsToCompletionList(
-            defaultDefinitions,
-            currentRange
+            defaultDefinitions
           )
         ];
 

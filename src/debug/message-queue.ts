@@ -1,9 +1,15 @@
-import { LoggingDebugSession, OutputEvent } from '@vscode/debugadapter';
-import { DebugProtocol } from '@vscode/debugprotocol';
+import { LoggingDebugSession } from '@vscode/debugadapter';
+
+import PseudoTerminal from '../helper/pseudo-terminal';
 
 export interface MessageBufferItem {
   message: string;
   line?: number;
+}
+
+export enum MessageCodes {
+  Clear = '\x1b[2J\x1b[3J\x1b[;H',
+  NewLine = '\r\n'
 }
 
 export default class MessageQueue {
@@ -11,12 +17,14 @@ export default class MessageQueue {
   private pending: boolean;
   private ending: boolean;
   private session: LoggingDebugSession;
+  terminal: PseudoTerminal;
 
   public constructor(session: LoggingDebugSession) {
     this.buffer = [];
     this.pending = false;
     this.ending = false;
     this.session = session;
+    this.terminal = new PseudoTerminal('greybel');
   }
 
   private digest() {
@@ -29,15 +37,7 @@ export default class MessageQueue {
     }
 
     me.pending = true;
-
-    const e: DebugProtocol.OutputEvent = new OutputEvent(
-      `${item.message}\n`,
-      'stdout'
-    );
-
-    e.body.line = item.line;
-
-    me.session.sendEvent(e);
+    me.terminal.print(item.message);
 
     process.nextTick(() => {
       me.digest();
@@ -45,7 +45,7 @@ export default class MessageQueue {
   }
 
   clear() {
-    this.print({ message: '\n'.repeat(20) });
+    this.terminal.clear();
   }
 
   private update() {
@@ -83,6 +83,8 @@ export default class MessageQueue {
     if (!me.pending && me.buffer.length > 0) {
       me.digest();
     }
+
+    me.terminal.dispose();
 
     return me;
   }

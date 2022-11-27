@@ -23,10 +23,11 @@ import {
   OutputHandler
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
-import vscode, { CancellationToken, Progress } from 'vscode';
+import vscode from 'vscode';
 
-import createKeyEventView from '../helper/key-event-view';
+import PseudoTerminal from '../helper/pseudo-terminal';
 import transform from '../helper/text-mesh-transform';
+import transformStringToKeyEvent from '../helper/transform-string-to-key-event';
 import { InterpreterResourceProvider, PseudoFS } from '../resource';
 import MessageQueue from './message-queue';
 
@@ -84,63 +85,43 @@ export class GreybelDebugSession extends LoggingDebugSession {
       }
 
       async progress(timeout: number): Promise<void> {
+        const terminal = PseudoTerminal.getActiveTerminal();
         const startTime = Date.now();
+        const max = 20;
+        terminal.print(`[${'-'.repeat(max)}]`, false);
 
-        await vscode.window.withProgress(
-          {
-            location: vscode.ProgressLocation.Notification,
-            title: 'Pending function...'
-          },
-          (
-            progress: Progress<{ increment: number }>,
-            _token: CancellationToken
-          ): Thenable<void> => {
-            progress.report({ increment: 0 });
+        return new Promise((resolve, _reject) => {
+          const interval = setInterval(() => {
+            const currentTime = Date.now();
+            const elapsed = currentTime - startTime;
 
-            return new Promise((resolve, _reject) => {
-              const interval = setInterval(() => {
-                const currentTime = Date.now();
-                const elapsed = currentTime - startTime;
+            if (elapsed > timeout) {
+              terminal.print(`[${'#'.repeat(max)}]`);
+              clearInterval(interval);
+              resolve();
+              return;
+            }
 
-                if (elapsed > timeout) {
-                  clearInterval(interval);
-                  resolve();
-                  return;
-                }
+            const elapsedPercentage = (100 * elapsed) / timeout;
+            const progress = Math.floor((elapsedPercentage * max) / 100);
+            const right = max - progress;
 
-                const elapsedPercentage = (100 * elapsed) / timeout;
-
-                progress.report({ increment: elapsedPercentage });
-              });
-            });
-          }
-        );
-      }
-
-      waitForInput(_isPassword: boolean): Promise<string> {
-        return new Promise((resolve) => {
-          vscode.window
-            .showInputBox({
-              title: 'user_input',
-              ignoreFocusOut: true
-            })
-            .then(
-              (value: any) => {
-                resolve(value.toString());
-              },
-              (_value: any) => {
-                resolve('');
-              }
+            terminal.print(
+              `[${'#'.repeat(progress)}${'-'.repeat(right)}]`,
+              false
             );
-        });
-      }
-
-      waitForKeyPress(): Promise<KeyEvent> {
-        return new Promise((resolve) => {
-          createKeyEventView((event: KeyEvent) => {
-            resolve(event);
           });
         });
+      }
+
+      waitForInput(isPassword: boolean): Promise<string> {
+        return PseudoTerminal.getActiveTerminal().waitForInput(isPassword);
+      }
+
+      async waitForKeyPress(): Promise<KeyEvent> {
+        const key = await PseudoTerminal.getActiveTerminal().waitForKeyPress();
+
+        return transformStringToKeyEvent(key);
       }
     };
 
@@ -249,6 +230,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
         params && params.length > 0 ? params.split(' ') : [];
 
       me._runtime.params = paramSegments;
+      me._messageQueue.terminal.focus();
       await me._runtime.run();
       me.sendResponse(response);
     } catch (err: any) {
@@ -571,6 +553,30 @@ export class GreybelDebugSession extends LoggingDebugSession {
     };
 
     this.sendResponse(response);
+  }
+
+  protected stepInRequest(
+    _response: DebugProtocol.StepInResponse,
+    _args: DebugProtocol.StepInArguments,
+    _request?: DebugProtocol.Request | undefined
+  ): void {
+    vscode.window.showErrorMessage('Step in is not supported.');
+  }
+
+  protected stepOutRequest(
+    _response: DebugProtocol.StepOutResponse,
+    _args: DebugProtocol.StepOutArguments,
+    _request?: DebugProtocol.Request | undefined
+  ): void {
+    vscode.window.showErrorMessage('Step out is not supported.');
+  }
+
+  protected stepBackRequest(
+    _response: DebugProtocol.StepBackResponse,
+    _args: DebugProtocol.StepBackArguments,
+    _request?: DebugProtocol.Request | undefined
+  ): void {
+    vscode.window.showErrorMessage('Step back is not supported.');
   }
 }
 
