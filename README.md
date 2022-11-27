@@ -22,7 +22,7 @@ Commands available (`CTRL+SHIFT+P`):
 
 You can also access most of the commands via the context menu:
 
-![Context Menu](/assets/context-menu.png?raw=true "ContextMenu")
+![Context Menu](https://github.com/ayecue/greybel-vs/blob/main/assets/context-menu.png?raw=true "ContextMenu")
 
 Do not forget to setup your plugin to your needs. Following settings are available:
 
@@ -65,15 +65,15 @@ Transforms the content of the active text document into one of three possible ou
 - Uglify: Minified
 - Beautify: Beautified
 
-![Minified File](/assets/minified.png?raw=true "Minified file")
+![Minified File](https://github.com/ayecue/greybel-vs/blob/main/assets/minified.png?raw=true "Minified file")
 
 It will also fill environment values with it's value which you are able to define in the configuration of this extension.
 
-![Env Settings](/assets/settings-env.png?raw=true "Env Settings")
+![Env Settings](https://github.com/ayecue/greybel-vs/blob/main/assets/settings-env.png?raw=true "Env Settings")
 
 You can also exclude namespaces from getting transformed.
 
-![Exclude namespaces](/assets/settings-exclude-namespaces.png?raw=true "Exclude namespaces")
+![Exclude namespaces](https://github.com/ayecue/greybel-vs/blob/main/assets/settings-exclude-namespaces.png?raw=true "Exclude namespaces")
 
 More details [here](https://github.com/ayecue/greybel-js#transpiler).
 
@@ -81,13 +81,13 @@ More details [here](https://github.com/ayecue/greybel-js#transpiler).
 
 Transforms and bundles your files which makes it easier to import them into GreyHack. As described in the [transform section](#transform) it has three possible transformation types and supports environment variables as well.
 
-![Build output](/assets/build.png?raw=true "Build output")
+![Build output](https://github.com/ayecue/greybel-vs/blob/main/assets/build.png?raw=true "Build output")
 
 Keep in mind to activate the installer to enable bundling in case you are using `import_code` in your code.
 
 You can also select the max characters per file which will then split the installer files into the selected size.
 
-![Max chars](/assets/settings-max-chars.png?raw=true "Max chars")
+![Max chars](https://github.com/ayecue/greybel-vs/blob/main/assets/settings-max-chars.png?raw=true "Max chars")
 
 More details [here](https://github.com/ayecue/greybel-js#transpiler).
 
@@ -97,15 +97,15 @@ Executes GreyScript code. Almost all intrinsics are fully supported. To get more
 
 It also features a [mock environment](https://github.com/ayecue/greybel-js#local-environment) and [debugger](#debugger).
 
-![Start debug](/assets/start-debug.png?raw=true "Start debug")
+![Start debug](https://github.com/ayecue/greybel-vs/blob/main/assets/start-debug.png?raw=true "Start debug")
 
 After you pressed run a prompt will appear to input the parameters for the execution.
 
-![Enter params](/assets/params.png?raw=true "Enter params")
+![Enter params](https://github.com/ayecue/greybel-vs/blob/main/assets/params.png?raw=true "Enter params")
 
 Since the latest update it also supports colors in the console via a pseudo terminal. Also inputing data is much more convinient now since there won't be any popups anymore instead you can use the pseudo terminal.
 
-![Pseudo Terminal](/assets/pseudo-terminal.png?raw=true "Pseudo Terminal")
+![Pseudo Terminal](https://github.com/ayecue/greybel-vs/blob/main/assets/pseudo-terminal.png?raw=true "Pseudo Terminal")
 
 More details [here](https://github.com/ayecue/greybel-js#interpreter).
 
@@ -113,21 +113,21 @@ More details [here](https://github.com/ayecue/greybel-js#interpreter).
 
 Enables you to set breakpoints, run code in a breakpoint context, jump to the next line of execution etc. Generally helpful if you want to debug your code. More details [here](https://github.com/ayecue/greybel-js#debugger).
 
-![Breakpoint](/assets/breakpoint.png?raw=true "Breakpoint")
+![Breakpoint](https://github.com/ayecue/greybel-vs/blob/main/assets/breakpoint.png?raw=true "Breakpoint")
 
 Keep in mind to set the breakpoint on a none empty line. Otherwise it will just skip that breakpoint.
 
-![Active breakpoint](/assets/active-breakpoint.png?raw=true "Active breakpoint")
+![Active breakpoint](https://github.com/ayecue/greybel-vs/blob/main/assets/active-breakpoint.png?raw=true "Active breakpoint")
 
 A repl is also available while executing the script or having an active breakpoint.
 
-![REPL](/assets/repl.png?raw=true "REPL")
+![REPL](https://github.com/ayecue/greybel-vs/blob/main/assets/repl.png?raw=true "REPL")
 
 ### API Browser
 
 API Browser for GreyScript. Version of [greyscript-meta](https://greyscript-meta.netlify.app/) in Visual Studio Code.
 
-![API Browser](/assets/api-browser.png?raw=true "API Browser")
+![API Browser](https://github.com/ayecue/greybel-vs/blob/main/assets/api-browser.png?raw=true "API Browser")
 
 ### Refresh
 
@@ -137,7 +137,7 @@ Will refresh the AST Cache which is used for diagnostics, hover tooltips and aut
 
 Will return a list of available GreyHack snippets. Such as `ls`, `mkdir` and more.
 
-![Snippets](/assets/snippets.png?raw=true "Snippets")
+![Snippets](https://github.com/ayecue/greybel-vs/blob/main/assets/snippets.png?raw=true "Snippets")
 
 ### Goto Error
 
@@ -161,13 +161,13 @@ Returns information about syntax errors in your code.
 
 Returns list of all available symbol in active file.
 
-![Symbol](/assets/symbols.png?raw=true "Symbol")
+![Symbol](https://github.com/ayecue/greybel-vs/blob/main/assets/symbols.png?raw=true "Symbol")
 
 #### Definition Provider
 
 Shows definitions in the currently active file and it's dependencies.
 
-![Definition](/assets/definition-provider.png?raw=true "Definition")
+![Definition](https://github.com/ayecue/greybel-vs/blob/main/assets/definition-provider.png?raw=true "Definition")
 
 #### Colorpicker Provider
 
