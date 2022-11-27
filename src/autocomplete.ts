@@ -61,8 +61,8 @@ export function activate(_context: ExtensionContext) {
         const astResult = helper.lookupAST(position);
 
         if (astResult) {
-          const { outer } = astResult;
-          const previous = outer.length > 0 ? outer[1] : undefined;
+          const { closest, outer } = astResult;
+          const previous = document.getText(currentRange) === '.' ? closest : (outer.length > 0 ? outer[1] : undefined);
 
           if (
             previous?.type === ASTType.MemberExpression ||
