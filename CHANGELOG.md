@@ -292,7 +292,7 @@ All notable changes to this project will be documented in this file.
 - fix router intrinsics in regards of forwarded ports
 - fix bug in meta lib overflow
 
-## [1.3.2] - 22-11-2022
+## [1.3.2] - 27-11-2022
 
 ### Changed
 
@@ -306,3 +306,5 @@ All notable changes to this project will be documented in this file.
 - add snippet command
 - implement color picker
 - decrease parse timeout
+- fix automcomplete not working in certain cases as expected
+- optimized ast document cache
