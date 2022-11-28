@@ -3,8 +3,7 @@ import EventEmitter from 'events';
 import vscode, { Terminal } from 'vscode';
 
 const provider = new AnotherAnsiProvider(EscapeSequence.Hex);
-const normalize = (v: string) =>
-  v.replace(/\\n/g, '\n').replace(/(?<!\r)\n/g, '\r\n');
+const normalize = (v: string) => v.replace(/(?<!\r)\n/g, '\r\n');
 
 export default class PseudoTerminal {
   private terminal: Terminal;
