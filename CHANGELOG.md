@@ -306,5 +306,11 @@ All notable changes to this project will be documented in this file.
 - add snippet command
 - implement color picker
 - decrease parse timeout
-- fix automcomplete not working in certain cases as expected
+- fix autocomplete not working in certain cases as expected
 - optimized ast document cache
+
+## [1.3.3] - 28-11-2022
+
+- keep terminal open after execution
+- add carriage return to format_columns and user_input
+- add carriage return to any prints by user
