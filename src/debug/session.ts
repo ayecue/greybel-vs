@@ -219,18 +219,18 @@ export class GreybelDebugSession extends LoggingDebugSession {
     );
 
     me._restart = false;
-    me._messageQueue = new MessageQueue(me);
 
     // start the program in the runtime
     try {
       const params = await vscode.window.showInputBox({
-        title: 'Enter execution parameters'
+        title: 'Enter execution parameters',
+        ignoreFocusOut: true
       });
       const paramSegments =
         params && params.length > 0 ? params.split(' ') : [];
 
       me._runtime.params = paramSegments;
-      me._messageQueue.terminal.focus();
+      me._messageQueue = new MessageQueue(me);
       await me._runtime.run();
       me.sendResponse(response);
     } catch (err: any) {
@@ -268,10 +268,9 @@ export class GreybelDebugSession extends LoggingDebugSession {
           showUser: true
         });
       }
+    } finally {
+      me._messageQueue?.end();
     }
-
-    me._messageQueue.end();
-    me._messageQueue = null;
 
     if (me._restart) {
       return me.launchRequest(response, args);

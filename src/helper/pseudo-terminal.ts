@@ -113,12 +113,18 @@ export default class PseudoTerminal {
     this.terminal.show(false);
   }
 
+  hide() {
+    this.terminal.hide();
+  }
+
   print(message: string, newline: boolean = true) {
     this.writeEmitter.fire(`${message}\r${newline ? '\n' : ''}`);
+    this.terminal.show();
   }
 
   replace(message: string) {
     this.writeEmitter.fire(`${message}\r`);
+    this.terminal.show();
   }
 
   clear() {
