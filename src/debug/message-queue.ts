@@ -19,12 +19,19 @@ export default class MessageQueue {
   private session: LoggingDebugSession;
   terminal: PseudoTerminal;
 
+  static previousTerminal: PseudoTerminal | null;
+
   public constructor(session: LoggingDebugSession) {
+    MessageQueue.previousTerminal?.dispose();
+
     this.buffer = [];
     this.pending = false;
     this.ending = false;
     this.session = session;
     this.terminal = new PseudoTerminal('greybel');
+
+    MessageQueue.previousTerminal = this.terminal;
+    this.terminal.focus();
   }
 
   private digest() {
@@ -83,8 +90,6 @@ export default class MessageQueue {
     if (!me.pending && me.buffer.length > 0) {
       me.digest();
     }
-
-    me.terminal.dispose();
 
     return me;
   }

@@ -3,6 +3,7 @@ import EventEmitter from 'events';
 import vscode, { Terminal } from 'vscode';
 
 const provider = new AnotherAnsiProvider(EscapeSequence.Hex);
+const normalize = (v: string) => v.replace(/(?<!\r)\n/g, '\r\n');
 
 export default class PseudoTerminal {
   private terminal: Terminal;
@@ -49,6 +50,7 @@ export default class PseudoTerminal {
     return new Promise((resolve) => {
       let buffer = '';
       const clear = () => {
+        this.writeEmitter.fire('\r\n');
         this.emitter.removeListener('close', onClose);
         this.emitter.removeListener('input', onInput);
       };
@@ -113,12 +115,18 @@ export default class PseudoTerminal {
     this.terminal.show(false);
   }
 
+  hide() {
+    this.terminal.hide();
+  }
+
   print(message: string, newline: boolean = true) {
-    this.writeEmitter.fire(`${message}\r${newline ? '\n' : ''}`);
+    this.writeEmitter.fire(`${normalize(message)}\r${newline ? '\n' : ''}`);
+    this.terminal.show();
   }
 
   replace(message: string) {
-    this.writeEmitter.fire(`${message}\r`);
+    this.writeEmitter.fire(`${normalize(message)}\r`);
+    this.terminal.show();
   }
 
   clear() {
