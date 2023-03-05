@@ -251,7 +251,12 @@ export class TypeMap {
       case ASTType.ListConstructorExpression:
         return new TypeInfo('[]', ['list:any']);
       case ASTType.BinaryExpression:
-        return new TypeInfo('Binary expression', ['number']);
+        return new TypeInfo('Binary expression', [
+          'number',
+          'string',
+          'list:any',
+          'map:any'
+        ]);
       case ASTType.LogicalExpression:
         return new TypeInfo('Logical expression', ['boolean']);
       default:
@@ -280,6 +285,8 @@ export class TypeMap {
       case ASTType.BooleanLiteral:
       case ASTType.MapConstructorExpression:
       case ASTType.ListConstructorExpression:
+      case ASTType.BinaryExpression:
+      case ASTType.LogicalExpression:
         return me.resolveDefault(item);
       default:
         return null;
