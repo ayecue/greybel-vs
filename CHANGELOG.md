@@ -314,3 +314,8 @@ All notable changes to this project will be documented in this file.
 - keep terminal open after execution
 - add carriage return to format_columns and user_input
 - add carriage return to any prints by user
+
+## [1.3.4] - 05-03-2023
+
+- use any type as initial autocomplete type
+- disable diagnostics for files inside greyscript project which are not gs
