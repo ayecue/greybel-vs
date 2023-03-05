@@ -4,6 +4,8 @@ import { ASTBase } from 'greyscript-core';
 import LRU from 'lru-cache';
 import vscode, { TextDocument } from 'vscode';
 
+import typeManager from './type-manager';
+
 export interface ParseResult {
   content: string;
   textDocument: TextDocument;
@@ -82,9 +84,11 @@ export class DocumentParseQueue extends EventEmitter {
     const parser = new Parser(content, {
       unsafe: true
     });
-    const chunk = parser.parseChunk();
+    const chunk = parser.parseChunk() as ASTChunkAdvanced;
 
-    if ((chunk as ASTChunkAdvanced).body?.length > 0) {
+    if (chunk.body?.length > 0) {
+      typeManager.analyze(document, chunk);
+
       return {
         content,
         textDocument: document,
@@ -95,7 +99,9 @@ export class DocumentParseQueue extends EventEmitter {
 
     try {
       const strictParser = new Parser(document.getText());
-      const strictChunk = strictParser.parseChunk();
+      const strictChunk = strictParser.parseChunk() as ASTChunkAdvanced;
+
+      typeManager.analyze(document, strictChunk);
 
       return {
         content,

@@ -14,7 +14,8 @@ import vscode, {
   Uri
 } from 'vscode';
 
-import { LookupHelper, TypeInfoWithDefinition } from './helper/lookup-type';
+import { LookupHelper } from './helper/lookup-type';
+import { TypeInfoWithDefinition } from './helper/type-manager';
 import { PseudoFS } from './resource';
 
 function formatType(type: string): string {
@@ -117,7 +118,7 @@ export function activate(_context: ExtensionContext) {
 
       const hoverText = new MarkdownString('');
 
-      if (typeInfo instanceof TypeInfoWithDefinition) {
+      if (typeInfo instanceof TypeInfoWithDefinition && typeInfo.type.length === 1) {
         const defintion = typeInfo.definition;
         const args = defintion.arguments || [];
         const example = defintion.example || [];

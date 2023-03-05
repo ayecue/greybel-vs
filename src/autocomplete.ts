@@ -23,10 +23,9 @@ import vscode, {
 
 import documentParseQueue from './helper/document-manager';
 import {
-  LookupHelper,
-  TypeInfo,
-  TypeInfoWithDefinition
+  LookupHelper
 } from './helper/lookup-type';
+import { TypeInfo, TypeInfoWithDefinition } from './helper/type-manager';
 
 export const convertDefinitionsToCompletionList = (
   definitions: SignatureDefinitionContainer
@@ -44,8 +43,7 @@ export const convertDefinitionsToCompletionList = (
 };
 
 export const getCompletionList = (helper: LookupHelper, item: ASTBase): CompletionList | null => {
-  const base = helper.lookupBase(item);
-  const typeInfo = helper.resolvePath(base!);
+  const typeInfo = helper.lookupBasePath(item);
 
   if (typeInfo instanceof TypeInfoWithDefinition) {
     const definitions = getDefinitions(

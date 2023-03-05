@@ -4,14 +4,14 @@ import documentParseQueue from './helper/document-manager';
 
 export function activate(context: ExtensionContext) {
   const update = (document: TextDocument) => {
-    if (document.languageId === 'greyscript') {
+    if (document.languageId !== 'greyscript') {
       return false;
     }
 
     return documentParseQueue.update(document);
   };
   const clear = (document: TextDocument) => {
-    if (document.languageId === 'greyscript') {
+    if (document.languageId !== 'greyscript') {
       return;
     }
 
