@@ -70,71 +70,66 @@ export const getCompletionList = (
 };
 
 export function activate(_context: ExtensionContext) {
-  vscode.languages.registerCompletionItemProvider(
-    'greyscript',
-    {
-      provideCompletionItems(
-        document: TextDocument,
-        position: Position,
-        _token: CancellationToken,
-        _ctx: CompletionContext
-      ) {
-        documentParseQueue.refresh(document);
+  vscode.languages.registerCompletionItemProvider('greyscript', {
+    provideCompletionItems(
+      document: TextDocument,
+      position: Position,
+      _token: CancellationToken,
+      _ctx: CompletionContext
+    ) {
+      documentParseQueue.refresh(document);
 
-        const currentRange = new Range(position.translate(0, -1), position);
+      const currentRange = new Range(position.translate(0, -1), position);
 
-        if (document.getText(currentRange) === '.') {
-          const definitions = getDefinitions(['any']);
-          const completionItems: CompletionItem[] = [
-            ...convertDefinitionsToCompletionList(definitions)
-          ];
-
-          if (completionItems.length > 0) {
-            return new CompletionList(completionItems);
-          }
-        }
-
-        const helper = new LookupHelper(document);
-        const astResult = helper.lookupAST(position);
-
-        if (astResult) {
-          const { outer } = astResult;
-          const previous =
-            outer.length > 0 ? outer[outer.length - 1] : undefined;
-
-          if (
-            previous?.type === ASTType.MemberExpression ||
-            previous?.type === ASTType.IndexExpression
-          ) {
-            const list = getCompletionList(helper, previous);
-            if (list) return list;
-          }
-        }
-
-        // get all default methods
-        const defaultDefinitions = getDefinitions(['general']);
+      if (document.getText(currentRange) === '.') {
+        const definitions = getDefinitions(['any']);
         const completionItems: CompletionItem[] = [
-          ...convertDefinitionsToCompletionList(defaultDefinitions)
+          ...convertDefinitionsToCompletionList(definitions)
         ];
 
-        if (!astResult) {
+        if (completionItems.length > 0) {
           return new CompletionList(completionItems);
         }
+      }
 
-        // get all identifer available in scope
-        completionItems.push(
-          ...helper
-            .findAllAvailableIdentifier(astResult.closest)
-            .map((property: string) => {
-              return new CompletionItem(property, CompletionItemKind.Function);
-            })
-        );
+      const helper = new LookupHelper(document);
+      const astResult = helper.lookupAST(position);
 
+      if (astResult) {
+        const { outer } = astResult;
+        const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
+
+        if (
+          previous?.type === ASTType.MemberExpression ||
+          previous?.type === ASTType.IndexExpression
+        ) {
+          const list = getCompletionList(helper, previous);
+          if (list) return list;
+        }
+      }
+
+      // get all default methods
+      const defaultDefinitions = getDefinitions(['general']);
+      const completionItems: CompletionItem[] = [
+        ...convertDefinitionsToCompletionList(defaultDefinitions)
+      ];
+
+      if (!astResult) {
         return new CompletionList(completionItems);
       }
-    },
-    '.'
-  );
+
+      // get all identifer available in scope
+      completionItems.push(
+        ...helper
+          .findAllAvailableIdentifier(astResult.closest)
+          .map((property: string) => {
+            return new CompletionItem(property, CompletionItemKind.Function);
+          })
+      );
+
+      return new CompletionList(completionItems);
+    }
+  });
 
   vscode.languages.registerSignatureHelpProvider(
     'greyscript',
