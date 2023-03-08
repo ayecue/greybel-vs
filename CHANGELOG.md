@@ -323,5 +323,5 @@ All notable changes to this project will be documented in this file.
 - fix error on trailing comma in maps and lists
 - add check for metaxploit if file exists to prevent error
 - change autocomplete to only trigger after dot
-- add support for import_code code completion #26
-- add support for accessing within scope after instantiation code completion #27
+- add support for import_code code completion [#26](https://github.com/ayecue/greybel-vs/issues/26)
+- add support for accessing within scope after instantiation code completion [#27](https://github.com/ayecue/greybel-vs/issues/27)
