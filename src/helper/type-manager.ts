@@ -32,6 +32,10 @@ export class TypeInfo {
     this.label = label;
     this.type = type;
   }
+
+  copy() {
+    return new TypeInfo(this.label, this.type);
+  }
 }
 
 export class TypeInfoWithDefinition extends TypeInfo {
@@ -40,6 +44,10 @@ export class TypeInfoWithDefinition extends TypeInfo {
   constructor(label: string, type: string[], definition: SignatureDefinition) {
     super(label, type);
     this.definition = definition;
+  }
+
+  copy() {
+    return new TypeInfoWithDefinition(this.label, this.type, this.definition);
   }
 }
 
@@ -198,7 +206,7 @@ export class TypeMap {
       currentScope = currentScope.scope;
     }
 
-    return null;
+    return new TypeInfo(name, ['any']);
   }
 
   private resolveFunctionDeclaration(
@@ -381,6 +389,16 @@ export class TypeMap {
     }
 
     console.timeEnd('analyzing');
+  }
+
+  getIdentifierInScope(item: ASTBase): Map<string, TypeInfo> | null {
+    const me = this;
+
+    if (me.refs.has(item)) {
+      return me.refs.get(item)!;
+    }
+
+    return null;
   }
 }
 
