@@ -10,7 +10,9 @@ import {
   ASTIndexExpression,
   ASTLiteral,
   ASTMemberExpression,
-  ASTType
+  ASTParenthesisExpression,
+  ASTType,
+  ASTUnaryExpression
 } from 'greyscript-core';
 import {
   getDefinition,
@@ -235,6 +237,23 @@ export class TypeMap {
     return this.resolve(base);
   }
 
+  private resolveParenthesisExpression(
+    item: ASTParenthesisExpression
+  ): TypeInfo | null {
+    const { expression } = item;
+    return this.resolve(expression);
+  }
+
+  private resolveUnaryExpression(item: ASTUnaryExpression): TypeInfo | null {
+    const { operator, argument } = item;
+
+    if (operator !== '@') {
+      return null;
+    }
+
+    return this.resolve(argument);
+  }
+
   private resolveDefault(item: ASTBase): TypeInfo | null {
     switch (item.type) {
       case ASTType.NilLiteral:
@@ -278,6 +297,12 @@ export class TypeMap {
         return me.resolveCallStatement(item as ASTCallStatement);
       case ASTType.CallExpression:
         return me.resolveCallExpression(item as ASTCallExpression);
+      case ASTType.UnaryExpression:
+        return me.resolveUnaryExpression(item as ASTUnaryExpression);
+      case ASTType.ParenthesisExpression:
+        return me.resolveParenthesisExpression(
+          item as ASTParenthesisExpression
+        );
       case ASTType.NilLiteral:
       case ASTType.StringLiteral:
       case ASTType.NumericLiteral:
@@ -307,10 +332,33 @@ export class TypeMap {
 
       if (resolved === null) continue;
 
-      const typeInfo =
+      let typeInfo;
+
+      if (
+        assignment.init instanceof ASTFunctionStatement &&
         resolved instanceof TypeInfoWithDefinition
-          ? new TypeInfo(name, resolved.definition.returns || ['any'])
-          : new TypeInfo(name, resolved.type);
+      ) {
+        typeInfo = new TypeInfoWithDefinition(
+          name,
+          resolved.type,
+          (resolved as TypeInfoWithDefinition).definition
+        );
+      } else if (
+        assignment.init instanceof ASTUnaryExpression &&
+        assignment.init.operator === '@' &&
+        resolved instanceof TypeInfoWithDefinition
+      ) {
+        typeInfo = new TypeInfoWithDefinition(
+          name,
+          resolved.type,
+          (resolved as TypeInfoWithDefinition).definition
+        );
+      } else {
+        typeInfo =
+          resolved instanceof TypeInfoWithDefinition
+            ? new TypeInfo(name, resolved.definition.returns || ['any'])
+            : new TypeInfo(name, resolved.type);
+      }
 
       if (identiferTypes.has(name)) {
         typeInfo.type = Array.from(
@@ -325,11 +373,14 @@ export class TypeMap {
   analyze() {
     const me = this;
 
+    console.time('analyzing');
     me.analyzeScope(me.root);
 
     for (const scope of me.root.scopes) {
       me.analyzeScope(scope);
     }
+
+    console.timeEnd('analyzing');
   }
 }
 
