@@ -121,18 +121,17 @@ export class TypeMap {
 
           if (currentMetaInfo instanceof TypeInfoWithDefinition) {
             const definition = currentMetaInfo.definition;
-
             definitions = getDefinitions(definition.returns);
           } else {
             definitions = getDefinitions(currentMetaInfo.type);
           }
 
           if (name in definitions) {
-            const defintion = definitions[name];
+            const definition = definitions[name];
             currentMetaInfo = new TypeInfoWithDefinition(
               name,
               ['function'],
-              defintion
+              definition
             );
             break;
           }
@@ -310,7 +309,7 @@ export class TypeMap {
 
       const typeInfo =
         resolved instanceof TypeInfoWithDefinition
-          ? new TypeInfo(name, resolved.definition.returns)
+          ? new TypeInfo(name, resolved.definition.returns || ['any'])
           : new TypeInfo(name, resolved.type);
 
       if (identiferTypes.has(name)) {

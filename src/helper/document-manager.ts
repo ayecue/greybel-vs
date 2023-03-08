@@ -2,7 +2,7 @@ import EventEmitter from 'events';
 import { ASTChunkAdvanced, Parser } from 'greybel-core';
 import { ASTBase } from 'greyscript-core';
 import LRU from 'lru-cache';
-import vscode, { TextDocument } from 'vscode';
+import vscode, { TextDocument, Uri } from 'vscode';
 
 import typeManager from './type-manager';
 
@@ -141,13 +141,78 @@ export class DocumentParseQueue extends EventEmitter {
     return true;
   }
 
-  async open(target: string): Promise<ParseResult> {
-    const textDocument = await vscode.workspace.openTextDocument(target);
-    return this.get(textDocument);
+  async open(target: string): Promise<ParseResult | null> {
+    try {
+      const textDocument = await vscode.workspace.openTextDocument(target);
+      return this.get(textDocument);
+    } catch (err) {
+      return null;
+    }
   }
 
   get(document: TextDocument): ParseResult {
     return this.results.get(document.fileName) || this.refresh(document);
+  }
+
+  async getImportsOf(document: TextDocument): Promise<ParseResult[]> {
+    const rootResult = this.get(document);
+
+    if (rootResult.document === null) {
+      return [];
+    }
+
+    const visited: Set<string> = new Set([document.fileName]);
+    const imports: Set<ParseResult> = new Set();
+    const traverse = async (rootResult: ParseResult) => {
+      const rootChunk = rootResult.document as ASTChunkAdvanced;
+      const rootPath = Uri.joinPath(
+        Uri.file(rootResult.textDocument.fileName),
+        '..'
+      );
+      const dependencies: Set<string> = new Set([
+        ...rootChunk.nativeImports
+          .filter((nativeImport) => nativeImport.fileSystemDirectory)
+          .map(
+            (nativeImport) =>
+              Uri.joinPath(rootPath, nativeImport.fileSystemDirectory).fsPath
+          )
+          .filter((importPath) => !visited.has(importPath)),
+        ...rootChunk.imports
+          .filter((nonNativeImport) => nonNativeImport.path)
+          .map(
+            (nonNativeImport) =>
+              Uri.joinPath(rootPath, nonNativeImport.path).fsPath
+          )
+          .filter((importPath) => !visited.has(importPath)),
+        ...rootChunk.includes
+          .filter((includeImport) => `${includeImport.path}.src`)
+          .map(
+            (includeImport) =>
+              Uri.joinPath(rootPath, `${includeImport.path}.src`).fsPath
+          )
+          .filter((importPath) => !visited.has(importPath))
+      ]);
+
+      for (const dependency of dependencies) {
+        if (visited.has(dependency)) continue;
+
+        const item = await this.open(dependency);
+
+        visited.add(dependency);
+
+        if (item === null) continue;
+
+        imports.add(item);
+
+        if (item.document !== null) {
+          await traverse(item);
+        }
+      }
+    };
+
+    await traverse(rootResult);
+
+    return Array.from(imports);
   }
 
   next(document: TextDocument, timeout: number = 5000): Promise<ParseResult> {

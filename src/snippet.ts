@@ -1,10 +1,8 @@
-import vscode, {
-  ExtensionContext
-} from 'vscode';
 import * as Snippets from 'greybel-mock-environment/dist/data/scripts';
+import vscode, { ExtensionContext } from 'vscode';
 
 const CodeSnippets = Snippets as {
-  [key: string]: string
+  [key: string]: string;
 };
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -28,7 +26,9 @@ export function activate(context: ExtensionContext) {
           return;
         }
 
-        vscode.window.showErrorMessage(`Cannot find snippet. Available snippets: ${names.join(', ')}`);
+        vscode.window.showErrorMessage(
+          `Cannot find snippet. Available snippets: ${names.join(', ')}`
+        );
       }
     )
   );

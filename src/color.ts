@@ -1,4 +1,11 @@
-import { ASTChunk, ASTLiteral, ASTBase, ASTType, ASTPosition } from 'greyscript-core';
+import colorConvert from 'color-convert';
+import {
+  ASTBase,
+  ASTChunk,
+  ASTLiteral,
+  ASTPosition,
+  ASTType
+} from 'greyscript-core';
 import vscode, {
   CancellationToken,
   Color,
@@ -10,7 +17,7 @@ import vscode, {
   Range,
   TextDocument
 } from 'vscode';
-import colorConvert from 'color-convert';
+
 import documentParseQueue from './helper/document-manager';
 
 enum ColorType {
@@ -25,7 +32,7 @@ enum ColorType {
 }
 
 const ColorMap: {
-  [key in ColorType]: string
+  [key in ColorType]: string;
 } = {
   black: '#000000',
   blue: '#0000FF',
@@ -43,42 +50,63 @@ export function activate(_context: ExtensionContext) {
   vscode.languages.registerColorProvider('greyscript', {
     provideColorPresentations(
       color: Color,
-      _context: { document: TextDocument, range: Range },
+      _context: { document: TextDocument; range: Range },
       _token: CancellationToken
     ): ProviderResult<ColorPresentation[]> {
-      return [{
-        label: `#${colorConvert.rgb.hex(color.red * 255, color.green * 255, color.blue * 255)}`
-      }];
+      return [
+        {
+          label: `#${colorConvert.rgb.hex(
+            color.red * 255,
+            color.green * 255,
+            color.blue * 255
+          )}`
+        }
+      ];
     },
 
-    async provideDocumentColors(document: TextDocument, _token: CancellationToken): Promise<ColorInformation[]> {
+    async provideDocumentColors(
+      document: TextDocument,
+      _token: CancellationToken
+    ): Promise<ColorInformation[]> {
       const parseResult = await documentParseQueue.next(document);
       const chunk = parseResult.document as ASTChunk;
-      const allAvailableStrings = chunk
-        .literals
-        .filter((literal: ASTBase) => (literal as ASTLiteral).type === ASTType.StringLiteral) as ASTLiteral[];
+      const allAvailableStrings = chunk.literals.filter(
+        (literal: ASTBase) =>
+          (literal as ASTLiteral).type === ASTType.StringLiteral
+      ) as ASTLiteral[];
       const result: ColorInformation[] = [];
-      const getRange = ({ 
+      const getRange = ({
         match,
         markup,
         value,
-        astPosition, lineIndex
+        astPosition,
+        lineIndex
       }: {
-        match: RegExpExecArray, markup: string, value: string, astPosition: ASTPosition, lineIndex: number
+        match: RegExpExecArray;
+        markup: string;
+        value: string;
+        astPosition: ASTPosition;
+        lineIndex: number;
       }): Range => {
         const colorStartIndex = match.index + markup.indexOf('=') + 1;
         const colorEndIndex = colorStartIndex + value.length;
-        const colorStart = new Position(astPosition.line + lineIndex - 1, astPosition.character + colorStartIndex);
-        const colorEnd = new Position(astPosition.line + lineIndex - 1, astPosition.character + colorEndIndex);
+        const colorStart = new Position(
+          astPosition.line + lineIndex - 1,
+          astPosition.character + colorStartIndex
+        );
+        const colorEnd = new Position(
+          astPosition.line + lineIndex - 1,
+          astPosition.character + colorEndIndex
+        );
 
         return new Range(colorStart, colorEnd);
-      }
+      };
 
       for (let index = 0; index < allAvailableStrings.length; index++) {
         const strLiteral = allAvailableStrings[index];
 
         if (!strLiteral.start) continue;
-        
+
         const start = strLiteral.start;
         const lines = strLiteral.value.toString().split('\n');
 
@@ -87,7 +115,7 @@ export function activate(_context: ExtensionContext) {
           const regexp = new RegExp('<(?:mark|color)=([^>]+)>', 'ig');
           let match;
 
-          while (match = regexp.exec(line)) {
+          while ((match = regexp.exec(line))) {
             const [markup, value] = match;
 
             if (value.startsWith('#')) {
@@ -95,23 +123,37 @@ export function activate(_context: ExtensionContext) {
 
               result.push({
                 range: getRange({
-                  match, markup, value, astPosition: start, lineIndex
+                  match,
+                  markup,
+                  value,
+                  astPosition: start,
+                  lineIndex
                 }),
-                color: new Color(red / 255, green  / 255, blue  / 255, 0)
+                color: new Color(red / 255, green / 255, blue / 255, 0)
               });
             } else if (hasOwnProperty.call(ColorMap, value)) {
-              const [red, green, blue] = colorConvert.hex.rgb(ColorMap[value as ColorType].slice(1));
+              const [red, green, blue] = colorConvert.hex.rgb(
+                ColorMap[value as ColorType].slice(1)
+              );
 
               result.push({
                 range: getRange({
-                  match, markup, value, astPosition: start, lineIndex
+                  match,
+                  markup,
+                  value,
+                  astPosition: start,
+                  lineIndex
                 }),
-                color: new Color(red / 255, green  / 255, blue  / 255, 0)
+                color: new Color(red / 255, green / 255, blue / 255, 0)
               });
             } else {
               result.push({
                 range: getRange({
-                  match, markup, value, astPosition: start, lineIndex
+                  match,
+                  markup,
+                  value,
+                  astPosition: start,
+                  lineIndex
                 }),
                 color: new Color(0, 0, 0, 1)
               });
@@ -119,8 +161,8 @@ export function activate(_context: ExtensionContext) {
           }
         }
       }
-      
+
       return result;
-    },
+    }
   });
 }

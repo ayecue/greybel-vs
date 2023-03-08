@@ -1,4 +1,8 @@
-import vscode, { ExtensionContext, TextDocument, TextDocumentChangeEvent } from 'vscode';
+import vscode, {
+  ExtensionContext,
+  TextDocument,
+  TextDocumentChangeEvent
+} from 'vscode';
 
 import documentParseQueue from './helper/document-manager';
 

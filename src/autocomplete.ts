@@ -22,9 +22,7 @@ import vscode, {
 } from 'vscode';
 
 import documentParseQueue from './helper/document-manager';
-import {
-  LookupHelper
-} from './helper/lookup-type';
+import { LookupHelper } from './helper/lookup-type';
 import { TypeInfo, TypeInfoWithDefinition } from './helper/type-manager';
 
 export const convertDefinitionsToCompletionList = (
@@ -42,13 +40,14 @@ export const convertDefinitionsToCompletionList = (
   return completionItems;
 };
 
-export const getCompletionList = (helper: LookupHelper, item: ASTBase): CompletionList | null => {
+export const getCompletionList = (
+  helper: LookupHelper,
+  item: ASTBase
+): CompletionList | null => {
   const typeInfo = helper.lookupBasePath(item);
 
   if (typeInfo instanceof TypeInfoWithDefinition) {
-    const definitions = getDefinitions(
-      typeInfo.definition.returns
-    );
+    const definitions = getDefinitions(typeInfo.definition.returns);
     const completionItems: CompletionItem[] = [
       ...convertDefinitionsToCompletionList(definitions)
     ];
@@ -100,7 +99,8 @@ export function activate(_context: ExtensionContext) {
 
         if (astResult) {
           const { outer } = astResult;
-          const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
+          const previous =
+            outer.length > 0 ? outer[outer.length - 1] : undefined;
 
           if (
             previous?.type === ASTType.MemberExpression ||
@@ -114,9 +114,7 @@ export function activate(_context: ExtensionContext) {
         // get all default methods
         const defaultDefinitions = getDefinitions(['general']);
         const completionItems: CompletionItem[] = [
-          ...convertDefinitionsToCompletionList(
-            defaultDefinitions
-          )
+          ...convertDefinitionsToCompletionList(defaultDefinitions)
         ];
 
         if (!astResult) {
