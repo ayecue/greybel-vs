@@ -71,7 +71,7 @@ export const getCompletionList = (
 
 export function activate(_context: ExtensionContext) {
   vscode.languages.registerCompletionItemProvider('greyscript', {
-    provideCompletionItems(
+    async provideCompletionItems(
       document: TextDocument,
       position: Position,
       _token: CancellationToken,
@@ -118,12 +118,37 @@ export function activate(_context: ExtensionContext) {
         return new CompletionList(completionItems);
       }
 
+      const existingProperties = new Set([
+        ...completionItems.map((item) => item.label)
+      ]);
+      const allImports = await documentParseQueue.getImportsOf(document);
+
+      for (const item of allImports) {
+        const { document } = item;
+
+        if (!document) {
+          continue;
+        }
+
+        completionItems.push(
+          ...helper
+            .findAllAvailableIdentifier(document)
+            .filter((property: string) => !existingProperties.has(property))
+            .map((property: string) => {
+              existingProperties.add(property);
+              return new CompletionItem(property, CompletionItemKind.Variable);
+            })
+        );
+      }
+
       // get all identifer available in scope
       completionItems.push(
         ...helper
           .findAllAvailableIdentifier(astResult.closest)
+          .filter((property: string) => !existingProperties.has(property))
           .map((property: string) => {
-            return new CompletionItem(property, CompletionItemKind.Function);
+            existingProperties.add(property);
+            return new CompletionItem(property, CompletionItemKind.Variable);
           })
       );
 
