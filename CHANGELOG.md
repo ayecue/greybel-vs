@@ -319,3 +319,7 @@ All notable changes to this project will be documented in this file.
 
 - use any type as initial autocomplete type
 - disable diagnostics for files inside greyscript project which are not gs
+- look for all definitions even in nested imported/included files
+- fix error on trailing comma in maps and lists
+- add check for metaxploit if file exists to prevent error
+- change autocomplete to only trigger after dot
