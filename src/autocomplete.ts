@@ -144,7 +144,7 @@ export function activate(_context: ExtensionContext) {
       // get all identifer available in scope
       completionItems.push(
         ...helper
-          .findAllAvailableIdentifier(astResult.closest)
+          .findAllAvailableIdentifierRelatedToPosition(astResult.closest)
           .filter((property: string) => !existingProperties.has(property))
           .map((property: string) => {
             existingProperties.add(property);

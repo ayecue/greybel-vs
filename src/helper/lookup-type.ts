@@ -3,6 +3,8 @@ import {
   ASTBase,
   ASTBaseBlockWithScope,
   ASTChunk,
+  ASTFunctionStatement,
+  ASTIdentifier,
   ASTType
 } from 'greyscript-core';
 import { Position, TextDocument } from 'vscode';
@@ -83,7 +85,40 @@ export class LookupHelper {
       result.push(...scope.namespaces);
     }
 
-    return result;
+    return Array.from(new Set(result));
+  }
+
+  findAllAvailableIdentifierRelatedToPosition(item: ASTBase): string[] {
+    const scopes = this.lookupScopes(item);
+    const result: string[] = [];
+    const rootScope = scopes.shift();
+
+    if (rootScope) {
+      if (rootScope instanceof ASTFunctionStatement) {
+        for (const parameter of rootScope.parameters) {
+          if (parameter instanceof ASTAssignmentStatement) {
+            result.push((parameter.variable as ASTIdentifier).name);
+          } else if (parameter instanceof ASTIdentifier) {
+            result.push(parameter.name);
+          }
+        }
+      }
+
+      for (const assignmentItem of rootScope.assignments) {
+        const assignment = assignmentItem as ASTAssignmentStatement;
+
+        if (assignment.end!.line >= item.end!.line) break;
+
+        const current = ASTStringify(assignment.variable);
+        result.push(current);
+      }
+    }
+
+    for (const scope of scopes) {
+      result.push(...scope.namespaces);
+    }
+
+    return Array.from(new Set(result));
   }
 
   lookupScope(item: ASTBase): ASTBaseBlockWithScope | null {
