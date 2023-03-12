@@ -91,8 +91,35 @@ export class TypeMap {
     this.refs = new WeakMap();
   }
 
+  lookupTypeOfNamespace(item: ASTBase): TypeInfo | null {
+    const me = this;
+    const name = ASTStringify(item);
+    let currentScope = item.scope;
+
+    while (currentScope) {
+      if (me.refs.has(currentScope)) {
+        const typeMap = me.refs.get(currentScope)!;
+
+        if (typeMap.has(name)) {
+          const typeInfo = typeMap.get(name)!;
+          return typeInfo;
+        }
+      }
+
+      currentScope = currentScope.scope;
+    }
+
+    return null;
+  }
+
   resolvePath(item: ASTBase): TypeInfo | null {
     const me = this;
+    const namespaceType = me.lookupTypeOfNamespace(item);
+
+    if (namespaceType) {
+      return namespaceType;
+    }
+
     let base: ASTBase | null = item;
     const traversalPath = [];
 
@@ -191,19 +218,10 @@ export class TypeMap {
     }
 
     // get type info from scopes
-    let currentScope = item.scope;
+    const namespaceType = me.lookupTypeOfNamespace(item);
 
-    while (currentScope) {
-      if (me.refs.has(currentScope)) {
-        const typeMap = me.refs.get(currentScope)!;
-
-        if (typeMap.has(name)) {
-          const typeInfo = typeMap.get(name)!;
-          return typeInfo;
-        }
-      }
-
-      currentScope = currentScope.scope;
+    if (namespaceType) {
+      return namespaceType;
     }
 
     return new TypeInfo(name, ['any']);
@@ -333,9 +351,7 @@ export class TypeMap {
     me.refs.set(scope, identiferTypes);
 
     for (const assignment of assignments) {
-      if (!(assignment.variable instanceof ASTIdentifier)) continue;
-
-      const name = assignment.variable.name;
+      const name = ASTStringify(assignment.variable);
       const resolved = me.resolve(assignment.init);
 
       if (resolved === null) continue;
