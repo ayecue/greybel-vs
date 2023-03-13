@@ -174,7 +174,8 @@ export class TypeMap {
           }
 
           // todo add retrieval for object/lists
-          return null;
+          currentMetaInfo = new TypeInfo(name, ['any']);
+          break;
         }
         case ASTType.IndexExpression: {
           // add index
