@@ -14,7 +14,8 @@ import vscode, {
   Uri
 } from 'vscode';
 
-import { LookupHelper, TypeInfoWithDefinition } from './helper/lookup-type';
+import { LookupHelper } from './helper/lookup-type';
+import { TypeInfoWithDefinition } from './helper/type-manager';
 import { PseudoFS } from './resource';
 
 function formatType(type: string): string {
@@ -43,81 +44,84 @@ export function activate(_context: ExtensionContext) {
         return;
       }
 
-      const typeInfo = helper.lookupTypeInfo(astResult);
+      if (astResult.closest.type === ASTType.ImportCodeExpression) {
+        // shows link to importCode resource
+        const hoverText = new MarkdownString('');
+        const importAst = astResult.closest as ASTImportCodeExpression;
+        const gameDir = importAst.gameDirectory;
+        const fileDir = importAst.fileSystemDirectory;
+        let output = [];
 
-      if (!typeInfo) {
-        if (astResult.closest.type === ASTType.ImportCodeExpression) {
-          // shows link to importCode resource
-          const hoverText = new MarkdownString('');
-          const importAst = astResult.closest as ASTImportCodeExpression;
-          const gameDir = importAst.gameDirectory;
-          const fileDir = importAst.fileSystemDirectory;
-          let output = [];
-
-          if (fileDir) {
-            const rootDir = Uri.joinPath(Uri.file(document.fileName), '..');
-            const target = Uri.joinPath(rootDir, fileDir);
-
-            output = [
-              `[Imports file "${PseudoFS.basename(
-                target.fsPath
-              )}" inside this code](${target.toString(true)})`,
-              '***',
-              'Click the link above to open the file.',
-              '',
-              'Use the build command to create an installer',
-              'file which will bundle all dependencies.'
-            ];
-          } else {
-            output = [
-              `Imports game file "${gameDir}" inside this code`,
-              '***',
-              'WARNING: There is no actual file path',
-              'therefore this will be ignored while building.',
-              '',
-              'Following example shows how to enable inclusion when building.',
-              '',
-              '**Example:**',
-              '```',
-              'import_code("/ingame/path":"/relative/physical/path")',
-              '```'
-            ];
-          }
-
-          hoverText.appendMarkdown(output.join('\n'));
-
-          return new Hover(hoverText);
-        } else if (
-          astResult.closest.type === ASTTypeExtended.FeatureImportExpression ||
-          astResult.closest.type === ASTTypeExtended.FeatureIncludeExpression
-        ) {
-          // shows link to import/include resource
-          const hoverText = new MarkdownString('');
-          const importCodeAst = astResult.closest as ASTFeatureImportExpression;
-          const fileDir = importCodeAst.path;
-
+        if (fileDir) {
           const rootDir = Uri.joinPath(Uri.file(document.fileName), '..');
           const target = Uri.joinPath(rootDir, fileDir);
 
-          const output = [
-            `[Inserts file "${PseudoFS.basename(
+          output = [
+            `[Imports file "${PseudoFS.basename(
               target.fsPath
-            )}" inside this code when building](${target.toString(true)})`,
+            )}" inside this code](${target.toString(true)})`,
             '***',
-            'Click the link above to open the file.'
+            'Click the link above to open the file.',
+            '',
+            'Use the build command to create an installer',
+            'file which will bundle all dependencies.'
           ];
-
-          hoverText.appendMarkdown(output.join('\n'));
-
-          return new Hover(hoverText);
+        } else {
+          output = [
+            `Imports game file "${gameDir}" inside this code`,
+            '***',
+            'WARNING: There is no actual file path',
+            'therefore this will be ignored while building.',
+            '',
+            'Following example shows how to enable inclusion when building.',
+            '',
+            '**Example:**',
+            '```',
+            'import_code("/ingame/path":"/relative/physical/path")',
+            '```'
+          ];
         }
 
+        hoverText.appendMarkdown(output.join('\n'));
+
+        return new Hover(hoverText);
+      } else if (
+        astResult.closest.type === ASTTypeExtended.FeatureImportExpression ||
+        astResult.closest.type === ASTTypeExtended.FeatureIncludeExpression
+      ) {
+        // shows link to import/include resource
+        const hoverText = new MarkdownString('');
+        const importCodeAst = astResult.closest as ASTFeatureImportExpression;
+        const fileDir = importCodeAst.path;
+
+        const rootDir = Uri.joinPath(Uri.file(document.fileName), '..');
+        const target = Uri.joinPath(rootDir, fileDir);
+
+        const output = [
+          `[Inserts file "${PseudoFS.basename(
+            target.fsPath
+          )}" inside this code when building](${target.toString(true)})`,
+          '***',
+          'Click the link above to open the file.'
+        ];
+
+        hoverText.appendMarkdown(output.join('\n'));
+
+        return new Hover(hoverText);
+      }
+
+      const typeInfo = helper.lookupTypeInfo(astResult);
+
+      if (!typeInfo) {
         return;
       }
 
       const hoverText = new MarkdownString('');
 
-      if (typeInfo instanceof TypeInfoWithDefinition) {
+      if (
+        typeInfo instanceof TypeInfoWithDefinition &&
+        typeInfo.type.length === 1
+      ) {
         const defintion = typeInfo.definition;
         const args = defintion.arguments || [];
         const example = defintion.example || [];
@@ -153,6 +157,7 @@ export function activate(_context: ExtensionContext) {
       hoverText.appendCodeblock(
         `${typeInfo.label}: ${formatTypes(typeInfo.type)}`
       );
+
       return new Hover(hoverText);
     }
   });

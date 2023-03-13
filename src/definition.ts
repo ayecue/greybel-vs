@@ -1,4 +1,3 @@
-import { ASTChunkAdvanced } from 'greybel-core';
 import { ASTBase, ASTIdentifier, ASTMemberExpression } from 'greyscript-core';
 import vscode, {
   CancellationToken,
@@ -6,12 +5,11 @@ import vscode, {
   ExtensionContext,
   Position,
   Range,
-  TextDocument,
-  Uri
+  TextDocument
 } from 'vscode';
 
 import ASTStringify from './helper/ast-stringify';
-import documentParseQueue, { ParseResult } from './helper/document-manager';
+import documentParseQueue from './helper/document-manager';
 import { LookupHelper } from './helper/lookup-type';
 
 const findAllDefinitions = (
@@ -46,30 +44,6 @@ const findAllDefinitions = (
   return definitions;
 };
 
-const findAllImports = async (
-  rootFile: string,
-  chunk: ASTChunkAdvanced
-): Promise<ParseResult[]> => {
-  const dependencies: Set<string> = new Set([
-    ...chunk.nativeImports
-      .filter((nativeImport) => nativeImport.fileSystemDirectory)
-      .map((nativeImport) => {
-        const rootDir = Uri.joinPath(Uri.file(rootFile), '..');
-        return Uri.joinPath(rootDir, nativeImport.fileSystemDirectory).fsPath;
-      }),
-    ...chunk.imports
-      .filter((nonNativeImport) => nonNativeImport.path)
-      .map((nonNativeImport) => {
-        const rootDir = Uri.joinPath(Uri.file(rootFile), '..');
-        return Uri.joinPath(rootDir, nonNativeImport.path).fsPath;
-      })
-  ]);
-
-  return Promise.all(
-    Array.from(dependencies).map(async (path) => documentParseQueue.open(path))
-  );
-};
-
 export function activate(_context: ExtensionContext) {
   vscode.languages.registerDefinitionProvider('greyscript', {
     async provideDefinition(
@@ -98,8 +72,7 @@ export function activate(_context: ExtensionContext) {
       }
 
       const definitions = findAllDefinitions(helper, identifer, closest.scope!);
-      const chunk = helper.lookupScopes(closest).pop() as ASTChunkAdvanced;
-      const allImports = await findAllImports(document.fileName, chunk);
+      const allImports = await documentParseQueue.getImportsOf(document);
 
       for (const item of allImports) {
         const { document, textDocument } = item;

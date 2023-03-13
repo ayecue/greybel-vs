@@ -314,3 +314,15 @@ All notable changes to this project will be documented in this file.
 - keep terminal open after execution
 - add carriage return to format_columns and user_input
 - add carriage return to any prints by user
+
+## [1.3.4] - 13-03-2023
+
+- use any type as initial autocomplete type
+- disable diagnostics for files inside greyscript project which are not gs
+- look for all definitions even in nested imported/included files
+- fix error on trailing comma in maps and lists
+- add check for metaxploit if file exists to prevent error
+- change autocomplete to only trigger after dot
+- add support for import_code code completion [#26](https://github.com/ayecue/greybel-vs/issues/26), thanks for suggesting [@Patrick-van-Halm](https://github.com/Patrick-van-Halm)
+- add support for accessing within scope after instantiation code completion [#27](https://github.com/ayecue/greybel-vs/issues/27), thanks for suggesting [@Patrick-van-Halm](https://github.com/Patrick-van-Halm)
+- add type-manager for improved type resolving

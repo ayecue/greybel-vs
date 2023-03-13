@@ -1,10 +1,26 @@
-import vscode, { ExtensionContext, TextDocumentChangeEvent } from 'vscode';
+import vscode, {
+  ExtensionContext,
+  TextDocument,
+  TextDocumentChangeEvent
+} from 'vscode';
 
 import documentParseQueue from './helper/document-manager';
 
 export function activate(context: ExtensionContext) {
-  const update = documentParseQueue.update.bind(documentParseQueue);
-  const clear = documentParseQueue.clear.bind(documentParseQueue);
+  const update = (document: TextDocument) => {
+    if (document.languageId !== 'greyscript') {
+      return false;
+    }
+
+    return documentParseQueue.update(document);
+  };
+  const clear = (document: TextDocument) => {
+    if (document.languageId !== 'greyscript') {
+      return;
+    }
+
+    documentParseQueue.clear(document);
+  };
 
   context.subscriptions.push(
     vscode.workspace.onDidOpenTextDocument(update),

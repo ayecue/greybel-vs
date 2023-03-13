@@ -22,11 +22,8 @@ import vscode, {
 } from 'vscode';
 
 import documentParseQueue from './helper/document-manager';
-import {
-  LookupHelper,
-  TypeInfo,
-  TypeInfoWithDefinition
-} from './helper/lookup-type';
+import { LookupHelper } from './helper/lookup-type';
+import { TypeInfo, TypeInfoWithDefinition } from './helper/type-manager';
 
 export const convertDefinitionsToCompletionList = (
   definitions: SignatureDefinitionContainer
@@ -43,14 +40,14 @@ export const convertDefinitionsToCompletionList = (
   return completionItems;
 };
 
-export const getCompletionList = (helper: LookupHelper, item: ASTBase): CompletionList | null => {
-  const base = helper.lookupBase(item);
-  const typeInfo = helper.resolvePath(base!);
+export const getCompletionList = (
+  helper: LookupHelper,
+  item: ASTBase
+): CompletionList | null => {
+  const typeInfo = helper.lookupBasePath(item);
 
   if (typeInfo instanceof TypeInfoWithDefinition) {
-    const definitions = getDefinitions(
-      typeInfo.definition.returns
-    );
+    const definitions = getDefinitions(typeInfo.definition.returns);
     const completionItems: CompletionItem[] = [
       ...convertDefinitionsToCompletionList(definitions)
     ];
@@ -73,67 +70,91 @@ export const getCompletionList = (helper: LookupHelper, item: ASTBase): Completi
 };
 
 export function activate(_context: ExtensionContext) {
-  vscode.languages.registerCompletionItemProvider(
-    'greyscript',
-    {
-      provideCompletionItems(
-        document: TextDocument,
-        position: Position,
-        _token: CancellationToken,
-        _ctx: CompletionContext
-      ) {
-        documentParseQueue.refresh(document);
-        const currentRange = new Range(position.translate(0, -1), position);
+  vscode.languages.registerCompletionItemProvider('greyscript', {
+    async provideCompletionItems(
+      document: TextDocument,
+      position: Position,
+      _token: CancellationToken,
+      _ctx: CompletionContext
+    ) {
+      documentParseQueue.refresh(document);
 
-        const helper = new LookupHelper(document);
-        const astResult = helper.lookupAST(position);
+      const currentRange = new Range(position.translate(0, -1), position);
 
-        if (astResult) {
-          const { closest, outer } = astResult;
-          const previous = outer.length > 0 ? outer[1] : undefined;
-
-          if (
-            previous?.type === ASTType.MemberExpression ||
-            previous?.type === ASTType.IndexExpression
-          ) {
-            const list = getCompletionList(helper, previous);
-            if (list) return list;
-          } else if (
-            document.getText(currentRange) === '.' &&
-            closest?.type === ASTType.MemberExpression ||
-            closest?.type === ASTType.IndexExpression
-          ) {
-            const list = getCompletionList(helper, closest);
-            if (list) return list;
-          }
-        }
-
-        // get all default methods
-        const defaultDefinitions = getDefinitions(['general']);
+      if (document.getText(currentRange) === '.') {
+        const definitions = getDefinitions(['any']);
         const completionItems: CompletionItem[] = [
-          ...convertDefinitionsToCompletionList(
-            defaultDefinitions
-          )
+          ...convertDefinitionsToCompletionList(definitions)
         ];
 
-        if (!astResult) {
+        if (completionItems.length > 0) {
           return new CompletionList(completionItems);
         }
+      }
 
-        // get all identifer available in scope
-        completionItems.push(
-          ...helper
-            .findAllAvailableIdentifier(astResult.closest)
-            .map((property: string) => {
-              return new CompletionItem(property, CompletionItemKind.Function);
-            })
-        );
+      const helper = new LookupHelper(document);
+      const astResult = helper.lookupAST(position);
 
+      if (astResult) {
+        const { outer } = astResult;
+        const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
+
+        if (
+          previous?.type === ASTType.MemberExpression ||
+          previous?.type === ASTType.IndexExpression
+        ) {
+          const list = getCompletionList(helper, previous);
+          if (list) return list;
+        }
+      }
+
+      // get all default methods
+      const defaultDefinitions = getDefinitions(['general']);
+      const completionItems: CompletionItem[] = [
+        ...convertDefinitionsToCompletionList(defaultDefinitions)
+      ];
+
+      if (!astResult) {
         return new CompletionList(completionItems);
       }
-    },
-    '.'
-  );
+
+      const existingProperties = new Set([
+        ...completionItems.map((item) => item.label)
+      ]);
+      const allImports = await documentParseQueue.getImportsOf(document);
+
+      for (const item of allImports) {
+        const { document } = item;
+
+        if (!document) {
+          continue;
+        }
+
+        completionItems.push(
+          ...helper
+            .findAllAvailableIdentifier(document)
+            .filter((property: string) => !existingProperties.has(property))
+            .map((property: string) => {
+              existingProperties.add(property);
+              return new CompletionItem(property, CompletionItemKind.Variable);
+            })
+        );
+      }
+
+      // get all identifer available in scope
+      completionItems.push(
+        ...helper
+          .findAllAvailableIdentifierRelatedToPosition(astResult.closest)
+          .filter((property: string) => !existingProperties.has(property))
+          .map((property: string) => {
+            existingProperties.add(property);
+            return new CompletionItem(property, CompletionItemKind.Variable);
+          })
+      );
+
+      return new CompletionList(completionItems);
+    }
+  });
 
   vscode.languages.registerSignatureHelpProvider(
     'greyscript',
