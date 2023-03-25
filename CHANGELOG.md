@@ -331,3 +331,4 @@ All notable changes to this project will be documented in this file.
 
 - fix nested #import in interpreter
 - proper json output when map/list gets stringified
+- fix refresh interval sometimes not parsing
