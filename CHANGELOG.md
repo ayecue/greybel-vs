@@ -326,3 +326,9 @@ All notable changes to this project will be documented in this file.
 - add support for import_code code completion [#26](https://github.com/ayecue/greybel-vs/issues/26), thanks for suggesting [@Patrick-van-Halm](https://github.com/Patrick-van-Halm)
 - add support for accessing within scope after instantiation code completion [#27](https://github.com/ayecue/greybel-vs/issues/27), thanks for suggesting [@Patrick-van-Halm](https://github.com/Patrick-van-Halm)
 - add type-manager for improved type resolving
+
+## [1.3.5] - 26-03-2023
+
+- fix nested #import in interpreter
+- proper json output when map/list gets stringified
+- fix refresh interval sometimes not parsing
