@@ -336,3 +336,7 @@ All notable changes to this project will be documented in this file.
 ## [1.3.6] - 26-03-2023
 
 - fix replace intrinsic
+
+## [1.3.7] - 27-03-2023
+
+- fix deep equal via extending max depth from 2 to 10 in interpreter
