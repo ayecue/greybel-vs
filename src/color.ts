@@ -129,7 +129,7 @@ export function activate(_context: ExtensionContext) {
                   astPosition: start,
                   lineIndex
                 }),
-                color: new Color(red / 255, green / 255, blue / 255, 0)
+                color: new Color(red / 255, green / 255, blue / 255, 1)
               });
             } else if (hasOwnProperty.call(ColorMap, value)) {
               const [red, green, blue] = colorConvert.hex.rgb(
@@ -144,7 +144,7 @@ export function activate(_context: ExtensionContext) {
                   astPosition: start,
                   lineIndex
                 }),
-                color: new Color(red / 255, green / 255, blue / 255, 0)
+                color: new Color(red / 255, green / 255, blue / 255, 1)
               });
             } else {
               result.push({
