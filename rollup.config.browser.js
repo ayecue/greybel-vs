@@ -1,4 +1,3 @@
-const path = require('path');
 const commonjs = require('@rollup/plugin-commonjs');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const { babel } = require('@rollup/plugin-babel');
@@ -20,7 +19,8 @@ const options = {
     plugins: [
         json(),
         commonjs({
-            esmExternals: ['vscode']
+            esmExternals: ['vscode'],
+            sourceMap: false
         }),
         nodePolyfills(),
         nodeResolve({
