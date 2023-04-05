@@ -142,7 +142,7 @@ export function activate(
     vscode.debug.registerDebugAdapterDescriptorFactory('greyscript', factory)
   );
   if ('dispose' in factory) {
-    context.subscriptions.push(factory);
+    context.subscriptions.push(factory as Record<"dispose", any>);
   }
 }
 

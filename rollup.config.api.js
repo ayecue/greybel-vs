@@ -1,7 +1,7 @@
 const commonjs = require('@rollup/plugin-commonjs');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const { babel } = require('@rollup/plugin-babel');
-const { terser } = require('rollup-plugin-terser');
+const terser = require('@rollup/plugin-terser').default;
 const json = require('@rollup/plugin-json');
 const nodePolyfills = require('rollup-plugin-node-polyfills');
 const externalGlobals  = require('rollup-plugin-external-globals');
