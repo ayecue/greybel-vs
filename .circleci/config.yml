@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@4.1
+  node: circleci/node@5.1.0
 
 commands:
   build:  
@@ -19,14 +19,14 @@ commands:
 jobs:
   build:  
     docker:
-      - image: cimg/node:15.1
+      - image: cimg/node:19.8.1
     steps:
       - checkout
       - node/install-packages
       - build
   build-and-publish: 
     docker:
-      - image: cimg/node:15.1
+      - image: cimg/node:19.8.1
     steps:
       - checkout
       - node/install-packages

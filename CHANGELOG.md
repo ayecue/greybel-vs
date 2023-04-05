@@ -340,3 +340,16 @@ All notable changes to this project will be documented in this file.
 ## [1.3.7] - 27-03-2023
 
 - fix deep equal via extending max depth from 2 to 10 in interpreter
+
+## [1.3.8] - 05-04-2023
+
+- use correct alpha channel value for color picker
+- fix error message in create_user related to invalid password format
+- fix acks condition in aireplay
+- fix permission check in get_content
+- fix current_date format
+- fix nslookup error handling
+- use proper max files in same folder
+- typeof for MetaMail returns now in the right capitalization
+- fix power operator handling
+- update meta descriptions
