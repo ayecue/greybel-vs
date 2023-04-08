@@ -4,7 +4,7 @@ GreyScript toolkit for [Grey Hack](https://greyhackgame.com). Includes highlight
 
 Based on [greybel-js](https://github.com/ayecue/greybel-js).
 
-If you need some GreyScript API information you can also checkout [greyscript-meta](https://documentation.greyscriot.org).
+If you need some GreyScript API information you can also checkout [greyscript-meta](https://documentation.greyscript.org).
 
 ## Usage
 
