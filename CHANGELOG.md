@@ -363,3 +363,8 @@ All notable changes to this project will be documented in this file.
 ## [1.4.0] - 07-04-2023
 
 - update meta version
+
+## [1.4.1] - 08-04-2023
+
+- update meta version
+- update readme
