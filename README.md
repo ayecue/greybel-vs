@@ -4,7 +4,7 @@ GreyScript toolkit for [Grey Hack](https://greyhackgame.com). Includes highlight
 
 Based on [greybel-js](https://github.com/ayecue/greybel-js).
 
-If you need some GreyScript API information you can also checkout [greyscript-meta](https://greyscript-meta.netlify.app/).
+If you need some GreyScript API information you can also checkout [greyscript-meta](https://documentation.greyscriot.org).
 
 ## Usage
 
@@ -125,7 +125,7 @@ A repl is also available while executing the script or having an active breakpoi
 
 ### API Browser
 
-API Browser for GreyScript. Version of [greyscript-meta](https://greyscript-meta.netlify.app/) in Visual Studio Code.
+API Browser for GreyScript. Version of [greyscript-meta](https://documentation.greyscript.org) in Visual Studio Code.
 
 ![API Browser](https://github.com/ayecue/greybel-vs/blob/main/assets/api-browser.png?raw=true "API Browser")
 
