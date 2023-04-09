@@ -368,3 +368,7 @@ All notable changes to this project will be documented in this file.
 
 - update meta version
 - update readme
+
+## [1.4.2] - 09-04-2023
+
+- fix potential crash in debugger
