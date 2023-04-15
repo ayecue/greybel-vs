@@ -372,3 +372,9 @@ All notable changes to this project will be documented in this file.
 ## [1.4.2] - 09-04-2023
 
 - fix potential crash in debugger
+
+## [1.4.3] - 15-04-2023
+
+- use regex in split intrinsic
+- fix list insert behaviour, return mutated list now
+- update meta descriptions
