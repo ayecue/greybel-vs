@@ -387,4 +387,5 @@ All notable changes to this project will be documented in this file.
 ## [1.4.5] - 21-04-2023
 
 - fix output format of show_procs in intrinsics
+- fix EOL character in format_columns intrinsics
 - update meta descriptions
