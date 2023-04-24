@@ -11,8 +11,8 @@ import {
   Thread
 } from '@vscode/debugadapter';
 import { DebugProtocol } from '@vscode/debugprotocol';
-import createMockEnvironment from 'greybel-gh-mock-intrinsics/dist/mock/environment';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
+import createMockEnvironment from 'greybel-gh-mock-intrinsics/dist/mock/environment';
 import {
   ContextType,
   CustomValue,
@@ -128,6 +128,8 @@ export class GreybelDebugSession extends LoggingDebugSession {
     };
     const config = vscode.workspace.getConfiguration('greybel');
     const seed = config.get<string>('interpreter.seed');
+    const environmentVariables =
+      config.get<object>('interpreter.environmentVariables') || {};
 
     me.setDebuggerLinesStartAt1(false);
     me.setDebuggerColumnsStartAt1(false);
@@ -139,7 +141,16 @@ export class GreybelDebugSession extends LoggingDebugSession {
         outputHandler: new VSOutputHandler()
       }),
       debugger: new GrebyelDebugger(me),
-      api: initIntrinsics(initGHIntrinsics(new ObjectValue(), createMockEnvironment(seed)))
+      api: initIntrinsics(
+        initGHIntrinsics(new ObjectValue(), createMockEnvironment(seed))
+      ),
+      environmentVariables: Object.entries(environmentVariables).reduce(
+        (result, [key, value]) => {
+          result.set(key, value);
+          return result;
+        },
+        new Map()
+      )
     });
   }
 

@@ -271,6 +271,12 @@
                     "default": "test",
                     "description": "Interpreter seed."
                 },
+                "greybel.interpreter.environmentVariables": {
+                    "type": "object",
+                    "default": {},
+                    "description": "Environment variables.",
+                    "scope": "resource"
+                },
                 "greybel.transpiler.buildType": {
                     "type": "string",
                     "enum": [
