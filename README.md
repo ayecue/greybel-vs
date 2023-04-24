@@ -37,6 +37,9 @@ Do not forget to setup your plugin to your needs. Following settings are availab
     - Environment variables
     - Excluded namespaces when optimizing
     - Obfuscation
+- Interpreter specific
+    - Define seed
+    - Environment variables
 - Installer specific
     - Define max characters per file
 
