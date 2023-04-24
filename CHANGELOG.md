@@ -393,3 +393,6 @@ All notable changes to this project will be documented in this file.
 ## [1.4.6] - 24-04-2023
 
 - fix potential crash caused by meta due to not using hasOwnProperty
+- support customizable seed in interpreter
+- support customizable environment variables in interpreter
+- add build command in file context menu
