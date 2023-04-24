@@ -9,10 +9,12 @@ import vscode, {
   ExtensionContext,
   TextEditor,
   TextEditorEdit,
-  Uri
+  Uri,
+  Event
 } from 'vscode';
 
 import { PseudoFS, TranspilerResourceProvider } from './resource';
+import { workspace } from 'vscode';
 
 function createContentHeader(): string {
   return ['s=get_shell', 'c=s.host_computer', 'h=home_dir', 'p=@push'].join(
@@ -198,9 +200,9 @@ export function activate(context: ExtensionContext) {
   async function build(
     editor: TextEditor,
     _edit: TextEditorEdit,
-    _args: any[]
+    eventUri: Uri
   ) {
-    if (editor.document.isDirty) {
+    if (editor.document.uri.fsPath === eventUri.fsPath && editor.document.isDirty) {
       const isSaved = await editor.document.save();
 
       if (!isSaved) {
@@ -214,7 +216,7 @@ export function activate(context: ExtensionContext) {
 
     try {
       const config = vscode.workspace.getConfiguration('greybel');
-      const target = editor.document.fileName;
+      const target = eventUri.fsPath;
       const buildTypeFromConfig = config.get('transpiler.buildType');
       const environmentVariablesFromConfig =
         config.get<object>('transpiler.environmentVariables') || {};
@@ -244,7 +246,7 @@ export function activate(context: ExtensionContext) {
 
       const rootPath = vscode.workspace.rootPath
         ? Uri.file(vscode.workspace.rootPath)
-        : Uri.joinPath(Uri.file(editor.document.fileName), '..');
+        : Uri.joinPath(Uri.file(eventUri.fsPath), '..');
       const buildPath = Uri.joinPath(rootPath, './build');
       const targetRootSegments = Uri.joinPath(
         Uri.file(target),

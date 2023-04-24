@@ -134,6 +134,13 @@
                     "group": "navigation"
                 }
             ],
+            "explorer/context": [
+                {
+                    "command": "greybel.build",
+                    "when": "resourceLangId == greyscript && !isWeb",
+                    "group": "1_modification"
+                }
+            ],
             "commandPalette": [
                 {
                     "command": "greybel.debug.debugEditorContents",
