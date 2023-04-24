@@ -144,7 +144,12 @@ export class GreybelDebugSession extends LoggingDebugSession {
       api: initIntrinsics(
         initGHIntrinsics(new ObjectValue(), createMockEnvironment(seed))
       ),
-      environmentVariables: new Map(Object.entries(environmentVariables))
+      environmentVariables: new Map(
+        Object.entries(environmentVariables).map(([key, value]) => [
+          key,
+          value.toString()
+        ])
+      )
     });
   }
 
