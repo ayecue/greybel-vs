@@ -266,6 +266,11 @@
                     "default": true,
                     "description": "Enable Greybel diagnostic."
                 },
+                "greybel.interpreter.seed": {
+                    "type": "string",
+                    "default": "test",
+                    "description": "Interpreter seed."
+                },
                 "greybel.transpiler.buildType": {
                     "type": "string",
                     "enum": [
