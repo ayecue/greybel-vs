@@ -389,3 +389,7 @@ All notable changes to this project will be documented in this file.
 - fix output format of show_procs in intrinsics
 - fix EOL character in format_columns intrinsics
 - update meta descriptions
+
+## [1.4.6] - 24-04-2023
+
+- fix potential crash caused by meta due to not using hasOwnProperty
