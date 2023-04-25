@@ -4,7 +4,7 @@ GreyScript toolkit for [Grey Hack](https://greyhackgame.com). Includes highlight
 
 Based on [greybel-js](https://github.com/ayecue/greybel-js).
 
-If you need some GreyScript API information you can also checkout [greyscript-meta](https://documentation.greyscript.org).
+If you need some GreyScript API information you can also look into this [GreyScript Documentation](https://documentation.greyscript.org).
 
 ## Usage
 
@@ -37,6 +37,9 @@ Do not forget to setup your plugin to your needs. Following settings are availab
     - Environment variables
     - Excluded namespaces when optimizing
     - Obfuscation
+- Interpreter specific
+    - Define seed
+    - Environment variables
 - Installer specific
     - Define max characters per file
 
@@ -103,7 +106,7 @@ After you pressed run a prompt will appear to input the parameters for the execu
 
 ![Enter params](https://github.com/ayecue/greybel-vs/blob/main/assets/params.png?raw=true "Enter params")
 
-Since the latest update it also supports colors in the console via a pseudo terminal. Also inputing data is much more convinient now since there won't be any popups anymore instead you can use the pseudo terminal.
+Supports colors in the console via a pseudo terminal. Also inputing data is much more convinient now since there won't be any popups anymore instead you can use the pseudo terminal.
 
 ![Pseudo Terminal](https://github.com/ayecue/greybel-vs/blob/main/assets/pseudo-terminal.png?raw=true "Pseudo Terminal")
 

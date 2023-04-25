@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.4.5",
+    "version": "1.4.6",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -132,6 +132,13 @@
                     "command": "greybel.gotoError",
                     "when": "resourceLangId == greyscript",
                     "group": "navigation"
+                }
+            ],
+            "explorer/context": [
+                {
+                    "command": "greybel.build",
+                    "when": "resourceLangId == greyscript && !isWeb",
+                    "group": "1_modification"
                 }
             ],
             "commandPalette": [
@@ -266,6 +273,17 @@
                     "default": true,
                     "description": "Enable Greybel diagnostic."
                 },
+                "greybel.interpreter.seed": {
+                    "type": "string",
+                    "default": "test",
+                    "description": "Interpreter seed."
+                },
+                "greybel.interpreter.environmentVariables": {
+                    "type": "object",
+                    "default": {},
+                    "description": "Environment variables.",
+                    "scope": "resource"
+                },
                 "greybel.transpiler.buildType": {
                     "type": "string",
                     "enum": [
@@ -381,12 +399,12 @@
         "color-convert": "^2.0.1",
         "css-color-names": "^1.0.1",
         "greybel-core": "^0.6.7",
-        "greybel-gh-mock-intrinsics": "^1.7.9",
-        "greybel-interpreter": "^1.6.4",
-        "greybel-intrinsics": "^1.6.7",
-        "greybel-transpiler": "^0.8.2",
+        "greybel-gh-mock-intrinsics": "^1.8.2",
+        "greybel-interpreter": "^1.6.7",
+        "greybel-intrinsics": "^1.7.0",
+        "greybel-transpiler": "^0.8.3",
         "greyscript-core": "^0.6.2",
-        "greyscript-meta": "^1.3.7",
+        "greyscript-meta": "^1.3.8",
         "lru-cache": "^7.14.1",
         "react-string-replace": "^1.1.0",
         "text-encoder-lite": "^2.0.0",
