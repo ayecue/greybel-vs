@@ -399,3 +399,9 @@ All notable changes to this project will be documented in this file.
 - add build command in file context menu
 - support circular dependencies for interpreter
 - add circular dependency check for build
+
+## [1.4.7] - 28.04.2023
+
+- support gh intrinsic references
+- support program to launch itself
+- add test-lib for setting up envs and debugging - [read more](https://github.com/ayecue/greybel-js#testlib)

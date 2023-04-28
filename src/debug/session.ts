@@ -11,8 +11,11 @@ import {
   Thread
 } from '@vscode/debugadapter';
 import { DebugProtocol } from '@vscode/debugprotocol';
-import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
-import createMockEnvironment from 'greybel-gh-mock-intrinsics/dist/mock/environment';
+import {
+  createGHMockEnv,
+  GHMockIntrinsicEnv,
+  init as initGHIntrinsics
+} from 'greybel-gh-mock-intrinsics';
 import {
   ContextType,
   CustomValue,
@@ -59,6 +62,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
   public breakpoints: Map<string, DebugProtocol.Breakpoint[]> = new Map();
 
   private _runtime: Interpreter;
+  private _env: GHMockIntrinsicEnv;
   private _breakpointIncrement: number = 0;
   private _restart: boolean = false;
   private _messageQueue: MessageQueue | null;
@@ -134,6 +138,9 @@ export class GreybelDebugSession extends LoggingDebugSession {
     me.setDebuggerLinesStartAt1(false);
     me.setDebuggerColumnsStartAt1(false);
 
+    this._env = createGHMockEnv({
+      seed
+    });
     this._messageQueue = null;
     this._runtime = new Interpreter({
       handler: new HandlerContainer({
@@ -141,9 +148,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
         outputHandler: new VSOutputHandler()
       }),
       debugger: new GrebyelDebugger(me),
-      api: initIntrinsics(
-        initGHIntrinsics(new ObjectValue(), createMockEnvironment(seed))
-      ),
+      api: initIntrinsics(initGHIntrinsics(new ObjectValue(), this._env)),
       environmentVariables: new Map(
         Object.entries(environmentVariables).map(([key, value]) => [
           key,
@@ -231,6 +236,8 @@ export class GreybelDebugSession extends LoggingDebugSession {
     me._runtime.setDebugger(
       args.noDebug ? new GrebyelPseudoDebugger() : new GrebyelDebugger(me)
     );
+    me._env.getLocal().programPath.content =
+      await me._runtime.handler.resourceHandler.get(args.program);
 
     me._restart = false;
 
