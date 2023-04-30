@@ -45,7 +45,9 @@ export function activate(context: ExtensionContext) {
           
         </div>
         <footer>
-          <script defer src="${panel.webview.asWebviewUri(indexScript)}"></script>
+          <script defer src="${panel.webview.asWebviewUri(
+            indexScript
+          )}"></script>
         </footer>
       </body>
     </html>`;

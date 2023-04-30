@@ -9,12 +9,10 @@ import vscode, {
   ExtensionContext,
   TextEditor,
   TextEditorEdit,
-  Uri,
-  Event
+  Uri
 } from 'vscode';
 
 import { PseudoFS, TranspilerResourceProvider } from './resource';
-import { workspace } from 'vscode';
 
 function createContentHeader(): string {
   return ['s=get_shell', 'c=s.host_computer', 'h=home_dir', 'p=@push'].join(
@@ -202,7 +200,10 @@ export function activate(context: ExtensionContext) {
     _edit: TextEditorEdit,
     eventUri: Uri
   ) {
-    if (editor.document.uri.fsPath === eventUri.fsPath && editor.document.isDirty) {
+    if (
+      editor.document.uri.fsPath === eventUri.fsPath &&
+      editor.document.isDirty
+    ) {
       const isSaved = await editor.document.save();
 
       if (!isSaved) {

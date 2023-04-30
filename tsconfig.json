@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es2019",
-    "lib": ["dom", "ES2019"],
+    "target": "es2020",
+    "lib": ["dom", "ES2020"],
     "outDir": "out",
     "sourceMap": true,
     "rootDir": "src",
-    "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
