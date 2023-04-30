@@ -4,6 +4,7 @@ import PseudoTerminal from '../helper/pseudo-terminal';
 
 export interface MessageBufferItem {
   message: string;
+  appendNewLine: boolean;
   line?: number;
 }
 
@@ -44,7 +45,7 @@ export default class MessageQueue {
     }
 
     me.pending = true;
-    me.terminal.print(item.message);
+    me.terminal.print(item.message, item.appendNewLine);
 
     process.nextTick(() => {
       me.digest();

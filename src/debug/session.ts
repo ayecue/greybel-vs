@@ -74,7 +74,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
     const me = this;
 
     const VSOutputHandler = class extends OutputHandler {
-      print(message: string) {
+      print(message: string, appendNewLine: boolean = true) {
         const transformed = transform(message);
         const opc = me._runtime.apiContext.getLastActive();
         let line;
@@ -83,14 +83,18 @@ export class GreybelDebugSession extends LoggingDebugSession {
           line = opc.stackItem.start?.line;
         }
 
-        me._messageQueue?.print({ message: transformed.replace(/\\n/g, '\n'), line });
+        me._messageQueue?.print({
+          message: transformed.replace(/\\n/g, '\n'),
+          line,
+          appendNewLine
+        });
       }
 
       clear() {
         me._messageQueue?.clear();
       }
 
-      async progress(timeout: number): Promise<void> {
+      progress(timeout: number): PromiseLike<void> {
         const terminal = PseudoTerminal.getActiveTerminal();
         const startTime = Date.now();
         const max = 20;
@@ -120,14 +124,16 @@ export class GreybelDebugSession extends LoggingDebugSession {
         });
       }
 
-      waitForInput(isPassword: boolean): Promise<string> {
+      waitForInput(isPassword: boolean): PromiseLike<string> {
         return PseudoTerminal.getActiveTerminal().waitForInput(isPassword);
       }
 
-      async waitForKeyPress(): Promise<KeyEvent> {
-        const key = await PseudoTerminal.getActiveTerminal().waitForKeyPress();
-
-        return transformStringToKeyEvent(key);
+      waitForKeyPress(): PromiseLike<KeyEvent> {
+        return PseudoTerminal.getActiveTerminal()
+          .waitForKeyPress()
+          .then((key) => {
+            return transformStringToKeyEvent(key);
+          });
       }
     };
     const config = vscode.workspace.getConfiguration('greybel');

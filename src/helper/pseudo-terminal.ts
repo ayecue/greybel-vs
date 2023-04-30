@@ -42,7 +42,7 @@ export default class PseudoTerminal {
     PseudoTerminal.activeTerminals.add(this);
   }
 
-  waitForInput(isPassword: boolean = false): Promise<string> {
+  waitForInput(isPassword: boolean = false): PromiseLike<string> {
     if (this.closed) return Promise.resolve('');
 
     this.focus();
@@ -87,7 +87,7 @@ export default class PseudoTerminal {
     });
   }
 
-  waitForKeyPress(): Promise<string> {
+  waitForKeyPress(): PromiseLike<string> {
     if (this.closed) return Promise.resolve(String.fromCharCode(13));
 
     this.focus();
@@ -120,12 +120,12 @@ export default class PseudoTerminal {
   }
 
   print(message: string, newline: boolean = true) {
-    this.writeEmitter.fire(`${normalize(message)}\r${newline ? '\n' : ''}`);
+    this.writeEmitter.fire(`${normalize(message)}${newline ? '\r\n' : ''}`);
     this.terminal.show();
   }
 
   replace(message: string) {
-    this.writeEmitter.fire(`${normalize(message)}\r`);
+    this.writeEmitter.fire(`${normalize(message)}`);
     this.terminal.show();
   }
 
