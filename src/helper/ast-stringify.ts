@@ -5,7 +5,7 @@ import DefaultMapProvider, {
 import { ASTBase } from 'greyscript-core';
 
 export default function transform(item: ASTBase): string {
-  const provider = <(make: Function, context: Context) => BuildMap>(
+  const provider = <(make: Function, context: Context) => BuildMap><unknown>(
     DefaultMapProvider
   );
   const transformer = new Transformer(
