@@ -414,3 +414,4 @@ All notable changes to this project will be documented in this file.
 ## [1.4.9] - 29.04.2023
 
 - replace newline in print with actual newline
+- refactor output handler enabling user_input not forcing newline
