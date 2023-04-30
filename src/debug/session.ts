@@ -83,7 +83,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
           line = opc.stackItem.start?.line;
         }
 
-        me._messageQueue?.print({ message: transformed, line });
+        me._messageQueue?.print({ message: transformed.replace(/\\n/g, '\n'), line });
       }
 
       clear() {
