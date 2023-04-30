@@ -124,11 +124,14 @@ export class GreybelDebugSession extends LoggingDebugSession {
         });
       }
 
-      waitForInput(isPassword: boolean): PromiseLike<string> {
+      waitForInput(isPassword: boolean, message: string): PromiseLike<string> {
+        this.print(message, false);
         return PseudoTerminal.getActiveTerminal().waitForInput(isPassword);
       }
 
-      waitForKeyPress(): PromiseLike<KeyEvent> {
+      waitForKeyPress(message: string): PromiseLike<KeyEvent> {
+        this.print(message);
+
         return PseudoTerminal.getActiveTerminal()
           .waitForKeyPress()
           .then((key) => {
