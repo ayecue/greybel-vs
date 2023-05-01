@@ -9,7 +9,7 @@ import transform, { Tag, TagRecord } from 'text-mesh-transformer';
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 const provider = new AnotherAnsiProvider(EscapeSequence.Hex);
 
-function useColor(color: string | undefined, content: string): string {
+export function useColor(color: string | undefined, content: string): string {
   if (!color) return content;
 
   const cssColorMap = cssColorNames as { [key: string]: string };
@@ -22,7 +22,7 @@ function useColor(color: string | undefined, content: string): string {
   return provider.colorWithHex(color, content);
 }
 
-function useBgColor(color: string | undefined, content: string): string {
+export function useBgColor(color: string | undefined, content: string): string {
   if (!color) return content;
 
   const cssColorMap = cssColorNames as { [key: string]: string };

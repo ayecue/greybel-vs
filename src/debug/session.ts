@@ -34,12 +34,10 @@ import { init as initIntrinsics } from 'greybel-intrinsics';
 import vscode from 'vscode';
 
 import PseudoTerminal from '../helper/pseudo-terminal';
-import transform from '../helper/text-mesh-transform';
+import transform, { useColor } from '../helper/text-mesh-transform';
 import transformStringToKeyEvent from '../helper/transform-string-to-key-event';
 import { InterpreterResourceProvider, PseudoFS } from '../resource';
 import MessageQueue from './message-queue';
-
-const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
   program: string;
@@ -268,39 +266,23 @@ export class GreybelDebugSession extends LoggingDebugSession {
       me.sendResponse(response);
     } catch (err: any) {
       if (err instanceof PrepareError) {
-        me.sendErrorResponse(
-          response,
-          1104,
-          '{message} in {relatedTarget}',
-          {
-            message: err.message,
-            relatedTarget: err.relatedTarget
-          },
-          ErrorDestination.User
-        );
+        me._messageQueue.print({
+          message: useColor('red', `${err.message} in ${err.relatedTarget}`),
+          appendNewLine: true
+        });
       } else if (err instanceof RuntimeError) {
-        me.sendErrorResponse(
-          response,
-          1104,
-          '{message} in {relatedTarget}: {stack}',
-          {
-            message: err.message,
-            relatedTarget: err.relatedTarget,
-            stack: err.stack
-          },
-          ErrorDestination.User
-        );
+        me._messageQueue.print({
+          message: useColor('red', `${err.message} in ${err.relatedTarget}\n${err.stack}`),
+          appendNewLine: true
+        });
       } else {
-        me.sendErrorResponse(
-          response,
-          1104,
-          'Unexpected error: {message}',
-          {
-            message: err.message
-          },
-          ErrorDestination.User
-        );
+        me._messageQueue.print({
+          message: useColor('red', `Unexpected error: ${err.message}\n${err.stack}`),
+          appendNewLine: true
+        });
       }
+
+      vscode.window.showErrorMessage(err.message, { modal: false });
     } finally {
       me._messageQueue?.end();
     }
