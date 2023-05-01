@@ -1,6 +1,7 @@
 import {
   Breakpoint,
   BreakpointEvent,
+  ErrorDestination,
   InitializedEvent,
   LoggingDebugSession,
   Scope,
@@ -11,6 +12,7 @@ import {
   Thread
 } from '@vscode/debugadapter';
 import { DebugProtocol } from '@vscode/debugprotocol';
+import { ModifierType } from 'another-ansi';
 import {
   createGHMockEnv,
   GHMockIntrinsicEnv,
@@ -25,18 +27,21 @@ import {
   KeyEvent,
   ObjectValue,
   OperationContext,
-  OutputHandler
+  OutputHandler,
+  PrepareError,
+  RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import vscode from 'vscode';
 
 import PseudoTerminal from '../helper/pseudo-terminal';
-import transform from '../helper/text-mesh-transform';
+import transform, {
+  ansiProvider,
+  useColor
+} from '../helper/text-mesh-transform';
 import transformStringToKeyEvent from '../helper/transform-string-to-key-event';
 import { InterpreterResourceProvider, PseudoFS } from '../resource';
 import MessageQueue from './message-queue';
-
-const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
   program: string;
@@ -79,8 +84,8 @@ export class GreybelDebugSession extends LoggingDebugSession {
         const opc = me._runtime.apiContext.getLastActive();
         let line;
 
-        if (opc.stackItem) {
-          line = opc.stackItem.start?.line;
+        if (opc.stackTrace.length > 0) {
+          line = opc.stackTrace[0].item?.start.line;
         }
 
         me._messageQueue?.print({
@@ -264,40 +269,36 @@ export class GreybelDebugSession extends LoggingDebugSession {
       await me._runtime.run();
       me.sendResponse(response);
     } catch (err: any) {
-      const opc =
-        me._runtime.apiContext.getLastActive() || me._runtime.globalContext;
-
-      if (opc.stackItem) {
-        me.sendErrorResponse(response, {
-          id: 1001,
-          format: `Runtime error: ${err.message} at line ${
-            opc.stackItem.start!.line
-          }:${opc.stackItem.start!.character} in ${opc.target}`,
-          showUser: true
-        });
-      } else if (hasOwnProperty.call(err, 'line')) {
-        const line = err.line;
-
-        me.sendErrorResponse(response, {
-          id: 1001,
-          format: `Parsing error: ${err.message} at line ${line} in ${opc.target}`,
-          showUser: true
-        });
-      } else if (hasOwnProperty.call(err, 'token')) {
-        const line = err.token.line;
-
-        me.sendErrorResponse(response, {
-          id: 1001,
-          format: `Parsing error: ${err.message} at line ${line} in ${opc.target}`,
-          showUser: true
-        });
+      if (err instanceof PrepareError) {
+        PseudoTerminal.getActiveTerminal().print(
+          useColor(
+            'red',
+            `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
+              err.message
+            } in ${err.relatedTarget}`
+          )
+        );
+      } else if (err instanceof RuntimeError) {
+        PseudoTerminal.getActiveTerminal().print(
+          useColor(
+            'red',
+            `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
+              err.message
+            } in ${err.relatedTarget}\n${err.stack}`
+          )
+        );
       } else {
-        me.sendErrorResponse(response, {
-          id: 1001,
-          format: `Unexpected error: ${err.message} in ${opc.target}`,
-          showUser: true
-        });
+        PseudoTerminal.getActiveTerminal().print(
+          useColor(
+            'red',
+            `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+              err.message
+            }\n${err.stack}`
+          )
+        );
       }
+
+      vscode.window.showErrorMessage(err.message, { modal: false });
     } finally {
       me._messageQueue?.end();
     }
@@ -464,25 +465,19 @@ export class GreybelDebugSession extends LoggingDebugSession {
     const me = this;
     const frames: IRuntimeStackFrame[] = [];
     const last = me._runtime.apiContext.getLastActive();
-    let index = 0;
-    let current = last;
 
-    while (current) {
-      const stackItem = current.stackItem;
+    for (let index = 0; index < last.stackTrace.length; index++) {
+      const current = last.stackTrace[index];
 
-      if (stackItem) {
-        const stackFrame: IRuntimeStackFrame = {
-          index: index++,
-          name: stackItem.type, // use a word of the line as the stackframe name
-          file: current.target,
-          line: stackItem.start!.line,
-          column: 0
-        };
+      const stackFrame: IRuntimeStackFrame = {
+        index,
+        name: current.item.type, // use a word of the line as the stackframe name
+        file: current.target,
+        line: current.item?.start.line,
+        column: current.item?.start.character
+      };
 
-        frames.push(stackFrame);
-      }
-
-      current = current.previous;
+      frames.push(stackFrame);
     }
 
     return {
@@ -622,7 +617,7 @@ class GrebyelDebugger extends Debugger {
       this.session.breakpoints.get(operationContext.target) || [];
     const actualBreakpoint = breakpoints.find(
       (bp: DebugProtocol.Breakpoint) => {
-        return bp.line === operationContext.stackItem?.start!.line;
+        return bp.line === operationContext.stackTrace[0]?.item?.start.line;
       }
     ) as DebugProtocol.Breakpoint;
 

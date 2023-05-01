@@ -1,4 +1,5 @@
 import {
+  BuildError,
   BuildType,
   Transpiler,
   TranspilerParseResult
@@ -300,7 +301,17 @@ export function activate(context: ExtensionContext) {
         { modal: false }
       );
     } catch (err: any) {
-      vscode.window.showErrorMessage(err.message, { modal: false });
+      if (err instanceof BuildError) {
+        vscode.window.showErrorMessage(
+          `Build error: ${err.message} in ${err.relatedTarget}`,
+          { modal: false }
+        );
+      } else {
+        vscode.window.showErrorMessage(
+          `Unexpected error: ${err.message}\n${err.stack}`,
+          { modal: false }
+        );
+      }
     }
   }
 
