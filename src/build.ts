@@ -303,11 +303,14 @@ export function activate(context: ExtensionContext) {
     } catch (err: any) {
       if (err instanceof BuildError) {
         vscode.window.showErrorMessage(
-          `${err.message} in ${err.relatedTarget}`,
+          `Build error: ${err.message} in ${err.relatedTarget}`,
           { modal: false }
         );
       } else {
-        vscode.window.showErrorMessage(err.message, { modal: false });
+        vscode.window.showErrorMessage(
+          `Unexpected error: ${err.message}\n${err.stack}`,
+          { modal: false }
+        );
       }
     }
   }

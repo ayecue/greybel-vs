@@ -267,11 +267,17 @@ export class GreybelDebugSession extends LoggingDebugSession {
     } catch (err: any) {
       if (err instanceof PrepareError) {
         PseudoTerminal.getActiveTerminal().print(
-          useColor('red', `Prepare error: ${err.message} in ${err.relatedTarget}`)
+          useColor(
+            'red',
+            `Prepare error: ${err.message} in ${err.relatedTarget}`
+          )
         );
       } else if (err instanceof RuntimeError) {
         PseudoTerminal.getActiveTerminal().print(
-          useColor('red', `Runtime error: ${err.message} in ${err.relatedTarget}\n${err.stack}`)
+          useColor(
+            'red',
+            `Runtime error: ${err.message} in ${err.relatedTarget}\n${err.stack}`
+          )
         );
       } else {
         PseudoTerminal.getActiveTerminal().print(
