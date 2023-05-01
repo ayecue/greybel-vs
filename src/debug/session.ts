@@ -266,20 +266,17 @@ export class GreybelDebugSession extends LoggingDebugSession {
       me.sendResponse(response);
     } catch (err: any) {
       if (err instanceof PrepareError) {
-        me._messageQueue.print({
-          message: useColor('red', `${err.message} in ${err.relatedTarget}`),
-          appendNewLine: true
-        });
+        PseudoTerminal.getActiveTerminal().print(
+          useColor('red', `Prepare error: ${err.message} in ${err.relatedTarget}`)
+        );
       } else if (err instanceof RuntimeError) {
-        me._messageQueue.print({
-          message: useColor('red', `${err.message} in ${err.relatedTarget}\n${err.stack}`),
-          appendNewLine: true
-        });
+        PseudoTerminal.getActiveTerminal().print(
+          useColor('red', `Runtime error: ${err.message} in ${err.relatedTarget}\n${err.stack}`)
+        );
       } else {
-        me._messageQueue.print({
-          message: useColor('red', `Unexpected error: ${err.message}\n${err.stack}`),
-          appendNewLine: true
-        });
+        PseudoTerminal.getActiveTerminal().print(
+          useColor('red', `Unexpected error: ${err.message}\n${err.stack}`)
+        );
       }
 
       vscode.window.showErrorMessage(err.message, { modal: false });
