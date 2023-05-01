@@ -12,6 +12,7 @@ import {
   Thread
 } from '@vscode/debugadapter';
 import { DebugProtocol } from '@vscode/debugprotocol';
+import { ModifierType } from 'another-ansi';
 import {
   createGHMockEnv,
   GHMockIntrinsicEnv,
@@ -34,7 +35,10 @@ import { init as initIntrinsics } from 'greybel-intrinsics';
 import vscode from 'vscode';
 
 import PseudoTerminal from '../helper/pseudo-terminal';
-import transform, { useColor } from '../helper/text-mesh-transform';
+import transform, {
+  ansiProvider,
+  useColor
+} from '../helper/text-mesh-transform';
 import transformStringToKeyEvent from '../helper/transform-string-to-key-event';
 import { InterpreterResourceProvider, PseudoFS } from '../resource';
 import MessageQueue from './message-queue';
@@ -269,19 +273,28 @@ export class GreybelDebugSession extends LoggingDebugSession {
         PseudoTerminal.getActiveTerminal().print(
           useColor(
             'red',
-            `Prepare error: ${err.message} in ${err.relatedTarget}`
+            `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
+              err.message
+            } in ${err.relatedTarget}`
           )
         );
       } else if (err instanceof RuntimeError) {
         PseudoTerminal.getActiveTerminal().print(
           useColor(
             'red',
-            `Runtime error: ${err.message} in ${err.relatedTarget}\n${err.stack}`
+            `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
+              err.message
+            } in ${err.relatedTarget}\n${err.stack}`
           )
         );
       } else {
         PseudoTerminal.getActiveTerminal().print(
-          useColor('red', `Unexpected error: ${err.message}\n${err.stack}`)
+          useColor(
+            'red',
+            `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+              err.message
+            }\n${err.stack}`
+          )
         );
       }
 

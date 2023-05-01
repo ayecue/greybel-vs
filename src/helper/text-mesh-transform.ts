@@ -7,7 +7,7 @@ import cssColorNames from 'css-color-names';
 import transform, { Tag, TagRecord } from 'text-mesh-transformer';
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
-const provider = new AnotherAnsiProvider(EscapeSequence.Hex);
+export const ansiProvider = new AnotherAnsiProvider(EscapeSequence.Hex);
 
 export function useColor(color: string | undefined, content: string): string {
   if (!color) return content;
@@ -19,7 +19,7 @@ export function useColor(color: string | undefined, content: string): string {
     color = item;
   }
 
-  return provider.colorWithHex(color, content);
+  return ansiProvider.colorWithHex(color, content);
 }
 
 export function useBgColor(color: string | undefined, content: string): string {
@@ -32,7 +32,7 @@ export function useBgColor(color: string | undefined, content: string): string {
     color = item;
   }
 
-  return provider.bgColorWithHex(color, content);
+  return ansiProvider.bgColorWithHex(color, content);
 }
 
 function wrapWithTag(openTag: TagRecord, content: string): string {
@@ -40,13 +40,13 @@ function wrapWithTag(openTag: TagRecord, content: string): string {
     case Tag.Color:
       return useColor(openTag.value, content);
     case Tag.Underline:
-      return provider.modify(ModifierType.Underline, content);
+      return ansiProvider.modify(ModifierType.Underline, content);
     case Tag.Italic:
-      return provider.modify(ModifierType.Italic, content);
+      return ansiProvider.modify(ModifierType.Italic, content);
     case Tag.Bold:
-      return provider.modify(ModifierType.Bold, content);
+      return ansiProvider.modify(ModifierType.Bold, content);
     case Tag.Strikethrough:
-      return provider.modify(ModifierType.Strikethrough, content);
+      return ansiProvider.modify(ModifierType.Strikethrough, content);
     case Tag.Mark:
       return useBgColor(openTag.value, content);
     case Tag.Lowercase:
