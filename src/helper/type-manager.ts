@@ -310,6 +310,8 @@ export class TypeMap {
   }
 
   resolve(item: ASTBase): TypeInfo | null {
+    if (item == null) return null;
+
     const me = this;
 
     switch (item.type) {
@@ -399,10 +401,15 @@ export class TypeMap {
     const me = this;
 
     console.time('analyzing');
-    me.analyzeScope(me.root);
 
-    for (const scope of me.root.scopes) {
-      me.analyzeScope(scope);
+    try {
+      me.analyzeScope(me.root);
+
+      for (const scope of me.root.scopes) {
+        me.analyzeScope(scope);
+      }
+    } catch (err) {
+      console.error(err);
     }
 
     console.timeEnd('analyzing');
