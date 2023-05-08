@@ -439,3 +439,7 @@ All notable changes to this project will be documented in this file.
 ## [1.5.3] - 08.05.2023
 
 - fix text-mesh transformation render for inner children
+
+## [1.5.4] - 09.05.2023
+
+- fix get library type in mock env, potentially fixing crash in netsession intrinsic
