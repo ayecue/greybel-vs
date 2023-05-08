@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -408,7 +408,7 @@
         "lru-cache": "^7.14.1",
         "react-string-replace": "^1.1.0",
         "text-encoder-lite": "^2.0.0",
-        "text-mesh-transformer": "^1.0.2"
+        "text-mesh-transformer": "^1.0.4"
     },
     "browserslist": "> 0.25%, not dead"
 }
