@@ -402,14 +402,10 @@ export class TypeMap {
 
     console.time('analyzing');
 
-    try {
-      me.analyzeScope(me.root);
+    me.analyzeScope(me.root);
 
-      for (const scope of me.root.scopes) {
-        me.analyzeScope(scope);
-      }
-    } catch (err) {
-      console.error(err);
+    for (const scope of me.root.scopes) {
+      me.analyzeScope(scope);
     }
 
     console.timeEnd('analyzing');
