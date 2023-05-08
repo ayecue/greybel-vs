@@ -4,7 +4,7 @@ import {
   ModifierType
 } from 'another-ansi';
 import cssColorNames from 'css-color-names';
-import transform, { Tag, TagRecord } from 'text-mesh-transformer';
+import { transform, Tag, TagRecord } from 'text-mesh-transformer';
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 export const ansiProvider = new AnotherAnsiProvider(EscapeSequence.Hex);
