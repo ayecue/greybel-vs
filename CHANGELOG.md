@@ -435,3 +435,7 @@ All notable changes to this project will be documented in this file.
 - update meta
 - fix faulty mock data which could potentially cause crash
 - rework parser to emulate greyscript behaviour more accurate
+
+## [1.5.3] - 08.05.2023
+
+- fix text-mesh transformation render for inner children
