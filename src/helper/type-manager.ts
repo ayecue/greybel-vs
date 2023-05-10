@@ -8,6 +8,7 @@ import {
   ASTFunctionStatement,
   ASTIdentifier,
   ASTIndexExpression,
+  ASTListValue,
   ASTLiteral,
   ASTMemberExpression,
   ASTParenthesisExpression,
@@ -264,6 +265,11 @@ export class TypeMap {
     return this.resolve(base);
   }
 
+  private resolveListValue(item: ASTListValue): TypeInfo | null {
+    const { value } = item;
+    return this.resolve(value);
+  }
+
   private resolveParenthesisExpression(
     item: ASTParenthesisExpression
   ): TypeInfo | null {
@@ -329,9 +335,9 @@ export class TypeMap {
       case ASTType.UnaryExpression:
         return me.resolveUnaryExpression(item as ASTUnaryExpression);
       case ASTType.ParenthesisExpression:
-        return me.resolveParenthesisExpression(
-          item as ASTParenthesisExpression
-        );
+        return me.resolveListValue(item as ASTListValue);
+      case ASTType.ListValue:
+        return me.resolveListValue(item as ASTListValue);
       case ASTType.NilLiteral:
       case ASTType.StringLiteral:
       case ASTType.NumericLiteral:

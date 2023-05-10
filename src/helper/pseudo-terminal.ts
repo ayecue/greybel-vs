@@ -1,4 +1,5 @@
 import { AnotherAnsiProvider, CommandType, EscapeSequence } from 'another-ansi';
+import ansiEscapes from 'ansi-escapes';
 import EventEmitter from 'events';
 import vscode, { Terminal } from 'vscode';
 
@@ -10,6 +11,7 @@ export default class PseudoTerminal {
   private writeEmitter: vscode.EventEmitter<string>;
   private emitter: EventEmitter;
   private closed: boolean;
+  previousLinesCount: number;
 
   // eslint-disable-next-line no-use-before-define
   static activeTerminals: Set<PseudoTerminal> = new Set<PseudoTerminal>();
@@ -38,6 +40,7 @@ export default class PseudoTerminal {
         }
       }
     });
+    this.previousLinesCount = 0;
 
     PseudoTerminal.activeTerminals.add(this);
   }
@@ -120,13 +123,18 @@ export default class PseudoTerminal {
   }
 
   print(message: string, newline: boolean = true) {
-    this.writeEmitter.fire(`${normalize(message)}${newline ? '\r\n' : ''}`);
+    const normalized = normalize(message);
+
+    this.previousLinesCount = normalized.split('\n').length;
+    if (newline) this.previousLinesCount++;
+
+    this.writeEmitter.fire(`${normalized}${newline ? '\r\n' : ''}`);
     this.terminal.show();
   }
 
   replace(message: string) {
-    this.writeEmitter.fire(`${normalize(message)}`);
-    this.terminal.show();
+    this.writeEmitter.fire(ansiEscapes.eraseLines(this.previousLinesCount));
+    this.print(message);
   }
 
   clear() {
