@@ -125,7 +125,7 @@ export default class PseudoTerminal {
   }
 
   replace(message: string) {
-    this.writeEmitter.fire(`${normalize(message)}`);
+    this.writeEmitter.fire(`\u001B[1A${normalize(message)}\r\n`);
     this.terminal.show();
   }
 

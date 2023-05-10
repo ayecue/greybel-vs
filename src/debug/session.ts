@@ -29,6 +29,7 @@ import {
   OperationContext,
   OutputHandler,
   PrepareError,
+  PrintOptions,
   RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
@@ -79,8 +80,19 @@ export class GreybelDebugSession extends LoggingDebugSession {
     const me = this;
 
     const VSOutputHandler = class extends OutputHandler {
-      print(message: string, appendNewLine: boolean = true) {
-        const transformed = transform(message);
+      print(
+        message: string,
+        { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
+      ) {
+        const transformed = transform(message).replace(/\\n/g, '\n');
+
+        if (replace) {
+          const terminal = PseudoTerminal.getActiveTerminal();
+          terminal.replace(transformed);
+          
+          return;
+        }
+
         const opc = me._runtime.apiContext.getLastActive();
         let line;
 
@@ -89,7 +101,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
         }
 
         me._messageQueue?.print({
-          message: transformed.replace(/\\n/g, '\n'),
+          message: transformed,
           line,
           appendNewLine
         });
@@ -130,12 +142,16 @@ export class GreybelDebugSession extends LoggingDebugSession {
       }
 
       waitForInput(isPassword: boolean, message: string): PromiseLike<string> {
-        this.print(message, false);
+        this.print(message, {
+          appendNewLine: false
+        });
         return PseudoTerminal.getActiveTerminal().waitForInput(isPassword);
       }
 
       waitForKeyPress(message: string): PromiseLike<KeyEvent> {
-        this.print(message);
+        this.print(message, {
+          appendNewLine: false
+        });
 
         return PseudoTerminal.getActiveTerminal()
           .waitForKeyPress()
