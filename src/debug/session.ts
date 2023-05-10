@@ -89,7 +89,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
         if (replace) {
           const terminal = PseudoTerminal.getActiveTerminal();
           terminal.replace(transformed);
-          
+
           return;
         }
 
