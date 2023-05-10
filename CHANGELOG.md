@@ -450,3 +450,4 @@ All notable changes to this project will be documented in this file.
 - fix type resolve
 - fix firewall_rules intrinsic return value
 - fix wait not using seconds but milliseconds
+- support refresh in print
