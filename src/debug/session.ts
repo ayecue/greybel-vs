@@ -33,7 +33,7 @@ import {
   RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
-import vscode from 'vscode';
+import vscode, { Uri } from 'vscode';
 
 import PseudoTerminal from '../helper/pseudo-terminal';
 import transform, {
@@ -261,13 +261,14 @@ export class GreybelDebugSession extends LoggingDebugSession {
     args: ILaunchRequestArguments
   ): Promise<void> {
     const me = this;
+    const uri = Uri.file(args.program);
 
     me._runtime.setTarget(args.program);
     me._runtime.setDebugger(
       args.noDebug ? new GrebyelPseudoDebugger() : new GrebyelDebugger(me)
     );
     me._env.getLocal().programPath.content =
-      await me._runtime.handler.resourceHandler.get(args.program);
+      await me._runtime.handler.resourceHandler.get(uri.fsPath);
 
     me._restart = false;
 
@@ -535,7 +536,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
     args: DebugProtocol.SetBreakpointsArguments
   ): Promise<void> {
     const me = this;
-    const path = args.source.path as string;
+    const uri = Uri.file(args.source.path);
     const clientLines = args.lines || [];
 
     const actualBreakpoints0 = clientLines.map((line: number) => {
@@ -543,7 +544,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
         false,
         line,
         0,
-        new Source(path, path)
+        new Source(uri.fsPath, uri.fsPath)
       ) as DebugProtocol.Breakpoint;
       bp.id = me._breakpointIncrement++;
       return bp;
@@ -552,7 +553,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
       actualBreakpoints0
     );
 
-    me.breakpoints.set(path, actualBreakpoints);
+    me.breakpoints.set(uri.fsPath, actualBreakpoints);
 
     response.body = {
       breakpoints: actualBreakpoints
@@ -567,7 +568,8 @@ export class GreybelDebugSession extends LoggingDebugSession {
     _request?: DebugProtocol.Request
   ): void {
     if (args.source.path) {
-      const breakpoints = this.breakpoints.get(args.source.path) || [];
+      const uri = Uri.file(args.source.path);
+      const breakpoints = this.breakpoints.get(uri.fsPath) || [];
       const actualBreakpoint = breakpoints.find(
         (bp: DebugProtocol.Breakpoint) => {
           return bp.line === args.line;
@@ -629,8 +631,9 @@ class GrebyelDebugger extends Debugger {
   }
 
   getBreakpoint(operationContext: OperationContext): boolean {
+    const uri = Uri.file(operationContext.target);
     const breakpoints =
-      this.session.breakpoints.get(operationContext.target) || [];
+      this.session.breakpoints.get(uri.fsPath) || [];
     const actualBreakpoint = breakpoints.find(
       (bp: DebugProtocol.Breakpoint) => {
         return bp.line === operationContext.stackTrace[0]?.item?.start.line;

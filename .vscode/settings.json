@@ -1,10 +1,9 @@
 {
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
   "terminal.integrated.profiles.windows": {
-    "PowerShell": {
-      "source": "PowerShell",
-      "icon": "terminal-powershell",
-      "args": ["-ExecutionPolicy", "Bypass"]
-    }
-  },
-  "terminal.integrated.defaultProfile.windows": "PowerShell"
+  "C:\\Program Files\\Git\\bin\\bash.exe": {
+    "path": "",
+    "args": []
+  }
+  }
 }

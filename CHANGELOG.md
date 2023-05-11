@@ -451,3 +451,7 @@ All notable changes to this project will be documented in this file.
 - fix firewall_rules intrinsic return value
 - fix wait not using seconds but milliseconds
 - support refresh in print
+
+## [1.5.6] - 11.05.2023
+
+- fix breakpoints in windows which were caused by file path being inconsistent
