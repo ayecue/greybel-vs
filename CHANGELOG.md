@@ -455,3 +455,7 @@ All notable changes to this project will be documented in this file.
 ## [1.5.6] - 11.05.2023
 
 - fix breakpoints in windows which were caused by file path being inconsistent
+
+## [1.5.7] - 12.05.2023
+
+- forbid literal optimization in default args
