@@ -26,17 +26,7 @@
         }
     },
     "indentationRules": {
-        "increaseIndentPattern": "(then|function\\([^)]+\\)|else|(while|for)[^;\\n]+)",
-        "decreaseIndentPattern": "(else|end (if|function|for|while))"
-    },
-    "onEnterRules": [
-        {
-            "beforeText": "(then|function|else|while|for)",
-            "action": { "indent": "indent" }
-        },
-        {
-            "beforeText": "(end|else)",
-            "action": { "indent": "outdent" }
-        }
-    ]
+		"increaseIndentPattern": "^\\s*((while|for).*?|if .* then|else( if)?.*?)\\s*$",
+		"decreaseIndentPattern": "^\\s*(else( if)?.*?|(end (if|function|for|while)))\\s*$"
+	}
 }
