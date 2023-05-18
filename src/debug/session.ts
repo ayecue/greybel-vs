@@ -632,8 +632,7 @@ class GrebyelDebugger extends Debugger {
 
   getBreakpoint(operationContext: OperationContext): boolean {
     const uri = Uri.file(operationContext.target);
-    const breakpoints =
-      this.session.breakpoints.get(uri.fsPath) || [];
+    const breakpoints = this.session.breakpoints.get(uri.fsPath) || [];
     const actualBreakpoint = breakpoints.find(
       (bp: DebugProtocol.Breakpoint) => {
         return bp.line === operationContext.stackTrace[0]?.item?.start.line;
