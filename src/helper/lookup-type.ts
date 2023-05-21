@@ -164,6 +164,16 @@ export class LookupHelper {
           };
         }
 
+        if (startLine < endLine) {
+          return {
+            valid:
+              (position.line > startLine && position.line < endLine) ||
+              (position.line === startLine &&
+                startCharacter <= position.character) ||
+              (position.line === endLine && endCharacter >= position.character)
+          };
+        }
+
         return {
           valid:
             startLine <= position.line &&

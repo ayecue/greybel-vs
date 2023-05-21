@@ -471,3 +471,4 @@ All notable changes to this project will be documented in this file.
 - simplify import_code logic by removing second custom argument and allowing to create an installer to whatever ingame directory
 - improve autocomplete including keywords, constants and operators
 - improve auto increase/decrease indent
+- fix hover tooltip for multiline strings
