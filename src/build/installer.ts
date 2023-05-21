@@ -4,7 +4,7 @@ import path from 'path';
 import { TextEncoderLite as TextEncoder } from 'text-encoder-lite';
 import vscode, { Uri } from 'vscode';
 
-import { PseudoFS } from '../resource';
+import { createBasePath } from '../helper/create-base-path';
 
 type ImportItem = {
   filepath: string;
@@ -12,33 +12,41 @@ type ImportItem = {
   content: string;
 };
 
+export interface InstallerOptions {
+  target: string;
+  ingameDirectory: string;
+  buildPath: Uri;
+  result: TranspilerParseResult;
+  maxChars: number;
+}
+
 class Installer {
   private importList: ImportItem[];
   private target: string;
+  private ingameDirectory: string;
   private buildPath: Uri;
   private maxChars: number;
 
   private segments: string[];
   private buffer: string;
 
-  constructor(
-    target: string,
-    buildPath: Uri,
-    result: TranspilerParseResult,
-    maxChars: number
-  ) {
-    this.importList = this.createImportList(target, result);
-    this.target = target;
-    this.buildPath = buildPath;
-    this.maxChars = maxChars - 1000;
+  constructor(options: InstallerOptions) {
+    this.target = options.target;
+    this.ingameDirectory = options.ingameDirectory;
+    this.buildPath = options.buildPath;
+    this.maxChars = options.maxChars - 1000;
     this.segments = [];
+    this.importList = this.createImportList(options.target, options.result);
     this.buffer = this.createContentHeader();
   }
 
   private createContentHeader(): string {
-    return ['s=get_shell', 'c=s.host_computer', 'h=home_dir', 'p=@push'].join(
-      '\n'
-    );
+    return [
+      's=get_shell',
+      'c=s.host_computer',
+      'h="' + this.ingameDirectory + '"',
+      'p=@push'
+    ].join('\n');
   }
 
   private isRootDirectory(target: string): boolean {
@@ -180,16 +188,14 @@ class Installer {
   }
 
   private createImportList(
-    target: string,
+    rootTarget: string,
     parseResult: TranspilerParseResult
   ): ImportItem[] {
-    const pseudoRoot = PseudoFS.dirname(target) || '';
     const imports = Object.entries(parseResult).map(([target, code]) => {
+      const ingameFilepath = createBasePath(rootTarget, target, '');
       return {
         filepath: target,
-        ingameFilepath: target
-          .replace(pseudoRoot, '')
-          .replace(PseudoFS.sep, '/'),
+        ingameFilepath,
         content: code
       };
     });
@@ -217,11 +223,8 @@ class Installer {
 }
 
 export const createInstaller = async (
-  target: string,
-  buildPath: Uri,
-  result: TranspilerParseResult,
-  maxChars: number
+  options: InstallerOptions
 ): Promise<void> => {
-  const installer = new Installer(target, buildPath, result, maxChars);
+  const installer = new Installer(options);
   await installer.build();
 };

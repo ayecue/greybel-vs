@@ -322,6 +322,11 @@
                     "default": false,
                     "description": "Allow special characters when uglifying."
                 },
+                "greybel.transpiler.ingameDirectory": {
+                    "type": "string",
+                    "default": "/root/",
+                    "description": "Define ingame directory to where the files should be imported to."
+                },
                 "greybel.installer": {
                     "type": "boolean",
                     "default": true,

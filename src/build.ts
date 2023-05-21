@@ -8,6 +8,7 @@ import vscode, {
 
 import { createParseResult } from './build/create-parse-result';
 import { createInstaller } from './build/installer';
+import { createBasePath } from './helper/create-base-path';
 import { TranspilerResourceProvider } from './resource';
 
 export function activate(context: ExtensionContext) {
@@ -40,6 +41,9 @@ export function activate(context: ExtensionContext) {
       const excludedNamespacesFromConfig =
         config.get<string[]>('transpiler.excludedNamespaces') || [];
       const obfuscation = config.get<boolean>('transpiler.obfuscation');
+      const ingameDirectory = Uri.file(
+        config.get<string>('transpiler.ingameDirectory')
+      );
       let buildType = BuildType.DEFAULT;
 
       if (buildTypeFromConfig === 'Uglify') {
@@ -58,7 +62,11 @@ export function activate(context: ExtensionContext) {
         obfuscation,
         disableLiteralsOptimization: config.get('transpiler.dlo'),
         disableNamespacesOptimization: config.get('transpiler.dno'),
-        excludedNamespaces: excludedNamespacesFromConfig
+        excludedNamespaces: excludedNamespacesFromConfig,
+        processImportPathCallback: (path: string) => {
+          const relativePath = createBasePath(target, path);
+          return Uri.joinPath(ingameDirectory, relativePath).path;
+        }
       }).parse();
 
       const rootPath = vscode.workspace.rootPath
@@ -82,7 +90,13 @@ export function activate(context: ExtensionContext) {
         vscode.window.showInformationMessage('Creating installer.', {
           modal: false
         });
-        await createInstaller(target, rootPath, result, maxChars);
+        await createInstaller({
+          target,
+          buildPath: rootPath,
+          ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
+          result,
+          maxChars
+        });
       }
 
       vscode.window.showInformationMessage(

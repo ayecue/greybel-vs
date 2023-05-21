@@ -1,7 +1,6 @@
 import {
   Breakpoint,
   BreakpointEvent,
-  ErrorDestination,
   InitializedEvent,
   LoggingDebugSession,
   Scope,
