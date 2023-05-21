@@ -12,6 +12,8 @@ const fs = vscode.workspace.fs;
 
 export class PseudoFS {
   static sep: string = path.sep;
+  static win32 = path.win32;
+  static posix = path.posix;
 
   static basename(file: string): string {
     return path.basename(file);
@@ -23,6 +25,10 @@ export class PseudoFS {
 
   static resolve(file: string): string {
     return path.resolve(file);
+  }
+
+  static isWindows() {
+    return this.win32.sep === this.sep;
   }
 }
 

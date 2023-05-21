@@ -23,5 +23,12 @@ export const createBasePath = (
     filtered.push(current);
   }
 
+  if (PseudoFS.isWindows()) {
+    return path
+      .replace(`${filtered.join(PseudoFS.sep)}`, base)
+      .split(PseudoFS.win32.sep)
+      .join(PseudoFS.posix.sep);
+  }
+
   return path.replace(`${filtered.join(PseudoFS.sep)}`, base);
 };
