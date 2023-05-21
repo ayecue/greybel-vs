@@ -1,6 +1,7 @@
 import { AnotherAnsiProvider, CommandType, EscapeSequence } from 'another-ansi';
 import ansiEscapes from 'ansi-escapes';
 import EventEmitter from 'events';
+import { OperationContext } from 'greybel-interpreter';
 import vscode, { Terminal } from 'vscode';
 
 const provider = new AnotherAnsiProvider(EscapeSequence.Hex);
@@ -45,7 +46,10 @@ export default class PseudoTerminal {
     PseudoTerminal.activeTerminals.add(this);
   }
 
-  waitForInput(isPassword: boolean = false): PromiseLike<string> {
+  waitForInput(
+    ctx: OperationContext,
+    isPassword: boolean = false
+  ): PromiseLike<string> {
     if (this.closed) return Promise.resolve('');
 
     this.focus();
@@ -54,8 +58,13 @@ export default class PseudoTerminal {
       let buffer = '';
       const clear = () => {
         this.writeEmitter.fire('\r\n');
+        ctx.processState.removeListener('exit', onExit);
         this.emitter.removeListener('close', onClose);
         this.emitter.removeListener('input', onInput);
+      };
+      const onExit = () => {
+        clear();
+        resolve('');
       };
       const onClose = () => {
         clear();
@@ -85,20 +94,26 @@ export default class PseudoTerminal {
         }
       };
 
+      ctx.processState.once('exit', onExit);
       this.emitter.addListener('close', onClose);
       this.emitter.addListener('input', onInput);
     });
   }
 
-  waitForKeyPress(): PromiseLike<string> {
+  waitForKeyPress(ctx: OperationContext): PromiseLike<string> {
     if (this.closed) return Promise.resolve(String.fromCharCode(13));
 
     this.focus();
 
     return new Promise((resolve) => {
       const clear = () => {
+        ctx.processState.removeListener('exit', onExit);
         this.emitter.removeListener('close', onClose);
         this.emitter.removeListener('input', onInput);
+      };
+      const onExit = () => {
+        clear();
+        resolve('');
       };
       const onInput = (input: string) => {
         clear();
@@ -109,6 +124,7 @@ export default class PseudoTerminal {
         resolve('');
       };
 
+      ctx.processState.once('exit', onExit);
       this.emitter.addListener('input', onInput);
       this.emitter.addListener('close', onClose);
     });

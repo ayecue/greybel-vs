@@ -1,7 +1,6 @@
 import {
   Breakpoint,
   BreakpointEvent,
-  ErrorDestination,
   InitializedEvent,
   LoggingDebugSession,
   Scope,
@@ -81,6 +80,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
 
     const VSOutputHandler = class extends OutputHandler {
       print(
+        _ctx: OperationContext,
         message: string,
         { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
       ) {
@@ -111,19 +111,24 @@ export class GreybelDebugSession extends LoggingDebugSession {
         me._messageQueue?.clear();
       }
 
-      progress(timeout: number): PromiseLike<void> {
+      progress(ctx: OperationContext, timeout: number): PromiseLike<void> {
         const terminal = PseudoTerminal.getActiveTerminal();
         const startTime = Date.now();
         const max = 20;
         terminal.print(`[${'-'.repeat(max)}]`, false);
 
         return new Promise((resolve, _reject) => {
+          const onExit = () => {
+            clearInterval(interval);
+            resolve();
+          };
           const interval = setInterval(() => {
             const currentTime = Date.now();
             const elapsed = currentTime - startTime;
 
             if (elapsed > timeout) {
               terminal.print(`[${'#'.repeat(max)}]`);
+              ctx.processState.removeListener('exit', onExit);
               clearInterval(interval);
               resolve();
               return;
@@ -138,23 +143,32 @@ export class GreybelDebugSession extends LoggingDebugSession {
               false
             );
           });
+
+          ctx.processState.once('exit', onExit);
         });
       }
 
-      waitForInput(isPassword: boolean, message: string): PromiseLike<string> {
-        this.print(message, {
+      waitForInput(
+        ctx: OperationContext,
+        isPassword: boolean,
+        message: string
+      ): PromiseLike<string> {
+        this.print(ctx, message, {
           appendNewLine: false
         });
-        return PseudoTerminal.getActiveTerminal().waitForInput(isPassword);
+        return PseudoTerminal.getActiveTerminal().waitForInput(ctx, isPassword);
       }
 
-      waitForKeyPress(message: string): PromiseLike<KeyEvent> {
-        this.print(message, {
+      waitForKeyPress(
+        ctx: OperationContext,
+        message: string
+      ): PromiseLike<KeyEvent> {
+        this.print(ctx, message, {
           appendNewLine: false
         });
 
         return PseudoTerminal.getActiveTerminal()
-          .waitForKeyPress()
+          .waitForKeyPress(ctx)
           .then((key) => {
             return transformStringToKeyEvent(key);
           });
@@ -632,8 +646,7 @@ class GrebyelDebugger extends Debugger {
 
   getBreakpoint(operationContext: OperationContext): boolean {
     const uri = Uri.file(operationContext.target);
-    const breakpoints =
-      this.session.breakpoints.get(uri.fsPath) || [];
+    const breakpoints = this.session.breakpoints.get(uri.fsPath) || [];
     const actualBreakpoint = breakpoints.find(
       (bp: DebugProtocol.Breakpoint) => {
         return bp.line === operationContext.stackTrace[0]?.item?.start.line;

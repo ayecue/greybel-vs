@@ -157,10 +157,10 @@ export class DocumentParseQueue extends EventEmitter {
       );
       const dependencies: Set<string> = new Set([
         ...rootChunk.nativeImports
-          .filter((nativeImport) => nativeImport.fileSystemDirectory)
+          .filter((nativeImport) => nativeImport.directory)
           .map(
             (nativeImport) =>
-              Uri.joinPath(rootPath, nativeImport.fileSystemDirectory).fsPath
+              Uri.joinPath(rootPath, nativeImport.directory).fsPath
           )
           .filter((importPath) => !visited.has(importPath)),
         ...rootChunk.imports

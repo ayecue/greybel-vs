@@ -31,6 +31,7 @@ Do not forget to setup your plugin to your needs. Following settings are availab
     - Hoverdocs
     - Installer
 - Transpiler specific
+    - Ingame directory
     - Build type
     - Disable literals optimization
     - Disable namespaces optimization

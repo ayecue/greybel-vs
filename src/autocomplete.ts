@@ -21,6 +21,9 @@ import vscode, {
   TextDocument
 } from 'vscode';
 
+import { AVAILABLE_CONSTANTS } from './autocomplete/constants';
+import { AVAILABLE_KEYWORDS } from './autocomplete/keywords';
+import { AVAILABLE_OPERATORS } from './autocomplete/operators';
 import documentParseQueue from './helper/document-manager';
 import { LookupHelper } from './helper/lookup-type';
 import { TypeInfo, TypeInfoWithDefinition } from './helper/type-manager';
@@ -111,6 +114,9 @@ export function activate(_context: ExtensionContext) {
       // get all default methods
       const defaultDefinitions = getDefinitions(['general']);
       const completionItems: CompletionItem[] = [
+        ...AVAILABLE_KEYWORDS,
+        ...AVAILABLE_OPERATORS,
+        ...AVAILABLE_CONSTANTS,
         ...convertDefinitionsToCompletionList(defaultDefinitions)
       ];
 

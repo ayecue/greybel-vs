@@ -48,39 +48,18 @@ export function activate(_context: ExtensionContext) {
         // shows link to importCode resource
         const hoverText = new MarkdownString('');
         const importAst = astResult.closest as ASTImportCodeExpression;
-        const gameDir = importAst.gameDirectory;
-        const fileDir = importAst.fileSystemDirectory;
-        let output = [];
-
-        if (fileDir) {
-          const rootDir = Uri.joinPath(Uri.file(document.fileName), '..');
-          const target = Uri.joinPath(rootDir, fileDir);
-
-          output = [
-            `[Imports file "${PseudoFS.basename(
-              target.fsPath
-            )}" inside this code](${target.toString(true)})`,
-            '***',
-            'Click the link above to open the file.',
-            '',
-            'Use the build command to create an installer',
-            'file which will bundle all dependencies.'
-          ];
-        } else {
-          output = [
-            `Imports game file "${gameDir}" inside this code`,
-            '***',
-            'WARNING: There is no actual file path',
-            'therefore this will be ignored while building.',
-            '',
-            'Following example shows how to enable inclusion when building.',
-            '',
-            '**Example:**',
-            '```',
-            'import_code("/ingame/path":"/relative/physical/path")',
-            '```'
-          ];
-        }
+        const rootDir = Uri.joinPath(Uri.file(document.fileName), '..');
+        const target = Uri.joinPath(rootDir, importAst.directory);
+        const output = [
+          `[Imports file "${PseudoFS.basename(
+            target.fsPath
+          )}" inside this code](${target.toString(true)})`,
+          '***',
+          'Click the link above to open the file.',
+          '',
+          'Use the build command to create an installer',
+          'file which will bundle all dependencies.'
+        ];
 
         hoverText.appendMarkdown(output.join('\n'));
 
