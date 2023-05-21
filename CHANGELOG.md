@@ -463,3 +463,11 @@ All notable changes to this project will be documented in this file.
 ## [1.5.8] - 12.05.2023
 
 - fix isa regarding boolean value, boolean now gets recognized by it as a member of number
+
+## [1.5.9] - 21.05.2023
+
+- fix import_code injection in includes and imports
+- add ingame directory settings property
+- simplify import_code logic by removing second custom argument and allowing to create an installer to whatever ingame directory
+- improve autocomplete including keywords, constants and operators
+- improve auto increase/decrease indent
