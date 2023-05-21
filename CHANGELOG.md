@@ -472,3 +472,4 @@ All notable changes to this project will be documented in this file.
 - improve autocomplete including keywords, constants and operators
 - improve auto increase/decrease indent
 - fix hover tooltip for multiline strings
+- instant exit on process termination
