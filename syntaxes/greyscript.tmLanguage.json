@@ -13,7 +13,7 @@
 		},
 		{
 			"name": "support.type.greyscript",
-			"match": "\\b(number|string|null|boolean|any|list|map)\\b"
+			"match": "\\b(number|string|null|any|list|map)\\b"
 		},
 		{
 			"name": "support.class.greyscript",
