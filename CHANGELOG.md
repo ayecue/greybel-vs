@@ -480,3 +480,4 @@ All notable changes to this project will be documented in this file.
 - fix return type of indexOf signature
 - fix tooltip for lastIndexOf
 - remove usage of boolean type in tooltips and signatures to avoid confusion since technically booleans do not exist
+- minor improvement to index expression type analyzing
