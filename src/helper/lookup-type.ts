@@ -94,14 +94,17 @@ export class LookupHelper {
     const scopes = this.lookupScopes(item);
     const result: string[] = [];
     const outerScope = scopes.length > 1 ? scopes[1] : null;
-    const globalScope = scopes[scopes.length - 1];
+    const globalScope = this.lookupGlobalScope(item);
 
     for (const scope of scopes) {
-      for (const namespace of scope.namespaces) {
-        const current = removeContextPrefixInNamespace(namespace);
+      for (const assignmentItem of scope.assignments) {
+        const assignment = assignmentItem as ASTAssignmentStatement;
+        const current = removeContextPrefixInNamespace(
+          transformASTToString(assignment.variable)
+        );
         result.push(current);
 
-        if (scope === globalScope || isGlobalsContextNamespace(namespace)) {
+        if (scope === globalScope) {
           result.push(`globals.${current}`);
         }
 
@@ -119,16 +122,16 @@ export class LookupHelper {
     const result: string[] = [];
     const rootScope = scopes.shift();
     const outerScope = scopes.length > 0 ? scopes[0] : null;
-    const globalScope =
-      scopes.length > 0 ? scopes[scopes.length - 1] : rootScope;
+    const globalScope = this.lookupGlobalScope(item);
 
     if (rootScope) {
       if (rootScope instanceof ASTFunctionStatement) {
         for (const parameter of rootScope.parameters) {
           if (parameter instanceof ASTAssignmentStatement) {
-            result.push((parameter.variable as ASTIdentifier).name);
+            const parameterName = (parameter.variable as ASTIdentifier).name;
+            result.push(parameterName, `locals.${parameterName}`);
           } else if (parameter instanceof ASTIdentifier) {
-            result.push(parameter.name);
+            result.push(parameter.name, `locals.${parameter.name}`);
           }
         }
       }
@@ -150,11 +153,14 @@ export class LookupHelper {
     }
 
     for (const scope of scopes) {
-      for (const namespace of scope.namespaces) {
-        const current = removeContextPrefixInNamespace(namespace);
+      for (const assignmentItem of scope.assignments) {
+        const assignment = assignmentItem as ASTAssignmentStatement;
+        const current = removeContextPrefixInNamespace(
+          transformASTToString(assignment.variable)
+        );
         result.push(current);
 
-        if (scope === globalScope || isGlobalsContextNamespace(namespace)) {
+        if (scope === globalScope) {
           result.push(`globals.${current}`);
         }
 
