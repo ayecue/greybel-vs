@@ -13,7 +13,7 @@ import transformASTToNamespace from './ast-namespace';
 import * as ASTScraper from './ast-scraper';
 import transformASTToString from './ast-stringify';
 import documentParseQueue from './document-manager';
-import typeManager, { lookupBase, TypeInfo } from './type-manager';
+import typeManager, { lookupBase, TypeInfo, TypeMap } from './type-manager';
 
 export type LookupOuter = ASTBase[];
 
@@ -211,10 +211,40 @@ export class LookupHelper {
     return null;
   }
 
-  lookupTypeInfo({ closest, outer }: LookupASTResult): TypeInfo | null {
+  async buildTypeMap(): Promise<TypeMap> {
     const typeMap = typeManager.get(this.document);
 
     if (!typeMap) {
+      return null;
+    }
+
+    const externalTypeMaps = [];
+    const allImports = await documentParseQueue.get(this.document).getImports();
+
+    for (const item of allImports) {
+      const { document, textDocument } = item;
+
+      if (!document) {
+        continue;
+      }
+
+      const typeMap = typeManager.get(textDocument);
+
+      if (typeMap) {
+        externalTypeMaps.push(typeMap);
+      }
+    }
+
+    return typeMap.fork(...externalTypeMaps);
+  }
+
+  async lookupTypeInfo({
+    closest,
+    outer
+  }: LookupASTResult): Promise<TypeInfo | null> {
+    const typeMap = await this.buildTypeMap();
+
+    if (typeMap === null) {
       return null;
     }
 
@@ -231,7 +261,7 @@ export class LookupHelper {
     return typeMap.resolve(closest);
   }
 
-  lookupType(position: Position): TypeInfo | null {
+  lookupType(position: Position): Promise<TypeInfo | null> {
     const me = this;
     const astResult = me.lookupAST(position);
 

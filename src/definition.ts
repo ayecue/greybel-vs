@@ -81,7 +81,7 @@ export function activate(_context: ExtensionContext) {
       }
 
       const definitions = findAllDefinitions(helper, identifer, closest.scope!);
-      const allImports = await documentParseQueue.getImportsOf(document);
+      const allImports = await documentParseQueue.get(document).getImports();
 
       for (const item of allImports) {
         const { document, textDocument } = item;

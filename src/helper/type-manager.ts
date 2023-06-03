@@ -86,11 +86,11 @@ export const lookupBase = (node: ASTBase | null = null): ASTBase | null => {
 
 export class TypeMap {
   private root: ASTChunkAdvanced;
-  private refs: WeakMap<ASTBase, Map<string, TypeInfo>>;
+  refs: Map<ASTBase, Map<string, TypeInfo>>;
 
   constructor(root: ASTChunkAdvanced) {
     this.root = root;
-    this.refs = new WeakMap();
+    this.refs = new Map();
   }
 
   lookupTypeOfNamespace(item: ASTBase): TypeInfo | null {
@@ -470,6 +470,40 @@ export class TypeMap {
 
     return null;
   }
+
+  fork(...typeMaps: TypeMap[]): TypeMap {
+    const forkTypeMap = new TypeMap(this.root);
+
+    for (const [scope, ref] of this.refs) {
+      const scopeRefCopy: Map<string, TypeInfo> = new Map();
+
+      for (const [identifier, typeInfo] of ref) {
+        scopeRefCopy.set(identifier, typeInfo);
+      }
+
+      forkTypeMap.refs.set(scope, scopeRefCopy);
+    }
+
+    const globalRefMap: Map<string, TypeInfo> = forkTypeMap.refs.get(this.root);
+
+    for (const typeMap of typeMaps) {
+      if (!typeMap.refs.has(typeMap.root)) {
+        continue;
+      }
+
+      const rootRefMap: Map<string, TypeInfo> = typeMap.refs.get(typeMap.root);
+
+      for (const [identifier, typeInfo] of rootRefMap) {
+        if (globalRefMap.has(identifier)) {
+          continue;
+        }
+
+        globalRefMap.set(identifier, typeInfo);
+      }
+    }
+
+    return forkTypeMap;
+  }
 }
 
 export class TypeManager {
@@ -482,7 +516,7 @@ export class TypeManager {
   analyze(document: TextDocument, chunk: ASTChunkAdvanced): TypeMap {
     const typeMap = new TypeMap(chunk);
 
-    console.time(`Analyzing for ${document.uri.fsPath} done within`);
+    console.time(`Analyzing for ${document.fileName} done within`);
 
     try {
       typeMap.analyze();
@@ -490,7 +524,7 @@ export class TypeManager {
       console.error(err);
     }
 
-    console.timeEnd(`Analyzing for ${document.uri.fsPath} done within`);
+    console.timeEnd(`Analyzing for ${document.fileName} done within`);
 
     const key = document.fileName;
     this.types.set(key, typeMap);

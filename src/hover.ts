@@ -9,7 +9,6 @@ import vscode, {
   Hover,
   MarkdownString,
   Position,
-  ProviderResult,
   TextDocument,
   Uri
 } from 'vscode';
@@ -32,11 +31,11 @@ function formatTypes(types: string[] = []): string {
 
 export function activate(_context: ExtensionContext) {
   vscode.languages.registerHoverProvider('greyscript', {
-    provideHover(
+    async provideHover(
       document: TextDocument,
       position: Position,
       _token: CancellationToken
-    ): ProviderResult<Hover> {
+    ): Promise<Hover> {
       const helper = new LookupHelper(document);
       const astResult = helper.lookupAST(position);
 
@@ -89,7 +88,7 @@ export function activate(_context: ExtensionContext) {
         return new Hover(hoverText);
       }
 
-      const typeInfo = helper.lookupTypeInfo(astResult);
+      const typeInfo = await helper.lookupTypeInfo(astResult);
 
       if (!typeInfo) {
         return;

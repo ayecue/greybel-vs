@@ -13,7 +13,6 @@ import vscode, {
   ExtensionContext,
   ParameterInformation,
   Position,
-  ProviderResult,
   Range,
   SignatureHelp,
   SignatureHelpContext,
@@ -127,7 +126,7 @@ export function activate(_context: ExtensionContext) {
       const existingProperties = new Set([
         ...completionItems.map((item) => item.label)
       ]);
-      const allImports = await documentParseQueue.getImportsOf(document);
+      const allImports = await documentParseQueue.get(document).getImports();
 
       for (const item of allImports) {
         const { document } = item;
@@ -165,12 +164,12 @@ export function activate(_context: ExtensionContext) {
   vscode.languages.registerSignatureHelpProvider(
     'greyscript',
     {
-      provideSignatureHelp(
+      async provideSignatureHelp(
         document: TextDocument,
         position: Position,
         _token: CancellationToken,
         _ctx: SignatureHelpContext
-      ): ProviderResult<SignatureHelp> {
+      ): Promise<SignatureHelp> {
         documentParseQueue.refresh(document);
         const helper = new LookupHelper(document);
         const astResult = helper.lookupAST(position);
@@ -200,7 +199,7 @@ export function activate(_context: ExtensionContext) {
         }
 
         const root = helper.lookupScope(astResult.closest);
-        const item = helper.lookupTypeInfo({
+        const item = await helper.lookupTypeInfo({
           closest: rootCallExpression,
           outer: root ? [root] : []
         });
