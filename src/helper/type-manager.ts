@@ -25,6 +25,15 @@ import { TextDocument } from 'vscode';
 
 import transformASTToNamespace from './ast-namespace';
 import transformASTToString from './ast-stringify';
+import {
+  isGlobalsContextNamespace,
+  isLocalsContextNamespace,
+  isOuterContextNamespace,
+  removeContextPrefixInNamespace,
+  removeGlobalsContextPrefixInNamespace,
+  removeLocalsContextPrefixInNamespace,
+  removeOuterContextPrefixInNamespace
+} from './utils';
 
 export class TypeInfo {
   label: string;
@@ -95,7 +104,9 @@ export class TypeMap {
 
   lookupTypeOfNamespace(item: ASTBase): TypeInfo | null {
     const me = this;
-    const namespace = transformASTToNamespace(item);
+    const namespace = removeContextPrefixInNamespace(
+      transformASTToNamespace(item)
+    );
     let currentScope = item.scope;
 
     while (currentScope) {
@@ -407,13 +418,15 @@ export class TypeMap {
 
     me.refs.set(scope, identiferTypes);
 
+    const globalIdentifierTypes = me.refs.get(me.root);
+
     for (const assignment of assignments) {
       const name = transformASTToNamespace(assignment.variable);
       const resolved = me.resolve(assignment.init);
 
       if (resolved === null) continue;
 
-      let typeInfo;
+      let typeInfo: TypeInfo;
 
       if (
         assignment.init instanceof ASTFunctionStatement &&
@@ -439,6 +452,67 @@ export class TypeMap {
           resolved instanceof TypeInfoWithDefinition
             ? new TypeInfo(name, resolved.definition.returns || ['any'])
             : new TypeInfo(name, resolved.type);
+      }
+
+      // in case globals is used variable needs to get attached to global scope
+      if (isGlobalsContextNamespace(name)) {
+        const nameWithoutGlobalsPrefix =
+          removeGlobalsContextPrefixInNamespace(name);
+
+        typeInfo.label = nameWithoutGlobalsPrefix;
+
+        if (globalIdentifierTypes.has(nameWithoutGlobalsPrefix)) {
+          typeInfo.type = Array.from(
+            new Set([
+              ...typeInfo.type,
+              ...globalIdentifierTypes.get(nameWithoutGlobalsPrefix)!.type
+            ])
+          );
+        }
+
+        globalIdentifierTypes.set(nameWithoutGlobalsPrefix, typeInfo);
+        continue;
+        // in case outer is used variable needs to get attached to outer scope
+      } else if (
+        isOuterContextNamespace(name) &&
+        assignment.scope?.scope != null &&
+        me.refs.has(assignment.scope.scope)
+      ) {
+        const outerIdentifierTypes = me.refs.get(assignment.scope.scope);
+        const nameWithoutOuterPrefix =
+          removeOuterContextPrefixInNamespace(name);
+
+        typeInfo.label = nameWithoutOuterPrefix;
+
+        if (outerIdentifierTypes.has(nameWithoutOuterPrefix)) {
+          typeInfo.type = Array.from(
+            new Set([
+              ...typeInfo.type,
+              ...outerIdentifierTypes.get(nameWithoutOuterPrefix)!.type
+            ])
+          );
+        }
+
+        outerIdentifierTypes.set(nameWithoutOuterPrefix, typeInfo);
+        continue;
+        // in case locals is used variable needs to get attached to locals scope
+      } else if (isLocalsContextNamespace(name)) {
+        const nameWithoutLocalsPrefix =
+          removeLocalsContextPrefixInNamespace(name);
+
+        typeInfo.label = nameWithoutLocalsPrefix;
+
+        if (identiferTypes.has(nameWithoutLocalsPrefix)) {
+          typeInfo.type = Array.from(
+            new Set([
+              ...typeInfo.type,
+              ...identiferTypes.get(nameWithoutLocalsPrefix)!.type
+            ])
+          );
+        }
+
+        identiferTypes.set(nameWithoutLocalsPrefix, typeInfo);
+        continue;
       }
 
       if (identiferTypes.has(name)) {
