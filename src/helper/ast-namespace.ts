@@ -16,7 +16,6 @@ import {
   ASTChunk,
   ASTComment,
   ASTElseClause,
-  ASTEvaluationExpression,
   ASTForGenericStatement,
   ASTIdentifier,
   ASTIfClause,
