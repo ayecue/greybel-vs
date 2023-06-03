@@ -483,3 +483,4 @@ All notable changes to this project will be documented in this file.
 - minor improvement to index expression type analyzing
 - use modified transformer to get namespace for type
 - partialy support type resolve from identifier assigned in imported file
+- fix type resolve within slice expression
