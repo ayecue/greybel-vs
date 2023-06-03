@@ -482,3 +482,4 @@ All notable changes to this project will be documented in this file.
 - remove usage of boolean type in tooltips and signatures to avoid confusion since technically booleans do not exist
 - minor improvement to index expression type analyzing
 - use modified transformer to get namespace for type
+- partialy support type resolve from identifier assigned in imported file
