@@ -220,6 +220,11 @@ export class TypeMap {
 
           // todo add better retrieval
           const indexType = me.resolve(indexValue);
+
+          if (!indexType) {
+            return null;
+          }
+
           currentMetaInfo = new TypeInfo(indexType.type[0], ['any']);
           break;
         }
@@ -350,6 +355,8 @@ export class TypeMap {
         ]);
       case ASTType.LogicalExpression:
         return new TypeInfo('Logical expression', ['number']);
+      case ASTType.SliceExpression:
+        return new TypeInfo('Slice expression', ['any']);
       default:
         return null;
     }
@@ -386,6 +393,7 @@ export class TypeMap {
       case ASTType.ListConstructorExpression:
       case ASTType.BinaryExpression:
       case ASTType.LogicalExpression:
+      case ASTType.SliceExpression:
         return me.resolveDefault(item);
       default:
         return null;
@@ -446,15 +454,11 @@ export class TypeMap {
   analyze() {
     const me = this;
 
-    console.time('analyzing');
-
     me.analyzeScope(me.root);
 
     for (const scope of me.root.scopes) {
       me.analyzeScope(scope);
     }
-
-    console.timeEnd('analyzing');
   }
 
   getIdentifierInScope(item: ASTBase): Map<string, TypeInfo> | null {
@@ -478,7 +482,15 @@ export class TypeManager {
   analyze(document: TextDocument, chunk: ASTChunkAdvanced): TypeMap {
     const typeMap = new TypeMap(chunk);
 
-    typeMap.analyze();
+    console.time(`Analyzing for ${document.uri.fsPath} done within`);
+
+    try {
+      typeMap.analyze();
+    } catch (err) {
+      console.error(err);
+    }
+
+    console.timeEnd(`Analyzing for ${document.uri.fsPath} done within`);
 
     const key = document.fileName;
     this.types.set(key, typeMap);

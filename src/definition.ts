@@ -1,4 +1,9 @@
-import { ASTBase, ASTIdentifier, ASTIndexExpression, ASTMemberExpression } from 'greyscript-core';
+import {
+  ASTBase,
+  ASTIdentifier,
+  ASTIndexExpression,
+  ASTMemberExpression
+} from 'greyscript-core';
 import vscode, {
   CancellationToken,
   DefinitionLink,
@@ -67,10 +72,11 @@ export function activate(_context: ExtensionContext) {
       const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
       let identifer = closest.name;
 
-      if (previous && (
-        previous instanceof ASTMemberExpression ||
-        previous instanceof ASTIndexExpression
-      )) {
+      if (
+        previous &&
+        (previous instanceof ASTMemberExpression ||
+          previous instanceof ASTIndexExpression)
+      ) {
         identifer = transformASTToNamespace(previous);
       }
 
