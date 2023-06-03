@@ -15,7 +15,7 @@ import vscode, {
   TextDocument
 } from 'vscode';
 
-import ASTStringify from './helper/ast-stringify';
+import transformASTToString from './helper/ast-stringify';
 import documentParseQueue from './helper/document-manager';
 
 const findAllAssignments = (
@@ -29,7 +29,7 @@ const findAllAssignments = (
   for (const item of scopes) {
     for (const assignmentItem of item.assignments) {
       const assignment = assignmentItem as ASTAssignmentStatement;
-      const current = ASTStringify(assignment.variable);
+      const current = transformASTToString(assignment.variable);
 
       if (!isValid(current)) {
         continue;

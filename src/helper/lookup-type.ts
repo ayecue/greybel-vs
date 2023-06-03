@@ -9,8 +9,9 @@ import {
 } from 'greyscript-core';
 import { Position, TextDocument } from 'vscode';
 
+import transformASTToNamespace from './ast-namespace';
 import * as ASTScraper from './ast-scraper';
-import ASTStringify from './ast-stringify';
+import transformASTToString from './ast-stringify';
 import documentParseQueue from './document-manager';
 import typeManager, { lookupBase, TypeInfo } from './type-manager';
 
@@ -36,7 +37,7 @@ export class LookupHelper {
     const result: ASTAssignmentStatement[] = [];
 
     for (const item of assignments) {
-      const current = ASTStringify(item.variable);
+      const current = transformASTToNamespace(item.variable);
 
       if (current === identifier) {
         result.push(item);
@@ -49,7 +50,7 @@ export class LookupHelper {
       for (const item of scopes) {
         for (const assignmentItem of item.assignments) {
           const assignment = assignmentItem as ASTAssignmentStatement;
-          const current = ASTStringify(assignment.variable);
+          const current = transformASTToNamespace(assignment.variable);
 
           if (!current.startsWith('globals.')) {
             continue;
@@ -109,7 +110,7 @@ export class LookupHelper {
 
         if (assignment.end!.line >= item.end!.line) break;
 
-        const current = ASTStringify(assignment.variable);
+        const current = transformASTToString(assignment.variable);
         result.push(current);
       }
     }
@@ -221,7 +222,8 @@ export class LookupHelper {
 
     if (
       previous?.type === ASTType.MemberExpression ||
-      previous?.type === ASTType.IndexExpression
+      (previous?.type === ASTType.IndexExpression &&
+        closest.type === ASTType.StringLiteral)
     ) {
       return typeMap.resolvePath(previous);
     }
