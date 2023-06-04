@@ -19,7 +19,6 @@ import transformASTToString from './ast-stringify';
 import documentParseQueue from './document-manager';
 import typeManager, { lookupBase, TypeInfo, TypeMap } from './type-manager';
 import {
-  injectMapContructorNamespaces,
   isGlobalsContextNamespace,
   removeContextPrefixInNamespace,
   removeGlobalsContextPrefixInNamespace
@@ -56,22 +55,13 @@ export class LookupHelper {
       if (current === identiferWithoutPrefix) {
         result.push(assignment);
       }
-
-      if (assignment.init instanceof ASTMapConstructorExpression) {
-        assignments.push(
-          ...injectMapContructorNamespaces(
-            assignment.variable,
-            assignment.init.fields
-          )
-        );
-      }
     }
 
     if (root instanceof ASTChunk) {
       const scopes: ASTBaseBlockWithScope[] = [root, ...root.scopes];
 
       for (const item of scopes) {
-        const assignments = [...item.assignments];
+        const assignments = item.assignments;
 
         for (let index = 0; index < assignments.length; index++) {
           const assignment = assignments[index] as ASTAssignmentStatement;
@@ -86,15 +76,6 @@ export class LookupHelper {
             identiferWithoutPrefix
           ) {
             result.push(assignment);
-          }
-
-          if (assignment.init instanceof ASTMapConstructorExpression) {
-            assignments.push(
-              ...injectMapContructorNamespaces(
-                assignment.variable,
-                assignment.init.fields
-              )
-            );
           }
         }
       }
@@ -122,7 +103,7 @@ export class LookupHelper {
     const globalScope = this.lookupGlobalScope(item);
 
     for (const scope of scopes) {
-      const assignments = [...scope.assignments];
+      const assignments = scope.assignments;
 
       for (let index = 0; index < assignments.length; index++) {
         const assignment = assignments[index] as ASTAssignmentStatement;
@@ -137,15 +118,6 @@ export class LookupHelper {
 
         if (scope === outerScope) {
           result.push(`outer.${current}`);
-        }
-
-        if (assignment.init instanceof ASTMapConstructorExpression) {
-          assignments.push(
-            ...injectMapContructorNamespaces(
-              assignment.variable,
-              assignment.init.fields
-            )
-          );
         }
       }
     }
@@ -161,18 +133,7 @@ export class LookupHelper {
     const globalScope = this.lookupGlobalScope(item);
 
     if (rootScope) {
-      if (rootScope instanceof ASTFunctionStatement) {
-        for (const parameter of rootScope.parameters) {
-          if (parameter instanceof ASTAssignmentStatement) {
-            const parameterName = (parameter.variable as ASTIdentifier).name;
-            result.push(parameterName, `locals.${parameterName}`);
-          } else if (parameter instanceof ASTIdentifier) {
-            result.push(parameter.name, `locals.${parameter.name}`);
-          }
-        }
-      }
-
-      const assignments = [...rootScope.assignments];
+      const assignments = rootScope.assignments;
 
       for (let index = 0; index < assignments.length; index++) {
         const assignment = assignments[index] as ASTAssignmentStatement;
@@ -187,20 +148,11 @@ export class LookupHelper {
         if (rootScope === globalScope) {
           result.push(`globals.${current}`);
         }
-
-        if (assignment.init instanceof ASTMapConstructorExpression) {
-          assignments.push(
-            ...injectMapContructorNamespaces(
-              assignment.variable,
-              assignment.init.fields
-            )
-          );
-        }
       }
     }
 
     for (const scope of scopes) {
-      const assignments = [...scope.assignments];
+      const assignments = scope.assignments;
 
       for (let index = 0; index < assignments.length; index++) {
         const assignment = assignments[index] as ASTAssignmentStatement;
@@ -215,15 +167,6 @@ export class LookupHelper {
 
         if (scope === outerScope) {
           result.push(`outer.${current}`);
-        }
-
-        if (assignment.init instanceof ASTMapConstructorExpression) {
-          assignments.push(
-            ...injectMapContructorNamespaces(
-              assignment.variable,
-              assignment.init.fields
-            )
-          );
         }
       }
     }
