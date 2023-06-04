@@ -127,9 +127,17 @@
 		},
 		{
 			"include": "#comment"
+		},
+		{
+			"include": "#blockComment"
 		}
 	],
 	"repository": {
+		"blockComment": {
+			"name": "comment.block",
+			"begin": "/\\*",
+			"end": "\\*/"
+		},
 		"comment": {
 			"name": "comment.line",
 			"begin": "//",
