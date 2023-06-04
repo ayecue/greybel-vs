@@ -1,10 +1,3 @@
-import {
-  ASTAssignmentStatement,
-  ASTBase,
-  ASTIndexExpression,
-  ASTMapKeyString
-} from 'greyscript-core';
-
 export const CONTEXT_PREFIX_PATTERN = /^(globals|locals|outer)\./;
 export const removeContextPrefixInNamespace = (namespace: string): string =>
   namespace.replace(CONTEXT_PREFIX_PATTERN, '');
