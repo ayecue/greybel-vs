@@ -488,3 +488,4 @@ All notable changes to this project will be documented in this file.
 - extend namespace find method to use assignment instead of namespaces coming from parser
 - fix possibly wrong start position of member, index and call expression
 - inject map constructor namespaces
+- inject list constructor namespaces
