@@ -1,4 +1,9 @@
-import { ASTBase, ASTCallExpression, ASTType } from 'greyscript-core';
+import {
+  ASTBase,
+  ASTCallExpression,
+  ASTIndexExpression,
+  ASTMemberExpression
+} from 'greyscript-core';
 import {
   getDefinitions,
   SignatureDefinitionArg,
@@ -23,6 +28,7 @@ import vscode, {
 import { AVAILABLE_CONSTANTS } from './autocomplete/constants';
 import { AVAILABLE_KEYWORDS } from './autocomplete/keywords';
 import { AVAILABLE_OPERATORS } from './autocomplete/operators';
+import transformASTToString from './helper/ast-stringify';
 import documentParseQueue from './helper/document-manager';
 import { LookupHelper } from './helper/lookup-type';
 import { TypeInfo, TypeInfoWithDefinition } from './helper/type-manager';
@@ -45,7 +51,7 @@ export const convertDefinitionsToCompletionList = (
 export const getCompletionList = (
   helper: LookupHelper,
   item: ASTBase
-): CompletionList | null => {
+): CompletionItem[] => {
   const typeInfo = helper.lookupBasePath(item);
 
   if (typeInfo instanceof TypeInfoWithDefinition) {
@@ -55,7 +61,7 @@ export const getCompletionList = (
     ];
 
     if (completionItems.length > 0) {
-      return new CompletionList(completionItems);
+      return completionItems;
     }
   } else if (typeInfo instanceof TypeInfo) {
     const definitions = getDefinitions(typeInfo.type);
@@ -64,11 +70,22 @@ export const getCompletionList = (
     ];
 
     if (completionItems.length > 0) {
-      return new CompletionList(completionItems);
+      return completionItems;
     }
   }
 
-  return null;
+  return [];
+};
+
+export const getDefaultCompletionList = (): CompletionItem[] => {
+  const defaultDefinitions = getDefinitions(['general']);
+
+  return [
+    ...AVAILABLE_KEYWORDS,
+    ...AVAILABLE_OPERATORS,
+    ...AVAILABLE_CONSTANTS,
+    ...convertDefinitionsToCompletionList(defaultDefinitions)
+  ];
 };
 
 export function activate(_context: ExtensionContext) {
@@ -96,28 +113,31 @@ export function activate(_context: ExtensionContext) {
 
       const helper = new LookupHelper(document);
       const astResult = helper.lookupAST(position);
+      const completionItems: CompletionItem[] = [];
+      let base = '';
 
       if (astResult) {
-        const { outer } = astResult;
+        const { closest, outer } = astResult;
         const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
 
         if (
-          previous?.type === ASTType.MemberExpression ||
-          previous?.type === ASTType.IndexExpression
+          previous instanceof ASTMemberExpression &&
+          closest === previous.identifier
         ) {
-          const list = getCompletionList(helper, previous);
-          if (list) return list;
+          base = transformASTToString(previous.base);
+          completionItems.push(...getCompletionList(helper, previous));
+        } else if (
+          previous instanceof ASTIndexExpression &&
+          closest === previous.index
+        ) {
+          base = transformASTToString(previous.base);
+          completionItems.push(...getCompletionList(helper, previous));
+        } else {
+          completionItems.push(...getDefaultCompletionList());
         }
+      } else {
+        completionItems.push(...getDefaultCompletionList());
       }
-
-      // get all default methods
-      const defaultDefinitions = getDefinitions(['general']);
-      const completionItems: CompletionItem[] = [
-        ...AVAILABLE_KEYWORDS,
-        ...AVAILABLE_OPERATORS,
-        ...AVAILABLE_CONSTANTS,
-        ...convertDefinitionsToCompletionList(defaultDefinitions)
-      ];
 
       if (!astResult) {
         return new CompletionList(completionItems);
@@ -128,6 +148,61 @@ export function activate(_context: ExtensionContext) {
       ]);
       const allImports = await documentParseQueue.get(document).getImports();
 
+      // filter for existing base
+      if (base.length > 0) {
+        const baseStart = `${base}.`;
+        const basePattern = new RegExp(`^${base}\\.`);
+
+        // get all identifer available in imports
+        for (const item of allImports) {
+          const { document } = item;
+
+          if (!document) {
+            continue;
+          }
+
+          completionItems.push(
+            ...helper
+              .findAllAvailableIdentifier(document)
+              .filter(
+                (property: string) =>
+                  property.startsWith(baseStart) &&
+                  !existingProperties.has(property)
+              )
+              .map((property: string) => {
+                const remainingValue = property.replace(basePattern, '');
+                existingProperties.add(remainingValue);
+                return new CompletionItem(
+                  remainingValue,
+                  CompletionItemKind.Variable
+                );
+              })
+          );
+        }
+
+        // get all identifer available in scope
+        completionItems.push(
+          ...helper
+            .findAllAvailableIdentifierRelatedToPosition(astResult.closest)
+            .filter(
+              (property: string) =>
+                property.startsWith(baseStart) &&
+                !existingProperties.has(property)
+            )
+            .map((property: string) => {
+              const remainingValue = property.replace(basePattern, '');
+              existingProperties.add(remainingValue);
+              return new CompletionItem(
+                remainingValue,
+                CompletionItemKind.Variable
+              );
+            })
+        );
+
+        return new CompletionList(completionItems);
+      }
+
+      // get all identifer available in imports
       for (const item of allImports) {
         const { document } = item;
 
