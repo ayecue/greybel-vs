@@ -370,6 +370,8 @@ export class TypeMap {
         return new TypeInfo('Logical expression', ['number']);
       case ASTType.SliceExpression:
         return new TypeInfo('Slice expression', ['any']);
+      case ASTType.Unknown:
+        return new TypeInfo('Unknown', ['any']);
       default:
         return null;
     }
@@ -407,6 +409,7 @@ export class TypeMap {
       case ASTType.BinaryExpression:
       case ASTType.LogicalExpression:
       case ASTType.SliceExpression:
+      case ASTType.Unknown:
         return me.resolveDefault(item);
       default:
         return null;
