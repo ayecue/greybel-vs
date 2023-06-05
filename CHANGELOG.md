@@ -490,3 +490,4 @@ All notable changes to this project will be documented in this file.
 - inject map constructor namespaces
 - inject list constructor namespaces
 - add block comment support
+- add comment function description support in UI
