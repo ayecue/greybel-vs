@@ -490,5 +490,5 @@ All notable changes to this project will be documented in this file.
 - inject map constructor namespaces
 - inject list constructor namespaces
 - add block comment support
-- add comment function description support in UI
+- add comment function description support
 - add action to transform to clipboard instead of writing into file

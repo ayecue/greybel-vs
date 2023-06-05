@@ -288,20 +288,53 @@ export class TypeMap {
     return new TypeInfo(name, ['any']);
   }
 
+  private getLastASTItemOfLine(line: number): ASTBase {
+    if (this.root.lines.has(line)) {
+      const items = this.root.lines.get(line);
+
+      if (items.length > 0) {
+        return items[items.length - 1];
+      }
+    }
+
+    return null;
+  }
+
+  private findASTItemInLine(line: number, type: ASTType): ASTBase {
+    if (this.root.lines.has(line)) {
+      const items = this.root.lines.get(line);
+      const result = items.find((item) => item.type === type);
+
+      if (result) {
+        return result;
+      }
+    }
+
+    return null;
+  }
+
+  private getItemDescription(
+    item: ASTBase,
+    defaultText: string = ''
+  ): string | null {
+    const me = this;
+    const previousItem = me.getLastASTItemOfLine(item.start.line - 1);
+    const currentItem = me.findASTItemInLine(item.start.line, ASTType.Comment);
+
+    if (previousItem instanceof ASTComment) {
+      return previousItem.value;
+    } else if (currentItem instanceof ASTComment) {
+      return currentItem.value;
+    }
+
+    return defaultText;
+  }
+
   private resolveFunctionDeclaration(
     item: ASTFunctionStatement
   ): TypeInfoWithDefinition | null {
     const me = this;
-    let description = 'This is a custom method.';
-
-    if (this.root.lines.has(item.start.line - 1)) {
-      const previousLine = this.root.lines.get(item.start.line - 1);
-      const last = previousLine[previousLine.length - 1];
-
-      if (last instanceof ASTComment) {
-        description = last.value;
-      }
-    }
+    const description = me.getItemDescription(item, 'This is a custom method.');
 
     return new TypeInfoWithDefinition('anonymous', ['function'], {
       arguments: item.parameters.map((arg: ASTBase) => {
