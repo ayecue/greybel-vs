@@ -104,17 +104,22 @@
                     "group": "z_commands"
                 },
                 {
-                    "command": "greybel.transform",
+                    "command": "greybel.transform.clipboard",
                     "when": "resourceLangId == greyscript",
                     "group": "1_modification"
                 },
                 {
-                    "command": "greybel.minify",
+                    "command": "greybel.transform.write",
                     "when": "resourceLangId == greyscript",
                     "group": "1_modification"
                 },
                 {
-                    "command": "greybel.beautify",
+                    "command": "greybel.minify.write",
+                    "when": "resourceLangId == greyscript",
+                    "group": "1_modification"
+                },
+                {
+                    "command": "greybel.beautify.write",
                     "when": "resourceLangId == greyscript",
                     "group": "1_modification"
                 },
@@ -151,15 +156,19 @@
                     "when": "resourceLangId == greyscript"
                 },
                 {
-                    "command": "greybel.transform",
+                    "command": "greybel.transform.clipboard",
                     "when": "resourceLangId == greyscript"
                 },
                 {
-                    "command": "greybel.minify",
+                    "command": "greybel.transform.write",
                     "when": "resourceLangId == greyscript"
                 },
                 {
-                    "command": "greybel.beautify",
+                    "command": "greybel.minify.write",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.beautify.write",
                     "when": "resourceLangId == greyscript"
                 },
                 {
@@ -216,15 +225,19 @@
                 "when": "!isWeb"
             },
             {
-                "command": "greybel.transform",
+                "command": "greybel.transform.clipboard",
+                "title": "Greybel: Transform to clipboard"
+            },
+            {
+                "command": "greybel.transform.write",
                 "title": "Greybel: Transform"
             },
             {
-                "command": "greybel.minify",
+                "command": "greybel.minify.write",
                 "title": "Greybel: Minify"
             },
             {
-                "command": "greybel.beautify",
+                "command": "greybel.beautify.write",
                 "title": "Greybel: Beautify"
             },
             {

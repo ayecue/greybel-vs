@@ -491,3 +491,4 @@ All notable changes to this project will be documented in this file.
 - inject list constructor namespaces
 - add block comment support
 - add comment function description support in UI
+- add action to transform to clipboard instead of writing into file

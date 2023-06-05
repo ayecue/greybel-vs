@@ -6,12 +6,18 @@ import vscode, {
   TextEditorEdit
 } from 'vscode';
 
+export enum ShareType {
+  WRITE = 'write',
+  CLIPBOARD = 'clipboard'
+}
+
 export function activate(context: ExtensionContext) {
   async function transform(
     editor: TextEditor,
-    _edit: TextEditorEdit,
+    editBuilder: TextEditorEdit,
     _args: any[],
-    specificBuildType?: BuildType
+    specificBuildType?: BuildType,
+    shareType: ShareType = ShareType.WRITE
   ) {
     if (editor.document.isDirty) {
       const isSaved = await editor.document.save();
@@ -53,29 +59,59 @@ export function activate(context: ExtensionContext) {
         excludedNamespaces: excludedNamespacesFromConfig
       }).parse();
 
-      const firstLine = editor.document.lineAt(0);
-      const lastLine = editor.document.lineAt(editor.document.lineCount - 1);
-      const textRange = new Range(firstLine.range.start, lastLine.range.end);
+      switch (shareType) {
+        case ShareType.WRITE: {
+          const firstLine = editor.document.lineAt(0);
+          const lastLine = editor.document.lineAt(
+            editor.document.lineCount - 1
+          );
+          const textRange = new Range(
+            firstLine.range.start,
+            lastLine.range.end
+          );
 
-      editor.edit(function (editBuilder: TextEditorEdit) {
-        editBuilder.replace(textRange, result);
-      });
-
-      vscode.window.showInformationMessage('Transform done.', { modal: false });
+          editBuilder.replace(textRange, result);
+          vscode.window.showInformationMessage('Transform done.', {
+            modal: false
+          });
+          break;
+        }
+        case ShareType.CLIPBOARD: {
+          vscode.env.clipboard.writeText(result);
+          vscode.window.showInformationMessage(
+            'Transform copied to clipboard.',
+            { modal: false }
+          );
+          break;
+        }
+        default: {
+          vscode.window.showInformationMessage('Unknown share type.', {
+            modal: false
+          });
+        }
+      }
     } catch (err: any) {
       vscode.window.showErrorMessage(err.message, { modal: false });
     }
   }
 
   context.subscriptions.push(
-    vscode.commands.registerTextEditorCommand('greybel.transform', transform),
     vscode.commands.registerTextEditorCommand(
-      'greybel.minify',
+      'greybel.transform.clipboard',
+      (editor: TextEditor, edit: TextEditorEdit, args: any[]) =>
+        transform(editor, edit, args, BuildType.UGLIFY, ShareType.CLIPBOARD)
+    ),
+    vscode.commands.registerTextEditorCommand(
+      'greybel.transform.write',
+      transform
+    ),
+    vscode.commands.registerTextEditorCommand(
+      'greybel.minify.write',
       (editor: TextEditor, edit: TextEditorEdit, args: any[]) =>
         transform(editor, edit, args, BuildType.UGLIFY)
     ),
     vscode.commands.registerTextEditorCommand(
-      'greybel.beautify',
+      'greybel.beautify.write',
       (editor: TextEditor, edit: TextEditorEdit, args: any[]) =>
         transform(editor, edit, args, BuildType.BEAUTIFY)
     )
