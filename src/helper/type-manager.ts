@@ -38,6 +38,18 @@ import {
   removeOuterContextPrefixInNamespace
 } from './utils';
 
+const DEFAULT_CUSTOM_FUNCTION_DESCRIPTION = `This is a custom method. You can add a description for this method by adding a comment above or after the function.
+\`\`\`
+myFunction = function(a, b, c) // This function does xyz
+\`\`\`
+or
+\`\`\`
+/*
+  This function does xyz
+*/
+myFunction = function(a, b, c)
+\`\`\`` as const;
+
 export class TypeInfo {
   label: string;
   type: string[];
@@ -334,7 +346,7 @@ export class TypeMap {
     item: ASTFunctionStatement
   ): TypeInfoWithDefinition | null {
     const me = this;
-    const description = me.getItemDescription(item, 'This is a custom method.');
+    const description = me.getItemDescription(item, DEFAULT_CUSTOM_FUNCTION_DESCRIPTION);
 
     return new TypeInfoWithDefinition('anonymous', ['function'], {
       arguments: item.parameters.map((arg: ASTBase) => {
