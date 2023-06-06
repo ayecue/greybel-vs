@@ -195,7 +195,7 @@ const getScraperMap = function (
         visit(bodyItem, level);
       }
     },
-    InvalidCodeExpression: () => {},
+    InvalidCodeExpression: () => {}
   };
 };
 

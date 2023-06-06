@@ -31,6 +31,8 @@
       "no-unused-vars": "off",
       "no-empty": "off",
       "no-use-before-define": "off",
+      "promise/catch-or-return": "warn",
+      "promise/always-return": "warn",
       "@typescript-eslint/no-unused-vars": [
         "error",
         { "args": "after-used", "argsIgnorePattern": "^_" }

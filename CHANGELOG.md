@@ -492,3 +492,4 @@ All notable changes to this project will be documented in this file.
 - add block comment support
 - add comment function description support
 - add action to transform to clipboard instead of writing into file
+- improve build error output

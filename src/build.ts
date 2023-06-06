@@ -1,6 +1,8 @@
-import { BuildError, BuildType, Transpiler } from 'greybel-transpiler';
+import { BuildType, Transpiler } from 'greybel-transpiler';
 import vscode, {
   ExtensionContext,
+  Position,
+  Range,
   TextEditor,
   TextEditorEdit,
   Uri
@@ -104,11 +106,32 @@ export function activate(context: ExtensionContext) {
         { modal: false }
       );
     } catch (err: any) {
-      if (err instanceof BuildError) {
-        vscode.window.showErrorMessage(
-          `Build error: ${err.message} in ${err.relatedTarget}`,
-          { modal: false }
-        );
+      if (err.range) {
+        const errRange = err.range;
+        const errTarget = err.target;
+
+        vscode.window
+          .showErrorMessage(
+            `Build error: ${err.message} at ${errTarget}:${errRange}`,
+            { modal: false },
+            'Go to error'
+          )
+          .then(async () => {
+            const textDocument = await vscode.workspace.openTextDocument(
+              errTarget
+            );
+            const range = new Range(
+              new Position(
+                errRange.start.line - 1,
+                errRange.start.character - 1
+              ),
+              new Position(errRange.end.line - 1, errRange.end.character - 1)
+            );
+
+            vscode.window.showTextDocument(textDocument, {
+              selection: range
+            });
+          });
       } else {
         vscode.window.showErrorMessage(
           `Unexpected error: ${err.message}\n${err.stack}`,

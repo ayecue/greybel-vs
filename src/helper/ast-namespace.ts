@@ -366,7 +366,7 @@ export function namespaceFactory(
     },
     InvalidCodeExpression: (): string => {
       return '';
-    },
+    }
   };
 }
 

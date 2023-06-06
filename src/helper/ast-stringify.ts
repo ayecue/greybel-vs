@@ -457,7 +457,7 @@ export function stringifyFactory(
     },
     InvalidCodeExpression: (): string => {
       return '';
-    },
+    }
   };
 }
 

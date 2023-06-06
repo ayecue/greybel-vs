@@ -1,6 +1,7 @@
 import { BuildType, DirectTranspiler } from 'greybel-transpiler';
 import vscode, {
   ExtensionContext,
+  Position,
   Range,
   TextEditor,
   TextEditorEdit
@@ -91,7 +92,34 @@ export function activate(context: ExtensionContext) {
         }
       }
     } catch (err: any) {
-      vscode.window.showErrorMessage(err.message, { modal: false });
+      if (err.range) {
+        const errRange = err.range;
+
+        vscode.window
+          .showErrorMessage(
+            `Build error: ${err.message} at ${editor.document.uri.fsPath}:${errRange}`,
+            { modal: false },
+            'Go to error'
+          )
+          .then(() => {
+            const range = new Range(
+              new Position(
+                errRange.start.line - 1,
+                errRange.start.character - 1
+              ),
+              new Position(errRange.end.line - 1, errRange.end.character - 1)
+            );
+
+            vscode.window.showTextDocument(editor.document, {
+              selection: range
+            });
+          });
+      } else {
+        vscode.window.showErrorMessage(
+          `Unexpected error: ${err.message}\n${err.stack}`,
+          { modal: false }
+        );
+      }
     }
   }
 
