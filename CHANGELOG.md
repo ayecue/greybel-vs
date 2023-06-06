@@ -474,7 +474,7 @@ All notable changes to this project will be documented in this file.
 - fix hover tooltip for multiline strings
 - instant exit on process termination
 
-## [1.6.0] - 02.06.2023
+## [1.6.0] - 06.06.2023
 
 - fix lastIndexOf behaviour, only works with strings now and returns -1 instead of null
 - fix return type of indexOf signature
