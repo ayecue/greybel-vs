@@ -97,7 +97,7 @@ export function activate(context: ExtensionContext) {
 
         vscode.window
           .showErrorMessage(
-            `Build error: ${err.message} at ${editor.document.uri.fsPath}:${errRange}`,
+            `Build error: ${err.message} at ${editor.document.uri.fsPath}:${errRange.start}`,
             { modal: false },
             'Go to error'
           )

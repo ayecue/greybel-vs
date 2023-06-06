@@ -112,7 +112,7 @@ export function activate(context: ExtensionContext) {
 
         vscode.window
           .showErrorMessage(
-            `Build error: ${err.message} at ${errTarget}:${errRange}`,
+            `Build error: ${err.message} at ${errTarget}:${errRange.start}`,
             { modal: false },
             'Go to error'
           )

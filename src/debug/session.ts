@@ -306,9 +306,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
             'red',
             `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
               err.message
-            } at [${err.target}:${err.range}](file://${err.target}:${
-              err.range
-            })`
+            } at ${err.target}:${err.range?.start || 0}`
           )
         );
       } else if (err instanceof RuntimeError) {
