@@ -35,6 +35,7 @@ import { init as initIntrinsics } from 'greybel-intrinsics';
 import vscode, { Uri } from 'vscode';
 
 import PseudoTerminal from '../helper/pseudo-terminal';
+import { showCustomErrorMessage } from '../helper/show-custom-error';
 import transform, {
   ansiProvider,
   useColor
@@ -306,7 +307,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
             'red',
             `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
               err.message
-            } in ${err.relatedTarget}`
+            } at ${err.target}:${err.range?.start || 0}`
           )
         );
       } else if (err instanceof RuntimeError) {
@@ -315,7 +316,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
             'red',
             `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
               err.message
-            } in ${err.relatedTarget}\n${err.stack}`
+            } in ${err.target}\n${err.stack}`
           )
         );
       } else {
@@ -329,7 +330,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
         );
       }
 
-      vscode.window.showErrorMessage(err.message, { modal: false });
+      showCustomErrorMessage(err);
     } finally {
       me._messageQueue?.end();
     }

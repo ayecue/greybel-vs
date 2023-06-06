@@ -1,4 +1,9 @@
-import { ASTBase, ASTIdentifier, ASTMemberExpression } from 'greyscript-core';
+import {
+  ASTBase,
+  ASTIdentifier,
+  ASTIndexExpression,
+  ASTMemberExpression
+} from 'greyscript-core';
 import vscode, {
   CancellationToken,
   DefinitionLink,
@@ -8,7 +13,7 @@ import vscode, {
   TextDocument
 } from 'vscode';
 
-import ASTStringify from './helper/ast-stringify';
+import transformASTToNamespace from './helper/ast-namespace';
 import documentParseQueue from './helper/document-manager';
 import { LookupHelper } from './helper/lookup-type';
 
@@ -67,12 +72,22 @@ export function activate(_context: ExtensionContext) {
       const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
       let identifer = closest.name;
 
-      if (previous && previous instanceof ASTMemberExpression) {
-        identifer = ASTStringify(previous);
+      if (previous) {
+        if (
+          previous instanceof ASTMemberExpression &&
+          previous.identifier === closest
+        ) {
+          identifer = transformASTToNamespace(previous);
+        } else if (
+          previous instanceof ASTIndexExpression &&
+          previous.index === closest
+        ) {
+          identifer = transformASTToNamespace(previous);
+        }
       }
 
       const definitions = findAllDefinitions(helper, identifer, closest.scope!);
-      const allImports = await documentParseQueue.getImportsOf(document);
+      const allImports = await documentParseQueue.get(document).getImports();
 
       for (const item of allImports) {
         const { document, textDocument } = item;

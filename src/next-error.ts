@@ -1,4 +1,5 @@
 import { Parser } from 'greybel-core';
+import { ASTRange } from 'greyscript-core';
 import vscode, {
   ExtensionContext,
   Position,
@@ -7,19 +8,17 @@ import vscode, {
   TextEditorEdit
 } from 'vscode';
 
-const hasOwnProperty = Object.prototype.hasOwnProperty;
-
 export function activate(context: ExtensionContext) {
   function gotoNextError(
     editor: TextEditor,
     _edit: TextEditorEdit,
     _args: any[]
   ) {
-    const selectedLine = (line: number) => {
-      const eol = editor.document.lineAt(line - 1).text.length;
-      const start = new Position(line - 1, 0);
-      const end = new Position(line - 1, eol);
-      const range = new Range(start, end);
+    const selectedLine = (errRange: ASTRange) => {
+      const range = new Range(
+        new Position(errRange.start.line - 1, errRange.start.character - 1),
+        new Position(errRange.end.line - 1, errRange.end.character - 1)
+      );
 
       vscode.window.showTextDocument(editor.document, {
         selection: range
@@ -31,10 +30,8 @@ export function activate(context: ExtensionContext) {
       parser.parseChunk();
       vscode.window.showInformationMessage('all good :)', { modal: false });
     } catch (err: any) {
-      if (hasOwnProperty.call(err, 'line')) {
-        selectedLine(err.line);
-      } else if (hasOwnProperty.call(err, 'token')) {
-        selectedLine(err.token.line);
+      if (err.range) {
+        selectedLine(err.range);
       }
 
       vscode.window.showErrorMessage(err.message, { modal: false });

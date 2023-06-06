@@ -1,18 +1,25 @@
+import { ASTChunkAdvanced } from 'greybel-core';
 import {
   ASTAssignmentStatement,
   ASTBase,
   ASTBaseBlockWithScope,
   ASTChunk,
-  ASTFunctionStatement,
-  ASTIdentifier,
+  ASTIndexExpression,
+  ASTMemberExpression,
   ASTType
 } from 'greyscript-core';
 import { Position, TextDocument } from 'vscode';
 
+import transformASTToNamespace from './ast-namespace';
 import * as ASTScraper from './ast-scraper';
-import ASTStringify from './ast-stringify';
+import transformASTToString from './ast-stringify';
 import documentParseQueue from './document-manager';
-import typeManager, { lookupBase, TypeInfo } from './type-manager';
+import typeManager, { lookupBase, TypeInfo, TypeMap } from './type-manager';
+import {
+  isGlobalsContextNamespace,
+  removeContextPrefixInNamespace,
+  removeGlobalsContextPrefixInNamespace
+} from './utils';
 
 export type LookupOuter = ASTBase[];
 
@@ -32,14 +39,18 @@ export class LookupHelper {
     identifier: string,
     root: ASTBase
   ): ASTAssignmentStatement[] {
-    const assignments = this.lookupAssignments(root);
+    const identiferWithoutPrefix = removeContextPrefixInNamespace(identifier);
+    const assignments = [...this.lookupAssignments(root)];
     const result: ASTAssignmentStatement[] = [];
 
-    for (const item of assignments) {
-      const current = ASTStringify(item.variable);
+    for (let index = 0; index < assignments.length; index++) {
+      const assignment = assignments[index] as ASTAssignmentStatement;
+      const current = removeContextPrefixInNamespace(
+        transformASTToNamespace(assignment.variable)
+      );
 
-      if (current === identifier) {
-        result.push(item);
+      if (current === identiferWithoutPrefix) {
+        result.push(assignment);
       }
     }
 
@@ -47,15 +58,20 @@ export class LookupHelper {
       const scopes: ASTBaseBlockWithScope[] = [root, ...root.scopes];
 
       for (const item of scopes) {
-        for (const assignmentItem of item.assignments) {
-          const assignment = assignmentItem as ASTAssignmentStatement;
-          const current = ASTStringify(assignment.variable);
+        const assignments = item.assignments;
 
-          if (!current.startsWith('globals.')) {
+        for (let index = 0; index < assignments.length; index++) {
+          const assignment = assignments[index] as ASTAssignmentStatement;
+          const current = transformASTToNamespace(assignment.variable);
+
+          if (!isGlobalsContextNamespace(current)) {
             continue;
           }
 
-          if (current.replace(/^globals./, '') === identifier) {
+          if (
+            removeGlobalsContextPrefixInNamespace(current) ===
+            identiferWithoutPrefix
+          ) {
             result.push(assignment);
           }
         }
@@ -80,9 +96,27 @@ export class LookupHelper {
   findAllAvailableIdentifier(item: ASTBase): string[] {
     const scopes = this.lookupScopes(item);
     const result: string[] = [];
+    const outerScope = scopes.length > 1 ? scopes[1] : null;
+    const globalScope = this.lookupGlobalScope(item);
 
     for (const scope of scopes) {
-      result.push(...scope.namespaces);
+      const assignments = scope.assignments;
+
+      for (let index = 0; index < assignments.length; index++) {
+        const assignment = assignments[index] as ASTAssignmentStatement;
+        const current = removeContextPrefixInNamespace(
+          transformASTToString(assignment.variable)
+        );
+        result.push(current);
+
+        if (scope === globalScope) {
+          result.push(`globals.${current}`);
+        }
+
+        if (scope === outerScope) {
+          result.push(`outer.${current}`);
+        }
+      }
     }
 
     return Array.from(new Set(result));
@@ -92,30 +126,46 @@ export class LookupHelper {
     const scopes = this.lookupScopes(item);
     const result: string[] = [];
     const rootScope = scopes.shift();
+    const outerScope = scopes.length > 0 ? scopes[0] : null;
+    const globalScope = this.lookupGlobalScope(item);
 
     if (rootScope) {
-      if (rootScope instanceof ASTFunctionStatement) {
-        for (const parameter of rootScope.parameters) {
-          if (parameter instanceof ASTAssignmentStatement) {
-            result.push((parameter.variable as ASTIdentifier).name);
-          } else if (parameter instanceof ASTIdentifier) {
-            result.push(parameter.name);
-          }
-        }
-      }
+      const assignments = rootScope.assignments;
 
-      for (const assignmentItem of rootScope.assignments) {
-        const assignment = assignmentItem as ASTAssignmentStatement;
+      for (let index = 0; index < assignments.length; index++) {
+        const assignment = assignments[index] as ASTAssignmentStatement;
 
         if (assignment.end!.line >= item.end!.line) break;
 
-        const current = ASTStringify(assignment.variable);
-        result.push(current);
+        const current = removeContextPrefixInNamespace(
+          transformASTToString(assignment.variable)
+        );
+        result.push(current, `locals.${current}`);
+
+        if (rootScope === globalScope) {
+          result.push(`globals.${current}`);
+        }
       }
     }
 
     for (const scope of scopes) {
-      result.push(...scope.namespaces);
+      const assignments = scope.assignments;
+
+      for (let index = 0; index < assignments.length; index++) {
+        const assignment = assignments[index] as ASTAssignmentStatement;
+        const current = removeContextPrefixInNamespace(
+          transformASTToString(assignment.variable)
+        );
+        result.push(current);
+
+        if (scope === globalScope) {
+          result.push(`globals.${current}`);
+        }
+
+        if (scope === outerScope) {
+          result.push(`outer.${current}`);
+        }
+      }
     }
 
     return Array.from(new Set(result));
@@ -139,6 +189,22 @@ export class LookupHelper {
     }
 
     return result;
+  }
+
+  lookupGlobalScope(item: ASTBase): ASTChunkAdvanced {
+    let result: ASTBaseBlockWithScope = null;
+    let current = item.scope;
+
+    if (item instanceof ASTBaseBlockWithScope) {
+      result = item;
+    }
+
+    while (current) {
+      result = current;
+      current = current.scope;
+    }
+
+    return result as ASTChunkAdvanced;
   }
 
   lookupAST(position: Position): LookupASTResult | null {
@@ -210,18 +276,54 @@ export class LookupHelper {
     return null;
   }
 
-  lookupTypeInfo({ closest, outer }: LookupASTResult): TypeInfo | null {
+  async buildTypeMap(): Promise<TypeMap> {
     const typeMap = typeManager.get(this.document);
 
     if (!typeMap) {
       return null;
     }
 
+    const externalTypeMaps = [];
+    const allImports = await documentParseQueue.get(this.document).getImports();
+
+    for (const item of allImports) {
+      const { document, textDocument } = item;
+
+      if (!document) {
+        continue;
+      }
+
+      const typeMap = typeManager.get(textDocument);
+
+      if (typeMap) {
+        externalTypeMaps.push(typeMap);
+      }
+    }
+
+    return typeMap.fork(...externalTypeMaps);
+  }
+
+  async lookupTypeInfo({
+    closest,
+    outer
+  }: LookupASTResult): Promise<TypeInfo | null> {
+    const typeMap = await this.buildTypeMap();
+
+    if (typeMap === null) {
+      return null;
+    }
+
     const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
 
     if (
-      previous?.type === ASTType.MemberExpression ||
-      previous?.type === ASTType.IndexExpression
+      previous?.type === ASTType.MemberExpression &&
+      closest === (previous as ASTMemberExpression).identifier
+    ) {
+      return typeMap.resolvePath(previous);
+    } else if (
+      previous?.type === ASTType.IndexExpression &&
+      closest === (previous as ASTIndexExpression).index &&
+      closest.type === ASTType.StringLiteral
     ) {
       return typeMap.resolvePath(previous);
     }
@@ -229,7 +331,7 @@ export class LookupHelper {
     return typeMap.resolve(closest);
   }
 
-  lookupType(position: Position): TypeInfo | null {
+  lookupType(position: Position): Promise<TypeInfo | null> {
     const me = this;
     const astResult = me.lookupAST(position);
 

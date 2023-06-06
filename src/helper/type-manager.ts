@@ -5,11 +5,14 @@ import {
   ASTBaseBlockWithScope,
   ASTCallExpression,
   ASTCallStatement,
+  ASTComment,
   ASTFunctionStatement,
   ASTIdentifier,
   ASTIndexExpression,
+  ASTListConstructorExpression,
   ASTListValue,
   ASTLiteral,
+  ASTMapConstructorExpression,
   ASTMemberExpression,
   ASTParenthesisExpression,
   ASTType,
@@ -23,7 +26,30 @@ import {
 } from 'greyscript-meta';
 import { TextDocument } from 'vscode';
 
-import ASTStringify from './ast-stringify';
+import transformASTToNamespace from './ast-namespace';
+import transformASTToString from './ast-stringify';
+import {
+  isGlobalsContextNamespace,
+  isLocalsContextNamespace,
+  isOuterContextNamespace,
+  removeContextPrefixInNamespace,
+  removeGlobalsContextPrefixInNamespace,
+  removeLocalsContextPrefixInNamespace,
+  removeOuterContextPrefixInNamespace
+} from './utils';
+
+const DEFAULT_CUSTOM_FUNCTION_DESCRIPTION =
+  `This is a custom method. You can add a description for this method by adding a comment above or after the function.
+\`\`\`
+myFunction = function(a, b, c) // This function does xyz
+\`\`\`
+or
+\`\`\`
+/*
+  This function does xyz
+*/
+myFunction = function(a, b, c)
+\`\`\`` as const;
 
 export class TypeInfo {
   label: string;
@@ -85,24 +111,26 @@ export const lookupBase = (node: ASTBase | null = null): ASTBase | null => {
 
 export class TypeMap {
   private root: ASTChunkAdvanced;
-  private refs: WeakMap<ASTBase, Map<string, TypeInfo>>;
+  refs: Map<ASTBase, Map<string, TypeInfo>>;
 
   constructor(root: ASTChunkAdvanced) {
     this.root = root;
-    this.refs = new WeakMap();
+    this.refs = new Map();
   }
 
   lookupTypeOfNamespace(item: ASTBase): TypeInfo | null {
     const me = this;
-    const name = ASTStringify(item);
+    const namespace = removeContextPrefixInNamespace(
+      transformASTToNamespace(item)
+    );
     let currentScope = item.scope;
 
     while (currentScope) {
       if (me.refs.has(currentScope)) {
         const typeMap = me.refs.get(currentScope)!;
 
-        if (typeMap.has(name)) {
-          const typeInfo = typeMap.get(name)!;
+        if (typeMap.has(namespace)) {
+          const typeInfo = typeMap.get(namespace)!;
           return typeInfo;
         }
       }
@@ -179,9 +207,53 @@ export class TypeMap {
           break;
         }
         case ASTType.IndexExpression: {
-          // add index
-          console.log('not yet supported');
-          return null;
+          if (!currentMetaInfo) {
+            return null;
+          }
+
+          const indexExpr = origin as ASTIndexExpression;
+          const indexValue = indexExpr.index;
+
+          if (
+            indexValue instanceof ASTLiteral &&
+            indexValue.type === ASTType.StringLiteral
+          ) {
+            // get signature
+            let definitions = null;
+
+            if (currentMetaInfo instanceof TypeInfoWithDefinition) {
+              const definition = currentMetaInfo.definition;
+              definitions = getDefinitions(definition.returns);
+            } else {
+              definitions = getDefinitions(currentMetaInfo.type);
+            }
+
+            const key = indexValue.value.toString();
+
+            if (key in definitions) {
+              const definition = definitions[key];
+              currentMetaInfo = new TypeInfoWithDefinition(
+                key,
+                ['function'],
+                definition
+              );
+              break;
+            }
+
+            // todo add better retrieval
+            currentMetaInfo = new TypeInfo(key, ['any']);
+            break;
+          }
+
+          // todo add better retrieval
+          const indexType = me.resolve(indexValue);
+
+          if (!indexType) {
+            return null;
+          }
+
+          currentMetaInfo = new TypeInfo(indexType.type[0], ['any']);
+          break;
         }
         default: {
           if (!currentMetaInfo) {
@@ -229,16 +301,62 @@ export class TypeMap {
     return new TypeInfo(name, ['any']);
   }
 
+  private getLastASTItemOfLine(line: number): ASTBase {
+    if (this.root.lines.has(line)) {
+      const items = this.root.lines.get(line);
+
+      if (items.length > 0) {
+        return items[items.length - 1];
+      }
+    }
+
+    return null;
+  }
+
+  private findASTItemInLine(line: number, type: ASTType): ASTBase {
+    if (this.root.lines.has(line)) {
+      const items = this.root.lines.get(line);
+      const result = items.find((item) => item.type === type);
+
+      if (result) {
+        return result;
+      }
+    }
+
+    return null;
+  }
+
+  private getItemDescription(
+    item: ASTBase,
+    defaultText: string = ''
+  ): string | null {
+    const me = this;
+    const previousItem = me.getLastASTItemOfLine(item.start.line - 1);
+    const currentItem = me.findASTItemInLine(item.start.line, ASTType.Comment);
+
+    if (previousItem instanceof ASTComment) {
+      return previousItem.value;
+    } else if (currentItem instanceof ASTComment) {
+      return currentItem.value;
+    }
+
+    return defaultText;
+  }
+
   private resolveFunctionDeclaration(
     item: ASTFunctionStatement
   ): TypeInfoWithDefinition | null {
     const me = this;
+    const description = me.getItemDescription(
+      item,
+      DEFAULT_CUSTOM_FUNCTION_DESCRIPTION
+    );
 
     return new TypeInfoWithDefinition('anonymous', ['function'], {
       arguments: item.parameters.map((arg: ASTBase) => {
         if (arg.type === ASTType.Identifier) {
           return {
-            label: ASTStringify(arg),
+            label: transformASTToString(arg),
             type: 'any'
           } as SignatureDefinitionArg;
         }
@@ -246,12 +364,12 @@ export class TypeMap {
         const assignment = arg as ASTAssignmentStatement;
 
         return {
-          label: ASTStringify(assignment.variable),
+          label: transformASTToString(assignment.variable),
           type: me.resolve(assignment.init)?.type[0] || 'any'
         };
       }),
       returns: ['any'],
-      description: 'This is a custom method.'
+      description
     });
   }
 
@@ -296,7 +414,7 @@ export class TypeMap {
       case ASTType.NumericLiteral:
         return new TypeInfo((item as ASTLiteral).raw.toString(), ['number']);
       case ASTType.BooleanLiteral:
-        return new TypeInfo((item as ASTLiteral).raw.toString(), ['boolean']);
+        return new TypeInfo((item as ASTLiteral).raw.toString(), ['number']);
       case ASTType.MapConstructorExpression:
         return new TypeInfo('{}', ['map:any']);
       case ASTType.ListConstructorExpression:
@@ -309,7 +427,11 @@ export class TypeMap {
           'map:any'
         ]);
       case ASTType.LogicalExpression:
-        return new TypeInfo('Logical expression', ['boolean']);
+        return new TypeInfo('Logical expression', ['number']);
+      case ASTType.SliceExpression:
+        return new TypeInfo('Slice expression', ['any']);
+      case ASTType.Unknown:
+        return new TypeInfo('Unknown', ['any']);
       default:
         return null;
     }
@@ -346,6 +468,8 @@ export class TypeMap {
       case ASTType.ListConstructorExpression:
       case ASTType.BinaryExpression:
       case ASTType.LogicalExpression:
+      case ASTType.SliceExpression:
+      case ASTType.Unknown:
         return me.resolveDefault(item);
       default:
         return null;
@@ -359,16 +483,16 @@ export class TypeMap {
 
     me.refs.set(scope, identiferTypes);
 
-    for (const assignment of assignments) {
-      const name = ASTStringify(assignment.variable);
-      const resolved = me.resolve(assignment.init);
+    const globalIdentifierTypes = me.refs.get(me.root);
+    const setReference = (name: string, item: ASTBase) => {
+      const resolved = me.resolve(item);
 
-      if (resolved === null) continue;
+      if (resolved === null) return;
 
-      let typeInfo;
+      let typeInfo: TypeInfo;
 
       if (
-        assignment.init instanceof ASTFunctionStatement &&
+        item instanceof ASTFunctionStatement &&
         resolved instanceof TypeInfoWithDefinition
       ) {
         typeInfo = new TypeInfoWithDefinition(
@@ -377,8 +501,8 @@ export class TypeMap {
           (resolved as TypeInfoWithDefinition).definition
         );
       } else if (
-        assignment.init instanceof ASTUnaryExpression &&
-        assignment.init.operator === '@' &&
+        item instanceof ASTUnaryExpression &&
+        item.operator === '@' &&
         resolved instanceof TypeInfoWithDefinition
       ) {
         typeInfo = new TypeInfoWithDefinition(
@@ -386,11 +510,92 @@ export class TypeMap {
           resolved.type,
           (resolved as TypeInfoWithDefinition).definition
         );
+      } else if (
+        item instanceof ASTMapConstructorExpression &&
+        resolved instanceof TypeInfo
+      ) {
+        for (const field of item.fields) {
+          const key = `${name}.${transformASTToNamespace(field.key)}`;
+          setReference(key, field.value);
+        }
+
+        typeInfo = new TypeInfo(name, resolved.type);
+      } else if (
+        item instanceof ASTListConstructorExpression &&
+        resolved instanceof TypeInfo
+      ) {
+        for (const field of item.fields) {
+          const key = `${name}[number]`;
+          setReference(key, field.value);
+        }
+
+        typeInfo = new TypeInfo(name, resolved.type);
       } else {
         typeInfo =
           resolved instanceof TypeInfoWithDefinition
             ? new TypeInfo(name, resolved.definition.returns || ['any'])
             : new TypeInfo(name, resolved.type);
+      }
+
+      // in case globals is used variable needs to get attached to global scope
+      if (isGlobalsContextNamespace(name)) {
+        const nameWithoutGlobalsPrefix =
+          removeGlobalsContextPrefixInNamespace(name);
+
+        typeInfo.label = nameWithoutGlobalsPrefix;
+
+        if (globalIdentifierTypes.has(nameWithoutGlobalsPrefix)) {
+          typeInfo.type = Array.from(
+            new Set([
+              ...typeInfo.type,
+              ...globalIdentifierTypes.get(nameWithoutGlobalsPrefix)!.type
+            ])
+          );
+        }
+
+        globalIdentifierTypes.set(nameWithoutGlobalsPrefix, typeInfo);
+        return;
+        // in case outer is used variable needs to get attached to outer scope
+      } else if (
+        isOuterContextNamespace(name) &&
+        item.scope?.scope != null &&
+        me.refs.has(item.scope.scope)
+      ) {
+        const outerIdentifierTypes = me.refs.get(item.scope.scope);
+        const nameWithoutOuterPrefix =
+          removeOuterContextPrefixInNamespace(name);
+
+        typeInfo.label = nameWithoutOuterPrefix;
+
+        if (outerIdentifierTypes.has(nameWithoutOuterPrefix)) {
+          typeInfo.type = Array.from(
+            new Set([
+              ...typeInfo.type,
+              ...outerIdentifierTypes.get(nameWithoutOuterPrefix)!.type
+            ])
+          );
+        }
+
+        outerIdentifierTypes.set(nameWithoutOuterPrefix, typeInfo);
+        return;
+        // in case locals is used variable needs to get attached to locals scope
+      } else if (isLocalsContextNamespace(name)) {
+        const nameWithoutLocalsPrefix =
+          removeLocalsContextPrefixInNamespace(name);
+
+        typeInfo.label = nameWithoutLocalsPrefix;
+
+        if (identiferTypes.has(nameWithoutLocalsPrefix)) {
+          typeInfo.type = Array.from(
+            new Set([
+              ...typeInfo.type,
+              ...identiferTypes.get(nameWithoutLocalsPrefix)!.type
+            ])
+          );
+        }
+
+        identiferTypes.set(nameWithoutLocalsPrefix, typeInfo);
+        return;
       }
 
       if (identiferTypes.has(name)) {
@@ -400,21 +605,22 @@ export class TypeMap {
       }
 
       identiferTypes.set(name, typeInfo);
+    };
+
+    for (const assignment of assignments) {
+      const name = transformASTToNamespace(assignment.variable);
+      setReference(name, assignment.init);
     }
   }
 
   analyze() {
     const me = this;
 
-    console.time('analyzing');
-
     me.analyzeScope(me.root);
 
     for (const scope of me.root.scopes) {
       me.analyzeScope(scope);
     }
-
-    console.timeEnd('analyzing');
   }
 
   getIdentifierInScope(item: ASTBase): Map<string, TypeInfo> | null {
@@ -425,6 +631,40 @@ export class TypeMap {
     }
 
     return null;
+  }
+
+  fork(...typeMaps: TypeMap[]): TypeMap {
+    const forkTypeMap = new TypeMap(this.root);
+
+    for (const [scope, ref] of this.refs) {
+      const scopeRefCopy: Map<string, TypeInfo> = new Map();
+
+      for (const [identifier, typeInfo] of ref) {
+        scopeRefCopy.set(identifier, typeInfo);
+      }
+
+      forkTypeMap.refs.set(scope, scopeRefCopy);
+    }
+
+    const globalRefMap: Map<string, TypeInfo> = forkTypeMap.refs.get(this.root);
+
+    for (const typeMap of typeMaps) {
+      if (!typeMap.refs.has(typeMap.root)) {
+        continue;
+      }
+
+      const rootRefMap: Map<string, TypeInfo> = typeMap.refs.get(typeMap.root);
+
+      for (const [identifier, typeInfo] of rootRefMap) {
+        if (globalRefMap.has(identifier)) {
+          continue;
+        }
+
+        globalRefMap.set(identifier, typeInfo);
+      }
+    }
+
+    return forkTypeMap;
   }
 }
 
@@ -438,7 +678,15 @@ export class TypeManager {
   analyze(document: TextDocument, chunk: ASTChunkAdvanced): TypeMap {
     const typeMap = new TypeMap(chunk);
 
-    typeMap.analyze();
+    console.time(`Analyzing for ${document.fileName} done within`);
+
+    try {
+      typeMap.analyze();
+    } catch (err) {
+      console.error(err);
+    }
+
+    console.timeEnd(`Analyzing for ${document.fileName} done within`);
 
     const key = document.fileName;
     this.types.set(key, typeMap);

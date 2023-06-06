@@ -473,3 +473,23 @@ All notable changes to this project will be documented in this file.
 - improve auto increase/decrease indent
 - fix hover tooltip for multiline strings
 - instant exit on process termination
+
+## [1.6.0] - 06.06.2023
+
+- fix lastIndexOf behaviour, only works with strings now and returns -1 instead of null
+- fix return type of indexOf signature
+- fix tooltip for lastIndexOf
+- remove usage of boolean type in tooltips and signatures to avoid confusion since technically booleans do not exist
+- minor improvement to index expression type analyzing
+- use modified transformer to get namespace for type
+- partialy support type resolve from identifier assigned in imported file
+- fix type resolve within slice expression
+- improve type resolve for assignments using locals, globals or outer prefix
+- extend namespace find method to use assignment instead of namespaces coming from parser
+- fix possibly wrong start position of member, index and call expression
+- inject map constructor namespaces
+- inject list constructor namespaces
+- add block comment support
+- add comment function description support
+- add action to transform to clipboard instead of writing into file
+- improve build error output

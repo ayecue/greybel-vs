@@ -15,8 +15,9 @@ import vscode, {
   TextDocument
 } from 'vscode';
 
-import ASTStringify from './helper/ast-stringify';
+import transformASTToString from './helper/ast-stringify';
 import documentParseQueue from './helper/document-manager';
+import { removeContextPrefixInNamespace } from './helper/utils';
 
 const findAllAssignments = (
   root: ASTChunk,
@@ -29,7 +30,9 @@ const findAllAssignments = (
   for (const item of scopes) {
     for (const assignmentItem of item.assignments) {
       const assignment = assignmentItem as ASTAssignmentStatement;
-      const current = ASTStringify(assignment.variable);
+      const current = removeContextPrefixInNamespace(
+        transformASTToString(assignment.variable)
+      );
 
       if (!isValid(current)) {
         continue;
@@ -47,6 +50,7 @@ const findAllAssignments = (
         assignment.variable.end.line - 1,
         assignment.variable.end.character - 1
       );
+
       result.push({
         name: current,
         containerName: current,

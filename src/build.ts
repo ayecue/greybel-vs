@@ -1,4 +1,4 @@
-import { BuildError, BuildType, Transpiler } from 'greybel-transpiler';
+import { BuildType, Transpiler } from 'greybel-transpiler';
 import vscode, {
   ExtensionContext,
   TextEditor,
@@ -9,6 +9,7 @@ import vscode, {
 import { createParseResult } from './build/create-parse-result';
 import { createInstaller } from './build/installer';
 import { createBasePath } from './helper/create-base-path';
+import { showCustomErrorMessage } from './helper/show-custom-error';
 import { TranspilerResourceProvider } from './resource';
 
 export function activate(context: ExtensionContext) {
@@ -104,17 +105,7 @@ export function activate(context: ExtensionContext) {
         { modal: false }
       );
     } catch (err: any) {
-      if (err instanceof BuildError) {
-        vscode.window.showErrorMessage(
-          `Build error: ${err.message} in ${err.relatedTarget}`,
-          { modal: false }
-        );
-      } else {
-        vscode.window.showErrorMessage(
-          `Unexpected error: ${err.message}\n${err.stack}`,
-          { modal: false }
-        );
-      }
+      showCustomErrorMessage(err);
     }
   }
 
