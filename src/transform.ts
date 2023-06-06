@@ -1,11 +1,12 @@
 import { BuildType, DirectTranspiler } from 'greybel-transpiler';
 import vscode, {
   ExtensionContext,
-  Position,
   Range,
   TextEditor,
   TextEditorEdit
 } from 'vscode';
+
+import { showCustomErrorMessage } from './helper/show-custom-error';
 
 export enum ShareType {
   WRITE = 'write',
@@ -92,34 +93,12 @@ export function activate(context: ExtensionContext) {
         }
       }
     } catch (err: any) {
-      if (err.range) {
-        const errRange = err.range;
-
-        vscode.window
-          .showErrorMessage(
-            `Build error: ${err.message} at ${editor.document.uri.fsPath}:${errRange.start}`,
-            { modal: false },
-            'Go to error'
-          )
-          .then(() => {
-            const range = new Range(
-              new Position(
-                errRange.start.line - 1,
-                errRange.start.character - 1
-              ),
-              new Position(errRange.end.line - 1, errRange.end.character - 1)
-            );
-
-            vscode.window.showTextDocument(editor.document, {
-              selection: range
-            });
-          });
-      } else {
-        vscode.window.showErrorMessage(
-          `Unexpected error: ${err.message}\n${err.stack}`,
-          { modal: false }
-        );
-      }
+      showCustomErrorMessage({
+        message: err.message,
+        range: err.range,
+        target: editor.document.uri.fsPath,
+        stack: err.stack
+      });
     }
   }
 

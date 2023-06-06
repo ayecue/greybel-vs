@@ -35,6 +35,7 @@ import { init as initIntrinsics } from 'greybel-intrinsics';
 import vscode, { Uri } from 'vscode';
 
 import PseudoTerminal from '../helper/pseudo-terminal';
+import { showCustomErrorMessage } from '../helper/show-custom-error';
 import transform, {
   ansiProvider,
   useColor
@@ -329,7 +330,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
         );
       }
 
-      vscode.window.showErrorMessage(err.message, { modal: false });
+      showCustomErrorMessage(err);
     } finally {
       me._messageQueue?.end();
     }
