@@ -56,10 +56,9 @@ export class ParseResult {
             Uri.joinPath(rootPath, nonNativeImport.path).fsPath
         ),
       ...rootChunk.includes
-        .filter((includeImport) => `${includeImport.path}.src`)
+        .filter((includeImport) => includeImport.path)
         .map(
-          (includeImport) =>
-            Uri.joinPath(rootPath, `${includeImport.path}.src`).fsPath
+          (includeImport) => Uri.joinPath(rootPath, includeImport.path).fsPath
         )
     ]);
 
