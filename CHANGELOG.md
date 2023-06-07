@@ -493,3 +493,7 @@ All notable changes to this project will be documented in this file.
 - add comment function description support
 - add action to transform to clipboard instead of writing into file
 - improve build error output
+
+## [1.6.1] - 07.06.2023
+
+- fix issue related to includes and type resolve
