@@ -497,3 +497,7 @@ All notable changes to this project will be documented in this file.
 ## [1.6.1] - 07.06.2023
 
 - fix issue related to includes and type resolve
+
+## [1.6.2] - 08.06.2023
+
+- add support for multiply and division on lists
