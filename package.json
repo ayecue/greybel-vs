@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.6.2",
+    "version": "1.6.3",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -46,7 +46,7 @@
         "react-dom": "^18.2.0",
         "rollup": "^3.20.2",
         "rollup-plugin-external-globals": "^0.7.3",
-        "rollup-plugin-node-polyfills": "^0.2.1",
+        "rollup-plugin-polyfill-node": "^0.12.0",
         "source-map-support": "^0.5.12",
         "typescript": "^4.5.4"
     },
@@ -242,7 +242,7 @@
             },
             {
                 "command": "greybel.api",
-                "title": "Greybel: API",
+                "title": "Greybel: API Documentation",
                 "when": "!isWeb"
             },
             {
@@ -417,13 +417,13 @@
         "ansi-escapes": "^4.3.2",
         "color-convert": "^2.0.1",
         "css-color-names": "^1.0.1",
-        "greybel-core": "^0.9.3",
-        "greybel-gh-mock-intrinsics": "^2.4.4",
-        "greybel-interpreter": "^2.1.5",
-        "greybel-intrinsics": "^2.2.1",
-        "greybel-transpiler": "^1.1.1",
-        "greyscript-core": "^0.9.5",
-        "greyscript-meta": "^1.4.0",
+        "greybel-core": "^0.9.4",
+        "greybel-gh-mock-intrinsics": "^2.4.6",
+        "greybel-interpreter": "^2.1.6",
+        "greybel-intrinsics": "^2.2.2",
+        "greybel-transpiler": "^1.1.2",
+        "greyscript-core": "^0.9.6",
+        "greyscript-meta": "^1.4.3",
         "lru-cache": "^7.14.1",
         "react-string-replace": "^1.1.0",
         "text-encoder-lite": "^2.0.0",
