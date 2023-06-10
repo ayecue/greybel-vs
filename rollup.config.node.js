@@ -2,7 +2,7 @@ const commonjs = require('@rollup/plugin-commonjs');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const terser = require('@rollup/plugin-terser').default;
 const json = require('@rollup/plugin-json');
-const nodePolyfills = require('rollup-plugin-node-polyfills');
+const nodePolyfills = require('rollup-plugin-polyfill-node');
 
 const options = {
     input: 'out/extension.js',
