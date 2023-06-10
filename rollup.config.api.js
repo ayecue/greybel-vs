@@ -12,11 +12,13 @@ const options = {
         file: 'api.view.js',
         format: 'iife'
     },
-    external: ['react', 'react-dom'],
+    external: ['react', 'react-dom', 'prismjs', 'react-markdown'],
     plugins: [
         externalGlobals({
             'react': 'React',
-            'react-dom': 'ReactDOM'
+            'react-dom': 'ReactDOM',
+            'prismjs': 'Prism',
+            'react-markdown': 'ReactMarkdown'
         }),
         json(),
         commonjs(),

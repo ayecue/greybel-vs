@@ -36,7 +36,6 @@ export async function displayAPIDocumentation(
         <link defer rel="stylesheet" type="text/css" href="https://unpkg.com/prismjs@1.29.0/themes/prism-twilight.min.css">
         <script defer crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
         <script defer crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
-        <script defer crossorigin src="https://unpkg.com/react-in-viewport@1.0.0-alpha.30/dist/umd/index.js"></script>
         <script defer crossorigin src="https://unpkg.com/react-markdown@8.0.7/react-markdown.min.js"></script>
         <script defer crossorigin src="https://unpkg.com/prismjs@1.29.0/prism.js"></script>
     </head>
@@ -45,7 +44,7 @@ export async function displayAPIDocumentation(
         
       </div>
       <footer>
-        <script>filterInit = ${searchText};</script>
+        <script>filterInit = "${searchText.replace('"', '\\"')}";</script>
         <script defer src="${panel.webview.asWebviewUri(indexScript)}"></script>
       </footer>
     </body>
