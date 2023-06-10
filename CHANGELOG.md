@@ -507,3 +507,4 @@ All notable changes to this project will be documented in this file.
 - improve support for command_info behavior
 - update to latest meta descriptions
 - changes regarding performance and style of api view
+- optimize meta package size
