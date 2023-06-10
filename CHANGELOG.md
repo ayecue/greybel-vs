@@ -501,3 +501,9 @@ All notable changes to this project will be documented in this file.
 ## [1.6.2] - 08.06.2023
 
 - add support for multiply and division on lists
+
+## [1.6.3] - 10.06.2023
+
+- improve support for command_info behavior
+- update to latest meta descriptions
+- changes regarding performance and style of api view
