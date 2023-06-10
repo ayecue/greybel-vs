@@ -15,7 +15,7 @@ const root = createRoot(document.querySelector('#root')!);
 root.render(
   React.createElement(WebAppView, {
     externalLinks: [],
-    filterInit: '',
+    filterInit: (window as any).filterInit || '',
     onCopyClick: shareLink
   })
 );

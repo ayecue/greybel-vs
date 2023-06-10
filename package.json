@@ -242,7 +242,7 @@
             },
             {
                 "command": "greybel.api",
-                "title": "Greybel: API",
+                "title": "Greybel: API Documentation",
                 "when": "!isWeb"
             },
             {
