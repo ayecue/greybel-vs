@@ -508,3 +508,7 @@ All notable changes to this project will be documented in this file.
 - update to latest meta descriptions
 - changes regarding performance and style of api view
 - optimize meta package size
+
+## [1.6.4] - 11.06.2023
+
+- fix progress bar print not getting replaced in terminal
