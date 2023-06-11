@@ -116,7 +116,8 @@ export class GreybelDebugSession extends LoggingDebugSession {
         const terminal = PseudoTerminal.getActiveTerminal();
         const startTime = Date.now();
         const max = 20;
-        terminal.print(`[${'-'.repeat(max)}]`, false);
+
+        terminal.print(`[${'-'.repeat(max)}]`);
 
         return new Promise((resolve, _reject) => {
           const onExit = () => {
@@ -128,7 +129,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
             const elapsed = currentTime - startTime;
 
             if (elapsed > timeout) {
-              terminal.print(`[${'#'.repeat(max)}]`);
+              terminal.replace(`[${'#'.repeat(max)}]`);
               ctx.processState.removeListener('exit', onExit);
               clearInterval(interval);
               resolve();
@@ -139,9 +140,8 @@ export class GreybelDebugSession extends LoggingDebugSession {
             const progress = Math.floor((elapsedPercentage * max) / 100);
             const right = max - progress;
 
-            terminal.print(
-              `[${'#'.repeat(progress)}${'-'.repeat(right)}]`,
-              false
+            terminal.replace(
+              `[${'#'.repeat(progress)}${'-'.repeat(right)}]`
             );
           });
 
