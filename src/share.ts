@@ -1,6 +1,6 @@
-import axios from 'axios';
 import vscode, { ExtensionContext, TextEditor, Uri } from 'vscode';
 
+import { post } from './helper/request';
 import { showCustomErrorMessage } from './helper/show-custom-error';
 
 export function activate(context: ExtensionContext) {
@@ -8,17 +8,15 @@ export function activate(context: ExtensionContext) {
     const content = editor.document.getText();
 
     try {
-      const response = await axios.post(
+      const response = await post(
         `${process.env.GREYBEL_EDITOR_URL}/.netlify/functions/code`,
         {
-          content
-        },
-        {
-          headers: { 'Content-Type': 'application/json' }
+          json: { content }
         }
       );
+      console.log(response);
       const uri = Uri.parse(
-        `${process.env.GREYBEL_EDITOR_URL}?id=${response.data.id}`
+        `${process.env.GREYBEL_EDITOR_URL}?id=${response.id}`
       );
 
       vscode.env.clipboard.writeText(uri.toString());

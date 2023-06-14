@@ -432,7 +432,6 @@
         "@vscode/debugprotocol": "^1.51.0",
         "another-ansi": "^1.0.2",
         "ansi-escapes": "^4.3.2",
-        "axios": "^1.4.0",
         "color-convert": "^2.0.1",
         "css-color-names": "^1.0.1",
         "greybel-core": "^0.9.4",
@@ -443,7 +442,6 @@
         "greyscript-core": "^0.9.6",
         "greyscript-meta": "^1.4.4",
         "lru-cache": "^7.14.1",
-        "react-string-replace": "^1.1.0",
         "text-encoder-lite": "^2.0.0",
         "text-mesh-transformer": "^1.0.4"
     },

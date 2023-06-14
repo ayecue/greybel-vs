@@ -26,6 +26,7 @@ const options = {
         }),
         nodePolyfills(),
         nodeResolve({
+            browser: true,
             preferBuiltins: false
         }),
         babel({

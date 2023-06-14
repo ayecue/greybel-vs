@@ -15,7 +15,7 @@ const options = {
         globals: {
             'vscode': 'vscode',
             'path': 'path',
-            'axios': 'require(\'axios\')'
+            'https': 'https'
         }
     },
     plugins: [
@@ -25,13 +25,15 @@ const options = {
             esmExternals: ['vscode', 'path'],
             sourceMap: false
         }),
-        nodePolyfills(),
+        nodePolyfills({
+            
+        }),
         nodeResolve({
             preferBuiltins: false
         }),
         terser()
     ],
-    external: ['vscode', 'path', 'axios']
+    external: ['vscode', 'path', 'https']
 };
 
 export default options;
