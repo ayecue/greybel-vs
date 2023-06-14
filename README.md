@@ -138,7 +138,7 @@ API Browser for GreyScript. A version of [greyscript-meta](https://documentation
 
 ### Share
 
-Shares your code via [editor.greyscript.org](https://github.com/ayecue/greybel-js#save-code). The related link will be copied into the clipboard.
+Shares your code via [editor.greyscript.org](https://github.com/ayecue/greybel-js#save-code). The related link will be written into the clipboard.
 
 ### Refresh
 
