@@ -99,27 +99,7 @@
             ],
             "editor/context": [
                 {
-                    "command": "greybel.refresh",
-                    "when": "resourceLangId == greyscript",
-                    "group": "z_commands"
-                },
-                {
-                    "command": "greybel.transform.clipboard",
-                    "when": "resourceLangId == greyscript",
-                    "group": "1_modification"
-                },
-                {
-                    "command": "greybel.transform.write",
-                    "when": "resourceLangId == greyscript",
-                    "group": "1_modification"
-                },
-                {
-                    "command": "greybel.minify.write",
-                    "when": "resourceLangId == greyscript",
-                    "group": "1_modification"
-                },
-                {
-                    "command": "greybel.beautify.write",
+                    "submenu": "greybel.transform",
                     "when": "resourceLangId == greyscript",
                     "group": "1_modification"
                 },
@@ -137,6 +117,24 @@
                     "command": "greybel.gotoError",
                     "when": "resourceLangId == greyscript",
                     "group": "navigation"
+                }
+            ],
+            "greybel.transform": [
+                {
+                    "command": "greybel.transform.clipboard",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.transform.write",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.minify.write",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.beautify.write",
+                    "when": "resourceLangId == greyscript"
                 }
             ],
             "explorer/context": [
@@ -193,6 +191,12 @@
                 }
             ]
         },
+        "submenus": [
+            {
+                "id": "greybel.transform",
+                "label": "Greybel: Transform"
+            }
+        ],
         "languages": [
             {
                 "id": "greyscript",
