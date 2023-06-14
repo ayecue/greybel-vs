@@ -2,7 +2,7 @@ import { WebAppView } from 'greyscript-meta';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
-const EXTERNAL_META_WEBSITE = 'https://documentation.greyscript.org';
+const EXTERNAL_META_WEBSITE = process.env.GREYBEL_DOCUMENTATION_URL;
 
 function shareLink(type: string, methodName: string) {
   const url = new URL(EXTERNAL_META_WEBSITE);

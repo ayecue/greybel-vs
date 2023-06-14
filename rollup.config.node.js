@@ -4,6 +4,7 @@ const terser = require('@rollup/plugin-terser').default;
 const json = require('@rollup/plugin-json');
 const nodePolyfills = require('rollup-plugin-polyfill-node');
 const externalGlobals  = require('rollup-plugin-external-globals');
+const dotenv = require('rollup-plugin-dotenv').default;
 
 const options = {
     input: 'out/extension.js',
@@ -14,10 +15,12 @@ const options = {
         format: 'cjs',
         globals: {
             'vscode': 'vscode',
-            'path': 'path'
+            'path': 'path',
+            'axios': 'require(\'axios\')'
         }
     },
     plugins: [
+        dotenv(),
         externalGlobals({
             'react': '{"$":"react"}',
             'react-dom': '{"$":"react-dom"}',
@@ -34,9 +37,18 @@ const options = {
         nodeResolve({
             preferBuiltins: false
         }),
-        terser()
+        //terser()
     ],
-    external: ['vscode', 'path', 'react', 'react-dom', 'prismjs', 'react-markdown', 'react-in-viewport']
+    external: [
+        'vscode',
+        'path',
+        'react',
+        'react-dom', 
+        'prismjs',
+        'react-markdown',
+        'react-in-viewport',
+        'axios'
+    ]
 };
 
 export default options;

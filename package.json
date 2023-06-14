@@ -45,6 +45,7 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "rollup": "^3.20.2",
+        "rollup-plugin-dotenv": "^0.5.0",
         "rollup-plugin-external-globals": "^0.7.3",
         "rollup-plugin-polyfill-node": "^0.12.0",
         "source-map-support": "^0.5.12",
@@ -99,8 +100,18 @@
             ],
             "editor/context": [
                 {
+                    "command": "greybel.gotoError",
+                    "when": "resourceLangId == greyscript",
+                    "group": "navigation"
+                },
+                {
                     "submenu": "greybel.transform",
                     "when": "resourceLangId == greyscript",
+                    "group": "1_modification"
+                },
+                {
+                    "command": "greybel.build",
+                    "when": "resourceLangId == greyscript && !isWeb",
                     "group": "1_modification"
                 },
                 {
@@ -109,14 +120,9 @@
                     "group": "z_commands"
                 },
                 {
-                    "command": "greybel.build",
+                    "command": "greybel.share",
                     "when": "resourceLangId == greyscript && !isWeb",
-                    "group": "1_modification"
-                },
-                {
-                    "command": "greybel.gotoError",
-                    "when": "resourceLangId == greyscript",
-                    "group": "navigation"
+                    "group": "z_commands"
                 }
             ],
             "greybel.transform": [
@@ -140,6 +146,11 @@
             "explorer/context": [
                 {
                     "command": "greybel.build",
+                    "when": "resourceLangId == greyscript && !isWeb",
+                    "group": "1_modification"
+                },
+                {
+                    "command": "greybel.share",
                     "when": "resourceLangId == greyscript && !isWeb",
                     "group": "1_modification"
                 }
@@ -243,6 +254,10 @@
             {
                 "command": "greybel.beautify.write",
                 "title": "Greybel: Beautify"
+            },
+            {
+                "command": "greybel.share",
+                "title": "Greybel: Share"
             },
             {
                 "command": "greybel.api",
@@ -419,6 +434,7 @@
         "@vscode/debugprotocol": "^1.51.0",
         "another-ansi": "^1.0.2",
         "ansi-escapes": "^4.3.2",
+        "axios": "^1.4.0",
         "color-convert": "^2.0.1",
         "css-color-names": "^1.0.1",
         "greybel-core": "^0.9.4",

@@ -140,9 +140,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
             const progress = Math.floor((elapsedPercentage * max) / 100);
             const right = max - progress;
 
-            terminal.replace(
-              `[${'#'.repeat(progress)}${'-'.repeat(right)}]`
-            );
+            terminal.replace(`[${'#'.repeat(progress)}${'-'.repeat(right)}]`);
           });
 
           ctx.processState.once('exit', onExit);
