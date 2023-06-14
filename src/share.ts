@@ -1,20 +1,23 @@
-import vscode, { ExtensionContext, TextEditor, Uri } from 'vscode';
+import vscode, { ExtensionContext, TextEditor, TextEditorEdit, Uri } from 'vscode';
 
 import { post } from './helper/request';
 import { showCustomErrorMessage } from './helper/show-custom-error';
 
 export function activate(context: ExtensionContext) {
-  async function share(editor: TextEditor) {
-    const content = editor.document.getText();
-
+  async function share(
+    editor: TextEditor,
+    _edit: TextEditorEdit,
+    eventUri: Uri
+  ) {
     try {
+      const doc = await vscode.workspace.openTextDocument(eventUri.fsPath);
+      const content = doc.getText();
       const response = await post(
         `${process.env.GREYBEL_EDITOR_URL}/.netlify/functions/code`,
         {
           json: { content }
         }
       );
-      console.log(response);
       const uri = Uri.parse(
         `${process.env.GREYBEL_EDITOR_URL}?id=${response.id}`
       );
