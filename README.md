@@ -1,6 +1,6 @@
 # greybel-vs
 
-GreyScript toolkit for [Grey Hack](https://greyhackgame.com). Includes highlighting, code execution, bundling and minifying among other features. Checkout the [changelog](https://github.com/ayecue/greybel-vs/blob/main/CHANGELOG.md) to get information on the latest changes.
+GreyScript toolkit for [Grey Hack](https://greyhackgame.com). Includes highlighting, code execution, bundling and minifying among other features. Check out the [changelog](https://github.com/ayecue/greybel-vs/blob/main/CHANGELOG.md) to get information on the latest changes.
 
 Based on [greybel-js](https://github.com/ayecue/greybel-js).
 
@@ -15,8 +15,9 @@ Commands available (`CTRL+SHIFT+P`):
 - `Greybel: Goto Error` - [info](#goto-error)
 - `Greybel: Transform to clipboard` - [info](#transform)
 - `Greybel: Transform` - [info](#transform)
-- `Greybel: Minify` - Shortcut for [info](#transform). Will use minifiy as build type.
+- `Greybel: Minify` - Shortcut for [info](#transform). Will use minify as build type.
 - `Greybel: Beautify` - Shortcut for [info](#transform). Will use beautify as build type.
+- `Greybel: Share` - [info](#share)
 - `Greybel: Refresh` - [info](#refresh)
 - `Greybel: API` - [info](#api-browser)
 - `Greybel: Snippets` - [info](#snippets)
@@ -25,7 +26,7 @@ You can also access most of the commands via the context menu:
 
 ![Context Menu](https://github.com/ayecue/greybel-vs/blob/main/assets/context-menu.png?raw=true "ContextMenu")
 
-Do not forget to setup your plugin to your needs. Following settings are available:
+Do not forget to set up your plugin to your needs. The following settings are available:
 
 - Activate/Deactivate
     - Autocomplete
@@ -54,6 +55,7 @@ Do not forget to setup your plugin to your needs. Following settings are availab
 - [Debugger](#debugger)
 - [API Browser](#api-browser)
 - [Snippets](#snippets)
+- [Share](#share)
 - [Goto Error](#goto-error)
 - [Providers](#supporting-providers)
     - [Autocompletion](#autocompletion-provider)
@@ -72,7 +74,7 @@ Transforms the content of the active text document into one of three possible ou
 
 ![Minified File](https://github.com/ayecue/greybel-vs/blob/main/assets/minified.png?raw=true "Minified file")
 
-It will also fill environment values with it's value which you are able to define in the configuration of this extension.
+It will also fill environment values with its value which you can define in the configuration of this extension.
 
 ![Env Settings](https://github.com/ayecue/greybel-vs/blob/main/assets/settings-env.png?raw=true "Env Settings")
 
@@ -98,7 +100,7 @@ More details [here](https://github.com/ayecue/greybel-js#transpiler).
 
 ### Interpreter
 
-Executes GreyScript code. Almost all intrinsics are fully supported. To get more information which intrinsics are supported [click here](https://github.com/ayecue/greybel-js#greyscript-api-support).
+Executes GreyScript code. Almost all intrinsics are fully supported. To get more information on which intrinsics are supported [click here](https://github.com/ayecue/greybel-js#greyscript-api-support).
 
 It also features a [mock environment](https://github.com/ayecue/greybel-js#local-environment) and [debugger](#debugger).
 
@@ -108,7 +110,7 @@ After you pressed run a prompt will appear to input the parameters for the execu
 
 ![Enter params](https://github.com/ayecue/greybel-vs/blob/main/assets/params.png?raw=true "Enter params")
 
-Supports colors in the console via a pseudo terminal. Also inputing data is much more convinient now since there won't be any popups anymore instead you can use the pseudo terminal.
+Supports colors in the console via a pseudo-terminal. Also inputting data is much more convenient now since there won't be any popups anymore instead you can use the pseudo-terminal.
 
 ![Pseudo Terminal](https://github.com/ayecue/greybel-vs/blob/main/assets/pseudo-terminal.png?raw=true "Pseudo Terminal")
 
@@ -120,7 +122,7 @@ Enables you to set breakpoints, run code in a breakpoint context, jump to the ne
 
 ![Breakpoint](https://github.com/ayecue/greybel-vs/blob/main/assets/breakpoint.png?raw=true "Breakpoint")
 
-Keep in mind to set the breakpoint on a none empty line. Otherwise it will just skip that breakpoint.
+Keep in mind to set the breakpoint on a none empty line. Otherwise, it will just skip that breakpoint.
 
 ![Active breakpoint](https://github.com/ayecue/greybel-vs/blob/main/assets/active-breakpoint.png?raw=true "Active breakpoint")
 
@@ -130,9 +132,13 @@ A repl is also available while executing the script or having an active breakpoi
 
 ### API Browser
 
-API Browser for GreyScript. Version of [greyscript-meta](https://documentation.greyscript.org) in Visual Studio Code.
+API Browser for GreyScript. A version of [greyscript-meta](https://documentation.greyscript.org) in Visual Studio Code.
 
 ![API Browser](https://github.com/ayecue/greybel-vs/blob/main/assets/api-browser.png?raw=true "API Browser")
+
+### Share
+
+Shares your code via [editor.greyscript.org](https://github.com/ayecue/greybel-js#save-code). The related link will be copied into the clipboard.
 
 ### Refresh
 
@@ -152,11 +158,11 @@ Jumps to the next existing syntax error.
 
 #### Autocompletion Provider
 
-Figures out the current context and tries to give suggestions accordingly.
+Figures out the current context and provides suggestions accordingly.
 
 #### Hover Tooltips Provider
 
-Returns informations about functions/types.
+Returns information about functions/types.
 
 #### Diagnostics Provider
 
@@ -164,19 +170,19 @@ Returns information about syntax errors in your code.
 
 #### Symbol Provider
 
-Returns list of all available symbol in active file.
+Returns list of all available symbols in the active file.
 
 ![Symbol](https://github.com/ayecue/greybel-vs/blob/main/assets/symbols.png?raw=true "Symbol")
 
 #### Definition Provider
 
-Shows definitions in the currently active file and it's dependencies.
+Shows definitions in the currently active file and its dependencies.
 
 ![Definition](https://github.com/ayecue/greybel-vs/blob/main/assets/definition-provider.png?raw=true "Definition")
 
 #### Colorpicker Provider
 
-Shows colorpicker if you got color or mark tags.
+Shows the color picker if you got color or mark tags.
 
 ## Copyright
 
