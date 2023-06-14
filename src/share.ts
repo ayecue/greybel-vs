@@ -18,11 +18,9 @@ export function activate(context: ExtensionContext) {
           json: { content }
         }
       );
-      const uri = Uri.parse(
-        `${process.env.GREYBEL_EDITOR_URL}?id=${response.id}`
-      );
+      const link = `${process.env.GREYBEL_EDITOR_URL}?id=${response.id}`;
 
-      vscode.env.clipboard.writeText(uri.toString(true));
+      vscode.env.clipboard.writeText(link);
       vscode.window
         .showInformationMessage(
           'Editor link got created and copied to clipboard.',
@@ -30,6 +28,7 @@ export function activate(context: ExtensionContext) {
           'Go to link'
         )
         .then(async () => {
+          const uri = Uri.parse(link);
           vscode.env.openExternal(uri);
         });
     } catch (err: any) {
