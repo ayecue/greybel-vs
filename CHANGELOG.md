@@ -518,3 +518,7 @@ All notable changes to this project will be documented in this file.
 - improve extension node build
 - add share logic
 - move transforms from context menu into submenu
+
+## [1.6.6] - 14.06.2023
+
+- remove usage of vscode uri for clipboard write in order to prevent encoding
