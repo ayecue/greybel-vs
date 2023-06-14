@@ -22,7 +22,7 @@ export function activate(context: ExtensionContext) {
         `${process.env.GREYBEL_EDITOR_URL}?id=${response.id}`
       );
 
-      vscode.env.clipboard.writeText(uri.toString());
+      vscode.env.clipboard.writeText(uri.toString(true));
       vscode.window
         .showInformationMessage(
           'Editor link got created and copied to clipboard.',
