@@ -25,15 +25,17 @@ const options = {
             esmExternals: ['vscode', 'path'],
             sourceMap: false
         }),
-        nodePolyfills({
-            
-        }),
+        nodePolyfills(),
         nodeResolve({
             preferBuiltins: false
         }),
         terser()
     ],
-    external: ['vscode', 'path', 'https']
+    external: [
+        'vscode',
+        'path',
+        'https'
+    ]
 };
 
 export default options;
