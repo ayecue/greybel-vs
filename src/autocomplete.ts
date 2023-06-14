@@ -8,7 +8,7 @@ import {
   getDefinitions,
   SignatureDefinitionArg,
   SignatureDefinitionContainer
-} from 'greyscript-meta';
+} from 'greyscript-meta/dist/meta';
 import vscode, {
   CancellationToken,
   CompletionContext,

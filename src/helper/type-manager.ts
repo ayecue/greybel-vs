@@ -23,7 +23,7 @@ import {
   getDefinitions,
   SignatureDefinition,
   SignatureDefinitionArg
-} from 'greyscript-meta';
+} from 'greyscript-meta/dist/meta';
 import { TextDocument } from 'vscode';
 
 import transformASTToNamespace from './ast-namespace';
