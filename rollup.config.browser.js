@@ -4,7 +4,7 @@ const { babel } = require('@rollup/plugin-babel');
 const terser = require('@rollup/plugin-terser').default;
 const json = require('@rollup/plugin-json');
 const nodePolyfills = require('rollup-plugin-polyfill-node');
-const externalGlobals  = require('rollup-plugin-external-globals');
+const dotenv = require('rollup-plugin-dotenv').default;
 
 const options = {
     input: 'out/extension.js',
@@ -18,13 +18,7 @@ const options = {
         }
     },
     plugins: [
-        externalGlobals({
-            'react': '{"$":"react"}',
-            'react-dom': '{"$":"react-dom"}',
-            'prismjs': '{"$":"prismjs","languages":{}}',
-            'react-markdown': '{"$":"react-markdown"}',
-            'react-in-viewport': '{"$":"react-in-viewport"}',
-        }),
+        dotenv(),
         json(),
         commonjs({
             esmExternals: ['vscode'],
@@ -32,6 +26,7 @@ const options = {
         }),
         nodePolyfills(),
         nodeResolve({
+            browser: true,
             preferBuiltins: false
         }),
         babel({
@@ -45,7 +40,9 @@ const options = {
         }),
        terser()
     ],
-    external: ['vscode', 'react', 'react-dom', 'prismjs', 'react-markdown', 'react-in-viewport']
+    external: [
+        'vscode'
+    ]
 };
 
 export default options;

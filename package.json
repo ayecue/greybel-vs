@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.6.4",
+    "version": "1.6.5",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -42,9 +42,8 @@
         "eslint-plugin-promise": "^6.0.0",
         "eslint-plugin-security": "^1.5.0",
         "eslint-plugin-simple-import-sort": "^7.0.0",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
         "rollup": "^3.20.2",
+        "rollup-plugin-dotenv": "^0.5.0",
         "rollup-plugin-external-globals": "^0.7.3",
         "rollup-plugin-polyfill-node": "^0.12.0",
         "source-map-support": "^0.5.12",
@@ -99,28 +98,18 @@
             ],
             "editor/context": [
                 {
-                    "command": "greybel.refresh",
+                    "command": "greybel.gotoError",
                     "when": "resourceLangId == greyscript",
-                    "group": "z_commands"
+                    "group": "navigation"
                 },
                 {
-                    "command": "greybel.transform.clipboard",
+                    "submenu": "greybel.transform",
                     "when": "resourceLangId == greyscript",
                     "group": "1_modification"
                 },
                 {
-                    "command": "greybel.transform.write",
-                    "when": "resourceLangId == greyscript",
-                    "group": "1_modification"
-                },
-                {
-                    "command": "greybel.minify.write",
-                    "when": "resourceLangId == greyscript",
-                    "group": "1_modification"
-                },
-                {
-                    "command": "greybel.beautify.write",
-                    "when": "resourceLangId == greyscript",
+                    "command": "greybel.build",
+                    "when": "resourceLangId == greyscript && !isWeb",
                     "group": "1_modification"
                 },
                 {
@@ -129,19 +118,37 @@
                     "group": "z_commands"
                 },
                 {
-                    "command": "greybel.build",
+                    "command": "greybel.share",
                     "when": "resourceLangId == greyscript && !isWeb",
-                    "group": "1_modification"
+                    "group": "z_commands"
+                }
+            ],
+            "greybel.transform": [
+                {
+                    "command": "greybel.transform.clipboard",
+                    "when": "resourceLangId == greyscript"
                 },
                 {
-                    "command": "greybel.gotoError",
-                    "when": "resourceLangId == greyscript",
-                    "group": "navigation"
+                    "command": "greybel.transform.write",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.minify.write",
+                    "when": "resourceLangId == greyscript"
+                },
+                {
+                    "command": "greybel.beautify.write",
+                    "when": "resourceLangId == greyscript"
                 }
             ],
             "explorer/context": [
                 {
                     "command": "greybel.build",
+                    "when": "resourceLangId == greyscript && !isWeb",
+                    "group": "1_modification"
+                },
+                {
+                    "command": "greybel.share",
                     "when": "resourceLangId == greyscript && !isWeb",
                     "group": "1_modification"
                 }
@@ -193,6 +200,12 @@
                 }
             ]
         },
+        "submenus": [
+            {
+                "id": "greybel.transform",
+                "label": "Greybel: Transform"
+            }
+        ],
         "languages": [
             {
                 "id": "greyscript",
@@ -239,6 +252,10 @@
             {
                 "command": "greybel.beautify.write",
                 "title": "Greybel: Beautify"
+            },
+            {
+                "command": "greybel.share",
+                "title": "Greybel: Share"
             },
             {
                 "command": "greybel.api",
@@ -425,7 +442,6 @@
         "greyscript-core": "^0.9.6",
         "greyscript-meta": "^1.4.4",
         "lru-cache": "^7.14.1",
-        "react-string-replace": "^1.1.0",
         "text-encoder-lite": "^2.0.0",
         "text-mesh-transformer": "^1.0.4"
     },

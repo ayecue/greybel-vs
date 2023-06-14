@@ -512,3 +512,9 @@ All notable changes to this project will be documented in this file.
 ## [1.6.4] - 11.06.2023
 
 - fix progress bar print not getting replaced in terminal
+
+## [1.6.5] - 14.06.2023
+
+- improve extension node build
+- add share logic
+- move transforms from context menu into submenu
