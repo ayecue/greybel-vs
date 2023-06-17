@@ -522,3 +522,7 @@ All notable changes to this project will be documented in this file.
 ## [1.6.6] - 14.06.2023
 
 - remove usage of vscode uri for clipboard write in order to prevent encoding
+
+## [1.6.7] - 17.06.2023
+
+- update meta descriptions
