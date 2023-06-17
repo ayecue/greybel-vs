@@ -16,6 +16,7 @@ root.render(
   React.createElement(WebAppView, {
     externalLinks: [],
     filterInit: (window as any).filterInit || '',
+    scrollToInit: '',
     onCopyClick: shareLink
   })
 );
