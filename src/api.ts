@@ -44,7 +44,7 @@ export async function displayAPIDocumentation(
         
       </div>
       <footer>
-        <script>filterInit = "${searchText.replace('"', '\\"')}";</script>
+        <script>var filterInit = "${searchText.replace('"', '\\"')}";</script>
         <script defer src="${panel.webview.asWebviewUri(indexScript)}"></script>
       </footer>
     </body>
