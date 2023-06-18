@@ -526,3 +526,7 @@ All notable changes to this project will be documented in this file.
 ## [1.6.7] - 17.06.2023
 
 - update meta descriptions
+
+## [1.6.8] - 18.06.2023
+
+- improve greyscript syntax
