@@ -2,146 +2,53 @@
 	"version": "1.0.0",
 	"name": "GreyScript",
 	"scopeName": "source.src",
-	"patterns": [
-		{
-			"name": "keyword.control.greyscript",
-			"match": "\\b(if|then|return|end|else|function|and|or|in|not|continue|break|while|for|new|from|isa)\\b"
-		},
-		{
-			"name": "keyword.control.greyscript",
-			"match": "#(include|import|envar)"
-		},
-		{
-			"name": "support.type.greyscript",
-			"match": "\\b(number|string|null|any|list|map)\\b"
-		},
-		{
-			"name": "support.class.greyscript",
-			"match": "\\b(aptClient|computer|crypto|file|ftpShell|metaLib|metaMail|metaxploit|netSession|port|router|shell|blockchain|service|subWallet|wallet|coin)\\b"
-		},
-		{
-			"name": "support.function.aptClient.greyscript",
-			"match": "\\.(show|search|update|add_repo|del_repo|install|check_upgrade)\\b"
-		},
-		{
-			"name": "support.function.computer.greyscript",
-			"match": "\\.(get_ports|File|create_folder|is_network_active|touch|show_procs|network_devices|change_password|create_user|delete_user|create_group|delete_group|groups|close_program|wifi_networks|connect_wifi|connect_ethernet|network_gateway|active_net_card)\\b"
-		},
-		{
-			"name": "support.function.crypto.greyscript",
-			"match": "\\.(aircrack|airmon|aireplay|decipher|smtp_user_List)\\b"
-		},
-		{
-			"name": "support.function.file.greyscript",
-			"match": "\\.(chmod|copy|move|rename|path|parent|name|get_content|set_content|is_binary|has_permission|delete|get_folders|get_files|permissions|owner|set_owner|group|set_group|size|meta_info)\\b"
-		},
-		{
-			"name": "support.function.ftpShell.greyscript",
-			"match": "\\.(host_computer|start_terminal|put)\\b"
-		},
-		{
-			"name": "support.function.list.greyscript",
-			"match": "\\.(remove|push|pop|pull|shuffle|reverse|sum|hasIndex|indexOf|sort|join|indexes|len|values)\\b"
-		},
-		{
-			"name": "support.function.map.greyscript",
-			"match": "\\.(remove|push|pop|pull|shuffle|sum|sum|hasIndex|indexOf|indexes|len|values)\\b"
-		},
-		{
-			"name": "support.function.metaLib.greyscript",
-			"match": "\\.(overflow|version|lib_name)\\b"
-		},
-		{
-			"name": "support.function.metaMail.greyscript",
-			"match": "\\.(delete|fetch|read|send)\\b"
-		},
-		{
-			"name": "support.function.metaxploit.greyscript",
-			"match": "\\.(load|net_use|rshell_client|rshell_server|scan|scan_address|sniffer)\\b"
-		},
-		{
-			"name": "support.function.netSession.greyscript",
-			"match": "\\.(dump_lib)\\b"
-		},
-		{
-			"name": "support.function.port.greyscript",
-			"match": "\\.(port_number|is_closed|get_lan_ip)\\b"
-		},
-		{
-			"name": "support.function.router.greyscript",
-			"match": "\\.(device_ports|devices_lan_ip|bssid_name|essid_name|firewall_rules|kernel_version|local_ip|public_ip|used_ports|ping_port|port_info)\\b"
-		},
-		{
-			"name": "support.function.shell.greyscript",
-			"match": "\\.(host_computer|start_terminal|build|connect_service|launch|ping|scp|masterkey|masterkey_direct|restore_network)\\b"
-		},
-		{
-			"name": "support.function.string.greyscript",
-			"match": "\\.(remove|hasIndex|indexOf|lastIndexOf|split|replace|trim|indexes|code|len|lower|upper|val|values|to_int)\\b"
-		},
-		{
-			"name": "support.function.blockchain.greyscript",
-			"match": "\\.(coin_price|show_history|amount_mined|get_coin|login_wallet|create_wallet|delete_coin)\\b"
-		},
-		{
-			"name": "support.function.service.greyscript",
-			"match": "\\.(install_service|start_service|stop_service)\\b"
-		},
-		{
-			"name": "support.function.coin.greyscript",
-			"match": "\\.(set_cycle_mining|get_cycle_mining|get_reward|set_reward|transaction|create_subwallet|get_subwallet|get_subwallets|set_address|get_address|get_mined_coins)\\b"
-		},
-		{
-			"name": "support.function.wallet.greyscript",
-			"match": "\\.(list_coins|get_balance|buy_coin|sell_coin|get_pending_trade|cancel_pending_trade|get_global_offers|list_global_coins|show_nodes|reset_password|get_pin)\\b"
-		},
-		{
-			"name": "support.function.subWallet.greyscript",
-			"match": "\\.(get_balance|set_info|get_info|delete|get_user|last_transaction|mining|check_password|wallet_username)\\b"
-		},
-		{
-			"name": "support.function.greyscript",
-			"match": "\\b(mail_login|typeof|get_router|get_switch|nslookup|print|clear_screen|active_user|home_dir|get_shell|user_input|include_lib|import_code|exit|user_mail_address|user_bank_number|whois|wait|command_info|program_path|current_path|format_columns|current_date|is_lan_ip|is_valid_ip|bitwise|abs|acos|asin|atan|tan|cos|char|sin|floor|range|round|rnd|sign|sqrt|str|ceil|pi|launch_path|slice|md5|hash|time)\\b"
-		},
-		{
-			"name": "support.variables.greyscript",
-			"match": "\\b(params|locals|globals)\\b"
-		},
-		{
+	"patterns": [{
+		"include": "#string"
+	}, {
+		"include": "#numeric"
+	}, {
+		"include": "#comment"
+	}, {
+		"include": "#variables"
+	}, {
+		"include": "#constant"
+	}, {
+		"include": "#keyword"
+	}, {
+		"include": "#type"
+	},{
+		"include": "#general-functions"
+	}, {
+		"include": "#type-methods"
+	}, {
+		"patterns": [{
+			"name": "support.variable.greyscript",
+			"match": "\\b(params|locals|globals|outer)\\b"
+		}, {
 			"name": "variable.language.self.greyscript",
 			"match": "\\b(self)\\b"
-		},
-		{
+		}, {
 			"name": "variable.language.super.greyscript",
 			"match": "\\b(super)\\b"
-		},
-		{
-			"name": "constant.language.greyscript",
-			"match": "\\b(true|false|null)\\b"
-		},
-		{
-			"include": "#string"
-		},
-		{
-			"include": "#numeric"
-		},
-		{
-			"include": "#comment"
-		},
-		{
-			"include": "#blockComment"
-		}
-	],
+		}, {
+			"name": "entity.other.attribute.greyscript",
+			"match": "(?<=[^.]\\.)\\b([a-zA-Z_][a-zA-Z0-9_]*)"
+		}, {
+			"name": "variable.other.greyscript",
+			"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b"
+		}]
+	}],
 	"repository": {
-		"blockComment": {
-			"name": "comment.block",
-			"begin": "/\\*",
-			"end": "\\*/"
-		},
 		"comment": {
-			"name": "comment.line",
-			"begin": "//",
-			"end": "\\n"
+			"patterns": [{
+				"name": "comment.line",
+				"begin": "//",
+				"end": "\\n"
+			}, {
+				"name": "comment.block",
+				"begin": "/\\*",
+				"end": "\\*/"
+			}]
 		},
 		"numeric": {
 			"patterns": [{
@@ -153,6 +60,130 @@
 			"name": "string.quoted.double.greyscript",
 			"begin": "\"",
 			"end": "\""
+		},
+		"keyword": {
+			"patterns": [{
+				"name": "keyword.control.greyscript",
+				"match": "\\b(if|then|end|else|function|in|while|for|from)\\b"
+			}, {
+				"name": "keyword.control.greyscript",
+				"match": "\\b(return|continue|break)\\b"
+			}, {
+				"name": "keyword.control.greyscript",
+				"match": "\\b(and|or|not|new|isa)\\b"
+			}, {
+				"name": "keyword.control.greyscript",
+				"match": "\\b#(include|import|envar)\\b"
+			}, {
+				"name": "keyword.operator.greyscript",
+				"match": "([+\\-*\\/^<>|\\&]|[<>=!]=|<<|>>>?)"
+			}]
+		},
+		"constant": {
+			"name": "constant.language.greyscript",
+			"match": "\\b(true|false|null)\\b"
+		},
+		"type": {
+			"patterns": [{
+				"begin": ": ",
+				"end": "\\n|,|;|=",
+				"patterns": [{
+					"match": "null|list|map|number|string|any|aptClient|computer|crypto|file|ftpShell|metaLib|metaMail|metaxploit|netSession|port|router|shell|blockchain|service|subWallet|wallet|coin",
+					"name": "support.class.greyscript"
+				}, {
+					"match": "or",
+					"name": "keyword.control.greyscript"
+				}]
+			}, {
+				"name": "support.class.greyscript",
+				"match": "\\b(list|map|number|string)\\b"
+			}]
+		},
+		"general-functions": {
+			"name": "support.function.greyscript",
+			"match": "\\b(mail_login|typeof|get_router|get_switch|nslookup|print|clear_screen|active_user|home_dir|get_shell|user_input|include_lib|import_code|exit|user_mail_address|user_bank_number|whois|wait|command_info|program_path|current_path|format_columns|current_date|is_lan_ip|is_valid_ip|bitwise|abs|acos|asin|atan|tan|cos|char|sin|floor|range|round|rnd|sign|sqrt|str|ceil|pi|launch_path|slice|md5|hash|time)\\b"
+		},
+		"type-methods": {
+			"patterns": [{
+				"name": "support.function.greyscript",
+				"match": "\\.(show|search|update|add_repo|del_repo|install|check_upgrade)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(get_ports|File|create_folder|is_network_active|touch|show_procs|network_devices|change_password|create_user|delete_user|create_group|delete_group|groups|close_program|wifi_networks|connect_wifi|connect_ethernet|network_gateway|active_net_card)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(aircrack|airmon|aireplay|decipher|smtp_user_List)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(chmod|copy|move|rename|path|parent|name|get_content|set_content|is_binary|has_permission|delete|get_folders|get_files|permissions|owner|set_owner|group|set_group|size|meta_info)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(host_computer|start_terminal|put)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(remove|push|pop|pull|shuffle|reverse|sum|hasIndex|indexOf|sort|join|indexes|len|values)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(remove|push|pop|pull|shuffle|sum|sum|hasIndex|indexOf|indexes|len|values)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(overflow|version|lib_name)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(delete|fetch|read|send)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(load|net_use|rshell_client|rshell_server|scan|scan_address|sniffer)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(dump_lib)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(port_number|is_closed|get_lan_ip)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(device_ports|devices_lan_ip|bssid_name|essid_name|firewall_rules|kernel_version|local_ip|public_ip|used_ports|ping_port|port_info)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(host_computer|start_terminal|build|connect_service|launch|ping|scp|masterkey|masterkey_direct|restore_network)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(remove|hasIndex|indexOf|lastIndexOf|split|replace|trim|indexes|code|len|lower|upper|val|values|to_int)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(coin_price|show_history|amount_mined|get_coin|login_wallet|create_wallet|delete_coin)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(install_service|start_service|stop_service)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(set_cycle_mining|get_cycle_mining|get_reward|set_reward|transaction|create_subwallet|get_subwallet|get_subwallets|set_address|get_address|get_mined_coins)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(list_coins|get_balance|buy_coin|sell_coin|get_pending_trade|cancel_pending_trade|get_global_offers|list_global_coins|show_nodes|reset_password|get_pin)\\b"
+			},
+			{
+				"name": "support.function.greyscript",
+				"match": "\\.(get_balance|set_info|get_info|delete|get_user|last_transaction|mining|check_password|wallet_username)\\b"
+			}]
 		}
 	}
 }

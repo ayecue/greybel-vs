@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.6.7",
+    "version": "1.6.8",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
