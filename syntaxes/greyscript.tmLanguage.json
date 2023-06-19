@@ -15,7 +15,11 @@
 	}, {
 		"include": "#keyword"
 	}, {
-		"include": "#type"
+		"begin": "(?<=function)",
+		"end": "\\n|;",
+		"patterns": [{
+			"include": "#type"
+		}]
 	},{
 		"include": "#general-functions"
 	}, {
