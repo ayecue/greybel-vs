@@ -217,14 +217,14 @@
                     ".src",
                     ".gs"
                 ],
-                "configuration": "./language.json"
+                "configuration": "node_modules/greyscript-textmate/dist/greyscriptLanguageConfig.json"
             }
         ],
         "grammars": [
             {
                 "language": "greyscript",
                 "scopeName": "source.src",
-                "path": "./syntaxes/greyscript.tmLanguage.json"
+                "path": "node_modules/greyscript-textmate/dist/greyscript.tmLanguage.json"
             }
         ],
         "commands": [
@@ -441,6 +441,7 @@
         "greybel-transpiler": "^1.1.2",
         "greyscript-core": "^0.9.6",
         "greyscript-meta": "^1.4.7",
+        "greyscript-textmate": "^1.0.0",
         "lru-cache": "^7.14.1",
         "text-encoder-lite": "^2.0.0",
         "text-mesh-transformer": "^1.0.4"
