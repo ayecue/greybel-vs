@@ -23,7 +23,7 @@
 		},
 		"end": "\\n",
 		"patterns": [{
-			"match": "([^:]+): ([^\\s]+)(=[^,\\)]+)?(?=[\\),\\n])",
+			"match": "([^:\"]+|\".+\"):([^\\),\\n=]+)(=[^,\\)]+)?(?=[\\),\\n])",
 			"captures": {
 				"1": {
 					"patterns": [{
@@ -33,11 +33,7 @@
 					}, {
 						"include": "#constant"
 					}, {
-						"name": "entity.other.attribute.greyscript",
-						"match": "(?<=[^.]\\.)\\b([a-zA-Z_][a-zA-Z0-9_]*)"
-					}, {
-						"name": "variable.other.greyscript",
-						"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b"
+						"include": "#identifier"
 					}]
 				},
 				"2": {
@@ -64,23 +60,33 @@
 		"include": "#type-methods"
 	}, {
 		"patterns": [{
-			"name": "support.variable.greyscript",
-			"match": "\\b(params|locals|globals|outer)\\b"
+			"include": "#variables"
 		}, {
-			"name": "variable.language.self.greyscript",
-			"match": "\\b(self)\\b"
-		}, {
-			"name": "variable.language.super.greyscript",
-			"match": "\\b(super)\\b"
-		}, {
-			"name": "entity.other.attribute.greyscript",
-			"match": "(?<=[^.]\\.)\\b([a-zA-Z_][a-zA-Z0-9_]*)"
-		}, {
-			"name": "variable.other.greyscript",
-			"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b"
+			"include": "#identifier"
 		}]
 	}],
 	"repository": {
+		"variables": {
+			"patterns": [{
+				"name": "support.variable.greyscript",
+				"match": "\\b(params|locals|globals|outer)\\b"
+			}, {
+				"name": "variable.language.self.greyscript",
+				"match": "\\b(self)\\b"
+			}, {
+				"name": "variable.language.super.greyscript",
+				"match": "\\b(super)\\b"
+			}]
+		},
+		"identifier": {
+			"patterns": [{
+				"name": "entity.other.attribute.greyscript",
+				"match": "(?<=[^.]\\.)\\b([a-zA-Z_][a-zA-Z0-9_]*)"
+			}, {
+				"name": "variable.other.greyscript",
+				"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b"
+			}]
+		},
 		"comment": {
 			"patterns": [{
 				"name": "comment.line",
