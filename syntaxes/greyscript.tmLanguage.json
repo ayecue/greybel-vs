@@ -15,45 +15,7 @@
 	}, {
 		"include": "#type"
 	}, {
-		"begin": "\\((function|constant|var|literal)\\)",
-		"beginCaptures": {
-			"1": {
-				"name": "keyword.control.greyscript"
-			}
-		},
-		"end": "\\n",
-		"patterns": [{
-			"match": "([^:\"]+|\".+\"):([^\\),\\n=]+)(=[^,\\)]+)?(?=[\\),\\n])",
-			"captures": {
-				"1": {
-					"patterns": [{
-						"include": "#string"
-					}, {
-						"include": "#numeric"
-					}, {
-						"include": "#constant"
-					}, {
-						"include": "#identifier"
-					}]
-				},
-				"2": {
-					"patterns": [{
-						"include": "#pseudo-type"
-					}, {
-						"include": "#keyword"
-					}]
-				},
-				"3": {
-					"patterns": [{
-						"include": "#string"
-					}, {
-						"include": "#numeric"
-					}, {
-						"include": "#constant"
-					}]
-				}
-			}
-		}]
+		"include": "#meta-typing"
 	},{
 		"include": "#general-functions"
 	}, {
@@ -66,6 +28,47 @@
 		}]
 	}],
 	"repository": {
+		"meta-typing": {
+			"begin": "\\((function|constant|var|literal|expr)\\)",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.control.greyscript"
+				}
+			},
+			"end": "\\n",
+			"patterns": [{
+				"match": "([^:\"]+|\".+\"):([^\\),\\n=]+)(=[^,\\)]+)?(?=[\\),\\n])",
+				"captures": {
+					"1": {
+						"patterns": [{
+							"include": "#string"
+						}, {
+							"include": "#numeric"
+						}, {
+							"include": "#constant"
+						}, {
+							"include": "#identifier"
+						}]
+					},
+					"2": {
+						"patterns": [{
+							"include": "#pseudo-type"
+						}, {
+							"include": "#keyword"
+						}]
+					},
+					"3": {
+						"patterns": [{
+							"include": "#string"
+						}, {
+							"include": "#numeric"
+						}, {
+							"include": "#constant"
+						}]
+					}
+				}
+			}]
+		},
 		"variables": {
 			"patterns": [{
 				"name": "support.variable.greyscript",
