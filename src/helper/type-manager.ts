@@ -293,6 +293,8 @@ export class TypeMap {
         return new TypeInfo(TypeInfoKind.Constant, name, ['map:any']);
       case 'locals':
         return new TypeInfo(TypeInfoKind.Constant, name, ['map:any']);
+      case 'outer':
+        return new TypeInfo(TypeInfoKind.Constant, name, ['map:any']);
       case 'self':
         return new TypeInfo(TypeInfoKind.Constant, name, ['map:any']);
     }
