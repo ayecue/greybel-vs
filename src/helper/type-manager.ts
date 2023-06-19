@@ -52,14 +52,14 @@ myFunction = function(a, b, c)
 \`\`\`` as const;
 
 export enum TypeInfoKind {
-  Variable = "var",
-  Function = "function",
-  Literal = "literal",
-  Constant = "constant",
-  ListConstructor = "list",
-  MapConstructor = "map",
-  Expression = "expr",
-  Unknown = "unknown"
+  Variable = 'var',
+  Function = 'function',
+  Literal = 'literal',
+  Constant = 'constant',
+  ListConstructor = 'list',
+  MapConstructor = 'map',
+  Expression = 'expr',
+  Unknown = 'unknown'
 }
 
 export class TypeInfo {
@@ -191,7 +191,8 @@ export class TypeMap {
           // resolve first identifier
           if (!currentMetaInfo) {
             currentMetaInfo =
-              me.resolveIdentifier(identifer) || new TypeInfo(TypeInfoKind.Variable, name, ['any']);
+              me.resolveIdentifier(identifer) ||
+              new TypeInfo(TypeInfoKind.Variable, name, ['any']);
             break;
           }
 
@@ -265,7 +266,11 @@ export class TypeMap {
             return null;
           }
 
-          currentMetaInfo = new TypeInfo(TypeInfoKind.Variable, indexType.type[0], ['any']);
+          currentMetaInfo = new TypeInfo(
+            TypeInfoKind.Variable,
+            indexType.type[0],
+            ['any']
+          );
           break;
         }
         default: {
@@ -423,13 +428,29 @@ export class TypeMap {
   private resolveDefault(item: ASTBase): TypeInfo | null {
     switch (item.type) {
       case ASTType.NilLiteral:
-        return new TypeInfo(TypeInfoKind.Literal, (item as ASTLiteral).raw.toString(), ['null']);
+        return new TypeInfo(
+          TypeInfoKind.Literal,
+          (item as ASTLiteral).raw.toString(),
+          ['null']
+        );
       case ASTType.StringLiteral:
-        return new TypeInfo(TypeInfoKind.Literal, (item as ASTLiteral).raw.toString(), ['string']);
+        return new TypeInfo(
+          TypeInfoKind.Literal,
+          (item as ASTLiteral).raw.toString(),
+          ['string']
+        );
       case ASTType.NumericLiteral:
-        return new TypeInfo(TypeInfoKind.Literal, (item as ASTLiteral).raw.toString(), ['number']);
+        return new TypeInfo(
+          TypeInfoKind.Literal,
+          (item as ASTLiteral).raw.toString(),
+          ['number']
+        );
       case ASTType.BooleanLiteral:
-        return new TypeInfo(TypeInfoKind.Literal, (item as ASTLiteral).raw.toString(), ['number']);
+        return new TypeInfo(
+          TypeInfoKind.Literal,
+          (item as ASTLiteral).raw.toString(),
+          ['number']
+        );
       case ASTType.MapConstructorExpression:
         return new TypeInfo(TypeInfoKind.MapConstructor, '{}', ['map:any']);
       case ASTType.ListConstructorExpression:
@@ -442,9 +463,13 @@ export class TypeMap {
           'map:any'
         ]);
       case ASTType.LogicalExpression:
-        return new TypeInfo(TypeInfoKind.Expression, 'Logical expression', ['number']);
+        return new TypeInfo(TypeInfoKind.Expression, 'Logical expression', [
+          'number'
+        ]);
       case ASTType.SliceExpression:
-        return new TypeInfo(TypeInfoKind.Expression, 'Slice expression', ['any']);
+        return new TypeInfo(TypeInfoKind.Expression, 'Slice expression', [
+          'any'
+        ]);
       case ASTType.Unknown:
         return new TypeInfo(TypeInfoKind.Unknown, 'Unknown', ['any']);
       default:
@@ -548,7 +573,11 @@ export class TypeMap {
       } else {
         typeInfo =
           resolved instanceof TypeInfoWithDefinition
-            ? new TypeInfo(TypeInfoKind.Variable, name, resolved.definition.returns || ['any'])
+            ? new TypeInfo(
+                TypeInfoKind.Variable,
+                name,
+                resolved.definition.returns || ['any']
+              )
             : new TypeInfo(TypeInfoKind.Variable, name, resolved.type);
       }
 

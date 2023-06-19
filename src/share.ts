@@ -1,4 +1,9 @@
-import vscode, { ExtensionContext, TextEditor, TextEditorEdit, Uri } from 'vscode';
+import vscode, {
+  ExtensionContext,
+  TextEditor,
+  TextEditorEdit,
+  Uri
+} from 'vscode';
 
 import { post } from './helper/request';
 import { showCustomErrorMessage } from './helper/show-custom-error';
