@@ -13,6 +13,8 @@
 	}, {
 		"include": "#keyword"
 	}, {
+		"#include": "#function"
+	}, {
 		"include": "#type"
 	}, {
 		"include": "#meta-typing"
@@ -28,6 +30,30 @@
 		}]
 	}],
 	"repository": {
+		"function": {
+			"begin": "(?<=function\\()",
+			"end": "(?=\\))",
+			"patterns": [{
+				"match": "([^=]+)(=.+)?(?=\\)|,)",
+				"captures": {
+					"1": {
+						"patterns": [{
+							"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b",
+							"name": "variable.parameter.greyscript"
+						}]
+					},
+					"2": {
+						"patterns": [{
+							"include": "#string"
+						}, {
+							"include": "#numeric"
+						}, {
+							"include": "#constant"
+						}]
+					}
+				}
+			}]
+		},
 		"meta-typing": {
 			"begin": "\\((function|constant|var|literal|expr)\\)",
 			"beginCaptures": {
