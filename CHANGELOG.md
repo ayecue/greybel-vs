@@ -534,3 +534,5 @@ All notable changes to this project will be documented in this file.
 ## [1.6.9] - 19.06.2023
 
 - cast null to empty string when concatenation
+- fix syntax related to object constructors
+- add general functions to support.function syntax
