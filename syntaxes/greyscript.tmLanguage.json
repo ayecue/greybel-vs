@@ -13,7 +13,7 @@
 	}, {
 		"include": "#keyword"
 	}, {
-		"#include": "#function"
+		"include": "#function"
 	}, {
 		"include": "#type"
 	}, {
@@ -117,7 +117,7 @@
 				"name": "constant.other.greyscript",
 				"match": "\\b([A-Z_]+)\\b"
 			}, {
-				"name": "support.class.greyscript",
+				"name": "entity.name.type.greyscript",
 				"match": "\\b([A-Z][\\w]*)\\b"
 			}, {
 				"name": "variable.other.greyscript",
