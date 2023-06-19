@@ -536,3 +536,4 @@ All notable changes to this project will be documented in this file.
 - cast null to empty string when concatenation
 - fix syntax related to object constructors
 - add general functions to support.function syntax
+- update meta descriptions
