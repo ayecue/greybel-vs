@@ -116,7 +116,7 @@
 				"match": "\\.(get_ports|File|create_folder|is_network_active|touch|show_procs|network_devices|change_password|create_user|delete_user|create_group|delete_group|groups|close_program|wifi_networks|connect_wifi|connect_ethernet|network_gateway|active_net_card)\\b"
 			}, {
 				"name": "support.function.greyscript",
-				"match": "\\.(aircrack|airmon|aireplay|decipher|smtp_user_List)\\b"
+				"match": "\\.(aircrack|airmon|aireplay|decipher|smtp_user_list)\\b"
 			}, {
 				"name": "support.function.greyscript",
 				"match": "\\.(chmod|copy|move|rename|path|parent|name|get_content|set_content|is_binary|has_permission|delete|get_folders|get_files|permissions|owner|set_owner|group|set_group|size|meta_info)\\b"
