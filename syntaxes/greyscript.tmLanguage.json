@@ -9,16 +9,54 @@
 	}, {
 		"include": "#comment"
 	}, {
-		"include": "#variables"
-	}, {
 		"include": "#constant"
 	}, {
 		"include": "#keyword"
 	}, {
-		"begin": "(?<=function)",
-		"end": "\\n|;",
+		"include": "#type"
+	}, {
+		"begin": "\\((function|constant|var|literal)\\)",
+		"beginCaptures": {
+			"1": {
+				"name": "keyword.control.greyscript"
+			}
+		},
+		"end": "\\n",
 		"patterns": [{
-			"include": "#type"
+			"match": "([^:]+): ([^\\s]+)(=[^,\\)]+)?(?=[\\),\\n])",
+			"captures": {
+				"1": {
+					"patterns": [{
+						"include": "#string"
+					}, {
+						"include": "#numeric"
+					}, {
+						"include": "#constant"
+					}, {
+						"name": "entity.other.attribute.greyscript",
+						"match": "(?<=[^.]\\.)\\b([a-zA-Z_][a-zA-Z0-9_]*)"
+					}, {
+						"name": "variable.other.greyscript",
+						"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b"
+					}]
+				},
+				"2": {
+					"patterns": [{
+						"include": "#pseudo-type"
+					}, {
+						"include": "#keyword"
+					}]
+				},
+				"3": {
+					"patterns": [{
+						"include": "#string"
+					}, {
+						"include": "#numeric"
+					}, {
+						"include": "#constant"
+					}]
+				}
+			}
 		}]
 	},{
 		"include": "#general-functions"
@@ -88,20 +126,12 @@
 			"match": "\\b(true|false|null)\\b"
 		},
 		"type": {
-			"patterns": [{
-				"begin": ": ",
-				"end": "\\n|,|;|=",
-				"patterns": [{
-					"match": "null|list|map|number|string|any|aptClient|computer|crypto|file|ftpShell|metaLib|metaMail|metaxploit|netSession|port|router|shell|blockchain|service|subWallet|wallet|coin",
-					"name": "support.class.greyscript"
-				}, {
-					"match": "or",
-					"name": "keyword.control.greyscript"
-				}]
-			}, {
-				"name": "support.class.greyscript",
-				"match": "\\b(list|map|number|string)\\b"
-			}]
+			"name": "support.class.greyscript",
+			"match": "\\b(list|map|number|string)\\b"
+		},
+		"pseudo-type": {
+			"match": "null|list|map|number|string|any|aptClient|computer|crypto|file|ftpShell|metaLib|metaMail|metaxploit|netSession|port|router|shell|blockchain|service|subWallet|wallet|coin",
+			"name": "support.class.greyscript"
 		},
 		"general-functions": {
 			"name": "support.function.greyscript",
