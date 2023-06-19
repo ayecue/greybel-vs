@@ -105,7 +105,7 @@
 		},
 		"general-functions": {
 			"name": "support.function.greyscript",
-			"match": "\\b(mail_login|typeof|get_router|get_switch|nslookup|print|clear_screen|active_user|home_dir|get_shell|user_input|include_lib|import_code|exit|user_mail_address|user_bank_number|whois|wait|command_info|program_path|current_path|format_columns|current_date|is_lan_ip|is_valid_ip|bitwise|abs|acos|asin|atan|tan|cos|char|sin|floor|range|round|rnd|sign|sqrt|str|ceil|pi|launch_path|slice|md5|hash|time|log|bitAnd|bitXor|yield|code|val|hasIndex|replace|split|join|to_int|insert|get_custom_object)\\b"
+			"match": "\\b(mail_login|typeof|get_router|get_switch|nslookup|print|clear_screen|active_user|home_dir|get_shell|user_input|include_lib|import_code|exit|user_mail_address|user_bank_number|whois|wait|command_info|program_path|current_path|format_columns|current_date|is_lan_ip|is_valid_ip|bitwise|abs|acos|asin|atan|tan|cos|char|sin|floor|range|round|rnd|sign|sqrt|str|ceil|pi|launch_path|slice|md5|hash|time|log|bitAnd|bitOr|bitXor|yield|code|val|hasIndex|replace|split|join|to_int|insert|get_custom_object)\\b"
 		},
 		"type-methods": {
 			"patterns": [{
