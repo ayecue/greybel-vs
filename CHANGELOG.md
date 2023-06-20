@@ -542,3 +542,7 @@ All notable changes to this project will be documented in this file.
 ## [1.6.10] - 20.06.2023
 
 - fix syntax grammar files location
+
+## [1.6.11] - 20.06.2023
+
+- fix function textmate syntax
