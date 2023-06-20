@@ -530,3 +530,11 @@ All notable changes to this project will be documented in this file.
 ## [1.6.8] - 18.06.2023
 
 - improve greyscript syntax
+
+## [1.6.9] - 19.06.2023
+
+- cast null to empty string when concatenation
+- fix syntax related to pseudo types
+- support function paramter in syntax
+- add general functions to support.function syntax
+- update meta descriptions

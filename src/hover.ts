@@ -107,7 +107,7 @@ export function activate(_context: ExtensionContext) {
         let headline;
 
         if (args.length === 0) {
-          headline = `(${typeInfo.type}) ${typeInfo.label} (): ${returnValues}`;
+          headline = `(${typeInfo.kind}) ${typeInfo.label} (): ${returnValues}`;
         } else {
           const argValues = args
             .map(
@@ -118,7 +118,7 @@ export function activate(_context: ExtensionContext) {
             )
             .join(', ');
 
-          headline = `(${typeInfo.type}) ${typeInfo.label} (${argValues}): ${returnValues}`;
+          headline = `(${typeInfo.kind}) ${typeInfo.label} (${argValues}): ${returnValues}`;
         }
 
         const output = ['```', headline, '```', '***', defintion.description];
@@ -133,7 +133,7 @@ export function activate(_context: ExtensionContext) {
       }
 
       hoverText.appendCodeblock(
-        `${typeInfo.label}: ${formatTypes(typeInfo.type)}`
+        `(${typeInfo.kind}) ${typeInfo.label}: ${formatTypes(typeInfo.type)}`
       );
 
       return new Hover(hoverText);
