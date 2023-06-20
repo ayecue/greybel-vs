@@ -441,7 +441,7 @@
         "greybel-transpiler": "^1.1.2",
         "greyscript-core": "^0.9.6",
         "greyscript-meta": "^1.4.7",
-        "greyscript-textmate": "^1.0.4",
+        "greyscript-textmate": "^1.0.5",
         "lru-cache": "^7.14.1",
         "text-encoder-lite": "^2.0.0",
         "text-mesh-transformer": "^1.0.4"
