@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.6.9",
+    "version": "1.6.10",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -51,13 +51,14 @@
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
-        "compile": "npm run compile:ts && npm run compile:node && npm run compile:browser && npm run compile:api && npm run move:stylesheet",
+        "compile": "npm run compile:ts && npm run compile:node && npm run compile:browser && npm run compile:api && npm run move:stylesheet && npm run move:grammar",
         "compile:ts": "tsc -p ./",
         "compile:node": "rollup --config rollup.config.node.js --bundleConfigAsCjs",
         "compile:browser": "rollup --config rollup.config.browser.js --bundleConfigAsCjs",
         "compile:extension": "vsce package --out extension.vsix",
         "compile:api": "rollup --config rollup.config.api.js --bundleConfigAsCjs",
         "move:stylesheet": "cp node_modules/greyscript-meta/web/index.css ./api.view.css",
+        "move:grammar": "cp -r node_modules/greyscript-textmate/dist/*.json ./",
         "lint": "eslint ./src/**/*.ts",
         "lint:fix": "eslint --fix ./src/**/*.ts",
         "watch": "tsc -watch -p ./",
@@ -217,14 +218,14 @@
                     ".src",
                     ".gs"
                 ],
-                "configuration": "node_modules/greyscript-textmate/dist/greyscriptLanguageConfig.json"
+                "configuration": "./greyscriptLanguageConfig.json"
             }
         ],
         "grammars": [
             {
                 "language": "greyscript",
                 "scopeName": "source.src",
-                "path": "node_modules/greyscript-textmate/dist/greyscript.tmLanguage.json"
+                "path": "./greyscript.tmLanguage.json"
             }
         ],
         "commands": [
