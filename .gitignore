@@ -9,3 +9,6 @@ extension.js
 api.view.css
 api.view.js
 .vscode-test-web
+greyscript.theme.json
+greyscript.tmLanguage.json
+greyscriptLanguageConfig.json

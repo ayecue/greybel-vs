@@ -538,3 +538,7 @@ All notable changes to this project will be documented in this file.
 - support function paramter in syntax
 - add general functions to support.function syntax
 - update meta descriptions
+
+## [1.6.10] - 20.06.2023
+
+- fix syntax grammar files location
