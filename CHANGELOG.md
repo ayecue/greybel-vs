@@ -550,3 +550,5 @@ All notable changes to this project will be documented in this file.
 ## [1.7.0] - 22.06.2023
 
 - if any is included in types just display any
+- support multiline conditions
+- support slice type resolve
