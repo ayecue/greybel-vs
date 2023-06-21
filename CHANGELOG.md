@@ -546,3 +546,9 @@ All notable changes to this project will be documented in this file.
 ## [1.6.11] - 20.06.2023
 
 - fix function textmate syntax
+
+## [1.7.0] - 22.06.2023
+
+- if any is included in types just display any
+- support multiline conditions
+- support slice type resolve

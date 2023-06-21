@@ -15,6 +15,7 @@ import {
   ASTMapConstructorExpression,
   ASTMemberExpression,
   ASTParenthesisExpression,
+  ASTSliceExpression,
   ASTType,
   ASTUnaryExpression
 } from 'greyscript-core';
@@ -73,6 +74,16 @@ export class TypeInfo {
     this.type = type;
   }
 
+  setType(type: string[]) {
+    this.type = type.includes('any') ? ['any'] : type;
+    return this;
+  }
+
+  extendType(type: string[]) {
+    const uniqItems = Array.from(new Set([...this.type, ...type]));
+    return this.setType(uniqItems);
+  }
+
   copy() {
     return new TypeInfo(this.kind, this.label, this.type);
   }
@@ -117,6 +128,8 @@ export const lookupBase = (node: ASTBase | null = null): ASTBase | null => {
       return (node as ASTIndexExpression).base;
     case ASTType.CallExpression:
       return (node as ASTCallExpression).base;
+    case ASTType.SliceExpression:
+      return (node as ASTSliceExpression).base;
     default:
       return null;
   }
@@ -184,6 +197,10 @@ export class TypeMap {
 
     while ((origin = traversalPath.shift())) {
       switch (origin.type) {
+        case ASTType.SliceExpression: {
+          currentMetaInfo = new TypeInfo(TypeInfoKind.Variable, null, ['any']);
+          break;
+        }
         case ASTType.Identifier: {
           const identifer = origin as ASTIdentifier;
           const name = identifer.name;
@@ -466,10 +483,6 @@ export class TypeMap {
         return new TypeInfo(TypeInfoKind.Expression, 'Logical expression', [
           'number'
         ]);
-      case ASTType.SliceExpression:
-        return new TypeInfo(TypeInfoKind.Expression, 'Slice expression', [
-          'any'
-        ]);
       case ASTType.Unknown:
         return new TypeInfo(TypeInfoKind.Unknown, 'Unknown', ['any']);
       default:
@@ -487,6 +500,7 @@ export class TypeMap {
         return me.resolveIdentifier(item as ASTIdentifier);
       case ASTType.MemberExpression:
       case ASTType.IndexExpression:
+      case ASTType.SliceExpression:
         return me.resolvePath(item);
       case ASTType.FunctionDeclaration:
         return me.resolveFunctionDeclaration(item as ASTFunctionStatement);
@@ -508,7 +522,6 @@ export class TypeMap {
       case ASTType.ListConstructorExpression:
       case ASTType.BinaryExpression:
       case ASTType.LogicalExpression:
-      case ASTType.SliceExpression:
       case ASTType.Unknown:
         return me.resolveDefault(item);
       default:
@@ -589,11 +602,8 @@ export class TypeMap {
         typeInfo.label = nameWithoutGlobalsPrefix;
 
         if (globalIdentifierTypes.has(nameWithoutGlobalsPrefix)) {
-          typeInfo.type = Array.from(
-            new Set([
-              ...typeInfo.type,
-              ...globalIdentifierTypes.get(nameWithoutGlobalsPrefix)!.type
-            ])
+          typeInfo.extendType(
+            globalIdentifierTypes.get(nameWithoutGlobalsPrefix)!.type
           );
         }
 
@@ -612,11 +622,8 @@ export class TypeMap {
         typeInfo.label = nameWithoutOuterPrefix;
 
         if (outerIdentifierTypes.has(nameWithoutOuterPrefix)) {
-          typeInfo.type = Array.from(
-            new Set([
-              ...typeInfo.type,
-              ...outerIdentifierTypes.get(nameWithoutOuterPrefix)!.type
-            ])
+          typeInfo.extendType(
+            outerIdentifierTypes.get(nameWithoutOuterPrefix)!.type
           );
         }
 
@@ -630,11 +637,8 @@ export class TypeMap {
         typeInfo.label = nameWithoutLocalsPrefix;
 
         if (identiferTypes.has(nameWithoutLocalsPrefix)) {
-          typeInfo.type = Array.from(
-            new Set([
-              ...typeInfo.type,
-              ...identiferTypes.get(nameWithoutLocalsPrefix)!.type
-            ])
+          typeInfo.extendType(
+            identiferTypes.get(nameWithoutLocalsPrefix)!.type
           );
         }
 
@@ -643,9 +647,7 @@ export class TypeMap {
       }
 
       if (identiferTypes.has(name)) {
-        typeInfo.type = Array.from(
-          new Set([...typeInfo.type, ...identiferTypes.get(name)!.type])
-        );
+        typeInfo.extendType(identiferTypes.get(name)!.type);
       }
 
       identiferTypes.set(name, typeInfo);
