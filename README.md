@@ -71,14 +71,16 @@ Transforms the content of the active text document into one of three possible ou
 - Default (active by default): Minor optimizations
 - Uglify: Minified
 - Beautify: Beautified
+  
+**Important**: Transforms will ignore any [include](https://github.com/ayecue/greybel-js#include), [import](https://github.com/ayecue/greybel-js#import) or [import_code](https://github.com/ayecue/greybel-js#import_code) line. Use the [build](#build) functionality instead.
 
 ![Minified File](https://github.com/ayecue/greybel-vs/blob/main/assets/minified.png?raw=true "Minified file")
 
-It will also fill environment values with its value which you can define in the configuration of this extension.
+Environment values will be injected while transforming. Environment values can be configurated in the options of the Greybel-VS extension.
 
 ![Env Settings](https://github.com/ayecue/greybel-vs/blob/main/assets/settings-env.png?raw=true "Env Settings")
 
-You can also exclude namespaces from getting transformed.
+Additionally, there is an option to define which namespaces should be excluded from getting transformed or optimized.
 
 ![Exclude namespaces](https://github.com/ayecue/greybel-vs/blob/main/assets/settings-exclude-namespaces.png?raw=true "Exclude namespaces")
 
@@ -90,9 +92,9 @@ Transforms and bundles your files which makes it easier to import them into Grey
 
 ![Build output](https://github.com/ayecue/greybel-vs/blob/main/assets/build.png?raw=true "Build output")
 
-Keep in mind to activate the installer to enable bundling in case you are using `import_code` in your code.
+Keep in mind to enable the installer option in case you want to bundle your files which are using `import_code`. While building, installer files will get generated now. The amount of files depends on the size of your project. These installer files will essentially contain all different code files and logic to create all files in the game. So basically you just need to copy and paste the code of the installer files into the game and then compile + execute them.
 
-You can also select the max characters per file which will then split the installer files into the selected size.
+You also have the option to set the characters limit for each installer file.
 
 ![Max chars](https://github.com/ayecue/greybel-vs/blob/main/assets/settings-max-chars.png?raw=true "Max chars")
 
@@ -118,7 +120,7 @@ More details [here](https://github.com/ayecue/greybel-js#interpreter).
 
 ### Debugger
 
-Enables you to set breakpoints, run code in a breakpoint context, jump to the next line of execution etc. Generally helpful if you want to debug your code. More details [here](https://github.com/ayecue/greybel-js#debugger).
+Enables you to set breakpoints, run code in a breakpoint context, jump to the next line of execution etc. Generally helpful if you want to debug your code. More details [here](https://github.com/ayecue/greybel-js#debugger-cli).
 
 ![Breakpoint](https://github.com/ayecue/greybel-vs/blob/main/assets/breakpoint.png?raw=true "Breakpoint")
 
@@ -126,13 +128,13 @@ Keep in mind to set the breakpoint on a none empty line. Otherwise, it will just
 
 ![Active breakpoint](https://github.com/ayecue/greybel-vs/blob/main/assets/active-breakpoint.png?raw=true "Active breakpoint")
 
-A repl is also available while executing the script or having an active breakpoint.
+A REPL is also available while executing the script or having an active breakpoint.
 
 ![REPL](https://github.com/ayecue/greybel-vs/blob/main/assets/repl.png?raw=true "REPL")
 
 ### API Browser
 
-API Browser for GreyScript. A version of [greyscript-meta](https://documentation.greyscript.org) in Visual Studio Code.
+API Browser for GreyScript. Basically a version of the [GreyScript API Documentation](https://documentation.greyscript.org) page within Visual Studio Code.
 
 ![API Browser](https://github.com/ayecue/greybel-vs/blob/main/assets/api-browser.png?raw=true "API Browser")
 
