@@ -555,4 +555,8 @@ All notable changes to this project will be documented in this file.
 
 ## [1.7.1] - 23.06.2023
 
-- add debugger keyword to textmate syntax for UI
+- add debugger keyword to textmate syntax
+
+## [1.7.2] - 25.06.2023
+
+- fix textmate syntax related to strings within functions and pseudo-types
