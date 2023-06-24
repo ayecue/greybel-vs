@@ -92,7 +92,7 @@ Transforms and bundles your files which makes it easier to import them into Grey
 
 ![Build output](https://github.com/ayecue/greybel-vs/blob/main/assets/build.png?raw=true "Build output")
 
-Keep in mind to enable the installer option in case you want to bundle your files which are using `import_code`. While building, installer files will get generated now. The amount of files depends on the size of your project. These installer files will essentially contain all different code files and logic to create all files in the game. So basically you just need to copy and paste the code of the installer files into the game and then compile + execute them.
+Keep in mind to enable the installer option in case you want to bundle your files which are using `import_code`. While building, installer files will get generated. The amount of files depends on the size of your project. These installer files will essentially contain all different code files and logic to create all files in the game. So basically you just need to copy and paste the code of the installer files into the game and then compile + execute them.
 
 You also have the option to set the characters limit for each installer file.
 
