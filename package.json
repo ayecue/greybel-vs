@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.7.1",
+    "version": "1.7.2",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -435,14 +435,14 @@
         "ansi-escapes": "^4.3.2",
         "color-convert": "^2.0.1",
         "css-color-names": "^1.0.1",
-        "greybel-core": "^0.9.5",
-        "greybel-gh-mock-intrinsics": "^2.4.8",
-        "greybel-interpreter": "^2.1.8",
-        "greybel-intrinsics": "^2.2.4",
-        "greybel-transpiler": "^1.1.3",
-        "greyscript-core": "^0.9.7",
-        "greyscript-meta": "^1.4.7",
-        "greyscript-textmate": "^1.1.0",
+        "greybel-core": "^0.9.6",
+        "greybel-gh-mock-intrinsics": "^2.5.2",
+        "greybel-interpreter": "^2.2.2",
+        "greybel-intrinsics": "^2.2.8",
+        "greybel-transpiler": "^1.1.4",
+        "greyscript-core": "^0.9.9",
+        "greyscript-meta": "^1.4.8",
+        "greyscript-textmate": "^1.3.0",
         "lru-cache": "^7.14.1",
         "text-encoder-lite": "^2.0.0",
         "text-mesh-transformer": "^1.0.4"
