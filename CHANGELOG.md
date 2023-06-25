@@ -561,3 +561,5 @@ All notable changes to this project will be documented in this file.
 
 - fix textmate syntax related to strings within functions and pseudo-types
 - fix argument types for to_int and insert
+- fix super behavior in regards of accessessing direct __isa
+- add launch call stack limit
