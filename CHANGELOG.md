@@ -571,3 +571,7 @@ All notable changes to this project will be documented in this file.
 - support division on strings
 - add modulo operator to textmate syntax
 - fix order in operator textmate syntax
+
+## [1.7.3] - 26.06.2023
+
+- use rnd function factory to get properly working rnd with seed
