@@ -575,3 +575,7 @@ All notable changes to this project will be documented in this file.
 ## [1.7.3] - 26.06.2023
 
 - use rnd function factory to get properly working rnd with seed
+
+## [1.7.4] - 29.06.2023
+
+- fix various evaluation expression output values
