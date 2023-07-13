@@ -1,12 +1,10 @@
 import {
   Breakpoint,
-  BreakpointEvent,
   InitializedEvent,
   LoggingDebugSession,
   Scope,
   Source,
   StackFrame,
-  StoppedEvent,
   TerminatedEvent,
   Thread
 } from '@vscode/debugadapter';
@@ -20,29 +18,21 @@ import {
 import {
   ContextType,
   CustomValue,
-  Debugger,
   HandlerContainer,
   Interpreter,
-  KeyEvent,
   ObjectValue,
   OperationContext,
-  OutputHandler,
   PrepareError,
-  PrintOptions,
   RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import vscode, { Uri } from 'vscode';
 
-import PseudoTerminal from '../helper/pseudo-terminal';
 import { showCustomErrorMessage } from '../helper/show-custom-error';
-import transform, {
-  ansiProvider,
-  useColor
-} from '../helper/text-mesh-transform';
-import transformStringToKeyEvent from '../helper/transform-string-to-key-event';
+import { ansiProvider, useColor } from '../helper/text-mesh-transform';
 import { InterpreterResourceProvider, PseudoFS } from '../resource';
-import MessageQueue from './message-queue';
+import { GrebyelDebugger, GrebyelPseudoDebugger } from './debugger';
+import { VSOutputHandler } from './output';
 
 interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
   program: string;
@@ -71,108 +61,13 @@ export class GreybelDebugSession extends LoggingDebugSession {
   private _env: GHMockIntrinsicEnv;
   private _breakpointIncrement: number = 0;
   private _restart: boolean = false;
-  private _messageQueue: MessageQueue | null;
+  private _out: VSOutputHandler;
 
   public constructor() {
     super('greybel-debug.txt');
 
     // this debugger uses zero-based lines and columns
     const me = this;
-
-    const VSOutputHandler = class extends OutputHandler {
-      print(
-        _ctx: OperationContext,
-        message: string,
-        { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
-      ) {
-        const transformed = transform(message).replace(/\\n/g, '\n');
-
-        if (replace) {
-          const terminal = PseudoTerminal.getActiveTerminal();
-          terminal.replace(transformed);
-
-          return;
-        }
-
-        const opc = me._runtime.apiContext.getLastActive();
-        let line;
-
-        if (opc.stackTrace.length > 0) {
-          line = opc.stackTrace[0].item?.start.line;
-        }
-
-        me._messageQueue?.print({
-          message: transformed,
-          line,
-          appendNewLine
-        });
-      }
-
-      clear() {
-        me._messageQueue?.clear();
-      }
-
-      progress(ctx: OperationContext, timeout: number): PromiseLike<void> {
-        const terminal = PseudoTerminal.getActiveTerminal();
-        const startTime = Date.now();
-        const max = 20;
-
-        terminal.print(`[${'-'.repeat(max)}]`);
-
-        return new Promise((resolve, _reject) => {
-          const onExit = () => {
-            clearInterval(interval);
-            resolve();
-          };
-          const interval = setInterval(() => {
-            const currentTime = Date.now();
-            const elapsed = currentTime - startTime;
-
-            if (elapsed > timeout) {
-              terminal.replace(`[${'#'.repeat(max)}]`);
-              ctx.processState.removeListener('exit', onExit);
-              clearInterval(interval);
-              resolve();
-              return;
-            }
-
-            const elapsedPercentage = (100 * elapsed) / timeout;
-            const progress = Math.floor((elapsedPercentage * max) / 100);
-            const right = max - progress;
-
-            terminal.replace(`[${'#'.repeat(progress)}${'-'.repeat(right)}]`);
-          });
-
-          ctx.processState.once('exit', onExit);
-        });
-      }
-
-      waitForInput(
-        ctx: OperationContext,
-        isPassword: boolean,
-        message: string
-      ): PromiseLike<string> {
-        this.print(ctx, message, {
-          appendNewLine: false
-        });
-        return PseudoTerminal.getActiveTerminal().waitForInput(ctx, isPassword);
-      }
-
-      waitForKeyPress(
-        ctx: OperationContext,
-        message: string
-      ): PromiseLike<KeyEvent> {
-        this.print(ctx, message, {
-          appendNewLine: false
-        });
-
-        return PseudoTerminal.getActiveTerminal()
-          .waitForKeyPress(ctx)
-          .then((key) => {
-            return transformStringToKeyEvent(key);
-          });
-      }
-    };
     const config = vscode.workspace.getConfiguration('greybel');
     const seed = config.get<string>('interpreter.seed');
     const environmentVariables =
@@ -184,11 +79,11 @@ export class GreybelDebugSession extends LoggingDebugSession {
     this._env = createGHMockEnv({
       seed
     });
-    this._messageQueue = null;
+    this._out = new VSOutputHandler();
     this._runtime = new Interpreter({
       handler: new HandlerContainer({
         resourceHandler: new InterpreterResourceProvider(),
-        outputHandler: new VSOutputHandler()
+        outputHandler: this._out
       }),
       debugger: new GrebyelDebugger(me),
       api: initIntrinsics(initGHIntrinsics(new ObjectValue(), this._env)),
@@ -295,12 +190,11 @@ export class GreybelDebugSession extends LoggingDebugSession {
         params && params.length > 0 ? params.split(' ') : [];
 
       me._runtime.params = paramSegments;
-      me._messageQueue = new MessageQueue(me);
       await me._runtime.run();
       me.sendResponse(response);
     } catch (err: any) {
       if (err instanceof PrepareError) {
-        PseudoTerminal.getActiveTerminal().print(
+        this._out.terminal.print(
           useColor(
             'red',
             `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
@@ -309,7 +203,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
           )
         );
       } else if (err instanceof RuntimeError) {
-        PseudoTerminal.getActiveTerminal().print(
+        this._out.terminal.print(
           useColor(
             'red',
             `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
@@ -318,7 +212,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
           )
         );
       } else {
-        PseudoTerminal.getActiveTerminal().print(
+        this._out.terminal.print(
           useColor(
             'red',
             `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
@@ -329,8 +223,6 @@ export class GreybelDebugSession extends LoggingDebugSession {
       }
 
       showCustomErrorMessage(err);
-    } finally {
-      me._messageQueue?.end();
     }
 
     if (me._restart) {
@@ -633,46 +525,4 @@ export class GreybelDebugSession extends LoggingDebugSession {
   ): void {
     vscode.window.showErrorMessage('Step back is not supported.');
   }
-}
-
-class GrebyelDebugger extends Debugger {
-  session: GreybelDebugSession;
-
-  constructor(session: GreybelDebugSession) {
-    super();
-    this.session = session;
-  }
-
-  getBreakpoint(operationContext: OperationContext): boolean {
-    const uri = Uri.file(operationContext.target);
-    const breakpoints = this.session.breakpoints.get(uri.fsPath) || [];
-    const actualBreakpoint = breakpoints.find(
-      (bp: DebugProtocol.Breakpoint) => {
-        return bp.line === operationContext.stackTrace[0]?.item?.start.line;
-      }
-    ) as DebugProtocol.Breakpoint;
-
-    if (actualBreakpoint) {
-      actualBreakpoint.verified = true;
-      this.session.sendEvent(new BreakpointEvent('changed', actualBreakpoint));
-      this.setBreakpoint(true);
-    }
-
-    return super.getBreakpoint(operationContext);
-  }
-
-  interact(operationContext: OperationContext) {
-    this.session.lastContext = operationContext;
-    this.session.sendEvent(
-      new StoppedEvent('breakpoint', GreybelDebugSession.threadID)
-    );
-  }
-}
-
-class GrebyelPseudoDebugger extends Debugger {
-  getBreakpoint(_operationContext: OperationContext): boolean {
-    return false;
-  }
-
-  interact(_operationContext: OperationContext) {}
 }
