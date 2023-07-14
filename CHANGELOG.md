@@ -579,3 +579,7 @@ All notable changes to this project will be documented in this file.
 ## [1.7.4] - 29.06.2023
 
 - fix various evaluation expression output values
+
+## [1.7.5] - 14.07.2023
+
+- fix replaceText behavior in print by using pseudo terminal directly and not message queue
