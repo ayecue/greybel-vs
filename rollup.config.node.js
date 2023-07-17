@@ -15,15 +15,17 @@ const options = {
         globals: {
             'vscode': 'vscode',
             'path': 'path',
-            'https': 'https'
+            'https': 'https',
+            'net': 'net'
         }
     },
     plugins: [
         dotenv(),
         json(),
         commonjs({
-            esmExternals: ['vscode', 'path'],
-            sourceMap: false
+            esmExternals: ['vscode', 'path', 'net'],
+            sourceMap: false,
+            ignoreDynamicRequires: ['net']
         }),
         nodePolyfills(),
         nodeResolve({
@@ -34,6 +36,7 @@ const options = {
     external: [
         'vscode',
         'path',
+        'net',
         'https'
     ]
 };

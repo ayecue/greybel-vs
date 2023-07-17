@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.7.5",
+    "version": "1.8.0",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -371,6 +371,25 @@
                     "minimum": 1000,
                     "description": "Amount of characters allowed in one file before splitting when creating installer.",
                     "when": "!isWeb"
+                },
+                "greybel.createIngame": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Create files automatically in-game.",
+                    "when": "!isWeb",
+                    "scope": "resource"
+                },
+                "greybel.createIngame.mode": {
+                    "type": "string",
+                    "enum": [
+                        "local",
+                        "public",
+                        "nightly"
+                    ],
+                    "default": "local",
+                    "description": "Creation mode.",
+                    "when": "!isWeb",
+                    "scope": "resource"
                 }
             }
         },
@@ -435,6 +454,7 @@
         "ansi-escapes": "^4.3.2",
         "color-convert": "^2.0.1",
         "css-color-names": "^1.0.1",
+        "greybel-c2-agent": "^0.1.6",
         "greybel-core": "^0.9.6",
         "greybel-gh-mock-intrinsics": "^2.5.4",
         "greybel-interpreter": "^2.2.3",
