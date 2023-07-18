@@ -583,3 +583,10 @@ All notable changes to this project will be documented in this file.
 ## [1.7.5] - 14.07.2023
 
 - fix replaceText behavior in print by using pseudo terminal directly and not message queue
+
+## [1.8.0] - 19.07.2023
+
+- add c2 agent to support remote file creation in-game
+- add support to cache refreshToken for ingame file creation
+- change vscode built for node version in order to support the c2 agent and steam
+- update meta involving create_folder signature fix

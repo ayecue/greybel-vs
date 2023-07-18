@@ -6,11 +6,15 @@ src
 .git
 rollup.config.browser.js
 rollup.config.node.js
+rollup.config.node.api
 tsconfig.json
 .gitignore
 .eslintrc
 .npmignore
 .npmrc
+.circleci
+.env
+package-lock.json
 assets
 node_modules
 !node_modules/**/*.json
