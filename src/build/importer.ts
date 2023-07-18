@@ -95,7 +95,7 @@ class Importer {
     return password;
   }
 
-  async import(): Promise<boolean> {
+  async import(): Promise<void> {
     if (!Object.prototype.hasOwnProperty.call(IMPORTER_MODE_MAP, this.mode)) {
       throw new Error('Unknown import mode.');
     }
@@ -113,30 +113,22 @@ class Importer {
       username: await this.getUsername(),
       password: await this.getPassword()
     });
-    let success = false;
 
     for (const item of this.importList) {
-      const isFileCreated = await agent.tryToCreateFile(
+      const isFileCreated = await agent.createFile(
         this.ingameDirectory + path.dirname(item.ingameFilepath),
         path.basename(item.ingameFilepath),
         item.content
       );
-
-      if (!isFileCreated) {
-        success = false;
-        break;
-      }
     }
 
     agent.dispose();
-
-    return success;
   }
 }
 
 export const createImporter = async (
   options: ImporterOptions
-): Promise<boolean> => {
+): Promise<void> => {
   const installer = new Importer(options);
-  return installer.import();
+  await installer.import();
 };
