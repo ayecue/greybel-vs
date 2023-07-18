@@ -72,7 +72,7 @@ class Importer {
     });
   }
 
-  private async getPassword(): Promise<string> {
+  private getPassword(): PromiseLike<string> {
     return vscode.window.showInputBox({
       title: 'Enter steam password',
       ignoreFocusOut: true,
@@ -95,7 +95,7 @@ class Importer {
         });
         callback(code);
       },
-      username: await this.getUsername(),
+      accountName: await this.getUsername(),
       password: await this.getPassword(),
       refreshToken: await this.extensionContext.secrets.get(
         'greybel.steam.refreshToken'
