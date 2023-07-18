@@ -1,7 +1,7 @@
 import GreybelC2AgentPkg from 'greybel-c2-agent';
 import { TranspilerParseResult } from 'greybel-transpiler';
 import path from 'path';
-import vscode from 'vscode';
+import vscode, { ExtensionContext } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
 const { GreybelC2Agent } = GreybelC2AgentPkg;
@@ -21,7 +21,7 @@ export interface ImporterOptions {
   target: string;
   ingameDirectory: string;
   result: TranspilerParseResult;
-  mode: string;
+  extensionContext: ExtensionContext;
 }
 
 class Importer {
@@ -29,12 +29,16 @@ class Importer {
   private target: string;
   private ingameDirectory: string;
   private mode: string;
+  private extensionContext: ExtensionContext;
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
     this.ingameDirectory = options.ingameDirectory;
     this.importList = this.createImportList(options.target, options.result);
-    this.mode = options.mode;
+    this.mode = vscode.workspace
+      .getConfiguration('greybel')
+      .get<string>('createIngame.mode');
+    this.extensionContext = options.extensionContext;
   }
 
   private createImportList(
@@ -53,7 +57,45 @@ class Importer {
     return imports;
   }
 
-  async import() {
+  private getUsername(): Thenable<string> {
+    const username = vscode.workspace
+      .getConfiguration('greybel')
+      .get<string>('createIngame.steamUser');
+
+    if (username != null) {
+      return Promise.resolve(username);
+    }
+
+    return vscode.window.showInputBox({
+      title: 'Enter steam account name',
+      ignoreFocusOut: true
+    });
+  }
+
+  private async getPassword(): Promise<string> {
+    let password = await this.extensionContext.secrets.get(
+      'greybel.createIngame.steamPassword'
+    );
+
+    if (password != null) {
+      return password;
+    }
+
+    password = await vscode.window.showInputBox({
+      title: 'Enter steam password',
+      ignoreFocusOut: true,
+      password: true
+    });
+
+    this.extensionContext.secrets.store(
+      'greybel.createIngame.steamPassword',
+      password
+    );
+
+    return password;
+  }
+
+  async import(): Promise<boolean> {
     if (!Object.prototype.hasOwnProperty.call(IMPORTER_MODE_MAP, this.mode)) {
       throw new Error('Unknown import mode.');
     }
@@ -68,32 +110,33 @@ class Importer {
         });
         callback(code);
       },
-      username: await vscode.window.showInputBox({
-        title: 'Enter steam account name',
-        ignoreFocusOut: true
-      }),
-      password: await vscode.window.showInputBox({
-        title: 'Enter steam password',
-        ignoreFocusOut: true,
-        password: true
-      })
+      username: await this.getUsername(),
+      password: await this.getPassword()
     });
+    let success = false;
 
     for (const item of this.importList) {
-      await agent.createFile(
+      const isFileCreated = await agent.tryToCreateFile(
         this.ingameDirectory + path.dirname(item.ingameFilepath),
         path.basename(item.ingameFilepath),
         item.content
       );
+
+      if (!isFileCreated) {
+        success = false;
+        break;
+      }
     }
 
     agent.dispose();
+
+    return success;
   }
 }
 
 export const createImporter = async (
   options: ImporterOptions
-): Promise<void> => {
+): Promise<boolean> => {
   const installer = new Importer(options);
-  await installer.import();
+  return installer.import();
 };

@@ -390,6 +390,12 @@
                     "description": "Creation mode.",
                     "when": "!isWeb",
                     "scope": "resource"
+                },
+                "greybel.createIngame.steamUser": {
+                    "type": ["string", "null"],
+                    "default": null,
+                    "description": "Steam user.",
+                    "when": "!isWeb"
                 }
             }
         },

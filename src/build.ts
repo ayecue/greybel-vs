@@ -102,12 +102,25 @@ export function activate(context: ExtensionContext) {
       }
 
       if (config.get<boolean>('createIngame.active')) {
-        await createImporter({
+        const success = await createImporter({
           target,
           ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
           result,
-          mode: config.get<string>('createIngame.mode')
+          extensionContext: context
         });
+
+        if (success) {
+          vscode.window.showInformationMessage(
+            'Importing files ingame was successful.',
+            {
+              modal: false
+            }
+          );
+        } else {
+          vscode.window.showErrorMessage('Importing files ingame failed.', {
+            modal: false
+          });
+        }
       }
 
       vscode.window.showInformationMessage(
