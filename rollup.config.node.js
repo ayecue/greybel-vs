@@ -1,8 +1,6 @@
 const commonjs = require('@rollup/plugin-commonjs');
-const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const terser = require('@rollup/plugin-terser').default;
 const json = require('@rollup/plugin-json');
-const nodePolyfills = require('rollup-plugin-polyfill-node');
 const dotenv = require('rollup-plugin-dotenv').default;
 
 const options = {
@@ -13,31 +11,54 @@ const options = {
         exports: 'named',
         format: 'cjs',
         globals: {
-            'vscode': 'vscode',
-            'path': 'path',
-            'https': 'https',
-            'net': 'net'
+            'vscode': 'vscode'
         }
     },
     plugins: [
         dotenv(),
         json(),
         commonjs({
-            esmExternals: ['vscode', 'path', 'net'],
             sourceMap: false,
             ignoreDynamicRequires: ['net']
-        }),
-        nodePolyfills(),
-        nodeResolve({
-            preferBuiltins: false
         }),
         terser()
     ],
     external: [
         'vscode',
-        'path',
-        'net',
-        'https'
+        "path",
+        "fs",
+        "url",
+        "net",
+        "events",
+        "os",
+        "https",
+        "stream",
+        "http",
+        "util",
+        "tty",
+        "readline",
+        "crypto",
+        "zlib",
+        "tls",
+        "dns",
+        "querystring",
+        "greyscript-core",
+        "greyscript-meta/dist/meta",
+        "greybel-transpiler",
+        "color-convert",
+        "greybel-core",
+        "greybel-mock-environment/dist/data/scripts",
+        "@vscode/debugadapter",
+        "another-ansi",
+        "greybel-gh-mock-intrinsics",
+        "greybel-interpreter",
+        "greybel-intrinsics",
+        "lru-cache",
+        "greybel-c2-agent",
+        "text-encoder-lite",
+        "css-color-names",
+        "text-mesh-transformer",
+        "ansi-escapes"
     ]
 };
 

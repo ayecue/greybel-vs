@@ -1,6 +1,5 @@
 .vscode
 .vscode-test-web
-node_modules
 out
 grammar
 src
@@ -13,3 +12,7 @@ tsconfig.json
 .npmignore
 .npmrc
 assets
+node_modules
+!node_modules/**/*.json
+!node_modules/**/*.js
+!node_modules/**/*.pem

@@ -101,7 +101,7 @@ export function activate(context: ExtensionContext) {
         });
       }
 
-      if (config.get<boolean>('createIngame')) {
+      if (config.get<boolean>('createIngame.active')) {
         await createImporter({
           target,
           ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
