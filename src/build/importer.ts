@@ -57,7 +57,7 @@ class Importer {
     return imports;
   }
 
-  private getUsername(): Thenable<string> {
+  private getUsername(): PromiseLike<string> {
     const username = vscode.workspace
       .getConfiguration('greybel')
       .get<string>('createIngame.steamUser');
@@ -73,26 +73,11 @@ class Importer {
   }
 
   private async getPassword(): Promise<string> {
-    let password = await this.extensionContext.secrets.get(
-      'greybel.createIngame.steamPassword'
-    );
-
-    if (password != null) {
-      return password;
-    }
-
-    password = await vscode.window.showInputBox({
+    return vscode.window.showInputBox({
       title: 'Enter steam password',
       ignoreFocusOut: true,
       password: true
     });
-
-    this.extensionContext.secrets.store(
-      'greybel.createIngame.steamPassword',
-      password
-    );
-
-    return password;
   }
 
   async import(): Promise<void> {
@@ -111,11 +96,16 @@ class Importer {
         callback(code);
       },
       username: await this.getUsername(),
-      password: await this.getPassword()
+      password: await this.getPassword(),
+      refreshToken: await this.extensionContext.secrets.get(
+        'greybel.steam.refreshToken'
+      ),
+      onSteamRefreshToken: (code) =>
+        this.extensionContext.secrets.store('greybel.steam.refreshToken', code)
     });
 
     for (const item of this.importList) {
-      const isFileCreated = await agent.createFile(
+      await agent.createFile(
         this.ingameDirectory + path.dirname(item.ingameFilepath),
         path.basename(item.ingameFilepath),
         item.content
