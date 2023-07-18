@@ -85,6 +85,10 @@ class Importer {
       throw new Error('Unknown import mode.');
     }
 
+    const refreshToken = await this.extensionContext.secrets.get(
+      'greybel.steam.refreshToken'
+    );
+
     const agent = new GreybelC2Agent({
       connectionType: IMPORTER_MODE_MAP[this.mode],
       steamGuardGetter: async (domain, callback) => {
@@ -96,12 +100,11 @@ class Importer {
         callback(code);
       },
       accountName: await this.getUsername(),
-      password: await this.getPassword(),
-      refreshToken: await this.extensionContext.secrets.get(
-        'greybel.steam.refreshToken'
-      ),
-      onSteamRefreshToken: (code) =>
-        this.extensionContext.secrets.store('greybel.steam.refreshToken', code)
+      password: refreshToken ?? (await this.getPassword()),
+      refreshToken,
+      onSteamRefreshToken: (code) => {
+        this.extensionContext.secrets.store('greybel.steam.refreshToken', code);
+      }
     });
 
     for (const item of this.importList) {
