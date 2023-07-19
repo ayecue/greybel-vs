@@ -461,7 +461,7 @@
         "ansi-escapes": "^4.3.2",
         "color-convert": "^2.0.1",
         "css-color-names": "^1.0.1",
-        "greybel-broker": "^0.3.0",
+        "greybel-broker": "^0.3.1",
         "greybel-core": "^0.9.6",
         "greybel-gh-mock-intrinsics": "^2.5.4",
         "greybel-interpreter": "^2.2.3",
