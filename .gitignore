@@ -12,5 +12,4 @@ api.view.js
 greyscript.theme.json
 greyscript.tmLanguage.json
 greyscriptLanguageConfig.json
-src/lzma_worker.js
 system.pem

@@ -45,7 +45,9 @@ const options = {
         "zlib",
         "tls",
         "dns",
-        "querystring"
+        "querystring",
+        "steam-user",
+        "node-json-stream"
     ]
 };
 
