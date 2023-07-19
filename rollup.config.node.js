@@ -47,7 +47,8 @@ const options = {
         "dns",
         "querystring",
         "steam-user",
-        "node-json-stream"
+        "node-json-stream",
+        "greybel-broker"
     ]
 };
 

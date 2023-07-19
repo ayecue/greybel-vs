@@ -19,6 +19,9 @@ assets
 node_modules
 #json-stream
 !node_modules/node-json-stream
+#greybel-broker
+!node_modules/greybel-broker
+!node_modules/greybel-c2
 #steam-user related
 !node_modules/steam-user
 !node_modules/@bbob/parser
