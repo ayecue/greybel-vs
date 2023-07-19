@@ -17,6 +17,4 @@ tsconfig.json
 package-lock.json
 assets
 node_modules
-!node_modules/**/*.json
-!node_modules/**/*.js
-!node_modules/**/*.pem
+!src/lzma_worker.js

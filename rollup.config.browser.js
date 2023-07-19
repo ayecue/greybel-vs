@@ -7,7 +7,7 @@ const nodePolyfills = require('rollup-plugin-polyfill-node');
 const dotenv = require('rollup-plugin-dotenv').default;
 
 const options = {
-    input: 'out/extension.js',
+    input: 'out/extension-browser.js',
     output: {
         file: 'extension.browser.js',
         name: 'greyscript',
