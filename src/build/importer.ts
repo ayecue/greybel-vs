@@ -1,4 +1,4 @@
-import GreybelC2AgentPkg from 'greybel-broker';
+import GreybelC2AgentPkg from 'greybel-proxy';
 import { TranspilerParseResult } from 'greybel-transpiler';
 import path from 'path';
 import vscode, { ExtensionContext } from 'vscode';
