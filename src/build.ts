@@ -7,6 +7,7 @@ import vscode, {
 } from 'vscode';
 
 import { createParseResult } from './build/create-parse-result';
+import { createImporter } from './build/importer';
 import { createInstaller } from './build/installer';
 import { createBasePath } from './helper/create-base-path';
 import { showCustomErrorMessage } from './helper/show-custom-error';
@@ -84,7 +85,7 @@ export function activate(context: ExtensionContext) {
       await vscode.workspace.fs.createDirectory(buildPath);
       await createParseResult(target, buildPath, result);
 
-      if (config.get('installer')) {
+      if (config.get<boolean>('installer')) {
         const maxChars =
           config.get<number>('transpiler.installer.maxChars') || 155000;
 
@@ -97,6 +98,19 @@ export function activate(context: ExtensionContext) {
           ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
           result,
           maxChars
+        });
+      }
+
+      if (config.get<boolean>('createIngame.active')) {
+        vscode.window.showInformationMessage('Importing files ingame.', {
+          modal: false
+        });
+
+        await createImporter({
+          target,
+          ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
+          result,
+          extensionContext: context
         });
       }
 

@@ -45,6 +45,10 @@ Do not forget to set up your plugin to your needs. The following settings are av
     - Environment variables
 - Installer specific
     - Define max characters per file
+- Create in-game specific
+    - Active
+    - Mode (local, public, nightly)
+    - Steam User
 
 ## Features
 
@@ -89,6 +93,8 @@ More details [here](https://github.com/ayecue/greybel-js#transpiler).
 ### Build
 
 Transforms and bundles your files which makes it easier to import them into GreyHack. As described in the [transform section](#transform) it has three possible transformation types and supports environment variables as well.
+
+Since `1.8.0` it is possible to automatically create files in the game. This can be activated by using the "Create In-game" option. More details [here](https://github.com/ayecue/greybel-js#auto-create-files-in-game).
 
 ![Build output](https://github.com/ayecue/greybel-vs/blob/main/assets/build.png?raw=true "Build output")
 
