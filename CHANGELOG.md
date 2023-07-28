@@ -590,3 +590,7 @@ All notable changes to this project will be documented in this file.
 - add support to cache refreshToken for ingame file creation
 - change vscode built for node version in order to support the c2 agent and steam
 - update meta involving create_folder signature fix
+
+## [1.8.1] - 28.07.2023
+
+- add support for funcRef in syntax highlight and code execution
