@@ -7,6 +7,15 @@ import vscode, { Terminal } from 'vscode';
 const provider = new AnotherAnsiProvider(EscapeSequence.Hex);
 const normalize = (v: string) => v.replace(/(?<!\r)\n/g, '\r\n');
 
+export enum PseudoTerminalInputKey {
+  Enter = '%0D',
+  Backspace = '%7F',
+  ArrowLeft = '%1B%5BD',
+  ArrowRight = '%1B%5BC',
+  ArrowUp = '%1B%5BA',
+  ArrowDown = '%1B%5BB'
+}
+
 export default class PseudoTerminal {
   private terminal: Terminal;
   private writeEmitter: vscode.EventEmitter<string>;
@@ -55,7 +64,9 @@ export default class PseudoTerminal {
     this.focus();
 
     return new Promise((resolve) => {
-      let buffer = '';
+      const buffer: string[] = [];
+      let cursorIndex = 0;
+
       const clear = () => {
         this.writeEmitter.fire('\r\n');
         ctx.processState.removeListener('exit', onExit);
@@ -71,25 +82,56 @@ export default class PseudoTerminal {
         resolve('');
       };
       const onInput = (input: string) => {
-        const code = input.charCodeAt(0);
+        const code = encodeURI(input);
 
         switch (code) {
           // enter
-          case 13: {
+          case PseudoTerminalInputKey.Enter: {
             clear();
-            resolve(buffer);
+            resolve(buffer.join(''));
             break;
           }
           // backspace
-          case 127:
+          case PseudoTerminalInputKey.Backspace:
             if (buffer.length > 0) {
-              buffer = buffer.substr(0, buffer.length - 1);
-              this.writeEmitter.fire(provider.command(CommandType.Backspace));
+              buffer.splice(cursorIndex - 1, 1);
+              this.writeEmitter.fire(ansiEscapes.cursorMove(-cursorIndex));
+
+              cursorIndex--;
+              this.writeEmitter.fire(
+                (isPassword ? buffer.map(() => '*') : buffer).join('') + ' '
+              );
+              this.writeEmitter.fire(
+                ansiEscapes.cursorMove(-buffer.length - 1 + cursorIndex)
+              );
             }
             break;
+          case PseudoTerminalInputKey.ArrowLeft:
+            if (cursorIndex > 0) {
+              cursorIndex--;
+              this.writeEmitter.fire(ansiEscapes.cursorMove(-1));
+            }
+            break;
+          case PseudoTerminalInputKey.ArrowRight:
+            if (cursorIndex < buffer.length) {
+              cursorIndex++;
+              this.writeEmitter.fire(ansiEscapes.cursorMove(1));
+            }
+            break;
+          case PseudoTerminalInputKey.ArrowDown:
+          case PseudoTerminalInputKey.ArrowUp:
+            break;
           default: {
-            buffer += input;
-            this.writeEmitter.fire(isPassword ? '*' : input);
+            buffer.splice(cursorIndex, 0, input);
+            this.writeEmitter.fire(ansiEscapes.cursorMove(-cursorIndex));
+
+            cursorIndex++;
+            this.writeEmitter.fire(
+              (isPassword ? buffer.map(() => '*') : buffer).join('')
+            );
+            this.writeEmitter.fire(
+              ansiEscapes.cursorMove(-buffer.length + cursorIndex)
+            );
           }
         }
       };
