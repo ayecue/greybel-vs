@@ -603,3 +603,4 @@ All notable changes to this project will be documented in this file.
 - fix: set computers list at rshell service install
 - support color shorthand in text-mesh
 - support quotes in text-mesh tags
+- improve pseudo terminal text input, support arrow keys
