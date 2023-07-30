@@ -596,3 +596,11 @@ All notable changes to this project will be documented in this file.
 - add support for funcRef in syntax highlight and code execution
 - add funcRef, list, number, string, params, globals, locals, outer and self to autocomplete constants
 - update meta
+
+## [1.8.2] - 29.07.2023
+
+- add support to be able to modify idx variables within for iterations
+- fix: set computers list at rshell service install
+- support color shorthand in text-mesh
+- support quotes in text-mesh tags
+- improve pseudo terminal text input, support arrow keys
