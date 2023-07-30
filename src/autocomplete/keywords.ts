@@ -24,6 +24,5 @@ export const AVAILABLE_KEYWORDS: CompletionItem[] = [
   GreybelKeyword.Envar,
   GreybelKeyword.Import,
   GreybelKeyword.Include,
-  GreybelKeyword.Debugger,
-  GreybelKeyword.From
+  GreybelKeyword.Debugger
 ].map((item: Keyword) => new CompletionItem(item, CompletionItemKind.Keyword));
