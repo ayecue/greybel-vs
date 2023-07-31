@@ -4,7 +4,7 @@ import {
   ModifierType
 } from 'another-ansi';
 import cssColorNames from 'css-color-names';
-import { Tag, TagRecord, transform } from 'text-mesh-transformer';
+import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 export const ansiProvider = new AnotherAnsiProvider(EscapeSequence.Hex);
@@ -35,10 +35,10 @@ export function useBgColor(color: string | undefined, content: string): string {
   return ansiProvider.bgColorWithHex(color, content);
 }
 
-function wrapWithTag(openTag: TagRecord, content: string): string {
-  switch (openTag.tag) {
+function wrapWithTag(openTag: TagRecordOpen, content: string): string {
+  switch (openTag.type) {
     case Tag.Color:
-      return useColor(openTag.value, content);
+      return useColor(openTag.attributes.value, content);
     case Tag.Underline:
       return ansiProvider.modify(ModifierType.Underline, content);
     case Tag.Italic:
@@ -48,22 +48,22 @@ function wrapWithTag(openTag: TagRecord, content: string): string {
     case Tag.Strikethrough:
       return ansiProvider.modify(ModifierType.Strikethrough, content);
     case Tag.Mark:
-      return useBgColor(openTag.value, content);
+      return useBgColor(openTag.attributes.value, content);
     case Tag.Lowercase:
       return content.toLowerCase();
     case Tag.Uppercase:
       return content.toLowerCase();
   }
 
-  if (openTag.value) {
-    return `<${openTag.tag}=${openTag.value}>${content}</${openTag.tag}>`;
+  if (openTag.attributes.value) {
+    return `<${openTag.type}=${openTag.attributes.value}>${content}</${openTag.type}>`;
   }
 
-  return `<${openTag.tag}>${content}</${openTag.tag}>`;
+  return `<${openTag.type}>${content}</${openTag.type}>`;
 }
 
 export default function (message: string): string {
-  return transform(message, (openTag: TagRecord, content: string): string => {
+  return transform(message, (openTag: TagRecordOpen, content: string): string => {
     return wrapWithTag(openTag, content);
   });
 }
