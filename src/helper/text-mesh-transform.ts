@@ -63,7 +63,10 @@ function wrapWithTag(openTag: TagRecordOpen, content: string): string {
 }
 
 export default function (message: string): string {
-  return transform(message, (openTag: TagRecordOpen, content: string): string => {
-    return wrapWithTag(openTag, content);
-  });
+  return transform(
+    message,
+    (openTag: TagRecordOpen, content: string): string => {
+      return wrapWithTag(openTag, content);
+    }
+  );
 }
