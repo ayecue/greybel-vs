@@ -624,3 +624,8 @@ All notable changes to this project will be documented in this file.
 ## [1.8.6] - 03.08.2023
 
 - use static isa objects for grey hack specific intrinsics to enable usage of isa on those types
+
+## [1.8.7] - 13.08.2023
+
+- improve installer logic of generated installer file
+- fix issue if line is longer than maxChars allowed in installer - related to [#102](https://github.com/ayecue/greybel-js/issues/102)

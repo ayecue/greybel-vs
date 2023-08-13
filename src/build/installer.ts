@@ -1,5 +1,4 @@
 import { TranspilerParseResult } from 'greybel-transpiler';
-import path from 'path';
 // @ts-ignore: No type definitions
 import { TextEncoderLite as TextEncoder } from 'text-encoder-lite';
 import vscode, { Uri } from 'vscode';
@@ -11,6 +10,91 @@ type ImportItem = {
   ingameFilepath: string;
   content: string;
 };
+
+interface InstallerFileOptions {
+  maxChars: number;
+  previous?: InstallerFile;
+}
+
+class InstallerFile {
+  readonly maxChars: number;
+
+  private items: ImportItem[];
+  private buffer: string;
+  private previous: InstallerFile | null;
+
+  constructor(options: InstallerFileOptions) {
+    this.maxChars = options.maxChars;
+    this.buffer = this.createContentHeader();
+    this.items = [];
+    this.previous = options.previous ?? null;
+  }
+
+  private createContentHeader(): string {
+    return [
+      's=get_shell',
+      'c=s.host_computer',
+      'p=@push',
+      'm=function(t,z,r)',
+      'x=t.split("/")[1:]',
+      'e=x.pop',
+      'for y in x',
+      'if (__y_idx==0) then continue',
+      'c.create_folder("/"+x[:__y_idx].join("/"),y)',
+      'end for',
+      'c.touch("/"+x.join("/"),e)',
+      'j=c.File(t)',
+      'if r then',
+      'j.set_content(z)',
+      'print("New file """+t+""" got created.")',
+      'else',
+      'j.set_content(j.get_content+z)',
+      'print("Content got appended to """+t+""".")',
+      'end if',
+      'end function',
+      ''
+    ].join(';');
+  }
+
+  insert(item: ImportItem): boolean {
+    const isNew = !this.previous?.items.includes(item);
+    const remaining = this.maxChars - this.buffer.length;
+    let line = `m("${item.ingameFilepath}","${item.content}",${
+      isNew ? '1' : '0'
+    });`;
+
+    if (remaining > line.length) {
+      this.buffer += line;
+      this.items.push(item);
+      item.content = '';
+      return true;
+    }
+
+    let diff = item.content.length + (remaining - line.length);
+
+    if (diff <= 0) {
+      return false;
+    }
+
+    let content = item.content.slice(0, diff);
+    const endingQuotes = content.match(/"+$/)?.[0];
+
+    if (endingQuotes && endingQuotes.length % 2 === 1) {
+      content = item.content.slice(0, --diff);
+    }
+
+    line = `m("${item.ingameFilepath}","${content}",${isNew ? '1' : '0'});`;
+    this.buffer += line;
+    this.items.push(item);
+
+    item.content = item.content.slice(diff);
+    return false;
+  }
+
+  getCode(): string {
+    return this.buffer;
+  }
+}
 
 export interface InstallerOptions {
   target: string;
@@ -27,164 +111,35 @@ class Installer {
   private buildPath: Uri;
   private maxChars: number;
 
-  private segments: string[];
-  private buffer: string;
+  private files: InstallerFile[];
+  private createdFiles: string[];
 
   constructor(options: InstallerOptions) {
     this.target = options.target;
     this.ingameDirectory = options.ingameDirectory;
     this.buildPath = options.buildPath;
     this.maxChars = options.maxChars - 1000;
-    this.segments = [];
+    this.files = [];
     this.importList = this.createImportList(options.target, options.result);
-    this.buffer = this.createContentHeader();
+    this.createdFiles = [];
   }
 
-  private createContentHeader(): string {
-    return [
-      's=get_shell',
-      'c=s.host_computer',
-      'h="' + this.ingameDirectory + '"',
-      'p=@push'
-    ].join('\n');
-  }
+  private async createInstallerFiles(): Promise<void> {
+    await Promise.all(
+      this.files.map(async (file, index) => {
+        const target = Uri.joinPath(
+          this.buildPath,
+          './build/installer' + index + '.src'
+        );
 
-  private isRootDirectory(target: string): boolean {
-    return /^(\.|\/)$/.test(target);
-  }
+        this.createdFiles.push(target.toString());
 
-  private createFolderLine(folder: string): string[] {
-    const parent = path.dirname(folder);
-    const target = path.basename(folder);
-    let output: string[] = [];
-
-    if (this.isRootDirectory(target) || target === '') {
-      return output;
-    }
-
-    if (this.isRootDirectory(parent)) {
-      output = output.concat([
-        'd=c.File(h+"/' + target + '")',
-        'if (d == null) then c.create_folder(h,"' + target + '")'
-      ]);
-    } else {
-      output = output.concat([
-        'd=c.File(h+"' + parent + '/' + target + '")',
-        'if (d == null) then c.create_folder(h+"' +
-          parent +
-          '","' +
-          target +
-          '")'
-      ]);
-    }
-
-    return output;
-  }
-
-  private createFileLine(file: string, isNew?: boolean): string {
-    const base = path.basename(file);
-    const folder = path.dirname(file);
-    let output = this.createFolderLine(folder);
-
-    if (isNew) {
-      if (this.isRootDirectory(folder)) {
-        output = output.concat([
-          'print("Creating "+h+"/' + base + '")',
-          'c.touch(h,"' + base + '")',
-          'f=c.File(h+"/' + base + '")',
-          'l=[]'
-        ]);
-      } else {
-        output = output.concat([
-          'print("Creating "+h+"' + folder + '/' + base + '")',
-          'c.touch(h+"' + folder + '","' + base + '")',
-          'f=c.File(h+"' + folder + '/' + base + '")',
-          'l=[]'
-        ]);
-      }
-    } else {
-      if (this.isRootDirectory(folder)) {
-        output = output.concat([
-          'f=c.File(h+"/' + base + '")',
-          'if (f == null) then',
-          'c.touch(h,"' + base + '")',
-          'f=c.File(h+"/' + base + '")',
-          'end if',
-          'l=f.get_content.split(char(10))'
-        ]);
-      } else {
-        output = output.concat([
-          'f=c.File(h+"' + folder + '/' + base + '")',
-          'if (f == null) then',
-          'c.touch(h+"' + folder + '", "' + base + '")',
-          'f=c.File(h+"' + folder + '/' + base + '")',
-          'end if',
-          'l=f.get_content.split(char(10))'
-        ]);
-      }
-    }
-
-    return output.join('\n');
-  }
-
-  private createCodeInsertLine(line: string): string {
-    const parsed = line
-      .replace(/"/g, '""')
-      .replace(/^import_code\(/i, 'import"+"_"+"code(');
-
-    return 'p(l,"' + parsed + '")';
-  }
-
-  private createSetContentLine(): string {
-    return 'f.set_content(l.join(char(10)))';
-  }
-
-  private async createInstallerFile(): Promise<void> {
-    if (this.buffer.length === 0) {
-      return;
-    }
-
-    const target = Uri.joinPath(
-      this.buildPath,
-      './build/installer' + this.segments.length + '.src'
+        await vscode.workspace.fs.writeFile(
+          target,
+          new TextEncoder().encode(file.getCode())
+        );
+      })
     );
-
-    await vscode.workspace.fs.writeFile(
-      target,
-      new TextEncoder().encode(this.buffer)
-    );
-  }
-
-  private async openFile(file: string): Promise<void> {
-    const preparedLine = '\n' + this.createFileLine(file, true);
-    const newContent = this.buffer + preparedLine;
-
-    if (newContent.length > this.maxChars) {
-      await this.createInstallerFile();
-      this.segments.push(this.buffer);
-
-      this.buffer =
-        this.createContentHeader() + '\n' + this.createFileLine(file, true);
-    } else {
-      this.buffer = newContent;
-    }
-  }
-
-  private async addLine(file: string, line: string): Promise<void> {
-    const preparedLine = '\n' + this.createCodeInsertLine(line);
-    const newContent = this.buffer + preparedLine;
-
-    if (newContent.length > this.maxChars) {
-      this.buffer += '\n' + this.createSetContentLine();
-      await this.createInstallerFile();
-      this.segments.push(this.buffer);
-
-      this.buffer =
-        this.createContentHeader() + '\n' + this.createFileLine(file);
-      await this.addLine(file, line);
-    } else {
-      this.buffer = newContent;
-    }
   }
 
   private createImportList(
@@ -192,11 +147,17 @@ class Installer {
     parseResult: TranspilerParseResult
   ): ImportItem[] {
     const imports = Object.entries(parseResult).map(([target, code]) => {
-      const ingameFilepath = createBasePath(rootTarget, target, '');
+      const ingameFilepath = `${this.ingameDirectory}${createBasePath(
+        rootTarget,
+        target,
+        ''
+      )}`;
       return {
         filepath: target,
         ingameFilepath,
         content: code
+          .replace(/"/g, '""')
+          .replace(/import_code\(/gi, 'import"+"_"+"code(')
       };
     });
 
@@ -204,21 +165,28 @@ class Installer {
   }
 
   async build() {
+    let file = new InstallerFile({
+      maxChars: this.maxChars
+    });
+    this.files.push(file);
+
     for (const item of this.importList) {
-      const lines = item.content.split('\n');
-      let line = lines.shift();
+      let done = false;
 
-      await this.openFile(item.ingameFilepath);
+      while (!done) {
+        done = file.insert(item);
 
-      while (line !== undefined) {
-        await this.addLine(item.ingameFilepath, line);
-        line = lines.shift();
+        if (!done) {
+          file = new InstallerFile({
+            maxChars: this.maxChars,
+            previous: file
+          });
+          this.files.push(file);
+        }
       }
-
-      this.buffer += '\n' + this.createSetContentLine();
     }
 
-    await this.createInstallerFile();
+    await this.createInstallerFiles();
   }
 }
 
