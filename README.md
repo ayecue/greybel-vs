@@ -45,6 +45,7 @@ Do not forget to set up your plugin to your needs. The following settings are av
     - Environment variables
 - Installer specific
     - Define max characters per file
+    - Auto compile
 - Create in-game specific
     - Active
     - Mode (local, public, nightly)
