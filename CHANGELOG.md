@@ -633,3 +633,7 @@ All notable changes to this project will be documented in this file.
 ## [1.8.8] - 19.08.2023
 
 - implement autocompile feature for installer - thanks for the suggestion to [@stevenklar](https://github.com/stevenklar) - related to [#106](https://github.com/ayecue/greybel-js/issues/106)
+
+## [1.8.9] - 19.08.2023
+
+- add auto delete of installer on every installer not just the last one - related to [#106](https://github.com/ayecue/greybel-js/issues/106)
