@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.8.7",
+    "version": "1.8.8",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -371,6 +371,12 @@
                     "default": 155000,
                     "minimum": 1000,
                     "description": "Amount of characters allowed in one file before splitting when creating installer.",
+                    "when": "!isWeb"
+                },
+                "greybel.transpiler.installer.autoCompile": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable auto compile feature for installer.",
                     "when": "!isWeb"
                 },
                 "greybel.createIngame.active": {

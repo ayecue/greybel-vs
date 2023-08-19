@@ -87,13 +87,16 @@ export function activate(context: ExtensionContext) {
 
       if (config.get<boolean>('installer')) {
         const maxChars =
-          config.get<number>('transpiler.installer.maxChars') || 155000;
+          config.get<number>('transpiler.installer.maxChars') || 160000;
+        const autoCompile =
+          config.get<boolean>('transpiler.installer.autoCompile') || false;
 
         vscode.window.showInformationMessage('Creating installer.', {
           modal: false
         });
         await createInstaller({
           target,
+          autoCompile,
           buildPath: rootPath,
           ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
           result,
