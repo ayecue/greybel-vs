@@ -37,10 +37,10 @@ class InstallerFile {
     const remaining = this.getRemainingSpace();
     let line = `m("${item.ingameFilepath}","${item.content}",${
       isNew ? '1' : '0'
-    });`;
+    });d`;
 
     if (remaining > line.length) {
-      this.buffer += line;
+      this.buffer += line.slice(0, -1);
       this.items.push(item);
       item.content = '';
       return true;
@@ -59,7 +59,7 @@ class InstallerFile {
       content = item.content.slice(0, --diff);
     }
 
-    line = `m("${item.ingameFilepath}","${content}",${isNew ? '1' : '0'});`;
+    line = `m("${item.ingameFilepath}","${content}",${isNew ? '1' : '0'});d`;
     this.buffer += line;
     this.items.push(item);
 
