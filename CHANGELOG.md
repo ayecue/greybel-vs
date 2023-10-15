@@ -644,3 +644,7 @@ All notable changes to this project will be documented in this file.
 - fix globals lookup - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#108](https://github.com/ayecue/greybel-js/issues/108)
 - add defaultArgs option - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#82](https://github.com/ayecue/greybel-vs/issues/82)
 - add silence error popups option - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#82](https://github.com/ayecue/greybel-vs/issues/82)
+
+## [1.8.11] - 15.10.2023
+
+- update remove intrinsic to properly work with object value delete
