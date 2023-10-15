@@ -65,6 +65,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
 
   private _useDefaultArgs: boolean = false;
   private _defaultArgs: string = '';
+  private _silenceErrorPopups: boolean = false;
 
   public constructor() {
     super('greybel-debug.txt');
@@ -81,6 +82,9 @@ export class GreybelDebugSession extends LoggingDebugSession {
 
     this._useDefaultArgs = config.get<boolean>('interpreter.useDefaultArgs');
     this._defaultArgs = config.get<string>('interpreter.defaultArgs');
+    this._silenceErrorPopups = config.get<boolean>(
+      'interpreter.silenceErrorPopups'
+    );
     this._env = createGHMockEnv({
       seed
     });
@@ -229,7 +233,9 @@ export class GreybelDebugSession extends LoggingDebugSession {
         );
       }
 
-      showCustomErrorMessage(err);
+      if (!this._silenceErrorPopups) {
+        showCustomErrorMessage(err);
+      }
     }
 
     if (me._restart) {

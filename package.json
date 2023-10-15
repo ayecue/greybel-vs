@@ -322,6 +322,11 @@
                     "description": "Prevent argument prompt and instead use default args.",
                     "scope": "resource"
                 },
+                "greybel.interpreter.silenceErrorPopups": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Silence error popups."
+                },
                 "greybel.interpreter.defaultArgs": {
                     "type": "string",
                     "default": "",
