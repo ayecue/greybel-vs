@@ -316,6 +316,18 @@
                     "description": "Environment variables.",
                     "scope": "resource"
                 },
+                "greybel.interpreter.useDefaultArgs": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Prevent argument promt and instead use default args.",
+                    "scope": "resource"
+                },
+                "greybel.interpreter.defaultArgs": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Default arguments used for script.",
+                    "scope": "resource"
+                },
                 "greybel.transpiler.buildType": {
                     "type": "string",
                     "enum": [

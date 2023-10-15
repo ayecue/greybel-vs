@@ -63,6 +63,9 @@ export class GreybelDebugSession extends LoggingDebugSession {
   private _restart: boolean = false;
   private _out: VSOutputHandler;
 
+  private _useDefaultArgs: boolean = false;
+  private _defaultArgs: string = '';
+
   public constructor() {
     super('greybel-debug.txt');
 
@@ -76,6 +79,8 @@ export class GreybelDebugSession extends LoggingDebugSession {
     me.setDebuggerLinesStartAt1(false);
     me.setDebuggerColumnsStartAt1(false);
 
+    this._useDefaultArgs = config.get<boolean>('interpreter.useDefaultArgs');
+    this._defaultArgs = config.get<string>('interpreter.defaultArgs');
     this._env = createGHMockEnv({
       seed
     });
@@ -182,10 +187,12 @@ export class GreybelDebugSession extends LoggingDebugSession {
 
     // start the program in the runtime
     try {
-      const params = await vscode.window.showInputBox({
-        title: 'Enter execution parameters',
-        ignoreFocusOut: true
-      });
+      const params = this._useDefaultArgs
+        ? this._defaultArgs
+        : await vscode.window.showInputBox({
+            title: 'Enter execution parameters',
+            ignoreFocusOut: true
+          });
       const paramSegments =
         params && params.length > 0 ? params.split(' ') : [];
 
