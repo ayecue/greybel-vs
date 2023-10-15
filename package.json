@@ -319,7 +319,7 @@
                 "greybel.interpreter.useDefaultArgs": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Prevent argument promt and instead use default args.",
+                    "description": "Prevent argument prompt and instead use default args.",
                     "scope": "resource"
                 },
                 "greybel.interpreter.defaultArgs": {
