@@ -637,3 +637,8 @@ All notable changes to this project will be documented in this file.
 ## [1.8.9] - 19.08.2023
 
 - add auto delete of installer on every installer not just the last one - related to [#106](https://github.com/ayecue/greybel-js/issues/106)
+
+## [1.8.10] - 15.10.2023
+
+- fix object value delete (fixes remove intrinsic)
+- fix globals lookup - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#108](https://github.com/ayecue/greybel-js/issues/108)
