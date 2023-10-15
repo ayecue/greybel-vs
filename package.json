@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.8.9",
+    "version": "1.8.10",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -316,6 +316,23 @@
                     "description": "Environment variables.",
                     "scope": "resource"
                 },
+                "greybel.interpreter.useDefaultArgs": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Prevent argument prompt and instead use default args.",
+                    "scope": "resource"
+                },
+                "greybel.interpreter.silenceErrorPopups": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Silence error popups."
+                },
+                "greybel.interpreter.defaultArgs": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Default arguments used for script.",
+                    "scope": "resource"
+                },
                 "greybel.transpiler.buildType": {
                     "type": "string",
                     "enum": [
@@ -469,9 +486,9 @@
         "css-color-names": "^1.0.1",
         "greybel-proxy": "^1.0.2",
         "greybel-core": "^0.9.10",
-        "greybel-gh-mock-intrinsics": "^2.5.15",
-        "greybel-interpreter": "^2.2.11",
-        "greybel-intrinsics": "^2.3.8",
+        "greybel-gh-mock-intrinsics": "^2.5.16",
+        "greybel-interpreter": "^2.2.12",
+        "greybel-intrinsics": "^2.3.9",
         "greybel-transpiler": "^1.1.9",
         "greyscript-core": "^0.9.12",
         "greyscript-meta": "^1.4.10",
