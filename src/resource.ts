@@ -42,6 +42,15 @@ async function tryToGet(targetUri: string): Promise<Uint8Array | null> {
   return null;
 }
 
+async function tryToGetPath(targetUri: string, altTargetUri: string): Promise<string> {
+  if (await tryToGet(targetUri)) {
+    return targetUri;
+  } else if (await tryToGet(altTargetUri)) {
+    return altTargetUri;
+  }
+  return targetUri;
+}
+
 async function tryToDecode(targetUri: string): Promise<string> {
   const out = await tryToGet(targetUri);
   return out ? new TextDecoder().decode(out) : '';
@@ -54,9 +63,9 @@ export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
         source: string,
         target: string
       ): Promise<string> => {
-        const base = Uri.joinPath(Uri.file(source), '..');
+        const base = target.startsWith('/') ? vscode.workspace.workspaceFolders[0]?.uri : Uri.joinPath(Uri.file(source), '..');
         const result = Uri.joinPath(base, target).fsPath;
-        return (await tryToGet(result)) ? result : result + '.src';
+        return await tryToGetPath(result, `${result}.src`);
       },
       has: async (target: string): Promise<boolean> => {
         return !!(await tryToGet(target));
@@ -73,9 +82,9 @@ export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
 
 export class InterpreterResourceProvider extends InterpreterResourceHandler {
   async getTargetRelativeTo(source: string, target: string): Promise<string> {
-    const base = Uri.joinPath(Uri.file(source), '..');
+    const base = target.startsWith('/') ? vscode.workspace.workspaceFolders[0]?.uri : Uri.joinPath(Uri.file(source), '..');
     const result = Uri.joinPath(base, target).fsPath;
-    return (await tryToGet(result)) ? result : result + '.src';
+    return await tryToGetPath(result, `${result}.src`);
   }
 
   async has(target: string): Promise<boolean> {
