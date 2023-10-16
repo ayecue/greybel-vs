@@ -651,4 +651,5 @@ All notable changes to this project will be documented in this file.
 
 ## [1.8.12] - 16.10.2023
 
-- use vscode workspace directory when using slash at the beginning of import path - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#82](https://github.com/ayecue/greybel-vs/issues/82)
+- use vscode workspace directory when using slash at the beginning of import path - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#84](https://github.com/ayecue/greybel-vs/issues/84)
+- allow // as an alternative to # for import and include statement - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#85](https://github.com/ayecue/greybel-vs/issues/85)
