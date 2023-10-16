@@ -648,3 +648,7 @@ All notable changes to this project will be documented in this file.
 ## [1.8.11] - 15.10.2023
 
 - update remove intrinsic to properly work with object value delete
+
+## [1.8.12] - 16.10.2023
+
+- use vscode workspace directory when using slash at the beginning of import path - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#82](https://github.com/ayecue/greybel-vs/issues/82)

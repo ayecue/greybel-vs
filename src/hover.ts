@@ -47,7 +47,7 @@ export function activate(_context: ExtensionContext) {
         // shows link to importCode resource
         const hoverText = new MarkdownString('');
         const importAst = astResult.closest as ASTImportCodeExpression;
-        const rootDir = Uri.joinPath(Uri.file(document.fileName), '..');
+        const rootDir = importAst.directory.startsWith('/') ? vscode.workspace.workspaceFolders[0]?.uri : Uri.joinPath(Uri.file(document.fileName), '..');
         const target = Uri.joinPath(rootDir, importAst.directory);
         const output = [
           `[Imports file "${PseudoFS.basename(
@@ -72,7 +72,7 @@ export function activate(_context: ExtensionContext) {
         const importCodeAst = astResult.closest as ASTFeatureImportExpression;
         const fileDir = importCodeAst.path;
 
-        const rootDir = Uri.joinPath(Uri.file(document.fileName), '..');
+        const rootDir = fileDir.startsWith('/') ? vscode.workspace.workspaceFolders[0]?.uri : Uri.joinPath(Uri.file(document.fileName), '..');
         const target = Uri.joinPath(rootDir, fileDir);
 
         const output = [
