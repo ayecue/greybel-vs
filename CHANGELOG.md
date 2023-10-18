@@ -672,3 +672,8 @@ All notable changes to this project will be documented in this file.
 ## [1.8.15] - 17.10.2023
 
 - fix errors related to path resolve when stoping script execution via debugger
+
+## [1.8.16] - 18.10.2023
+
+- fix incorrect scope resolution order - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#97](https://github.com/ayecue/greybel-vs/issues/97)
+- add .ms file extension - related to [#96](https://github.com/ayecue/greybel-vs/issues/96)
