@@ -217,7 +217,8 @@
                 ],
                 "extensions": [
                     ".src",
-                    ".gs"
+                    ".gs",
+                    ".ms"
                 ],
                 "configuration": "./greyscriptLanguageConfig.json"
             }
