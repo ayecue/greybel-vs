@@ -70,6 +70,8 @@ export class GreybelDebugSession extends LoggingDebugSession {
   public constructor() {
     super('greybel-debug.txt');
 
+    Interpreter.clearAllIntrinsics();
+
     // this debugger uses zero-based lines and columns
     const me = this;
     const config = vscode.workspace.getConfiguration('greybel');

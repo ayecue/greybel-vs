@@ -702,3 +702,4 @@ All notable changes to this project will be documented in this file.
 
 - fix shorthand doesn't work with self, globals, outer and locals - related to [#106](https://github.com/ayecue/greybel-vs/issues/106)
 - update proxy version to latest version - related to [#108](https://github.com/ayecue/greybel-vs/issues/108) and maybe [#107](https://github.com/ayecue/greybel-vs/issues/107)
+- reset string, number, function, map and list intrinsics each session - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#110](https://github.com/ayecue/greybel-vs/issues/110)
