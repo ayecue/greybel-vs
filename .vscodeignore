@@ -28,6 +28,7 @@ node_modules
 !node_modules/@bbob/plugin-helper
 !node_modules/@doctormckay/stdlib
 !node_modules/@doctormckay/steam-crypto
+!node_modules/@doctormckay/user-agents
 !node_modules/adm-zip
 !node_modules/ansi-regex
 !node_modules/binarykvparser
