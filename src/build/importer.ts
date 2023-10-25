@@ -8,8 +8,7 @@ const { GreybelC2Agent } = GreybelC2AgentPkg;
 
 const IMPORTER_MODE_MAP = {
   local: 2,
-  public: 0,
-  nightly: 1
+  public: 0
 };
 
 type ImportItem = {
@@ -99,11 +98,15 @@ class Importer {
         });
         callback(code);
       },
-      accountName: await this.getUsername(),
-      password: refreshToken ?? (await this.getPassword()),
       refreshToken,
-      onSteamRefreshToken: (code) => {
+      onSteamRefreshToken: (code: string) => {
         this.extensionContext.secrets.store('greybel.steam.refreshToken', code);
+      },
+      credentialsGetter: async (label: string) => {
+        if (label.includes('password')) {
+          return await this.getPassword();
+        }
+        return await this.getUsername();
       }
     });
 

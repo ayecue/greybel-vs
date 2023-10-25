@@ -59,7 +59,7 @@ export class VSOutputHandler extends OutputHandler {
         const elapsed = currentTime - startTime;
 
         if (elapsed > timeout) {
-          this._terminal.replace(`[${'#'.repeat(max)}]`);
+          this._terminal.updateLast(`[${'#'.repeat(max)}]`);
           ctx.processState.removeListener('exit', onExit);
           clearInterval(interval);
           resolve();
@@ -70,7 +70,9 @@ export class VSOutputHandler extends OutputHandler {
         const progress = Math.floor((elapsedPercentage * max) / 100);
         const right = max - progress;
 
-        this._terminal.replace(`[${'#'.repeat(progress)}${'-'.repeat(right)}]`);
+        this._terminal.updateLast(
+          `[${'#'.repeat(progress)}${'-'.repeat(right)}]`
+        );
       });
 
       ctx.processState.once('exit', onExit);
