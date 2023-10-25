@@ -15,6 +15,7 @@ import { activate as activateSnippets } from './snippet';
 import { activate as activateSubscriptions } from './subscriptions';
 import { activate as activateSymbol } from './symbol';
 import { activate as activateTransform } from './transform';
+import { activate as activateClearSecrets } from './clear-secrets';
 
 export function activate(context: ExtensionContext) {
   const config = vscode.workspace.getConfiguration('greybel');
@@ -45,6 +46,7 @@ export function activate(context: ExtensionContext) {
   activateSnippets(context);
   activateColor(context);
   activateShare(context);
+  activateClearSecrets(context);
 }
 
 export function deactivate() {}
