@@ -183,15 +183,22 @@ export default class PseudoTerminal {
   print(message: string, newline: boolean = true) {
     const normalized = normalize(message);
 
-    this.previousLinesCount = normalized.split('\n').length;
+    this.previousLinesCount += normalized.split('\n').length;
     if (newline) this.previousLinesCount++;
 
     this.writeEmitter.fire(`${normalized}${newline ? '\r\n' : ''}`);
     this.terminal.show();
   }
 
+  updateLast(message: string) {
+    this.writeEmitter.fire(ansiEscapes.eraseLines(1));
+    this.previousLinesCount--;
+    this.print(message);
+  }
+
   replace(message: string) {
     this.writeEmitter.fire(ansiEscapes.eraseLines(this.previousLinesCount));
+    this.previousLinesCount = 0;
     this.print(message);
   }
 

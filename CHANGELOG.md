@@ -721,3 +721,4 @@ All notable changes to this project will be documented in this file.
 - revert iteration performance improvement
 - add new netsession intrinsics
 - add get_ctf, will always return null for now
+- erase all previous lines on print replaceText
