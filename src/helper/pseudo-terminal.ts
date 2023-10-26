@@ -191,8 +191,8 @@ export default class PseudoTerminal {
   }
 
   updateLast(message: string) {
-    this.writeEmitter.fire(ansiEscapes.eraseLines(1));
-    this.previousLinesCount--;
+    this.writeEmitter.fire(ansiEscapes.eraseLines(2));
+    this.previousLinesCount -= 2;
     this.print(message);
   }
 

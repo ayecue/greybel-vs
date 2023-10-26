@@ -746,3 +746,4 @@ All notable changes to this project will be documented in this file.
 ## [1.9.8] - 26.10.2023
 
 - override process state into function scope
+- fix loading bar in console
