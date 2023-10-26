@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.9.8",
+    "version": "1.9.9",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -123,6 +123,11 @@
                     "command": "greybel.share",
                     "when": "resourceLangId == greyscript && !isWeb",
                     "group": "z_commands"
+                },
+                {
+                    "command": "greybel.import",
+                    "when": "!isWeb",
+                    "group": "1_modification"
                 }
             ],
             "greybel.transform": [
@@ -152,6 +157,11 @@
                 {
                     "command": "greybel.share",
                     "when": "resourceLangId == greyscript && !isWeb",
+                    "group": "1_modification"
+                },
+                {
+                    "command": "greybel.import",
+                    "when": "!isWeb",
                     "group": "1_modification"
                 }
             ],
@@ -198,6 +208,10 @@
                 },
                 {
                     "command": "greybel.snippets",
+                    "when": "resourceLangId == greyscript && !isWeb"
+                },
+                {
+                    "command": "greybel.clearSecrets",
                     "when": "resourceLangId == greyscript && !isWeb"
                 }
             ]
@@ -272,6 +286,10 @@
             {
                 "command": "greybel.clearSecrets",
                 "title": "Greybel: Clear secrets"
+            },
+            {
+                "command": "greybel.import",
+                "title": "Greybel: Import file into the game"
             },
             {
                 "command": "greybel.snippets",
