@@ -79,7 +79,7 @@ export const keyCodes: KeyCodeItem[] = [
     code: 'Tab'
   },
   {
-    sequence: [8].join(';'),
+    sequence: [127].join(';'),
     keyCode: KeyCode.Backspace,
     code: 'Backspace'
   },
