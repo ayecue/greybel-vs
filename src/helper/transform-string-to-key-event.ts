@@ -181,7 +181,6 @@ export default function transformStringToKeyEvent(key: string): KeyEvent {
     .split('')
     .map((v: string) => v.charCodeAt(0))
     .join(';');
-  console.debug('test', sequence);
   const create = (keyCode: number, code: string): KeyEvent => ({
     keyCode,
     code
