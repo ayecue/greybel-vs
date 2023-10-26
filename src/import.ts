@@ -4,10 +4,24 @@ import vscode, {
   TextEditorEdit,
   Uri
 } from 'vscode';
-import path from 'path';
 
 import { showCustomErrorMessage } from './helper/show-custom-error';
 import { createImporter } from './build/importer';
+
+const getFiles = async (uri: vscode.Uri): Promise<vscode.Uri[]> => {
+  const stat = await vscode.workspace.fs.stat(uri);
+  
+  if (stat.type === vscode.FileType.Directory) {
+    const target = vscode.workspace.asRelativePath(uri.fsPath);
+    return await vscode.workspace.findFiles(`${target}/**/*`);
+  } else if (stat.type === vscode.FileType.File) {
+    return [
+      uri
+    ];
+  }
+
+  return [];
+}
 
 export function activate(context: ExtensionContext) {
   async function share(
@@ -16,26 +30,43 @@ export function activate(context: ExtensionContext) {
     eventUri: Uri
   ) {
     try {
-      const config = vscode.workspace.getConfiguration('greybel');
+      const files = await getFiles(eventUri);
+
+      if (files.length === 0) {
+        vscode.window.showInformationMessage('No files found!', {
+          modal: false
+        });
+        return;
+      }
+
       const target = eventUri.fsPath;
-      const doc = await vscode.workspace.openTextDocument(target);
-      const content = doc.getText();
+      const config = vscode.workspace.getConfiguration('greybel');
       const ingameDirectory = Uri.file(
         config.get<string>('transpiler.ingameDirectory')
       );
-      
+      const filesWithContent = await Promise.all(files.map(async (file) => {
+        const buffer = await vscode.workspace.fs.readFile(file);
+        const content = new TextDecoder().decode(buffer);
+
+        return {
+          path: file.fsPath,
+          content
+        };
+      }));
+
       await createImporter({
         target,
         ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
-        result: {
-          [target]: content
-        },
+        result: filesWithContent.reduce((result, item) => {
+          result[item.path] = item.content;
+          return result;
+        }, {}),
         extensionContext: context
       });
 
-      vscode.window.showInformationMessage(`${target} got imported to ${ingameDirectory.fsPath}!`, {
-          modal: false
-        });
+      vscode.window.showInformationMessage(`${files.length} files got imported to ${ingameDirectory.fsPath}!`, {
+        modal: false
+      });
     } catch (err: any) {
       showCustomErrorMessage(err);
     }
