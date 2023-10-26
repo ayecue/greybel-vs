@@ -738,3 +738,6 @@ All notable changes to this project will be documented in this file.
 
 - update meta text - thanks for the contribution to [@Olipro](https://github.com/Olipro)
 - fix hangup related to comparisons - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#119](https://github.com/ayecue/greybel-vs/issues/119)
+- detect backspace on keypress - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#124](https://github.com/ayecue/greybel-vs/issues/124)
+- only pass target from context in launch when file contains original script
+- fix overflow password exploit condition - thanks for the contribution to [@Olipro](https://github.com/Olipro)
