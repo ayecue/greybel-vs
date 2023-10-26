@@ -737,3 +737,4 @@ All notable changes to this project will be documented in this file.
 ## [1.9.7] - 26.10.2023
 
 - update meta text - thanks for the contribution to [@Olipro](https://github.com/Olipro)
+- fix hangup related to comparisons - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#119](https://github.com/ayecue/greybel-vs/issues/119)
