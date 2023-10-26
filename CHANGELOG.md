@@ -733,3 +733,7 @@ All notable changes to this project will be documented in this file.
 - add trim, lastIndexOf, replace and reverse to generic signatures
 - add ascending argument to sort intrinsic
 - improve function stringify
+
+## [1.9.7] - 26.10.2023
+
+- update meta text - thanks for the contribution to [@Olipro](https://github.com/Olipro)
