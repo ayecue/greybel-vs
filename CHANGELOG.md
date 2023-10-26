@@ -747,3 +747,7 @@ All notable changes to this project will be documented in this file.
 
 - override process state into function scope
 - fix loading bar in console
+
+## [1.9.9] - 27.10.2023
+
+- add seperate import command - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#108](https://github.com/ayecue/greybel-vs/issues/108)
