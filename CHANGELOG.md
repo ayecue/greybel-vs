@@ -755,3 +755,7 @@ All notable changes to this project will be documented in this file.
 ## [1.9.10] - 27.10.2023
 
 - bump proxy version due to latest GreyHack update
+
+## [1.9.11] - 27.10.2023
+
+- add sequence for insert, home, end, page down, page up and delete - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#124](https://github.com/ayecue/greybel-vs/issues/124)

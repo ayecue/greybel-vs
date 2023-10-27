@@ -84,32 +84,32 @@ export const keyCodes: KeyCodeItem[] = [
     code: 'Backspace'
   },
   {
-    sequence: [45].join(';'),
+    sequence: [27, 91, 50, 126].join(';'),
     keyCode: KeyCode.Insert,
     code: 'Insert'
   },
   {
-    sequence: [36].join(';'),
+    sequence: [27, 91, 72].join(';'),
     keyCode: KeyCode.Home,
     code: 'Home'
   },
   {
-    sequence: [35].join(';'),
+    sequence: [27, 91, 70].join(';'),
     keyCode: KeyCode.End,
     code: 'End'
   },
   {
-    sequence: [34].join(';'),
+    sequence: [27, 91, 54, 126].join(';'),
     keyCode: KeyCode.PageDown,
     code: 'PageDown'
   },
   {
-    sequence: [33].join(';'),
+    sequence: [27, 91, 53, 126].join(';'),
     keyCode: KeyCode.PageUp,
     code: 'PageUp'
   },
   {
-    sequence: [46].join(';'),
+    sequence: [27, 91, 51, 126].join(';'),
     keyCode: KeyCode.Delete,
     code: 'Delete'
   },
