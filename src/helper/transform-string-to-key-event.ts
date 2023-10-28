@@ -17,18 +17,18 @@ export enum KeyCode {
   PageDown = 34,
   PageUp = 33,
   Delete = 46,
-  F1 = 112,
-  F2 = 113,
-  F3 = 114,
-  F4 = 115,
-  F5 = 116,
-  F6 = 117,
-  F7 = 118,
-  F8 = 119,
-  F9 = 120,
-  F10 = 121,
-  F11 = 122,
-  F12 = 123
+  F1 = -1,
+  F2 = -2,
+  F3 = -3,
+  F4 = -4,
+  F5 = -5,
+  F6 = -6,
+  F7 = -7,
+  F8 = -8,
+  F9 = -9,
+  F10 = -10,
+  F11 = -11,
+  F12 = -12
 }
 
 export interface KeyCodeItem {
@@ -177,7 +177,6 @@ export const keyCodes: KeyCodeItem[] = [
 
 export default function transformStringToKeyEvent(key: string): KeyEvent {
   const sequence = key
-    .toUpperCase()
     .split('')
     .map((v: string) => v.charCodeAt(0))
     .join(';');
@@ -193,5 +192,5 @@ export default function transformStringToKeyEvent(key: string): KeyEvent {
     return create(keyCodeItem.keyCode, keyCodeItem.code);
   }
 
-  return create(key.toUpperCase().charCodeAt(0), key);
+  return create(key.charCodeAt(0), key);
 }
