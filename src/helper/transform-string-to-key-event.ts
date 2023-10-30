@@ -1,35 +1,5 @@
 import { KeyEvent } from 'greybel-interpreter';
-
-// Ansi KeyCodes
-export enum KeyCode {
-  Return = 13,
-  Escape = 27,
-  Space = 32,
-  Tab = 9,
-  Up = 38,
-  Right = 39,
-  Left = 37,
-  Down = 40,
-  Backspace = 8,
-  Insert = 45,
-  Home = 36,
-  End = 35,
-  PageDown = 34,
-  PageUp = 33,
-  Delete = 46,
-  F1 = -1,
-  F2 = -2,
-  F3 = -3,
-  F4 = -4,
-  F5 = -5,
-  F6 = -6,
-  F7 = -7,
-  F8 = -8,
-  F9 = -9,
-  F10 = -10,
-  F11 = -11,
-  F12 = -12
-}
+import { KeyCode } from 'greybel-gh-mock-intrinsics';
 
 export interface KeyCodeItem {
   sequence: string;
@@ -40,22 +10,22 @@ export interface KeyCodeItem {
 export const keyCodes: KeyCodeItem[] = [
   {
     sequence: [27, 91, 65].join(';'),
-    keyCode: KeyCode.Up,
+    keyCode: KeyCode.UpArrow,
     code: 'ArrowUp'
   },
   {
     sequence: [27, 91, 67].join(';'),
-    keyCode: KeyCode.Right,
+    keyCode: KeyCode.RightArrow,
     code: 'ArrowRight'
   },
   {
     sequence: [27, 91, 68].join(';'),
-    keyCode: KeyCode.Left,
+    keyCode: KeyCode.LeftArrow,
     code: 'ArrowLeft'
   },
   {
     sequence: [27, 91, 66].join(';'),
-    keyCode: KeyCode.Down,
+    keyCode: KeyCode.DownArrow,
     code: 'ArrowDown'
   },
   {
@@ -65,7 +35,7 @@ export const keyCodes: KeyCodeItem[] = [
   },
   {
     sequence: [13].join(';'),
-    keyCode: KeyCode.Return,
+    keyCode: KeyCode.Enter,
     code: 'Enter'
   },
   {
@@ -180,17 +150,19 @@ export default function transformStringToKeyEvent(key: string): KeyEvent {
     .split('')
     .map((v: string) => v.charCodeAt(0))
     .join(';');
-  const create = (keyCode: number, code: string): KeyEvent => ({
-    keyCode,
-    code
-  });
   const keyCodeItem = keyCodes.find(
     (v: KeyCodeItem) => v.sequence === sequence
   );
 
   if (keyCodeItem) {
-    return create(keyCodeItem.keyCode, keyCodeItem.code);
+    return {
+      keyCode: keyCodeItem.keyCode,
+      code: keyCodeItem.code
+    };
   }
 
-  return create(key.charCodeAt(0), key);
+  return {
+    charCode: key.charCodeAt(0),
+    code: key
+  };
 }
