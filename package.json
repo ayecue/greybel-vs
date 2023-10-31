@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.9.16",
+    "version": "1.9.17",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -338,6 +338,11 @@
                     "default": {},
                     "description": "Environment variables.",
                     "scope": "resource"
+                },
+                "greybel.interpreter.hideUnsupportedTextMeshProRichTextTags": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Hide unsupported TextMesh Pro rich text tags."
                 },
                 "greybel.interpreter.useDefaultArgs": {
                     "type": "boolean",

@@ -780,3 +780,7 @@ All notable changes to this project will be documented in this file.
 
 - bump proxy version due to latest GreyHack update
 - bind context of owning map to super instead of the call context - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#136](https://github.com/ayecue/greybel-vs/issues/136)
+
+## [1.9.17] - 31.10.2023
+
+- add hideUnsupportedTextMeshProRichTextTags flag - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#139](https://github.com/ayecue/greybel-vs/issues/139)

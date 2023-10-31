@@ -78,6 +78,10 @@ export class GreybelDebugSession extends LoggingDebugSession {
     const seed = config.get<string>('interpreter.seed');
     const environmentVariables =
       config.get<object>('interpreter.environmentVariables') || {};
+    const hideUnsupportedTextMeshProRichTextTags =
+      config.get<boolean>(
+        'interpreter.hideUnsupportedTextMeshProRichTextTags'
+      ) ?? false;
 
     me.setDebuggerLinesStartAt1(false);
     me.setDebuggerColumnsStartAt1(false);
@@ -90,7 +94,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
     this._env = createGHMockEnv({
       seed
     });
-    this._out = new VSOutputHandler();
+    this._out = new VSOutputHandler(hideUnsupportedTextMeshProRichTextTags);
     this._runtime = new Interpreter({
       handler: new HandlerContainer({
         resourceHandler: new InterpreterResourceProvider(),
