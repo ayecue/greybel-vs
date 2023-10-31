@@ -13,13 +13,16 @@ export class VSOutputHandler extends OutputHandler {
   static previousTerminal: PseudoTerminal | null;
 
   private _terminal: PseudoTerminal;
+  private _hideUnsupportedTags: boolean;
 
-  constructor() {
+  constructor(hideUnsupportedTags: boolean) {
     super();
 
     VSOutputHandler.previousTerminal?.dispose();
 
     this._terminal = new PseudoTerminal('greybel');
+    this._hideUnsupportedTags = hideUnsupportedTags;
+
     VSOutputHandler.previousTerminal = this._terminal;
     this._terminal.focus();
   }
@@ -29,7 +32,10 @@ export class VSOutputHandler extends OutputHandler {
     message: string,
     { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
   ) {
-    const transformed = transform(message).replace(/\\n/g, '\n');
+    const transformed = transform(message, this._hideUnsupportedTags).replace(
+      /\\n/g,
+      '\n'
+    );
 
     if (replace) {
       this._terminal.replace(transformed);

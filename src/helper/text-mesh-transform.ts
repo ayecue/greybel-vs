@@ -35,7 +35,11 @@ export function useBgColor(color: string | undefined, content: string): string {
   return ansiProvider.bgColorWithHex(color, content);
 }
 
-function wrapWithTag(openTag: TagRecordOpen, content: string): string {
+function wrapWithTag(
+  openTag: TagRecordOpen,
+  content: string,
+  hideUnsupportedTags: boolean
+): string {
   switch (openTag.type) {
     case Tag.Color:
       return useColor(openTag.attributes.value, content);
@@ -55,6 +59,9 @@ function wrapWithTag(openTag: TagRecordOpen, content: string): string {
       return content.toLowerCase();
   }
 
+  if (hideUnsupportedTags) {
+    return content;
+  }
   if (openTag.attributes.value) {
     return `<${openTag.type}=${openTag.attributes.value}>${content}</${openTag.type}>`;
   }
@@ -62,11 +69,14 @@ function wrapWithTag(openTag: TagRecordOpen, content: string): string {
   return `<${openTag.type}>${content}</${openTag.type}>`;
 }
 
-export default function (message: string): string {
+export default function (
+  message: string,
+  hideUnsupportedTags: boolean = false
+): string {
   return transform(
     message,
     (openTag: TagRecordOpen, content: string): string => {
-      return wrapWithTag(openTag, content);
+      return wrapWithTag(openTag, content, hideUnsupportedTags);
     }
   );
 }

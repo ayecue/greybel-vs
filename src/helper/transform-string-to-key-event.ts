@@ -1,5 +1,5 @@
-import { KeyEvent } from 'greybel-interpreter';
 import { KeyCode } from 'greybel-gh-mock-intrinsics';
+import { KeyEvent } from 'greybel-interpreter';
 
 export interface KeyCodeItem {
   sequence: string;
