@@ -800,4 +800,4 @@ All notable changes to this project will be documented in this file.
 ## [1.10.2] - 05.11.2023
 
 - add snippets
-- fix exit on call arguments and if statement - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#145](https://github.com/ayecue/greybel-vs/issues/145)
+- fix exit within call args and if condition - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#145](https://github.com/ayecue/greybel-vs/issues/145)
