@@ -33,6 +33,7 @@ import { ansiProvider, useColor } from '../helper/text-mesh-transform';
 import { InterpreterResourceProvider, PseudoFS } from '../resource';
 import { GrebyelDebugger, GrebyelPseudoDebugger } from './debugger';
 import { VSOutputHandler } from './output';
+import { DebugSessionLike } from './types';
 
 interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
   program: string;
@@ -52,8 +53,11 @@ interface IRuntimeStack {
   frames: IRuntimeStackFrame[];
 }
 
-export class GreybelDebugSession extends LoggingDebugSession {
-  public static threadID = 1;
+export class GreybelDebugSession
+  extends LoggingDebugSession
+  implements DebugSessionLike
+{
+  public threadID: number;
   public lastContext: OperationContext | undefined;
   public breakpoints: Map<string, DebugProtocol.Breakpoint[]> = new Map();
 
@@ -84,6 +88,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
     me.setDebuggerLinesStartAt1(false);
     me.setDebuggerColumnsStartAt1(false);
 
+    this.threadID = Math.random() * 0x7fffffff;
     this._useDefaultArgs = config.get<boolean>('interpreter.useDefaultArgs');
     this._defaultArgs = config.get<string>('interpreter.defaultArgs');
     this._silenceErrorPopups = config.get<boolean>(
@@ -252,7 +257,7 @@ export class GreybelDebugSession extends LoggingDebugSession {
   protected threadsRequest(response: DebugProtocol.ThreadsResponse): void {
     // runtime supports no threads so just return a default thread.
     response.body = {
-      threads: [new Thread(GreybelDebugSession.threadID, 'thread 1')]
+      threads: [new Thread(this.threadID, 'thread 1')]
     };
     this.sendResponse(response);
   }
