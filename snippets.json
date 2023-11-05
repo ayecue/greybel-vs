@@ -1,0 +1,45 @@
+{
+  "function body": {
+      "prefix": "func",
+      "body": [
+          "function",
+          "\t$0",
+          "end function"
+      ],
+      "description": "Defines function body"
+  },
+  "function body with arguments": {
+    "prefix": "func",
+    "body": [
+        "function($1)",
+        "\t$0",
+        "end function"
+    ],
+    "description": "Defines function body with arguments"
+  },
+  "for": {
+      "prefix": "for",
+      "body": [
+          "for ${1:variable} in ${2:expr}",
+          "\t$0",
+          "end for"
+      ],
+      "description": "Defines a for loop"
+  },
+  "if block": {
+      "prefix": "if",
+      "body": [
+          "if ${1:condition} then",
+          "\t$0",
+          "end if"
+      ],
+      "description": "Defines an if block"
+  },
+  "if line": {
+      "prefix": "ift",
+      "body": [
+          "if ${1:condition} then ${2:action}"
+      ],
+      "description": "Defines a single-line if/then"
+  }
+}
