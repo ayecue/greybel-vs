@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "1.10.1",
+    "version": "1.10.2",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -242,6 +242,12 @@
                 "language": "greyscript",
                 "scopeName": "source.src",
                 "path": "./greyscript.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "greyscript",
+                "path": "./snippets.json"
             }
         ],
         "commands": [
@@ -515,9 +521,9 @@
         "color-convert": "^2.0.1",
         "css-color-names": "^1.0.1",
         "greybel-core": "~0.10.0",
-        "greybel-gh-mock-intrinsics": "~2.11.3",
-        "greybel-interpreter": "~2.8.3",
-        "greybel-intrinsics": "~2.9.3",
+        "greybel-gh-mock-intrinsics": "~2.11.5",
+        "greybel-interpreter": "~2.8.6",
+        "greybel-intrinsics": "~2.9.6",
         "greybel-proxy": "~2.1.11",
         "greybel-transpiler": "~1.2.0",
         "greyscript-core": "~0.10.0",

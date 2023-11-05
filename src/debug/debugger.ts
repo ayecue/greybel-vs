@@ -3,12 +3,12 @@ import { DebugProtocol } from '@vscode/debugprotocol';
 import { Debugger, OperationContext } from 'greybel-interpreter';
 import { Uri } from 'vscode';
 
-import { GreybelDebugSession } from './session';
+import { DebugSessionLike } from './types';
 
 export class GrebyelDebugger extends Debugger {
-  session: GreybelDebugSession;
+  session: DebugSessionLike;
 
-  constructor(session: GreybelDebugSession) {
+  constructor(session: DebugSessionLike) {
     super();
     this.session = session;
   }
@@ -34,7 +34,7 @@ export class GrebyelDebugger extends Debugger {
   interact(operationContext: OperationContext) {
     this.session.lastContext = operationContext;
     this.session.sendEvent(
-      new StoppedEvent('breakpoint', GreybelDebugSession.threadID)
+      new StoppedEvent('breakpoint', this.session.threadID)
     );
   }
 }
