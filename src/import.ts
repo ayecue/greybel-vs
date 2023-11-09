@@ -66,7 +66,7 @@ export function activate(context: ExtensionContext) {
       const failedItems = results.filter((item) => !item.success);
 
       if (successfulItems.length === 0) {
-        vscode.window.showInformationMessage(`No files could be imported! This might be due to a new Grey Hack version or other reasons.`, {
+        vscode.window.showInformationMessage(`No files could get imported! This might be due to a new Grey Hack version or other reasons.`, {
           modal: false
         });
       } else if (failedItems.length > 0) {
