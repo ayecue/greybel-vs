@@ -109,12 +109,28 @@ export function activate(context: ExtensionContext) {
           modal: false
         });
 
-        await createImporter({
+        const importResults = await createImporter({
           target,
           ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
           result,
           extensionContext: context
         });
+        const successfulItems = importResults.filter((item) => item.success);
+        const failedItems = importResults.filter((item) => !item.success);
+
+        if (successfulItems.length === 0) {
+          vscode.window.showInformationMessage(`No files could get imported! This might be due to a new Grey Hack version or other reasons.`, {
+            modal: false
+          });
+        } else if (failedItems.length > 0) {
+          vscode.window.showInformationMessage(`Import was only partially successful. Only ${successfulItems.length} files got imported to ${ingameDirectory.fsPath}!`, {
+            modal: false
+          });
+        } else {
+          vscode.window.showInformationMessage(`${successfulItems.length} files got imported to ${ingameDirectory.fsPath}!`, {
+            modal: false
+          });
+        }
       }
 
       vscode.window.showInformationMessage(

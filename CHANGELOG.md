@@ -801,3 +801,8 @@ All notable changes to this project will be documented in this file.
 
 - add snippets
 - fix exit within call args and if condition - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#145](https://github.com/ayecue/greybel-vs/issues/145)
+
+## [1.10.3] - 09.11.2023
+
+- bump proxy version due to latest GreyHack update
+- improve file importer feedback when files couldn't be imported
