@@ -19,13 +19,13 @@ import {
   ContextType,
   CustomValue,
   HandlerContainer,
-  Interpreter,
   ObjectValue,
   OperationContext,
   PrepareError,
   RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
+import { Interpreter } from 'greyscript-interpreter';
 import vscode, { Uri } from 'vscode';
 
 import { showCustomErrorMessage } from '../helper/show-custom-error';

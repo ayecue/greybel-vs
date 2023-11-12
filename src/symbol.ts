@@ -2,7 +2,7 @@ import {
   ASTAssignmentStatement,
   ASTBaseBlockWithScope,
   ASTChunk
-} from 'greyscript-core';
+} from 'miniscript-core';
 import vscode, {
   CancellationToken,
   ExtensionContext,

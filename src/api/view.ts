@@ -1,4 +1,4 @@
-import { WebAppView } from 'greyscript-meta';
+import WebAppView from 'greyscript-meta/dist/web/app';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 

@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
-import { ASTChunkAdvanced, Parser } from 'greybel-core';
-import { ASTBase } from 'greyscript-core';
+import { ASTChunkGreyScript, Parser } from 'greyscript-core';
 import LRU from 'lru-cache';
+import { ASTBase } from 'miniscript-core';
 import vscode, { TextDocument, Uri } from 'vscode';
 
 import typeManager from './type-manager';
@@ -40,7 +40,7 @@ export class ParseResult {
       return this.dependencies;
     }
 
-    const rootChunk = this.document as ASTChunkAdvanced;
+    const rootChunk = this.document as ASTChunkGreyScript;
     const rootPath = Uri.joinPath(Uri.file(this.textDocument.fileName), '..');
     const dependencies: Set<string> = new Set([
       ...rootChunk.nativeImports
@@ -159,7 +159,7 @@ export class DocumentParseQueue extends EventEmitter {
     const parser = new Parser(content, {
       unsafe: true
     });
-    const chunk = parser.parseChunk() as ASTChunkAdvanced;
+    const chunk = parser.parseChunk() as ASTChunkGreyScript;
 
     if (chunk.body?.length > 0) {
       typeManager.analyze(document, chunk);
@@ -175,7 +175,7 @@ export class DocumentParseQueue extends EventEmitter {
 
     try {
       const strictParser = new Parser(document.getText());
-      const strictChunk = strictParser.parseChunk() as ASTChunkAdvanced;
+      const strictChunk = strictParser.parseChunk() as ASTChunkGreyScript;
 
       typeManager.analyze(document, strictChunk);
 

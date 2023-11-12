@@ -1,4 +1,4 @@
-import { ASTChunkAdvanced } from 'greybel-core';
+import { ASTChunkGreyScript } from 'greyscript-core';
 import {
   ASTAssignmentStatement,
   ASTBase,
@@ -7,7 +7,7 @@ import {
   ASTIndexExpression,
   ASTMemberExpression,
   ASTType
-} from 'greyscript-core';
+} from 'miniscript-core';
 import { Position, TextDocument } from 'vscode';
 
 import transformASTToNamespace from './ast-namespace';
@@ -191,7 +191,7 @@ export class LookupHelper {
     return result;
   }
 
-  lookupGlobalScope(item: ASTBase): ASTChunkAdvanced {
+  lookupGlobalScope(item: ASTBase): ASTChunkGreyScript {
     let result: ASTBaseBlockWithScope = null;
     let current = item.scope;
 
@@ -204,7 +204,7 @@ export class LookupHelper {
       current = current.scope;
     }
 
-    return result as ASTChunkAdvanced;
+    return result as ASTChunkGreyScript;
   }
 
   lookupAST(position: Position): LookupASTResult | null {

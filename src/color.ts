@@ -5,7 +5,7 @@ import {
   ASTLiteral,
   ASTPosition,
   ASTType
-} from 'greyscript-core';
+} from 'miniscript-core';
 import vscode, {
   CancellationToken,
   Color,

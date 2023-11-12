@@ -1,5 +1,5 @@
 import { CompletionItem } from '@vscode/debugadapter';
-import { Operator } from 'greyscript-core';
+import { Operator } from 'miniscript-core';
 import { CompletionItemKind } from 'vscode';
 
 export const AVAILABLE_OPERATORS: CompletionItem[] = [
