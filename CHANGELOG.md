@@ -806,3 +806,7 @@ All notable changes to this project will be documented in this file.
 
 - bump proxy version due to latest GreyHack update
 - improve file importer feedback when files couldn't be imported
+
+## [2.0.0] - 12.11.2023
+
+- update dependencies to next major version
