@@ -9,7 +9,7 @@ export const AVAILABLE_OPERATORS: CompletionItem[] = [
   Operator.Minus,
   Operator.Slash,
   Operator.Power,
-  Operator.PercentSign,
+  Operator.Modulo,
   Operator.LessThan,
   Operator.GreaterThan,
   Operator.LessThanOrEqual,
