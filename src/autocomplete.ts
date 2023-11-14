@@ -3,12 +3,12 @@ import {
   ASTCallExpression,
   ASTIndexExpression,
   ASTMemberExpression
-} from 'greyscript-core';
+} from 'miniscript-core';
 import {
-  getDefinitions,
   SignatureDefinitionArg,
   SignatureDefinitionContainer
-} from 'greyscript-meta/dist/meta';
+} from 'meta-utils';
+import { greyscriptMeta } from 'greyscript-meta/dist/meta';
 import vscode, {
   CancellationToken,
   CompletionContext,
@@ -55,7 +55,7 @@ export const getCompletionList = (
   const typeInfo = helper.lookupBasePath(item);
 
   if (typeInfo instanceof TypeInfoWithDefinition) {
-    const definitions = getDefinitions(typeInfo.definition.returns);
+    const definitions = greyscriptMeta.getDefinitions(typeInfo.definition.returns);
     const completionItems: CompletionItem[] = [
       ...convertDefinitionsToCompletionList(definitions)
     ];
@@ -64,7 +64,7 @@ export const getCompletionList = (
       return completionItems;
     }
   } else if (typeInfo instanceof TypeInfo) {
-    const definitions = getDefinitions(typeInfo.type);
+    const definitions = greyscriptMeta.getDefinitions(typeInfo.type);
     const completionItems: CompletionItem[] = [
       ...convertDefinitionsToCompletionList(definitions)
     ];
@@ -78,7 +78,7 @@ export const getCompletionList = (
 };
 
 export const getDefaultCompletionList = (): CompletionItem[] => {
-  const defaultDefinitions = getDefinitions(['general']);
+  const defaultDefinitions = greyscriptMeta.getDefinitions(['general']);
 
   return [
     ...AVAILABLE_KEYWORDS,
@@ -101,7 +101,7 @@ export function activate(_context: ExtensionContext) {
       const currentRange = new Range(position.translate(0, -1), position);
 
       if (document.getText(currentRange) === '.') {
-        const definitions = getDefinitions(['any']);
+        const definitions = greyscriptMeta.getDefinitions(['any']);
         const completionItems: CompletionItem[] = [
           ...convertDefinitionsToCompletionList(definitions)
         ];

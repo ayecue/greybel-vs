@@ -3,7 +3,7 @@ import {
   ASTIdentifier,
   ASTIndexExpression,
   ASTMemberExpression
-} from 'greyscript-core';
+} from 'miniscript-core';
 import vscode, {
   CancellationToken,
   DefinitionLink,

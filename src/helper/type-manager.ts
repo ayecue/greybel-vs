@@ -1,4 +1,6 @@
 import { ASTChunkAdvanced } from 'greybel-core';
+import { greyscriptMeta } from 'greyscript-meta/dist/meta';
+import { SignatureDefinition, SignatureDefinitionArg } from 'meta-utils';
 import {
   ASTAssignmentStatement,
   ASTBase,
@@ -18,13 +20,7 @@ import {
   ASTSliceExpression,
   ASTType,
   ASTUnaryExpression
-} from 'greyscript-core';
-import {
-  getDefinition,
-  getDefinitions,
-  SignatureDefinition,
-  SignatureDefinitionArg
-} from 'greyscript-meta/dist/meta';
+} from 'miniscript-core';
 import { TextDocument } from 'vscode';
 
 import transformASTToNamespace from './ast-namespace';
@@ -218,9 +214,9 @@ export class TypeMap {
 
           if (currentMetaInfo instanceof TypeInfoWithDefinition) {
             const definition = currentMetaInfo.definition;
-            definitions = getDefinitions(definition.returns);
+            definitions = greyscriptMeta.getDefinitions(definition.returns);
           } else {
-            definitions = getDefinitions(currentMetaInfo.type);
+            definitions = greyscriptMeta.getDefinitions(currentMetaInfo.type);
           }
 
           if (name in definitions) {
@@ -254,9 +250,9 @@ export class TypeMap {
 
             if (currentMetaInfo instanceof TypeInfoWithDefinition) {
               const definition = currentMetaInfo.definition;
-              definitions = getDefinitions(definition.returns);
+              definitions = greyscriptMeta.getDefinitions(definition.returns);
             } else {
-              definitions = getDefinitions(currentMetaInfo.type);
+              definitions = greyscriptMeta.getDefinitions(currentMetaInfo.type);
             }
 
             const key = indexValue.value.toString();
@@ -322,7 +318,7 @@ export class TypeMap {
     }
 
     // check for default namespace
-    const defaultDef = getDefinition(['general'], name);
+    const defaultDef = greyscriptMeta.getDefinition(['general'], name);
 
     if (defaultDef) {
       return new TypeInfoWithDefinition(name, ['function'], defaultDef);

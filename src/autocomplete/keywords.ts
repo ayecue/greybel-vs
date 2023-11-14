@@ -1,6 +1,7 @@
 import { CompletionItem } from '@vscode/debugadapter';
 import { GreybelKeyword, Keyword } from 'greybel-core';
-import { Keyword as CoreKeyword } from 'greyscript-core';
+import { GreyScriptKeyword } from 'greyscript-core';
+import { Keyword as CoreKeyword } from 'miniscript-core';
 import { CompletionItemKind } from 'vscode';
 
 export const AVAILABLE_KEYWORDS: CompletionItem[] = [
@@ -20,7 +21,7 @@ export const AVAILABLE_KEYWORDS: CompletionItem[] = [
   CoreKeyword.Return,
   CoreKeyword.Function,
   CoreKeyword.Continue,
-  CoreKeyword.ImportCode,
+  GreyScriptKeyword.ImportCode,
   GreybelKeyword.Envar,
   GreybelKeyword.Import,
   GreybelKeyword.Include,

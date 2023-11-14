@@ -1,4 +1,5 @@
-import { BuildType, DirectTranspiler } from 'greybel-transpiler';
+import { BuildType } from 'greybel-transpiler';
+import { DirectTranspiler } from 'greyscript-transpiler';
 import vscode, {
   ExtensionContext,
   Range,

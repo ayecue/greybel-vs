@@ -1,5 +1,5 @@
 import { Operation } from 'greybel-interpreter';
-import { ASTRange } from 'greyscript-core';
+import { ASTRange } from 'miniscript-core';
 import vscode, { Position, Range } from 'vscode';
 
 export type CustomError = {

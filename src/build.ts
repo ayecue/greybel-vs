@@ -1,10 +1,11 @@
-import { BuildType, Transpiler } from 'greybel-transpiler';
+import { BuildType, Transpiler } from 'greyscript-transpiler';
 import vscode, {
   ExtensionContext,
   TextEditor,
   TextEditorEdit,
   Uri
 } from 'vscode';
+import { greyscriptMeta } from 'greyscript-meta/dist/meta';
 
 import { createParseResult } from './build/create-parse-result';
 import { createImporter } from './build/importer';
@@ -64,7 +65,10 @@ export function activate(context: ExtensionContext) {
         obfuscation,
         disableLiteralsOptimization: config.get('transpiler.dlo'),
         disableNamespacesOptimization: config.get('transpiler.dno'),
-        excludedNamespaces: excludedNamespacesFromConfig,
+        excludedNamespaces: [
+          ...excludedNamespacesFromConfig,
+          ...Array.from(Object.keys(greyscriptMeta.getSignaturesByType('general')))
+        ],
         processImportPathCallback: (path: string) => {
           const relativePath = createBasePath(target, path);
           return Uri.joinPath(ingameDirectory, relativePath).path;

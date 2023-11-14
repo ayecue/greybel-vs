@@ -1,5 +1,5 @@
 import { Parser } from 'greybel-core';
-import { ASTRange } from 'greyscript-core';
+import { ASTRange } from 'miniscript-core';
 import vscode, {
   ExtensionContext,
   Position,
