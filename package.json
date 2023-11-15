@@ -233,6 +233,10 @@
                     ".src",
                     ".gs"
                 ],
+                "icon": {
+                    "light": "./icons/file-icon-lightmode.png",
+                    "dark": "./icons/file-icon-darkmode.png"
+                },
                 "configuration": "./greyscriptLanguageConfig.json"
             }
         ],
