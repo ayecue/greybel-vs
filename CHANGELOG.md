@@ -830,3 +830,8 @@ All notable changes to this project will be documented in this file.
 - fix meta map pull signature
 - fix typeof + toString behavior of maps with classID
 - add file icon
+
+## [2.0.2] - 16.11.2023
+
+- fix failure when sortKey was not existing
+- support detection of all single line comments above function declaration
