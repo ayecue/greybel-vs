@@ -835,3 +835,7 @@ All notable changes to this project will be documented in this file.
 
 - fix failure when sortKey was not existing
 - support detection of all single line comments above function declaration
+
+## [2.1.0] - 22.11.2023
+
+- replacing recursive interpreter with bytecode generator + vm to improve performance
