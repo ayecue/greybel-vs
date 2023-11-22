@@ -1,8 +1,8 @@
 import {
   KeyEvent,
-  OperationContext,
   OutputHandler,
-  PrintOptions
+  PrintOptions,
+  VM
 } from 'greybel-interpreter';
 
 import PseudoTerminal from '../helper/pseudo-terminal';
@@ -28,7 +28,7 @@ export class VSOutputHandler extends OutputHandler {
   }
 
   print(
-    _ctx: OperationContext,
+    _vm: VM,
     message: string,
     { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
   ) {
@@ -49,7 +49,7 @@ export class VSOutputHandler extends OutputHandler {
     this._terminal.clear();
   }
 
-  progress(ctx: OperationContext, timeout: number): PromiseLike<void> {
+  progress(vm: VM, timeout: number): PromiseLike<void> {
     const startTime = Date.now();
     const max = 20;
 
@@ -66,7 +66,7 @@ export class VSOutputHandler extends OutputHandler {
 
         if (elapsed > timeout) {
           this._terminal.updateLast(`[${'#'.repeat(max)}]`);
-          ctx.processState.removeListener('exit', onExit);
+          vm.getSignal().removeListener('exit', onExit);
           clearInterval(interval);
           resolve();
           return;
@@ -81,31 +81,31 @@ export class VSOutputHandler extends OutputHandler {
         );
       });
 
-      ctx.processState.once('exit', onExit);
+      vm.getSignal().once('exit', onExit);
     });
   }
 
   waitForInput(
-    ctx: OperationContext,
+    vm: VM,
     isPassword: boolean,
     message: string
   ): PromiseLike<string> {
-    this.print(ctx, message, {
+    this.print(vm, message, {
       appendNewLine: false
     });
-    return PseudoTerminal.getActiveTerminal().waitForInput(ctx, isPassword);
+    return PseudoTerminal.getActiveTerminal().waitForInput(vm, isPassword);
   }
 
   waitForKeyPress(
-    ctx: OperationContext,
+    vm: VM,
     message: string
   ): PromiseLike<KeyEvent> {
-    this.print(ctx, message, {
+    this.print(vm, message, {
       appendNewLine: false
     });
 
     return PseudoTerminal.getActiveTerminal()
-      .waitForKeyPress(ctx)
+      .waitForKeyPress(vm)
       .then((key) => {
         return transformStringToKeyEvent(key);
       });

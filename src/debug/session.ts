@@ -22,7 +22,8 @@ import {
   ObjectValue,
   OperationContext,
   PrepareError,
-  RuntimeError
+  RuntimeError,
+  Instruction
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import { Interpreter } from 'greyscript-interpreter';
@@ -58,7 +59,7 @@ export class GreybelDebugSession
   implements DebugSessionLike
 {
   public threadID: number;
-  public lastContext: OperationContext | undefined;
+  public lastInstruction: Instruction | undefined;
   public breakpoints: Map<string, DebugProtocol.Breakpoint[]> = new Map();
 
   private _runtime: Interpreter;
@@ -189,6 +190,7 @@ export class GreybelDebugSession
     const me = this;
     const uri = Uri.file(args.program);
 
+    me._runtime.debugMode = !args.noDebug;
     me._runtime.setTarget(args.program);
     me._runtime.setDebugger(
       args.noDebug ? new GrebyelPseudoDebugger() : new GrebyelDebugger(me)
@@ -278,7 +280,7 @@ export class GreybelDebugSession
     _request?: DebugProtocol.Request
   ): Promise<void> {
     const me = this;
-    const opc = me._runtime.globalContext.getLastActive();
+    const frame = me._runtime.vm.getFrame();
     const variables: DebugProtocol.Variable[] = [];
     const setVariables = (current: OperationContext, ref: number) => {
       current.scope.value.forEach((item: CustomValue, name: CustomValue) => {
@@ -294,8 +296,8 @@ export class GreybelDebugSession
       });
     };
 
-    if (opc && opc.type !== ContextType.Global) {
-      setVariables(opc, 0);
+    if (frame && frame.type !== ContextType.Global) {
+      setVariables(frame, 0);
     }
 
     setVariables(me._runtime.globalContext, 0);
@@ -408,20 +410,20 @@ export class GreybelDebugSession
   public getStack(): IRuntimeStack {
     const me = this;
     const frames: IRuntimeStackFrame[] = [];
-    const last = me._runtime.apiContext.getLastActive();
+    const instructions = me._runtime.vm.getStacktrace();
 
-    for (let index = 0; index < last.stackTrace.length; index++) {
-      const current = last.stackTrace[index];
+    for (let index = instructions.length - 1; index >= 0; index--) {
+      const current = instructions[index];
 
       const stackFrame: IRuntimeStackFrame = {
         index,
-        name: current.item.type, // use a word of the line as the stackframe name
-        file: current.target,
-        line: current.item?.start.line,
-        column: current.item?.start.character
+        name: current.source.name, // use a word of the line as the stackframe name
+        file: current.source.path,
+        line: current.source.start.line,
+        column: current.source.start.character
       };
 
-      frames.push(stackFrame);
+      frames.unshift(stackFrame);
     }
 
     return {
