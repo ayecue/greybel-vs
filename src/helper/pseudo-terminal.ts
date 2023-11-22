@@ -1,7 +1,7 @@
 import { AnotherAnsiProvider, CommandType, EscapeSequence } from 'another-ansi';
 import ansiEscapes from 'ansi-escapes';
 import EventEmitter from 'events';
-import { OperationContext } from 'greybel-interpreter';
+import { VM } from 'greybel-interpreter';
 import vscode, { Terminal } from 'vscode';
 
 const provider = new AnotherAnsiProvider(EscapeSequence.Hex);
@@ -56,7 +56,7 @@ export default class PseudoTerminal {
   }
 
   waitForInput(
-    ctx: OperationContext,
+    vm: VM,
     isPassword: boolean = false
   ): PromiseLike<string> {
     if (this.closed) return Promise.resolve('');
@@ -69,7 +69,7 @@ export default class PseudoTerminal {
 
       const clear = () => {
         this.writeEmitter.fire('\r\n');
-        ctx.processState.removeListener('exit', onExit);
+        vm.getSignal().removeListener('exit', onExit);
         this.emitter.removeListener('close', onClose);
         this.emitter.removeListener('input', onInput);
       };
@@ -136,20 +136,20 @@ export default class PseudoTerminal {
         }
       };
 
-      ctx.processState.once('exit', onExit);
+      vm.getSignal().once('exit', onExit);
       this.emitter.addListener('close', onClose);
       this.emitter.addListener('input', onInput);
     });
   }
 
-  waitForKeyPress(ctx: OperationContext): PromiseLike<string> {
+  waitForKeyPress(vm: VM): PromiseLike<string> {
     if (this.closed) return Promise.resolve(String.fromCharCode(13));
 
     this.focus();
 
     return new Promise((resolve) => {
       const clear = () => {
-        ctx.processState.removeListener('exit', onExit);
+        vm.getSignal().removeListener('exit', onExit);
         this.emitter.removeListener('close', onClose);
         this.emitter.removeListener('input', onInput);
       };
@@ -166,7 +166,7 @@ export default class PseudoTerminal {
         resolve('');
       };
 
-      ctx.processState.once('exit', onExit);
+      vm.getSignal().once('exit', onExit);
       this.emitter.addListener('input', onInput);
       this.emitter.addListener('close', onClose);
     });

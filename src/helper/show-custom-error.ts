@@ -1,4 +1,4 @@
-import { Operation } from 'greybel-interpreter';
+import { Instruction } from 'greybel-interpreter';
 import { ASTRange } from 'miniscript-core';
 import vscode, { Position, Range } from 'vscode';
 
@@ -7,7 +7,7 @@ export type CustomError = {
   range?: ASTRange;
   target: string;
   stack?: string;
-  stackTrace?: Operation[];
+  stackTrace?: Instruction[];
 };
 
 const getRangeFromCustomError = (err: CustomError): Range => {
@@ -17,7 +17,7 @@ const getRangeFromCustomError = (err: CustomError): Range => {
       new Position(err.range.end.line - 1, err.range.end.character - 1)
     );
   } else if (err.stackTrace) {
-    const item = err.stackTrace[0].item;
+    const item = err.stackTrace[0].source;
 
     return new Range(
       new Position(item.start.line - 1, item.start.character - 1),
