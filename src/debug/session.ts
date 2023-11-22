@@ -412,7 +412,7 @@ export class GreybelDebugSession
     const frames: IRuntimeStackFrame[] = [];
     const instructions = me._runtime.vm.getStacktrace();
 
-    for (let index = instructions.length; index >= 0; index--) {
+    for (let index = instructions.length - 1; index >= 0; index--) {
       const current = instructions[index];
 
       const stackFrame: IRuntimeStackFrame = {
