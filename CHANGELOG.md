@@ -844,3 +844,7 @@ All notable changes to this project will be documented in this file.
 ## [2.1.1] - 23.11.2023
 
 - fix error message popup when instruction is internal
+
+## [2.1.2] - 23.11.2023
+
+- add support for text mesh tags to close on newline
