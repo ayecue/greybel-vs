@@ -2,48 +2,70 @@ import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
 
 import { Stdout } from './utils/stdout';
 
-function wrapWithTag(openTag: TagRecordOpen, content: string): string {
+function parsePixelOrEmValue(value: string) {
+  if (value.endsWith('em')) {
+    return value;
+  } else if (value.endsWith('px')) {
+    return value;
+  }
+
+  return `${value}px`;
+}
+
+function parseNumber(value: string, defaultNumber: number = 1) {
+  try {
+    return parseFloat(value);
+  } catch (err: any) {
+    return defaultNumber;
+  }
+}
+
+function wrapWithTag(openTag, content) {
   switch (openTag.type) {
     case Tag.Space:
-      return `<span style="margin-left:${openTag.attributes.value}px;">${content}</span>`;
+      return `<span class="space" style="margin-left:${parsePixelOrEmValue(openTag.attributes.value)};">${content}</span>`;
     case Tag.MSpace:
-      return `<span style="letter-spacing:${openTag.attributes.value}px;">${content}</span>`;
+      return `<span class="msspace" style="letter-spacing:${parsePixelOrEmValue(openTag.attributes.value)};">${content}</span>`;
     case Tag.Color:
-      return `<span style="color:${openTag.attributes.value};">${content}</span>`;
+      return `<span class="color" style="color:${openTag.attributes.value};">${content}</span>`;
     case Tag.Underline:
-      return `<span style="text-decoration:underline;">${content}</span>`;
+      return `<span class="underline">${content}</span>`;
     case Tag.Italic:
-      return `<span style="font-style:italic;">${content}</span>`;
+      return `<span class="italic">${content}</span>`;
     case Tag.Bold:
-      return `<span style="font-weight:bold;">${content}</span>`;
+      return `<span class="bold">${content}</span>`;
     case Tag.Strikethrough:
-      return `<span style="text-decoration:line-through;">${content}</span>`;
+      return `<span class="strikethrough">${content}</span>`;
     case Tag.Mark:
-      return `<span style="background-color:${openTag.attributes.value};">${content}</span>`;
+      return `<span class="mark" style="background-color:${openTag.attributes.value};">${content}</span>`;
     case Tag.Lowercase:
-      return `<span style="text-transform:lowercase;">${content}</span>`;
+      return `<span class="lowercase">${content}</span>`;
     case Tag.Uppercase:
-      return `<span style="text-transform:uppercase;">${content}</span>`;
+      return `<span class="uppercase">${content}</span>`;
     case Tag.Align:
-      return `<span style="text-align:${openTag.attributes.value};display:block;">${content}</span>`;
+      return `<span class="align" style="text-align:${parsePixelOrEmValue(openTag.attributes.value)};">${content}</span>`;
     case Tag.CSpace:
-      return `<span style="letter-spacing:${openTag.attributes.value};">${content}</span>`;
+      return `<span class="cspace" style="letter-spacing:${parsePixelOrEmValue(openTag.attributes.value)};">${content}</span>`;
     case Tag.LineHeight:
-      return `<span style="line-height:${openTag.attributes.value};">${content}</span>`;
+      return `<span class="lineheight" style="line-height:${parsePixelOrEmValue(openTag.attributes.value)};">${content}</span>`;
     case Tag.Margin:
-      return `<span style="margin:0 ${openTag.attributes.value};">${content}</span>`;
+      return `<span class="margin" style="margin:0 ${parsePixelOrEmValue(openTag.attributes.value)};">${content}</span>`;
     case Tag.NoBR:
       return `<nobr>${content}</nobr>`;
     case Tag.Sprite:
-      return `<span style="color:${openTag.attributes.color};">&#9608</span>`;
+      return `<span class="sprite" style="background-color:${openTag.attributes.color};">X</span>`;
     case Tag.Pos:
-      return `<span style="position:relative;left:${openTag.attributes.value}px;">${content}</span>`;
+      return `<span class="pos" style="margin-left:${parsePixelOrEmValue(openTag.attributes.value)};">${content}</span>`;
     case Tag.Size:
-      return `<span style="font-size:${openTag.attributes.value}px;">${content}</span>`;
+      return `<span class="size" style="font-size:${parsePixelOrEmValue(openTag.attributes.value)};">${content}</span>`;
+    case Tag.Scale:
+      return `<span class="scale" style="transform:scale(${parseNumber(openTag.attributes.value)});">${content}</span>`;
     case Tag.VOffset:
-      return `<span style="position:relative;bottom:${openTag.attributes.value}px;display:block;height:0px;">${content}</span>`;
+      return `<span class="voffset" style="transform:translate(0px,${parsePixelOrEmValue(openTag.attributes.value)});">${content}</span>`;
     case Tag.Indent:
-      return `<span style="margin-left:${openTag.attributes.value};">${content}</span>`;
+      return `<span class="indent" style="margin-left:${parsePixelOrEmValue(openTag.attributes.value)};">${content}</span>`;
+    case Tag.Rotate:
+      return `<span class="rotate" style="rotate:${openTag.attributes.value}deg;">${content}</span>`;
   }
 
   if (openTag.attributes.value) {
@@ -75,6 +97,7 @@ interface UpdateLastMessage {
 }
 
 function main() {
+  const rootNode = document.getElementById('root');
   const messageBox = document.getElementById('preview');
   const out = new Stdout(messageBox);
 
@@ -84,7 +107,8 @@ function main() {
     switch (payload.type) {
       case 'clear': {
         out.clear();
-        return;
+        rootNode.scrollTo(0, 0);
+        break;
       }
       case 'print': {
         const printPayload = payload as PrintMessage;
@@ -99,19 +123,23 @@ function main() {
           out.replace(transformed + '\n');
         } else if (printPayload.appendNewLine) {
           out.write(transformed + '\n');
+          rootNode.scrollTo(0, messageBox.scrollHeight);
         } else {
           out.write(transformed);
+          rootNode.scrollTo(0, messageBox.scrollHeight);
         }
-        return;
+        break;
       }
       case 'update-last': {
         const updateLastPayload = payload as UpdateLastMessage;
         out.updateLast(updateLastPayload.message);
-        return;
+        break;
       }
       case 'write': {
         const writePayload = payload as WriteMessage;
         out.write(writePayload.message);
+        rootNode.scrollTo(0, messageBox.scrollHeight);
+        break;
       }
     }
   });
