@@ -20,10 +20,7 @@ const getRangeFromCustomError = (err: CustomError): Range => {
     const item = err.stackTrace[0].source;
 
     if (item.path === 'internal') {
-      return new Range(
-        new Position(0, 0),
-        new Position(0, 0)
-      );
+      return new Range(new Position(0, 0), new Position(0, 0));
     }
 
     return new Range(

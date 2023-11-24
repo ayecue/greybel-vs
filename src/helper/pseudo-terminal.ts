@@ -55,10 +55,7 @@ export default class PseudoTerminal {
     PseudoTerminal.activeTerminals.add(this);
   }
 
-  waitForInput(
-    vm: VM,
-    isPassword: boolean = false
-  ): PromiseLike<string> {
+  waitForInput(vm: VM, isPassword: boolean = false): PromiseLike<string> {
     if (this.closed) return Promise.resolve('');
 
     this.focus();
