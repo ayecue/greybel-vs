@@ -4,6 +4,8 @@ import { Stdout } from './utils/stdout';
 
 function wrapWithTag(openTag: TagRecordOpen, content: string): string {
   switch (openTag.type) {
+    case Tag.Space:
+      return `<span style="margin-left:${openTag.attributes.value}px;">${content}</span>`;
     case Tag.MSpace:
       return `<span style="letter-spacing:${openTag.attributes.value}px;">${content}</span>`;
     case Tag.Color:
