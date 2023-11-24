@@ -853,3 +853,4 @@ All notable changes to this project will be documented in this file.
 
 - fix prepare error on execute not showing line
 - add preview grey hack output (WIP)
+- do not allow frame pop on global frame
