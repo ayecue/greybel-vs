@@ -848,3 +848,8 @@ All notable changes to this project will be documented in this file.
 ## [2.1.2] - 23.11.2023
 
 - add support for text mesh tags to close on newline
+
+## [2.1.3] - 24.11.2023
+
+- fix prepare error on execute not showing line
+- add preview grey hack output
