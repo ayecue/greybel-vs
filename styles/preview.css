@@ -70,23 +70,22 @@ body {
 #preview .line .voffset {
 	transform-origin: left top;
 	display: block;
-	clear: left;
 }
 
-#preview .line .color {
+#preview .line .color, #preview .line .underline, #preview .line .uppercase, #preview .line .lowercase, #preview .line .strikethrough, #preview .line .size {
 	display: inline;
 }
 
 #preview .line .scale {
-	transform-origin: left top;
+	transform-origin: left 0;
 	display: block;
 }
 
 #preview .line .pos {
-	transform-origin: left top;
-	display: block;
+	transform-origin: left 0;
+	display: inline;
 }
 
-#preview .line .size {
-	display: inline;
+#preview .line .rotate {
+	display: inline-block;
 }
