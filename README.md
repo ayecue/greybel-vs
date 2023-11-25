@@ -21,6 +21,7 @@ Commands available (`CTRL+SHIFT+P`):
 - `Greybel: Refresh` - [info](#refresh)
 - `Greybel: API` - [info](#api-browser)
 - `Greybel: Snippets` - [info](#snippets)
+- `Greybel: Preview output (experimental)` - [info](#preview-output)
 
 You can also access most of the commands via the context menu:
 
@@ -158,6 +159,10 @@ Will refresh the AST Cache which is used for diagnostics, hover tooltips and aut
 Will return a list of available GreyHack snippets. Such as `ls`, `mkdir` and more.
 
 ![Snippets](https://github.com/ayecue/greybel-vs/blob/main/assets/snippets.png?raw=true "Snippets")
+
+### Preview output
+
+Emulates the ingame terminal graphical output. This feature is currently experimental and will probably not show every tag accurately.
 
 ### Goto Error
 

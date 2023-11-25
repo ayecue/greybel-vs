@@ -1,13 +1,9 @@
-import {
-  KeyEvent,
-  OutputHandler,
-  PrintOptions,
-  VM
-} from 'greybel-interpreter';
+import { KeyEvent, OutputHandler, PrintOptions, VM } from 'greybel-interpreter';
 
 import PseudoTerminal from '../helper/pseudo-terminal';
 import transform from '../helper/text-mesh-transform';
 import transformStringToKeyEvent from '../helper/transform-string-to-key-event';
+import { getPreviewInstance } from '../preview';
 
 export class VSOutputHandler extends OutputHandler {
   static previousTerminal: PseudoTerminal | null;
@@ -32,6 +28,7 @@ export class VSOutputHandler extends OutputHandler {
     message: string,
     { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
   ) {
+    getPreviewInstance().print(message, { appendNewLine, replace });
     const transformed = transform(message, this._hideUnsupportedTags).replace(
       /\\n/g,
       '\n'
@@ -46,6 +43,7 @@ export class VSOutputHandler extends OutputHandler {
   }
 
   clear() {
+    getPreviewInstance().clear();
     this._terminal.clear();
   }
 
@@ -53,6 +51,7 @@ export class VSOutputHandler extends OutputHandler {
     const startTime = Date.now();
     const max = 20;
 
+    getPreviewInstance().write(`[${'-'.repeat(max)}]`);
     this._terminal.print(`[${'-'.repeat(max)}]`);
 
     return new Promise((resolve, _reject) => {
@@ -65,6 +64,8 @@ export class VSOutputHandler extends OutputHandler {
         const elapsed = currentTime - startTime;
 
         if (elapsed > timeout) {
+          getPreviewInstance().updateLast(`[${'#'.repeat(max)}]`);
+          getPreviewInstance().write(`\n`);
           this._terminal.updateLast(`[${'#'.repeat(max)}]`);
           vm.getSignal().removeListener('exit', onExit);
           clearInterval(interval);
@@ -76,6 +77,9 @@ export class VSOutputHandler extends OutputHandler {
         const progress = Math.floor((elapsedPercentage * max) / 100);
         const right = max - progress;
 
+        getPreviewInstance().updateLast(
+          `[${'#'.repeat(progress)}${'-'.repeat(right)}]`
+        );
         this._terminal.updateLast(
           `[${'#'.repeat(progress)}${'-'.repeat(right)}]`
         );
@@ -96,10 +100,7 @@ export class VSOutputHandler extends OutputHandler {
     return PseudoTerminal.getActiveTerminal().waitForInput(vm, isPassword);
   }
 
-  waitForKeyPress(
-    vm: VM,
-    message: string
-  ): PromiseLike<KeyEvent> {
+  waitForKeyPress(vm: VM, message: string): PromiseLike<KeyEvent> {
     this.print(vm, message, {
       appendNewLine: false
     });

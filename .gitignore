@@ -8,6 +8,8 @@ extension.js
 *.vsix
 api.view.css
 api.view.js
+preview.view.css
+preview.view.js
 .vscode-test-web
 greyscript.theme.json
 greyscript.tmLanguage.json

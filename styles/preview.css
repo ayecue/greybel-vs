@@ -1,0 +1,91 @@
+body {
+	font-family: monospace;
+	background: #000;
+	margin: 0;
+}
+
+#root {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	overflow: auto;
+}
+
+#preview {
+	color: green;
+	padding: 5px;
+	position: relative;
+	white-space: pre;
+	min-height: 100%;
+}
+
+#preview .line {
+	display: block;
+	position: relative;
+}
+
+#preview .line span {
+	display: inline-block;
+}
+
+#preview .line .msspace {
+	font-family: monoscpace;
+}
+
+#preview .line .underline {
+	text-decoration: underline;
+}
+
+#preview .line .strikethrough {
+	text-decoration: line-through;
+}
+
+#preview .line .italic {
+	font-style:italic;
+}
+
+#preview .line .bold {
+	font-weight:bold;
+}
+
+#preview .line .lowercase {
+	text-transform: lowercase;
+}
+
+#preview .line .uppercase {
+	text-transform: uppercase;
+}
+
+#preview .line .align {
+	display:block;
+}
+
+#preview .line .sprite {
+	display: inline-block;
+	color: transparent;
+}
+
+#preview .line .voffset {
+	transform-origin: left top;
+	display: block;
+}
+
+#preview .line .color, #preview .line .underline, #preview .line .uppercase, #preview .line .lowercase, #preview .line .strikethrough, #preview .line .size {
+	display: inline;
+}
+
+#preview .line .scale {
+	transform-origin: left 0;
+	display: block;
+}
+
+#preview .line .pos {
+	transform-origin: left 0;
+	display: inline;
+}
+
+#preview .line .rotate {
+	display: inline-block;
+}

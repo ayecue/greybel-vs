@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -51,14 +51,16 @@
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
-        "compile": "npm run compile:ts && npm run compile:node && npm run compile:browser && npm run compile:api && npm run move",
+        "compile": "npm run compile:ts && npm run compile:node && npm run compile:browser && npm run compile:api && npm run compile:preview && npm run move",
         "compile:ts": "tsc -p ./",
         "compile:node": "rollup --config rollup.config.node.js --bundleConfigAsCjs",
         "compile:browser": "rollup --config rollup.config.browser.js --bundleConfigAsCjs",
         "compile:extension": "vsce package --out extension.vsix",
         "compile:api": "rollup --config rollup.config.api.js --bundleConfigAsCjs",
-        "move": "npm run move:stylesheet && npm run move:grammar",
-        "move:stylesheet": "cp node_modules/greyscript-meta/web/index.css ./api.view.css",
+        "compile:preview": "rollup --config rollup.config.preview.js --bundleConfigAsCjs",
+        "move": "npm run move:api:stylesheet && npm run move:preview:stylesheet && npm run move:grammar",
+        "move:api:stylesheet": "cp node_modules/greyscript-meta/web/index.css ./api.view.css",
+        "move:preview:stylesheet": "cp styles/preview.css ./preview.view.css",
         "move:grammar": "cp -r node_modules/greyscript-textmate/dist/*.json ./",
         "lint": "eslint ./src/**/*.ts",
         "lint:fix": "eslint --fix ./src/**/*.ts",
@@ -116,6 +118,11 @@
                 },
                 {
                     "command": "greybel.api",
+                    "when": "resourceLangId == greyscript && !isWeb",
+                    "group": "z_commands"
+                },
+                {
+                    "command": "greybel.preview",
                     "when": "resourceLangId == greyscript && !isWeb",
                     "group": "z_commands"
                 },
@@ -192,6 +199,10 @@
                 },
                 {
                     "command": "greybel.api",
+                    "when": "resourceLangId == greyscript && !isWeb"
+                },
+                {
+                    "command": "greybel.preview",
                     "when": "resourceLangId == greyscript && !isWeb"
                 },
                 {
@@ -286,6 +297,11 @@
             {
                 "command": "greybel.api",
                 "title": "Greybel: API Documentation",
+                "when": "!isWeb"
+            },
+            {
+                "command": "greybel.preview",
+                "title": "Greybel: Preview output",
                 "when": "!isWeb"
             },
             {
@@ -523,9 +539,9 @@
         "ansi-escapes": "^4.3.2",
         "color-convert": "^2.0.1",
         "css-color-names": "^1.0.1",
-        "greybel-gh-mock-intrinsics": "~4.0.9",
-        "greyscript-interpreter": "~1.0.17",
-        "greybel-intrinsics": "~4.0.15",
+        "greybel-gh-mock-intrinsics": "~4.1.1",
+        "greyscript-interpreter": "~1.1.1",
+        "greybel-intrinsics": "~4.1.1",
         "greybel-proxy": "~2.1.12",
         "greyscript-transpiler": "~0.5.2",
         "greyscript-core": "~1.4.2",
@@ -534,7 +550,7 @@
         "lru-cache": "^7.14.1",
         "node-json-stream": "~0.2.6",
         "text-encoder-lite": "^2.0.0",
-        "text-mesh-transformer": "^1.4.0"
+        "text-mesh-transformer": "^1.4.1"
     },
     "browserslist": "> 0.25%, not dead"
 }

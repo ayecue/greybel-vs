@@ -17,6 +17,7 @@ tsconfig.json
 package-lock.json
 assets
 node_modules
+styles
 #json-stream
 !node_modules/node-json-stream
 #greybel-proxy

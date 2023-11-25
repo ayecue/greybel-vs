@@ -19,11 +19,11 @@ import {
   ContextType,
   CustomValue,
   HandlerContainer,
+  Instruction,
   ObjectValue,
   OperationContext,
   PrepareError,
-  RuntimeError,
-  Instruction
+  RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import { Interpreter } from 'greyscript-interpreter';
@@ -31,6 +31,7 @@ import vscode, { Uri } from 'vscode';
 
 import { showCustomErrorMessage } from '../helper/show-custom-error';
 import { ansiProvider, useColor } from '../helper/text-mesh-transform';
+import { getPreviewInstance } from '../preview';
 import { InterpreterResourceProvider, PseudoFS } from '../resource';
 import { GrebyelDebugger, GrebyelPseudoDebugger } from './debugger';
 import { VSOutputHandler } from './output';
@@ -190,6 +191,7 @@ export class GreybelDebugSession
     const me = this;
     const uri = Uri.file(args.program);
 
+    getPreviewInstance().clear();
     me._runtime.debugMode = !args.noDebug;
     me._runtime.setTarget(args.program);
     me._runtime.setDebugger(
@@ -213,6 +215,7 @@ export class GreybelDebugSession
 
       me._runtime.params = paramSegments;
       await me._runtime.run();
+      console.debug('Open handles', me._runtime.vm.getOpenHandles());
       me.sendResponse(response);
     } catch (err: any) {
       if (err instanceof PrepareError) {
