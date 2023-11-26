@@ -854,3 +854,7 @@ All notable changes to this project will be documented in this file.
 - fix prepare error on execute not showing line
 - add preview grey hack output (WIP)
 - do not allow frame pop on global frame
+
+## [2.1.4] - 26.11.2023
+
+- fix for iterations combined with returns causing the iterator stack not to pop
