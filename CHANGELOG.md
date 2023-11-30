@@ -862,3 +862,4 @@ All notable changes to this project will be documented in this file.
 ## [2.1.5] - 30.11.2023
 
 - fix self not being reassignable within frame
+- bump proxy version due to latest GreyHack update
