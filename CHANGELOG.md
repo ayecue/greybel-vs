@@ -863,3 +863,8 @@ All notable changes to this project will be documented in this file.
 
 - fix self not being reassignable within frame
 - bump proxy version due to latest GreyHack update
+
+## [2.1.6] - 16.12.2023
+
+- use dot as resolve trigger for autocompletion handler
+- bump proxy version due to latest GreyHack update 
