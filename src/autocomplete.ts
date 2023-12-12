@@ -98,19 +98,6 @@ export function activate(_context: ExtensionContext) {
     ) {
       documentParseQueue.refresh(document);
 
-      const currentRange = new Range(position.translate(0, -1), position);
-
-      if (document.getText(currentRange) === '.') {
-        const definitions = greyscriptMeta.getDefinitions(['any']);
-        const completionItems: CompletionItem[] = [
-          ...convertDefinitionsToCompletionList(definitions)
-        ];
-
-        if (completionItems.length > 0) {
-          return new CompletionList(completionItems);
-        }
-      }
-
       const helper = new LookupHelper(document);
       const astResult = helper.lookupAST(position);
       const completionItems: CompletionItem[] = [];
@@ -234,7 +221,7 @@ export function activate(_context: ExtensionContext) {
 
       return new CompletionList(completionItems);
     }
-  });
+  }, '.');
 
   vscode.languages.registerSignatureHelpProvider(
     'greyscript',

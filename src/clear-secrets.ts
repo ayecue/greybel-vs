@@ -1,11 +1,7 @@
 import vscode, {
-  ExtensionContext,
-  TextEditor,
-  TextEditorEdit,
-  Uri
+  ExtensionContext
 } from 'vscode';
 
-import { post } from './helper/request';
 import { showCustomErrorMessage } from './helper/show-custom-error';
 
 export function activate(context: ExtensionContext) {
