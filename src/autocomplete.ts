@@ -18,7 +18,6 @@ import vscode, {
   ExtensionContext,
   ParameterInformation,
   Position,
-  Range,
   SignatureHelp,
   SignatureHelpContext,
   SignatureInformation,
@@ -104,21 +103,18 @@ export function activate(_context: ExtensionContext) {
       let base = '';
 
       if (astResult) {
-        const { closest, outer } = astResult;
-        const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
+        const { closest } = astResult;
 
         if (
-          previous instanceof ASTMemberExpression &&
-          closest === previous.identifier
+          closest instanceof ASTMemberExpression
         ) {
-          base = transformASTToString(previous.base);
-          completionItems.push(...getCompletionList(helper, previous));
+          base = transformASTToString(closest.base);
+          completionItems.push(...getCompletionList(helper, closest));
         } else if (
-          previous instanceof ASTIndexExpression &&
-          closest === previous.index
+          closest instanceof ASTIndexExpression
         ) {
-          base = transformASTToString(previous.base);
-          completionItems.push(...getCompletionList(helper, previous));
+          base = transformASTToString(closest.base);
+          completionItems.push(...getCompletionList(helper, closest));
         } else {
           completionItems.push(...getDefaultCompletionList());
         }
