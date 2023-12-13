@@ -1,8 +1,6 @@
 import { BuildType, Transpiler } from 'greyscript-transpiler';
 import vscode, {
   ExtensionContext,
-  TextEditor,
-  TextEditorEdit,
   Uri
 } from 'vscode';
 import { greyscriptMeta } from 'greyscript-meta/dist/meta';
@@ -13,26 +11,20 @@ import { createInstaller } from './build/installer';
 import { createBasePath } from './helper/create-base-path';
 import { showCustomErrorMessage } from './helper/show-custom-error';
 import { TranspilerResourceProvider } from './resource';
+import documentManager from './helper/document-manager';
 
 export function activate(context: ExtensionContext) {
   async function build(
-    editor: TextEditor,
-    _edit: TextEditorEdit,
     eventUri: Uri
   ) {
-    if (
-      editor.document.uri.fsPath === eventUri.fsPath &&
-      editor.document.isDirty
-    ) {
-      const isSaved = await editor.document.save();
+    const result = await documentManager.open(eventUri.fsPath);
 
-      if (!isSaved) {
-        vscode.window.showErrorMessage(
-          'You cannot build a file which does not exist in the file system.',
-          { modal: false }
-        );
-        return;
-      }
+    if (result === null) {
+      vscode.window.showErrorMessage(
+        'You cannot build a file which does not exist in the file system.',
+        { modal: false }
+      );
+      return;
     }
 
     try {
@@ -147,6 +139,6 @@ export function activate(context: ExtensionContext) {
   }
 
   context.subscriptions.push(
-    vscode.commands.registerTextEditorCommand('greybel.build', build)
+    vscode.commands.registerCommand('greybel.build', build)
   );
 }

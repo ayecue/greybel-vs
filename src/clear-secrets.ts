@@ -1,11 +1,7 @@
 import vscode, {
-  ExtensionContext,
-  TextEditor,
-  TextEditorEdit,
-  Uri
+  ExtensionContext
 } from 'vscode';
 
-import { post } from './helper/request';
 import { showCustomErrorMessage } from './helper/show-custom-error';
 
 export function activate(context: ExtensionContext) {
@@ -20,6 +16,6 @@ export function activate(context: ExtensionContext) {
   }
 
   context.subscriptions.push(
-    vscode.commands.registerTextEditorCommand('greybel.clearSecrets', clearSecrets)
+    vscode.commands.registerCommand('greybel.clearSecrets', clearSecrets)
   );
 }

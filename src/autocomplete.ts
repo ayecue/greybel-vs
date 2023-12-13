@@ -2,7 +2,8 @@ import {
   ASTBase,
   ASTCallExpression,
   ASTIndexExpression,
-  ASTMemberExpression
+  ASTMemberExpression,
+  ASTType
 } from 'miniscript-core';
 import {
   SignatureDefinitionArg,
@@ -18,7 +19,6 @@ import vscode, {
   ExtensionContext,
   ParameterInformation,
   Position,
-  Range,
   SignatureHelp,
   SignatureHelpContext,
   SignatureInformation,
@@ -98,40 +98,24 @@ export function activate(_context: ExtensionContext) {
     ) {
       documentParseQueue.refresh(document);
 
-      const currentRange = new Range(position.translate(0, -1), position);
-
-      if (document.getText(currentRange) === '.') {
-        const definitions = greyscriptMeta.getDefinitions(['any']);
-        const completionItems: CompletionItem[] = [
-          ...convertDefinitionsToCompletionList(definitions)
-        ];
-
-        if (completionItems.length > 0) {
-          return new CompletionList(completionItems);
-        }
-      }
-
       const helper = new LookupHelper(document);
       const astResult = helper.lookupAST(position);
       const completionItems: CompletionItem[] = [];
       let base = '';
 
       if (astResult) {
-        const { closest, outer } = astResult;
-        const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
+        const { closest } = astResult;
 
         if (
-          previous instanceof ASTMemberExpression &&
-          closest === previous.identifier
+          closest instanceof ASTMemberExpression
         ) {
-          base = transformASTToString(previous.base);
-          completionItems.push(...getCompletionList(helper, previous));
+          base = transformASTToString(closest.base);
+          completionItems.push(...getCompletionList(helper, closest));
         } else if (
-          previous instanceof ASTIndexExpression &&
-          closest === previous.index
+          closest instanceof ASTIndexExpression
         ) {
-          base = transformASTToString(previous.base);
-          completionItems.push(...getCompletionList(helper, previous));
+          base = transformASTToString(closest.base);
+          completionItems.push(...getCompletionList(helper, closest));
         } else {
           completionItems.push(...getDefaultCompletionList());
         }
@@ -234,7 +218,7 @@ export function activate(_context: ExtensionContext) {
 
       return new CompletionList(completionItems);
     }
-  });
+  }, '.');
 
   vscode.languages.registerSignatureHelpProvider(
     'greyscript',

@@ -19,6 +19,7 @@ import {
   ASTParenthesisExpression,
   ASTReturnStatement,
   ASTSliceExpression,
+  ASTType,
   ASTUnaryExpression,
   ASTWhileStatement
 } from 'miniscript-core';
@@ -314,7 +315,7 @@ export function findEx(
   const walker = new ScraperWalker((item: ASTBase, level: number) => {
     const state = validate(item, level) || {};
 
-    if (state.valid) {
+    if (state.valid && item.type !== ASTType.InvalidCodeExpression) {
       result.push(item);
     }
 
