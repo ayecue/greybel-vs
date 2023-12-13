@@ -27,22 +27,6 @@ export function activate(context: ExtensionContext) {
       return;
     }
 
-    const document = result.textDocument;
-
-    if (
-      document.isDirty
-    ) {
-      const isSaved = await document.save();
-
-      if (!isSaved) {
-        vscode.window.showErrorMessage(
-          'You cannot build a file which does not exist in the file system.',
-          { modal: false }
-        );
-        return;
-      }
-    }
-
     try {
       const config = vscode.workspace.getConfiguration('greybel');
       const target = eventUri.fsPath;
