@@ -864,8 +864,9 @@ All notable changes to this project will be documented in this file.
 - fix self not being reassignable within frame
 - bump proxy version due to latest GreyHack update
 
-## [2.1.6] - 16.12.2023
+## [2.1.6] - 14.12.2023
 
 - use dot as resolve trigger for autocompletion handler + minor adjustments - related to [#158](https://github.com/ayecue/greybel-vs/issues/158)
 - bump proxy version due to latest GreyHack update
 - transform several text editor commands into normal commands - thanks for reporting to [@MadbHatter](https://github.com/MadbHatter) - related to [#157](https://github.com/ayecue/greybel-vs/issues/157)
+- update meta to improve autocomplete
