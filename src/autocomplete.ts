@@ -2,7 +2,8 @@ import {
   ASTBase,
   ASTCallExpression,
   ASTIndexExpression,
-  ASTMemberExpression
+  ASTMemberExpression,
+  ASTType
 } from 'miniscript-core';
 import {
   SignatureDefinitionArg,
