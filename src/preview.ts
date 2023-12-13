@@ -105,7 +105,7 @@ export function activate(context: ExtensionContext) {
   setPreviewInstance(new Preview(context));
 
   context.subscriptions.push(
-    vscode.commands.registerTextEditorCommand('greybel.preview', () =>
+    vscode.commands.registerCommand('greybel.preview', () =>
       getPreviewInstance().create() 
     )
   );

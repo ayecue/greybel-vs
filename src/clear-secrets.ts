@@ -16,6 +16,6 @@ export function activate(context: ExtensionContext) {
   }
 
   context.subscriptions.push(
-    vscode.commands.registerTextEditorCommand('greybel.clearSecrets', clearSecrets)
+    vscode.commands.registerCommand('greybel.clearSecrets', clearSecrets)
   );
 }

@@ -10,8 +10,6 @@ import { showCustomErrorMessage } from './helper/show-custom-error';
 
 export function activate(context: ExtensionContext) {
   async function share(
-    editor: TextEditor,
-    _edit: TextEditorEdit,
     eventUri: Uri
   ) {
     try {
@@ -42,6 +40,6 @@ export function activate(context: ExtensionContext) {
   }
 
   context.subscriptions.push(
-    vscode.commands.registerTextEditorCommand('greybel.share', share)
+    vscode.commands.registerCommand('greybel.share', share)
   );
 }

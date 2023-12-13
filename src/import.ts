@@ -25,8 +25,6 @@ const getFiles = async (uri: vscode.Uri): Promise<vscode.Uri[]> => {
 
 export function activate(context: ExtensionContext) {
   async function importIngame(
-    editor: TextEditor,
-    _edit: TextEditorEdit,
     eventUri: Uri
   ) {
     try {
@@ -84,6 +82,6 @@ export function activate(context: ExtensionContext) {
   }
 
   context.subscriptions.push(
-    vscode.commands.registerTextEditorCommand('greybel.import', importIngame)
+    vscode.commands.registerCommand('greybel.import', importIngame)
   );
 }

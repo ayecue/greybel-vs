@@ -53,7 +53,7 @@ export async function displayAPIDocumentation(
 
 export function activate(context: ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerTextEditorCommand('greybel.api', () =>
+    vscode.commands.registerCommand('greybel.api', () =>
       displayAPIDocumentation(context)
     )
   );

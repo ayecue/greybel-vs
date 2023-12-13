@@ -2,6 +2,8 @@ import { Instruction } from 'greybel-interpreter';
 import { ASTRange } from 'miniscript-core';
 import vscode, { Position, Range } from 'vscode';
 
+import documentManager from './document-manager';
+
 export type CustomError = {
   message: string;
   range?: ASTRange;
@@ -45,7 +47,7 @@ export const showCustomErrorMessage = (err: CustomError): void => {
         'Go to error'
       )
       .then(async () => {
-        const textDocument = await vscode.workspace.openTextDocument(errTarget);
+        const { textDocument } = await documentManager.open(errTarget);
 
         vscode.window.showTextDocument(textDocument, {
           selection: range
