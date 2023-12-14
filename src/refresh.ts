@@ -5,7 +5,7 @@ import documentManager from './helper/document-manager';
 
 export function activate(context: ExtensionContext) {
   async function refresh(
-    eventUri: Uri
+    eventUri: Uri = vscode.window.activeTextEditor?.document?.uri
   ) {
     const result = await documentManager.open(eventUri.fsPath);
 

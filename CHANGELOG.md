@@ -870,3 +870,8 @@ All notable changes to this project will be documented in this file.
 - bump proxy version due to latest GreyHack update
 - transform several text editor commands into normal commands - thanks for reporting to [@MadbHatter](https://github.com/MadbHatter) - related to [#157](https://github.com/ayecue/greybel-vs/issues/157)
 - update meta to improve autocomplete
+
+## [2.1.7] - 14.12.2023
+
+- use active document for build, refresh, import and share if there is no event uri available - thanks for the suggestion to [@MadbHatter](https://github.com/MadbHatter) - related to [#157](https://github.com/ayecue/greybel-vs/issues/157)
+- make gotoError and transforms invisible in command palette since those require the context of an editor
