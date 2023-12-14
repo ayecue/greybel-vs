@@ -10,7 +10,7 @@ import { showCustomErrorMessage } from './helper/show-custom-error';
 
 export function activate(context: ExtensionContext) {
   async function share(
-    eventUri: Uri
+    eventUri: Uri = vscode.window.activeTextEditor?.document?.uri
   ) {
     try {
       const doc = await vscode.workspace.openTextDocument(eventUri.fsPath);

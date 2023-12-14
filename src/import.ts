@@ -25,7 +25,7 @@ const getFiles = async (uri: vscode.Uri): Promise<vscode.Uri[]> => {
 
 export function activate(context: ExtensionContext) {
   async function importIngame(
-    eventUri: Uri
+    eventUri: Uri = vscode.window.activeTextEditor?.document?.uri
   ) {
     try {
       const files = await getFiles(eventUri);
