@@ -12,11 +12,6 @@ Automatically detects `.gs` and `.src` files.
 
 Commands available (`CTRL+SHIFT+P`):
 - `Greybel: Build` - [info](#build)
-- `Greybel: Goto Error` - [info](#goto-error)
-- `Greybel: Transform to clipboard` - [info](#transform)
-- `Greybel: Transform` - [info](#transform)
-- `Greybel: Minify` - Shortcut for [info](#transform). Will use minify as build type.
-- `Greybel: Beautify` - Shortcut for [info](#transform). Will use beautify as build type.
 - `Greybel: Share` - [info](#share)
 - `Greybel: Refresh` - [info](#refresh)
 - `Greybel: API` - [info](#api-browser)

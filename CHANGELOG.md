@@ -875,3 +875,7 @@ All notable changes to this project will be documented in this file.
 
 - use active document for build, refresh, import and share if there is no event uri available - thanks for the suggestion to [@MadbHatter](https://github.com/MadbHatter) - related to [#157](https://github.com/ayecue/greybel-vs/issues/157)
 - make gotoError and transforms invisible in command palette since those require the context of an editor
+
+## [2.1.8] - 19.12.2023
+
+- bump proxy version due to latest GreyHack update
