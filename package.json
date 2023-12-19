@@ -198,6 +198,10 @@
                     "when": "false"
                 },
                 {
+                    "command": "greybel.share",
+                    "when": "resourceLangId == greyscript && !isWeb"
+                },
+                {
                     "command": "greybel.api",
                     "when": "resourceLangId == greyscript && !isWeb"
                 },
