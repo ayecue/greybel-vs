@@ -879,3 +879,8 @@ All notable changes to this project will be documented in this file.
 ## [2.1.8] - 19.12.2023
 
 - bump proxy version due to latest GreyHack update
+
+## [2.1.9] - 29.12.2023
+
+- minor fixes to meta descriptions
+- fix missing fallback value for allow import for file entities in mock environment
