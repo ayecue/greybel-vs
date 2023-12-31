@@ -893,3 +893,7 @@ All notable changes to this project will be documented in this file.
 - fix airmon intrinsic stop option
 - fix missing boot folder in generated computers
 - improve preview output - thanks for the suggestion to [@Olipro](https://github.com/Olipro) - related to [#139](https://github.com/ayecue/greybel-vs/issues/139)
+
+## [2.1.11] - 31.12.2023
+
+- use proper sprite set for preview output
