@@ -1,4 +1,10 @@
-import { KeyEvent, OutputHandler, PrintOptions, VM } from 'greybel-interpreter';
+import {
+  KeyEvent,
+  OutputHandler,
+  PrintOptions,
+  UpdateOptions,
+  VM
+} from 'greybel-interpreter';
 
 import PseudoTerminal from '../helper/pseudo-terminal';
 import transform from '../helper/text-mesh-transform';
@@ -23,22 +29,40 @@ export class VSOutputHandler extends OutputHandler {
     this._terminal.focus();
   }
 
+  private processLine(text: string): string {
+    return transform(text, this._hideUnsupportedTags).replace(/\\n/g, '\n');
+  }
+
   print(
     _vm: VM,
     message: string,
     { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
   ) {
     getPreviewInstance().print(message, { appendNewLine, replace });
-    const transformed = transform(message, this._hideUnsupportedTags).replace(
-      /\\n/g,
-      '\n'
-    );
+    const transformed = this.processLine(message);
 
     if (replace) {
       this._terminal.replace(transformed);
       return;
     }
 
+    this._terminal.print(transformed, appendNewLine);
+  }
+
+  update(
+    _vm: VM,
+    message: string,
+    { appendNewLine = false, replace = false }: Partial<UpdateOptions> = {}
+  ) {
+    const transformed = this.processLine(message);
+
+    if (replace) {
+      getPreviewInstance().updateLast(message);
+      this._terminal.updateLast(transformed);
+      return;
+    }
+
+    getPreviewInstance().write(message);
     this._terminal.print(transformed, appendNewLine);
   }
 
@@ -51,7 +75,7 @@ export class VSOutputHandler extends OutputHandler {
     const startTime = Date.now();
     const max = 20;
 
-    getPreviewInstance().write(`[${'-'.repeat(max)}]`);
+    getPreviewInstance().print(`[${'-'.repeat(max)}]`);
     this._terminal.print(`[${'-'.repeat(max)}]`);
 
     return new Promise((resolve, _reject) => {
@@ -94,16 +118,27 @@ export class VSOutputHandler extends OutputHandler {
     isPassword: boolean,
     message: string
   ): PromiseLike<string> {
-    this.print(vm, message, {
-      appendNewLine: false
-    });
+    getPreviewInstance().input(message);
+
+    const transformed = transform(message, this._hideUnsupportedTags).replace(
+      /\\n/g,
+      '\n'
+    );
+
+    this._terminal.print(transformed, false);
+
     return PseudoTerminal.getActiveTerminal().waitForInput(vm, isPassword);
   }
 
   waitForKeyPress(vm: VM, message: string): PromiseLike<KeyEvent> {
-    this.print(vm, message, {
-      appendNewLine: false
-    });
+    getPreviewInstance().input(message);
+
+    const transformed = transform(message, this._hideUnsupportedTags).replace(
+      /\\n/g,
+      '\n'
+    );
+
+    this._terminal.print(transformed, false);
 
     return PseudoTerminal.getActiveTerminal()
       .waitForKeyPress(vm)
