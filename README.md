@@ -157,7 +157,9 @@ Will return a list of available GreyHack snippets. Such as `ls`, `mkdir` and mor
 
 ### Preview output
 
-Emulates the ingame terminal graphical output. This feature is currently experimental and will probably not show every tag accurately.
+Since it is impossible to transform TextMesh Pro Rich-Text tags into HTML or ANSI-Codes without losing formatting this feature got added. This will create a web view that will render actual TextMesh Pro in your VSCode.
+
+[![Preview Demo](/assets/preview.gif?raw=true)]
 
 ### Goto Error
 
