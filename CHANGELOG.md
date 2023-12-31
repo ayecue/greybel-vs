@@ -885,3 +885,11 @@ All notable changes to this project will be documented in this file.
 - minor fixes to meta descriptions
 - fix missing fallback value for allow import for file entities in mock environment
 - update steam client
+
+## [2.1.10] - 31.12.2023
+
+- minor fixes to meta descriptions
+- fix connect_ethernet intrinsic ip check
+- fix airmon intrinsic stop option
+- fix missing boot folder in generated computers
+- improve preview output - thanks for the suggestion to [@Olipro](https://github.com/Olipro) - related to [#139](https://github.com/ayecue/greybel-vs/issues/139)
