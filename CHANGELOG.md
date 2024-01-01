@@ -897,3 +897,7 @@ All notable changes to this project will be documented in this file.
 ## [2.1.11] - 31.12.2023
 
 - use proper sprite set for preview output
+
+## [2.1.12] - 01.01.2024
+
+- add pointer for current active instruction for stacktrace

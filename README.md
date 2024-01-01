@@ -91,7 +91,7 @@ More details [here](https://github.com/ayecue/greybel-js#transpiler).
 
 Transforms and bundles your files which makes it easier to import them into GreyHack. As described in the [transform section](#transform) it has three possible transformation types and supports environment variables as well.
 
-Since `1.8.0` it is possible to automatically create files in the game. This can be activated by using the "Create In-game" option. More details [here](https://github.com/ayecue/greybel-js#auto-create-files-in-game).
+It is also possible to automatically create files in the game. This can be activated by using the "Create In-game" option. More details [here](https://github.com/ayecue/greybel-js#auto-create-files-in-game). Please keep in mind to set the mode to `public` if you want to import it into multiplayer and `local`` if you want to import it into singleplayer.
 
 ![Build output](https://github.com/ayecue/greybel-vs/blob/main/assets/build.png?raw=true "Build output")
 
@@ -115,7 +115,7 @@ After you pressed run a prompt will appear to input the parameters for the execu
 
 ![Enter params](https://github.com/ayecue/greybel-vs/blob/main/assets/params.png?raw=true "Enter params")
 
-Supports colors in the console via a pseudo-terminal. Also inputting data is much more convenient now since there won't be any popups anymore instead you can use the pseudo-terminal.
+In the pseudo-terminal you can see the output of your program and also interact with the program. Please note that the pseudo-terminal only partially supports TextMesh Pro Rich-Text tags since more complex tags cannot be transformed sufficiently into ANSI-Codes. If you want to see the proper output please take a look at [the preview output feature](#preview-output). 
 
 ![Pseudo Terminal](https://github.com/ayecue/greybel-vs/blob/main/assets/pseudo-terminal.png?raw=true "Pseudo Terminal")
 
@@ -157,7 +157,7 @@ Will return a list of available GreyHack snippets. Such as `ls`, `mkdir` and mor
 
 ### Preview output
 
-Since it is impossible to transform TextMesh Pro Rich-Text tags into HTML or ANSI-Codes without losing formatting this feature got added. This will create a web view that will render actual TextMesh Pro in your VSCode.
+Will create a web view that will render actual TextMesh Pro Rich-Text tags in your VSCode. Main purpose of this feature is to emulate the actual output of the game. So in case you want to draw images or do fancy prompts this might be useful.
 
 ![Preview Demo](https://github.com/ayecue/greybel-vs/blob/main/assets/preview.gif?raw=true)
 
