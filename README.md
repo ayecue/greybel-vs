@@ -91,7 +91,7 @@ More details [here](https://github.com/ayecue/greybel-js#transpiler).
 
 Transforms and bundles your files which makes it easier to import them into GreyHack. As described in the [transform section](#transform) it has three possible transformation types and supports environment variables as well.
 
-It is also possible to automatically create files in the game. This can be activated by using the "Create In-game" option. More details [here](https://github.com/ayecue/greybel-js#auto-create-files-in-game). Please keep in mind to set the mode to "public" if you want to import it into multiplayer and "local" if you want to import it into singleplayer.
+It is also possible to automatically create files in the game. This can be activated by using the "Create In-game" option. More details [here](https://github.com/ayecue/greybel-js#auto-create-files-in-game). Please keep in mind to set the mode to `public` if you want to import it into multiplayer and `local`` if you want to import it into singleplayer.
 
 ![Build output](https://github.com/ayecue/greybel-vs/blob/main/assets/build.png?raw=true "Build output")
 
