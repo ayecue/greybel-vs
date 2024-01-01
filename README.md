@@ -115,7 +115,7 @@ After you pressed run a prompt will appear to input the parameters for the execu
 
 ![Enter params](https://github.com/ayecue/greybel-vs/blob/main/assets/params.png?raw=true "Enter params")
 
-Supports colors in the console via a pseudo-terminal. Also inputting data is much more convenient now since there won't be any popups anymore instead you can use the pseudo-terminal.
+In the pseudo-terminal you can see the output of your program and also interact with the program. Please note that the pseudo-terminal only partially supports TextMesh Pro Rich-Text tags since more complex tags cannot be transformed sufficiently into ANSI-Codes. If you want to see the proper output please take a look at [the preview output feature](#preview-output). 
 
 ![Pseudo Terminal](https://github.com/ayecue/greybel-vs/blob/main/assets/pseudo-terminal.png?raw=true "Pseudo Terminal")
 
@@ -157,7 +157,7 @@ Will return a list of available GreyHack snippets. Such as `ls`, `mkdir` and mor
 
 ### Preview output
 
-Will create a web view that will render actual TextMesh Pro Rich-Text tags in your VSCode.
+Will create a web view that will render actual TextMesh Pro Rich-Text tags in your VSCode. Main purpose of this feature is to emulate the actual output of the game. So in case you want to draw images or do fancy prompts this might be useful.
 
 ![Preview Demo](https://github.com/ayecue/greybel-vs/blob/main/assets/preview.gif?raw=true)
 
