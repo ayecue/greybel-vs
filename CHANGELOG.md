@@ -901,3 +901,7 @@ All notable changes to this project will be documented in this file.
 ## [2.1.12] - 01.01.2024
 
 - add pointer for current active instruction for stacktrace
+
+## [2.1.13] - 02.01.2023
+
+- use proper font weight map
