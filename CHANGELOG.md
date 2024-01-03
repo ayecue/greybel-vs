@@ -902,6 +902,10 @@ All notable changes to this project will be documented in this file.
 
 - add pointer for current active instruction for stacktrace
 
-## [2.1.13] - 02.01.2023
+## [2.1.13] - 02.01.2024
 
 - use proper font weight map
+
+## [2.1.14] - 03.01.2024
+
+- bump proxy version due to latest GreyHack update
