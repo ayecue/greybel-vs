@@ -6,6 +6,7 @@ import vscode, {
   TextEditor,
   TextEditorEdit
 } from 'vscode';
+import { greyscriptMeta } from 'greyscript-meta/dist/meta';
 
 import { showCustomErrorMessage } from './helper/show-custom-error';
 
@@ -59,7 +60,11 @@ export function activate(context: ExtensionContext) {
         obfuscation,
         disableLiteralsOptimization: config.get('transpiler.dlo'),
         disableNamespacesOptimization: config.get('transpiler.dno'),
-        excludedNamespaces: excludedNamespacesFromConfig
+        excludedNamespaces: [
+          'params',
+          ...excludedNamespacesFromConfig,
+          ...Array.from(Object.keys(greyscriptMeta.getSignaturesByType('general')))
+        ],
       }).parse();
 
       switch (shareType) {
