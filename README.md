@@ -16,7 +16,7 @@ Commands available (`CTRL+SHIFT+P`):
 - `Greybel: Refresh` - [info](#refresh)
 - `Greybel: API` - [info](#api-browser)
 - `Greybel: Snippets` - [info](#snippets)
-- `Greybel: Preview output (experimental)` - [info](#preview-output)
+- `Greybel: Preview output` - [info](#preview-output)
 
 You can also access most of the commands via the context menu:
 
@@ -58,6 +58,7 @@ Do not forget to set up your plugin to your needs. The following settings are av
 - [Snippets](#snippets)
 - [Share](#share)
 - [Goto Error](#goto-error)
+- [Preview output](#preview-output)
 - [Providers](#supporting-providers)
     - [Autocompletion](#autocompletion-provider)
     - [Hover Tooltips](#hover-tooltips-provider)
@@ -91,7 +92,7 @@ More details [here](https://github.com/ayecue/greybel-js#transpiler).
 
 Transforms and bundles your files which makes it easier to import them into GreyHack. As described in the [transform section](#transform) it has three possible transformation types and supports environment variables as well.
 
-It is also possible to automatically create files in the game. This can be activated by using the "Create In-game" option. More details [here](https://github.com/ayecue/greybel-js#auto-create-files-in-game). Please keep in mind to set the mode to `public` if you want to import it into multiplayer and `local`` if you want to import it into singleplayer.
+It is also possible to automatically create files in the game. This can be activated by using the "Create In-game" option. More details [here](https://github.com/ayecue/greybel-js#auto-create-files-in-game). Please keep in mind to set the mode to `public` if you want to import it into multiplayer and `local` if you want to import it into singleplayer.
 
 ![Build output](https://github.com/ayecue/greybel-vs/blob/main/assets/build.png?raw=true "Build output")
 

@@ -58,6 +58,7 @@ export function activate(context: ExtensionContext) {
         disableLiteralsOptimization: config.get('transpiler.dlo'),
         disableNamespacesOptimization: config.get('transpiler.dno'),
         excludedNamespaces: [
+          'params',
           ...excludedNamespacesFromConfig,
           ...Array.from(Object.keys(greyscriptMeta.getSignaturesByType('general')))
         ],
