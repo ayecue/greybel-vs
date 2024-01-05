@@ -96,9 +96,6 @@ export class GreybelDebugSession
     this._silenceErrorPopups = config.get<boolean>(
       'interpreter.silenceErrorPopups'
     );
-    this._env = createGHMockEnv({
-      seed
-    });
     this._out = new VSOutputHandler(hideUnsupportedTextMeshProRichTextTags);
     this._runtime = new Interpreter({
       handler: new HandlerContainer({
@@ -106,7 +103,6 @@ export class GreybelDebugSession
         outputHandler: this._out
       }),
       debugger: new GrebyelDebugger(me),
-      api: initIntrinsics(initGHIntrinsics(new ObjectValue(), this._env)),
       environmentVariables: new Map(
         Object.entries(environmentVariables).map(([key, value]) => [
           key,
@@ -114,6 +110,11 @@ export class GreybelDebugSession
         ])
       )
     });
+    this._env = createGHMockEnv(this._runtime, {
+      seed
+    });
+
+    this._runtime.setApi(initIntrinsics(initGHIntrinsics(new ObjectValue(), this._env)));
   }
 
   /**
