@@ -918,3 +918,4 @@ All notable changes to this project will be documented in this file.
 ## [2.1.15] - 05.01.2024
 
 - add myprogram as process when script is getting executed
+- while minimizing check if hasIndex value exists in namespaces otherwise falls back to not otimized value
