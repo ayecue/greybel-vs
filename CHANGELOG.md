@@ -914,3 +914,7 @@ All notable changes to this project will be documented in this file.
 
 - exclude params from optimization in transpiler
 - add all optimization excludes used in build to transform as well
+
+## [2.1.15] - 05.01.2024
+
+- add myprogram as process when script is getting executed
