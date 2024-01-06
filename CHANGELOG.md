@@ -919,3 +919,7 @@ All notable changes to this project will be documented in this file.
 
 - add myprogram as process when script is getting executed
 - while minimizing check if hasIndex value exists in namespaces otherwise falls back to not otimized value
+
+## [2.1.17] - 06.01.2024
+
+- automatically saves target file on build if file is in a dirty state - thanks for the suggestion to [@gatekeeper258](https://github.com/gatekeeper258) - related to [#155](https://github.com/ayecue/greybel-vs/issues/155)
