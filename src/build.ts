@@ -27,6 +27,10 @@ export function activate(context: ExtensionContext) {
       return;
     }
 
+    if (result.textDocument.isDirty) {
+      await result.textDocument.save();
+    }
+
     try {
       const config = vscode.workspace.getConfiguration('greybel');
       const target = eventUri.fsPath;
