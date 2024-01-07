@@ -923,3 +923,7 @@ All notable changes to this project will be documented in this file.
 ## [2.1.17] - 06.01.2024
 
 - automatically saves target file on build if file is in a dirty state - thanks for the suggestion to [@gatekeeper258](https://github.com/gatekeeper258) - related to [#155](https://github.com/ayecue/greybel-js/issues/155)
+
+## [2.1.18] - 07.01.2024
+
+- bump proxy version due to server change
