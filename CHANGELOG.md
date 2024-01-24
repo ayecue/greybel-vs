@@ -927,3 +927,8 @@ All notable changes to this project will be documented in this file.
 ## [2.1.18] - 07.01.2024
 
 - bump proxy version due to server change
+
+## [2.2.0] - 25.01.2024
+
+- fix index expression to replicate [#89](https://github.com/JoeStrout/miniscript/issues/89) behavior of MiniScript
+- add frame limit to interpreter to prevent crashing VSCode due to infinite recursion caused by script
