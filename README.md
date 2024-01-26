@@ -24,13 +24,14 @@ You can also access most of the commands via the context menu:
 
 ![Context Menu](https://github.com/ayecue/greybel-vs/blob/main/assets/context-menu.png?raw=true "ContextMenu")
 
-Do not forget to [set up](#settings) greybel.
+Do not forget to [set up](#settings) Greybel to your needs.
 
 ## Settings
 
 - Autocomplete: Activate/Deactivate
 - Create in-game
   - Active: Activate/Deactivate
+  - Agent: headless, message-hook
   - Mode: local, public
   - Steam User: Steam username
 - Diagnostic: Activate/Deactivate
@@ -318,3 +319,7 @@ Shows the color picker if you got color or mark tags.
 ## Copyright
 
 [Sloth icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/sloth)
+
+## Contact
+
+If you have any questions or need help feel free to join the dedicated Greybel discord https://discord.gg/q8tR8F8u2M
