@@ -5,8 +5,8 @@ Toolkit for GreyScript which is a scripting language used in [Grey Hack](https:/
 ## Links
 
 - Latest changes: [Changelog](https://github.com/ayecue/greybel-vs/blob/main/CHANGELOG.md)
-- CLI: [greybel-js](https://github.com/ayecue/greybel-js).
-- GreyScript API: [GreyScript Documentation](https://documentation.greyscript.org).
+- CLI: [greybel-js](https://github.com/ayecue/greybel-js)
+- GreyScript API: [GreyScript Documentation](https://documentation.greyscript.org)
 
 ## Usage
 
