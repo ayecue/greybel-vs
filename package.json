@@ -432,7 +432,7 @@
                     "default": "/root/",
                     "description": "Define ingame directory to where the files should be imported to."
                 },
-                "greybel.installer": {
+                "greybel.transpiler.installer.active": {
                     "type": "boolean",
                     "default": true,
                     "description": "Generate installer when building.",

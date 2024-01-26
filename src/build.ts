@@ -86,7 +86,7 @@ export function activate(context: ExtensionContext) {
       await vscode.workspace.fs.createDirectory(buildPath);
       await createParseResult(target, buildPath, result);
 
-      if (config.get<boolean>('installer')) {
+      if (config.get<boolean>('installer.installer.active')) {
         const maxChars =
           config.get<number>('transpiler.installer.maxChars') || 160000;
         const autoCompile =
