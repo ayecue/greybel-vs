@@ -109,11 +109,30 @@ Building will transform and bundle your scripts in a way that makes it easy to i
 
 #### Auto create files in-game
 
-It is possible to automatically create transpiled files in the game. This can be activated by enabling the create-ingame option. Additionally, you can choose between two different modes `local` and `public`.
+It is possible to automatically create transpiled files in the game. This can be activated by enabling the create-ingame option. Additionally, you can choose between two agents. Depending on the agent there are certain prerequisites to fulfil or behaviors to watch out for.
+
+##### Headless
+
+When you are using headless you are essentially connecting to the game without using the actual native game client. Depending on which mode you selected, either `local` or `public` the agent will import the file into either singleplayer or multiplayer.
 
 By default `local` is selected. Keep in mind that the game needs to have a single-player session running for `local` to work. For `public` there is no need to have the game client running.
 
-A minor caveat is that a Steam account and password need to be provided. The refresh token will be cached so no continued providing of credentials is required. You can delete the refresh token any time by using the "Clear secrets" command.
+A minor caveat is that a Steam account and password need to be provided. The refresh token will be cached so no continued providing of credentials is required. You can delete the refresh token at any time by using the "Clear secrets" command.
+
+**Note**: This agent will potentially log you out of Grey Hack since Grey Hack  only allows one active game session.
+
+##### Message Hook
+
+The message-hook agent will essentially send messages to the game server through the game client. For that to work you'll have to install [BepInEx](https://github.com/BepInEx/BepInEx) first. Here are the prerequisites:
+
+- Install [BepInEx version 6.0.0-pre.1](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.1) for more details about the installation you can take a look [here](https://docs.bepinex.dev/master/articles/user_guide/installation/index.html)
+- With [BepInEx](https://github.com/BepInEx/BepInEx) in place, you just need to download the [GreyHackMessageHook.dll](tbd)
+
+With all that done you can now start the game and start either a single-player or multiplayer session. You'll be now able to sync files with the game without getting disconnected.
+
+Additionally, you won't need to provide any Steam credentials nor do you need to select a mode.
+
+**Note**: For this agent to work you **have to have Grey Hack running**.
 
 #### Imports on building
 

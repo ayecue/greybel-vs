@@ -20,8 +20,9 @@ node_modules
 styles
 #json-stream
 !node_modules/node-json-stream
-#greybel-proxy
+#greybel-agent
 !node_modules/greybel-c2
+!node_modules/greybel-c2-light
 #steam-user related
 !node_modules/steam-user
 !node_modules/@bbob/parser
