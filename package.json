@@ -198,18 +198,22 @@
                 },
                 {
                     "command": "greybel.share",
-                    "when": "resourceLangId == greyscript && !isWeb"
+                    "when": "resourceLangId == greyscript"
                 },
                 {
                     "command": "greybel.api",
-                    "when": "resourceLangId == greyscript && !isWeb"
+                    "when": "resourceLangId == greyscript"
                 },
                 {
                     "command": "greybel.preview",
-                    "when": "resourceLangId == greyscript && !isWeb"
+                    "when": "resourceLangId == greyscript"
                 },
                 {
                     "command": "greybel.build",
+                    "when": "resourceLangId == greyscript && !isWeb"
+                },
+                {
+                    "command": "greybel.import",
                     "when": "resourceLangId == greyscript && !isWeb"
                 },
                 {
@@ -222,7 +226,7 @@
                 },
                 {
                     "command": "greybel.snippets",
-                    "when": "resourceLangId == greyscript && !isWeb"
+                    "when": "resourceLangId == greyscript"
                 },
                 {
                     "command": "greybel.clearSecrets",
