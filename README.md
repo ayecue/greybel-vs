@@ -320,6 +320,11 @@ Shows the color picker if you got color or mark tags.
 
 [Sloth icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/sloth)
 
+## Todo
+
+* implement missing intrinsics
+* improve mock environment
+
 ## Contact
 
 If you have any questions or need help feel free to join the dedicated Greybel discord https://discord.gg/q8tR8F8u2M
