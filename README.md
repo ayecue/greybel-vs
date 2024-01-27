@@ -110,21 +110,21 @@ Building will transform and bundle your scripts in a way that makes it easy to i
 
 #### Auto create files in-game
 
-It is possible to automatically create transpiled files in the game. This can be activated by enabling the create-ingame option. Additionally, you can choose between two agents. Depending on the agent there are certain prerequisites to fulfil or behaviors to watch out for.
+It is possible to automatically create transpiled files in the game. This can be activated by enabling the create-ingame option. Additionally, you can choose between two agents. Depending on the agent there are certain prerequisites to fulfill or behaviors to watch out for.
 
 ##### Headless
 
-When you are using headless you are essentially connecting to the game without using the actual native game client. Depending on which mode you selected, either `local` or `public` the agent will import the file into either singleplayer or multiplayer.
+When you are using headless you are essentially connecting to the game without using the actual native game client. Depending on which mode you selected, either `local` or `public` the agent will import the files into either singleplayer or multiplayer.
 
 By default `local` is selected. Keep in mind that the game needs to have a single-player session running for `local` to work. For `public` there is no need to have the game client running.
 
 A minor caveat is that a Steam account and password need to be provided. The refresh token will be cached so no continued providing of credentials is required. You can delete the refresh token at any time by using the "Clear secrets" command.
 
-**Note**: This agent will potentially log you out of Grey Hack since Grey Hack  only allows one active game session.
+**Note**: This agent will potentially log you out of Grey Hack since Grey Hack only allows one active game session.
 
 ##### Message Hook
 
-The message-hook agent will essentially send messages to the game server through the game client. For that to work you'll have to install [BepInEx](https://github.com/BepInEx/BepInEx) first. Here are the prerequisites:
+The message-hook agent will essentially send messages to the game server through the game client. For that to work you'll have to install [BepInEx](https://github.com/BepInEx/BepInEx) first and then the plugin second. Here are the prerequisites:
 
 - Install [BepInEx version 6.0.0-pre.1](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.1) for more details about the installation you can take a look [here](https://docs.bepinex.dev/master/articles/user_guide/installation/index.html)
 - With [BepInEx](https://github.com/BepInEx/BepInEx) in place, you just need to download the [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/ef886ba9b87f701bc46d877df98f47c9299cab33/GreyHackMessageHook.dll) and put it into the plugins folder

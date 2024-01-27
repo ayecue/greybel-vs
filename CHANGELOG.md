@@ -935,4 +935,4 @@ All notable changes to this project will be documented in this file.
 - prevent error when stopping script execution while waiting for key input
 - enable to change background color of terminal preview view
 - enable some commands for VSCode web version - related to [#173](https://github.com/ayecue/greybel-vs/issues/173) - thanks for reporting to [@almostSouji](https://github.com/almostSouji)
-- add message-hook agent to enable a smoother workflow
+- add message-hook agent to enable a smoother workflow when importing files in-game
