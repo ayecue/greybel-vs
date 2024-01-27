@@ -6,7 +6,7 @@ import vscode, {
 import { greyscriptMeta } from 'greyscript-meta/dist/meta';
 
 import { createParseResult } from './build/create-parse-result';
-import { createImporter } from './build/importer';
+import { AgentType, ImporterMode, createImporter } from './build/importer';
 import { createInstaller } from './build/installer';
 import { createBasePath } from './helper/create-base-path';
 import { showCustomErrorMessage } from './helper/show-custom-error';
@@ -86,7 +86,7 @@ export function activate(context: ExtensionContext) {
       await vscode.workspace.fs.createDirectory(buildPath);
       await createParseResult(target, buildPath, result);
 
-      if (config.get<boolean>('installer')) {
+      if (config.get<boolean>('transpiler.installer.active')) {
         const maxChars =
           config.get<number>('transpiler.installer.maxChars') || 160000;
         const autoCompile =
@@ -114,7 +114,13 @@ export function activate(context: ExtensionContext) {
           target,
           ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
           result,
-          extensionContext: context
+          extensionContext: context,
+          mode: vscode.workspace
+            .getConfiguration('greybel')
+            .get<ImporterMode>('createIngame.mode'),
+          agentType: vscode.workspace
+            .getConfiguration('greybel')
+            .get<AgentType>('createIngame.agent')
         });
         const successfulItems = importResults.filter((item) => item.success);
         const failedItems = importResults.filter((item) => !item.success);

@@ -114,7 +114,9 @@ export class GreybelDebugSession
       seed
     });
 
-    this._runtime.setApi(initIntrinsics(initGHIntrinsics(new ObjectValue(), this._env)));
+    this._runtime.setApi(
+      initIntrinsics(initGHIntrinsics(new ObjectValue(), this._env))
+    );
   }
 
   /**

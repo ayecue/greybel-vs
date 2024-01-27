@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "2.1.18",
+    "version": "2.2.0",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -198,18 +198,22 @@
                 },
                 {
                     "command": "greybel.share",
-                    "when": "resourceLangId == greyscript && !isWeb"
+                    "when": "resourceLangId == greyscript"
                 },
                 {
                     "command": "greybel.api",
-                    "when": "resourceLangId == greyscript && !isWeb"
+                    "when": "resourceLangId == greyscript"
                 },
                 {
                     "command": "greybel.preview",
-                    "when": "resourceLangId == greyscript && !isWeb"
+                    "when": "resourceLangId == greyscript"
                 },
                 {
                     "command": "greybel.build",
+                    "when": "resourceLangId == greyscript && !isWeb"
+                },
+                {
+                    "command": "greybel.import",
                     "when": "resourceLangId == greyscript && !isWeb"
                 },
                 {
@@ -222,7 +226,7 @@
                 },
                 {
                     "command": "greybel.snippets",
-                    "when": "resourceLangId == greyscript && !isWeb"
+                    "when": "resourceLangId == greyscript"
                 },
                 {
                     "command": "greybel.clearSecrets",
@@ -432,7 +436,7 @@
                     "default": "/root/",
                     "description": "Define ingame directory to where the files should be imported to."
                 },
-                "greybel.installer": {
+                "greybel.transpiler.installer.active": {
                     "type": "boolean",
                     "default": true,
                     "description": "Generate installer when building.",
@@ -459,6 +463,17 @@
                     "when": "!isWeb",
                     "scope": "resource"
                 },
+                "greybel.createIngame.agent": {
+                  "type": "string",
+                  "enum": [
+                      "headless",
+                      "message-hook"
+                  ],
+                  "default": "headless",
+                  "description": "Agent used for file import.",
+                  "when": "!isWeb",
+                  "scope": "resource"
+              },
                 "greybel.createIngame.mode": {
                     "type": "string",
                     "enum": [
@@ -542,10 +557,10 @@
         "ansi-escapes": "^4.3.2",
         "color-convert": "^2.0.1",
         "css-color-names": "^1.0.1",
-        "greybel-gh-mock-intrinsics": "~4.3.0",
-        "greyscript-interpreter": "~1.2.3",
-        "greybel-intrinsics": "~4.2.3",
-        "greybel-proxy": "~2.3.0",
+        "greybel-gh-mock-intrinsics": "~4.4.1",
+        "greyscript-interpreter": "~1.3.0",
+        "greybel-intrinsics": "~4.3.0",
+        "greybel-agent": "~1.0.0",
         "greyscript-transpiler": "~0.5.3",
         "greyscript-core": "~1.4.2",
         "greyscript-meta": "~2.3.2",

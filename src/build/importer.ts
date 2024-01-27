@@ -1,14 +1,24 @@
-import GreybelC2AgentPkg from 'greybel-proxy';
+import GreybelAgentPkg from 'greybel-agent';
 import { TranspilerParseResult } from 'greybel-transpiler';
 import path from 'path';
 import vscode, { ExtensionContext } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
-const { GreybelC2Agent } = GreybelC2AgentPkg;
+const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg;
+
+export enum AgentType {
+  C2 = 'headless',
+  C2Light = 'message-hook'
+}
+
+export enum ImporterMode {
+  Local = 'local',
+  Public = 'public'
+}
 
 const IMPORTER_MODE_MAP = {
-  local: 2,
-  public: 0
+  [ImporterMode.Local]: 2,
+  [ImporterMode.Public]: 0
 };
 
 type ImportItem = {
@@ -23,25 +33,27 @@ type ImportResult = {
 
 export interface ImporterOptions {
   target: string;
+  mode: ImporterMode;
   ingameDirectory: string;
+  agentType: AgentType;
   result: TranspilerParseResult;
   extensionContext: ExtensionContext;
 }
 
 class Importer {
   private importList: ImportItem[];
+  private agentType: AgentType;
   private target: string;
   private ingameDirectory: string;
-  private mode: string;
+  private mode: ImporterMode;
   private extensionContext: ExtensionContext;
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
     this.ingameDirectory = options.ingameDirectory;
     this.importList = this.createImportList(options.target, options.result);
-    this.mode = vscode.workspace
-      .getConfiguration('greybel')
-      .get<string>('createIngame.mode');
+    this.agentType = options.agentType;
+    this.mode = options.mode;
     this.extensionContext = options.extensionContext;
   }
 
@@ -84,36 +96,50 @@ class Importer {
     });
   }
 
+  async createAgent(): Promise<any> {
+    switch (this.agentType) {
+      case AgentType.C2: {
+        const refreshToken = await this.extensionContext.secrets.get(
+          'greybel.steam.refreshToken'
+        );
+
+        return new GreybelC2Agent({
+          connectionType: IMPORTER_MODE_MAP[this.mode],
+          steamGuardGetter: async (domain, callback) => {
+            const code = await vscode.window.showInputBox({
+              title: `Enter steam guard code (send to ${domain})`,
+              ignoreFocusOut: true,
+              password: true
+            });
+            callback(code);
+          },
+          refreshToken,
+          onSteamRefreshToken: (code: string) => {
+            this.extensionContext.secrets.store(
+              'greybel.steam.refreshToken',
+              code
+            );
+          },
+          credentialsGetter: async (label: string) => {
+            if (label.includes('password')) {
+              return await this.getPassword();
+            }
+            return await this.getUsername();
+          }
+        });
+      }
+      case AgentType.C2Light: {
+        return new GreybelC2LightAgent();
+      }
+    }
+  }
+
   async import(): Promise<ImportResult[]> {
     if (!Object.prototype.hasOwnProperty.call(IMPORTER_MODE_MAP, this.mode)) {
       throw new Error('Unknown import mode.');
     }
 
-    const refreshToken = await this.extensionContext.secrets.get(
-      'greybel.steam.refreshToken'
-    );
-
-    const agent = new GreybelC2Agent({
-      connectionType: IMPORTER_MODE_MAP[this.mode],
-      steamGuardGetter: async (domain, callback) => {
-        const code = await vscode.window.showInputBox({
-          title: `Enter steam guard code (send to ${domain})`,
-          ignoreFocusOut: true,
-          password: true
-        });
-        callback(code);
-      },
-      refreshToken,
-      onSteamRefreshToken: (code: string) => {
-        this.extensionContext.secrets.store('greybel.steam.refreshToken', code);
-      },
-      credentialsGetter: async (label: string) => {
-        if (label.includes('password')) {
-          return await this.getPassword();
-        }
-        return await this.getUsername();
-      }
-    });
+    const agent = await this.createAgent();
     const results: ImportResult[] = [];
 
     for (const item of this.importList) {

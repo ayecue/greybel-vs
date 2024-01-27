@@ -6,7 +6,7 @@ import vscode, {
 } from 'vscode';
 
 import { showCustomErrorMessage } from './helper/show-custom-error';
-import { createImporter } from './build/importer';
+import { AgentType, ImporterMode, createImporter } from './build/importer';
 
 const getFiles = async (uri: vscode.Uri): Promise<vscode.Uri[]> => {
   const stat = await vscode.workspace.fs.stat(uri);
@@ -58,7 +58,13 @@ export function activate(context: ExtensionContext) {
           result[item.path] = item.content;
           return result;
         }, {}),
-        extensionContext: context
+        extensionContext: context,
+        mode: vscode.workspace
+            .getConfiguration('greybel')
+            .get<ImporterMode>('createIngame.mode'),
+          agentType: vscode.workspace
+            .getConfiguration('greybel')
+            .get<AgentType>('createIngame.agent')
       });
       const successfulItems = results.filter((item) => item.success);
       const failedItems = results.filter((item) => !item.success);
