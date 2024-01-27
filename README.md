@@ -138,7 +138,7 @@ Additionally, you won't need to provide any Steam credentials nor do you need to
 
 #### Imports on building
 
-Scripting in Grey Hack can be hell. Especially when you files that import each other or any kind of bigger project where you have to copy-paste each file by hand into the game every time. Greybel tries to aid you so you spend less time copy-pasting and more time coding and playing.
+Scripting in Grey Hack can be hell. Especially when you have files that import each other or any kind of bigger project where you have to copy-paste each file by hand into the game every time. Greybel tries to aid you so you spend less time copy-pasting and more time coding and playing.
 
 ![Build output](https://github.com/ayecue/greybel-vs/blob/main/assets/build.png?raw=true "Build output")
 
