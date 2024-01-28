@@ -34,6 +34,7 @@ Do not forget to [set up](#settings) Greybel to your needs.
   - Agent: headless, message-hook
   - Mode: local, public
   - Steam User: Steam username
+  - Auto Compile: Auto compile and delete source files
 - Diagnostic: Activate/Deactivate
 - Hoverdocs: Activate/Deactivate
 - Interpreter
