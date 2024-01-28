@@ -64,7 +64,8 @@ export function activate(context: ExtensionContext) {
             .get<ImporterMode>('createIngame.mode'),
           agentType: vscode.workspace
             .getConfiguration('greybel')
-            .get<AgentType>('createIngame.agent')
+            .get<AgentType>('createIngame.agent'),
+        autoCompile: false
       });
       const successfulItems = results.filter((item) => item.success);
       const failedItems = results.filter((item) => !item.success);
