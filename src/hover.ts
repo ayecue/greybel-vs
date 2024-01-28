@@ -100,10 +100,9 @@ export function activate(_context: ExtensionContext) {
         typeInfo instanceof TypeInfoWithDefinition &&
         typeInfo.type.length === 1
       ) {
-        const defintion = typeInfo.definition;
-        const args = defintion.arguments || [];
-        const example = defintion.example || [];
-        const returnValues = formatTypes(defintion.returns) || 'null';
+        const definition = typeInfo.definition;
+        const args = definition.arguments || [];
+        const returnValues = formatTypes(definition.returns) || 'null';
         let headline;
 
         if (args.length === 0) {
@@ -121,7 +120,8 @@ export function activate(_context: ExtensionContext) {
           headline = `(${typeInfo.kind}) ${typeInfo.label} (${argValues}): ${returnValues}`;
         }
 
-        const output = ['```', headline, '```', '***', defintion.description];
+        const output = ['```', headline, '```', '***', definition.description];
+        const example = definition.example || [];
 
         if (example.length > 0) {
           output.push(...['#### Examples:', '```', ...example, '```']);

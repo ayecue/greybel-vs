@@ -17,6 +17,7 @@ import vscode, {
   CompletionItemKind,
   CompletionList,
   ExtensionContext,
+  MarkdownString,
   ParameterInformation,
   Position,
   SignatureHelp,
@@ -285,6 +286,7 @@ export function activate(_context: ExtensionContext) {
         signatureHelp.signatures = [];
         signatureHelp.activeSignature = 0;
 
+        // Signature args
         const definition = item.definition;
         const args = definition.arguments || [];
         const returnValues = definition.returns.join(' or ') || 'null';
@@ -305,7 +307,19 @@ export function activate(_context: ExtensionContext) {
           }
         );
 
+        // Signature documentation
+        const documentation = new MarkdownString('');
+        const output = [definition.description];
+        const example = definition.example || [];
+
+        if (example.length > 0) {
+          output.push(...['#### Examples:', '```', ...example, '```']);
+        }
+
+        documentation.appendMarkdown(output.join('\n'));
+
         signatureInfo.parameters = params;
+        signatureInfo.documentation = documentation;
         signatureHelp.signatures.push(signatureInfo);
 
         return signatureHelp;
