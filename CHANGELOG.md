@@ -943,4 +943,4 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.2] - 28.01.2024
 
-- update GreyHackMessageHook.dll version to 0.2 adding an auto close
+- update GreyHackMessageHook.dll version to 0.2 adding an auto close - thanks to [@stevenklar](https://github.com/stevenklar) - related to [#159](https://github.com/ayecue/greybel-js/issues/159)
