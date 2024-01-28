@@ -115,12 +115,12 @@ export function activate(context: ExtensionContext) {
           ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
           result,
           extensionContext: context,
-          mode: vscode.workspace
-            .getConfiguration('greybel')
+          mode: config
             .get<ImporterMode>('createIngame.mode'),
-          agentType: vscode.workspace
-            .getConfiguration('greybel')
-            .get<AgentType>('createIngame.agent')
+          agentType: config
+            .get<AgentType>('createIngame.agent'),
+          autoCompile: config
+            .get<boolean>('createIngame.autoCompile'),
         });
         const successfulItems = importResults.filter((item) => item.success);
         const failedItems = importResults.filter((item) => !item.success);

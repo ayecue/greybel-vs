@@ -940,3 +940,9 @@ All notable changes to this project will be documented in this file.
 ## [2.2.1] - 27.01.2024
 
 - fix instruction in readme for message-hook agent
+
+## [2.2.2] - 28.01.2024
+
+- update GreyHackMessageHook.dll version to 0.3 adding an auto close - thanks to [@stevenklar](https://github.com/stevenklar) - related to [#159](https://github.com/ayecue/greybel-js/issues/159)
+- add auto compile option for create in-game feature - thanks for the suggestion to [@stevenklar](https://github.com/stevenklar) - related to [#160](https://github.com/ayecue/greybel-js/issues/160)
+- add function definition to signature helper - thanks for the suggestion to [@stevenklar](https://github.com/stevenklar)
