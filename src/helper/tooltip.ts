@@ -27,12 +27,13 @@ const useCommentDefinitionOrDefault = (
   const commentDefs = parse(`/**
     ${item.definition.description}
   */`);
+  const [commentDef] = commentDefs;
 
-  if (commentDefs.length > 0) {
-    const [commentDef] = commentDefs;
+  if (commentDef.tags.length > 0) {
     const commentDescription =
       commentDef.tags.find((it) => it.tag === 'description')?.description ??
-      commentDef.description;
+      commentDef.description ??
+      '';
     const commentArgs: SignatureDefinitionArg[] = commentDef.tags
       .filter((it) => it.tag === 'param')
       .map((it) => ({
@@ -42,7 +43,7 @@ const useCommentDefinitionOrDefault = (
       }));
     const commentReturnValues = commentDef.tags.find(
       (it) => it.tag === 'return'
-    );
+    ) ?? { type: 'any' };
 
     return new TypeInfoWithDefinition(item.label, ['function'], {
       arguments: commentArgs,
@@ -94,13 +95,16 @@ export const createSignatureInfo = (
   const label = createTooltipHeader(typeInfo);
   const signatureInfo = new SignatureInformation(label);
   const args = typeInfo.definition.arguments ?? [];
+  const text = new MarkdownString('');
+
+  text.appendMarkdown(createTooltipBody(typeInfo));
 
   signatureInfo.parameters = args.map((argItem: SignatureDefinitionArg) => {
     return new ParameterInformation(
       `${argItem.label}${argItem.opt ? '?' : ''}: ${argItem.type}`
     );
   });
-  signatureInfo.documentation = createTooltipBody(typeInfo);
+  signatureInfo.documentation = text;
 
   return signatureInfo;
 };
