@@ -2,11 +2,9 @@ import {
   ASTBase,
   ASTCallExpression,
   ASTIndexExpression,
-  ASTMemberExpression,
-  ASTType
+  ASTMemberExpression
 } from 'miniscript-core';
 import {
-  SignatureDefinitionArg,
   SignatureDefinitionContainer
 } from 'meta-utils';
 import { greyscriptMeta } from 'greyscript-meta/dist/meta';
@@ -17,12 +15,9 @@ import vscode, {
   CompletionItemKind,
   CompletionList,
   ExtensionContext,
-  MarkdownString,
-  ParameterInformation,
   Position,
   SignatureHelp,
   SignatureHelpContext,
-  SignatureInformation,
   TextDocument
 } from 'vscode';
 
@@ -33,6 +28,7 @@ import transformASTToString from './helper/ast-stringify';
 import documentParseQueue from './helper/document-manager';
 import { LookupHelper } from './helper/lookup-type';
 import { TypeInfo, TypeInfoWithDefinition } from './helper/type-manager';
+import { createSignatureInfo } from './helper/tooltip';
 
 export const convertDefinitionsToCompletionList = (
   definitions: SignatureDefinitionContainer
@@ -285,42 +281,7 @@ export function activate(_context: ExtensionContext) {
           selectedIndex === -1 ? 0 : selectedIndex;
         signatureHelp.signatures = [];
         signatureHelp.activeSignature = 0;
-
-        // Signature args
-        const definition = item.definition;
-        const args = definition.arguments || [];
-        const returnValues = definition.returns.join(' or ') || 'null';
-        const argValues = args
-          .map(
-            (item: SignatureDefinitionArg) =>
-              `${item.label}${item.opt ? '?' : ''}: ${item.type}`
-          )
-          .join(', ');
-        const signatureInfo = new SignatureInformation(
-          `(${item.type}) ${item.label} (${argValues}): ${returnValues}`
-        );
-        const params: ParameterInformation[] = args.map(
-          (argItem: SignatureDefinitionArg) => {
-            return new ParameterInformation(
-              `${argItem.label}${argItem.opt ? '?' : ''}: ${argItem.type}`
-            );
-          }
-        );
-
-        // Signature documentation
-        const documentation = new MarkdownString('');
-        const output = [definition.description];
-        const example = definition.example || [];
-
-        if (example.length > 0) {
-          output.push(...['#### Examples:', '```', ...example, '```']);
-        }
-
-        documentation.appendMarkdown(output.join('\n'));
-
-        signatureInfo.parameters = params;
-        signatureInfo.documentation = documentation;
-        signatureHelp.signatures.push(signatureInfo);
+        signatureHelp.signatures.push(createSignatureInfo(item));
 
         return signatureHelp;
       }

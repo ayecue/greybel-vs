@@ -16,6 +16,7 @@ import vscode, {
 import { LookupHelper } from './helper/lookup-type';
 import { TypeInfoWithDefinition } from './helper/type-manager';
 import { PseudoFS } from './resource';
+import { createHover } from './helper/tooltip';
 
 function formatType(type: string): string {
   const segments = type.split(':');
@@ -100,36 +101,7 @@ export function activate(_context: ExtensionContext) {
         typeInfo instanceof TypeInfoWithDefinition &&
         typeInfo.type.length === 1
       ) {
-        const definition = typeInfo.definition;
-        const args = definition.arguments || [];
-        const returnValues = formatTypes(definition.returns) || 'null';
-        let headline;
-
-        if (args.length === 0) {
-          headline = `(${typeInfo.kind}) ${typeInfo.label} (): ${returnValues}`;
-        } else {
-          const argValues = args
-            .map(
-              (item) =>
-                `${item.label}${item.opt ? '?' : ''}: ${formatType(item.type)}${
-                  item.default ? ` = ${item.default}` : ''
-                }`
-            )
-            .join(', ');
-
-          headline = `(${typeInfo.kind}) ${typeInfo.label} (${argValues}): ${returnValues}`;
-        }
-
-        const output = ['```', headline, '```', '***', definition.description];
-        const example = definition.example || [];
-
-        if (example.length > 0) {
-          output.push(...['#### Examples:', '```', ...example, '```']);
-        }
-
-        hoverText.appendMarkdown(output.join('\n'));
-
-        return new Hover(hoverText);
+        return createHover(typeInfo);
       }
 
       hoverText.appendCodeblock(
