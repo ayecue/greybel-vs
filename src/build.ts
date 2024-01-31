@@ -6,7 +6,7 @@ import vscode, {
 import { greyscriptMeta } from 'greyscript-meta/dist/meta';
 
 import { createParseResult } from './build/create-parse-result';
-import { AgentType, ImporterMode, createImporter } from './build/importer';
+import { AgentType, ImportResultFailure, ImportResultSuccess, ImporterMode, createImporter } from './build/importer';
 import { createInstaller } from './build/installer';
 import { createBasePath } from './helper/create-base-path';
 import { showCustomErrorMessage } from './helper/show-custom-error';
@@ -122,16 +122,18 @@ export function activate(context: ExtensionContext) {
           autoCompile: config
             .get<boolean>('createIngame.autoCompile'),
         });
-        const successfulItems = importResults.filter((item) => item.success);
-        const failedItems = importResults.filter((item) => !item.success);
+        const successfulItems = importResults.filter((item) => item.success) as ImportResultSuccess[];
+        const failedItems = importResults.filter((item) => !item.success) as ImportResultFailure[];
 
         if (successfulItems.length === 0) {
-          vscode.window.showInformationMessage(`No files could get imported! This might be due to a new Grey Hack version or other reasons.`, {
-            modal: false
+          vscode.window.showInformationMessage(`File import failed! This can happen if Grey Hack received an update and sometimes due to other issues.`, {
+            modal: true,
+            detail: failedItems.map((it) => it.reason).join('\n')
           });
         } else if (failedItems.length > 0) {
           vscode.window.showInformationMessage(`Import was only partially successful. Only ${successfulItems.length} files got imported to ${ingameDirectory.fsPath}!`, {
-            modal: false
+            modal: true,
+            detail: failedItems.map((it) => it.reason).join('\n')
           });
         } else {
           vscode.window.showInformationMessage(`${successfulItems.length} files got imported to ${ingameDirectory.fsPath}!`, {
