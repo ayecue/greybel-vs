@@ -26,10 +26,18 @@ type ImportItem = {
   content: string;
 };
 
-type ImportResult = {
+export type ImportResultSuccess = {
   path: string;
-  success: boolean;
+  success: true;
 };
+
+export type ImportResultFailure = {
+  path: string;
+  success: false;
+  reason: string;
+};
+
+export type ImportResult = ImportResultSuccess | ImportResultFailure;
 
 export interface ImporterOptions {
   target: string;
@@ -109,33 +117,36 @@ class Importer {
           'greybel.steam.refreshToken'
         );
 
-        return new GreybelC2Agent({
-          connectionType: IMPORTER_MODE_MAP[this.mode],
-          steamGuardGetter: async (domain, callback) => {
-            const code = await vscode.window.showInputBox({
-              title: `Enter steam guard code (send to ${domain})`,
-              ignoreFocusOut: true,
-              password: true
-            });
-            callback(code);
-          },
-          refreshToken,
-          onSteamRefreshToken: (code: string) => {
-            this.extensionContext.secrets.store(
-              'greybel.steam.refreshToken',
-              code
-            );
-          },
-          credentialsGetter: async (label: string) => {
-            if (label.includes('password')) {
-              return await this.getPassword();
+        return new GreybelC2Agent(
+          {
+            connectionType: IMPORTER_MODE_MAP[this.mode],
+            steamGuardGetter: async (domain, callback) => {
+              const code = await vscode.window.showInputBox({
+                title: `Enter steam guard code (send to ${domain})`,
+                ignoreFocusOut: true,
+                password: true
+              });
+              callback(code);
+            },
+            refreshToken,
+            onSteamRefreshToken: (code: string) => {
+              this.extensionContext.secrets.store(
+                'greybel.steam.refreshToken',
+                code
+              );
+            },
+            credentialsGetter: async (label: string) => {
+              if (label.includes('password')) {
+                return await this.getPassword();
+              }
+              return await this.getUsername();
             }
-            return await this.getUsername();
-          }
-        });
+          },
+          [125, 150]
+        );
       }
       case AgentType.C2Light: {
-        return new GreybelC2LightAgent();
+        return new GreybelC2LightAgent([125, 150]);
       }
     }
   }
@@ -149,18 +160,24 @@ class Importer {
     const results: ImportResult[] = [];
 
     for (const item of this.importRefs.values()) {
-      const isCreated = await agent.tryToCreateFile(
+      const response = await agent.tryToCreateFile(
         this.ingameDirectory + path.posix.dirname(item.ingameFilepath),
         path.basename(item.ingameFilepath),
         item.content
       );
 
-      if (isCreated) {
+      if (response.success) {
         console.log(`Imported ${item.ingameFilepath} successful`);
         results.push({ path: item.ingameFilepath, success: true });
       } else {
-        console.log(`Importing of ${item.ingameFilepath} failed`);
-        results.push({ path: item.ingameFilepath, success: false });
+        console.log(
+          `Importing of ${item.ingameFilepath} failed due to ${response.message}`
+        );
+        results.push({
+          path: item.ingameFilepath,
+          success: false,
+          reason: response.message
+        });
       }
     }
 
@@ -169,13 +186,13 @@ class Importer {
       const binaryFileName = path
         .basename(rootRef.ingameFilepath)
         .replace(/\.[^.]+$/, '');
-      const builtDone = agent.tryToBuild(
+      const response = await agent.tryToBuild(
         this.ingameDirectory + path.posix.dirname(rootRef.ingameFilepath),
         binaryFileName,
         rootRef.content
       );
 
-      if (builtDone) {
+      if (response.success) {
         console.log(`Build done`);
 
         for (const item of this.importRefs.values()) {
@@ -184,7 +201,7 @@ class Importer {
           );
         }
       } else {
-        console.log(`Build failed`);
+        console.log(`Build failed due to ${response.message}`);
       }
     }
 
