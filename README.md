@@ -5,6 +5,8 @@ Toolkit for GreyScript which is a scripting language used in [Grey Hack](https:/
 ## Links
 
 - Latest changes: [Changelog](https://github.com/ayecue/greybel-vs/blob/main/CHANGELOG.md)
+- Projects using Greybel: [viper-3.0](https://github.com/cantemizyurek/viper-3.0)
+- Demo Projects: [Minesweeper](https://github.com/ayecue/minesweeper-gs), [JSON](https://github.com/ayecue/json), [TEdit](https://github.com/ayecue/tedit)
 - CLI: [greybel-js](https://github.com/ayecue/greybel-js)
 - GreyScript API: [GreyScript Documentation](https://documentation.greyscript.org)
 
