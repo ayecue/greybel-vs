@@ -194,12 +194,15 @@ class Importer {
 
       if (response.success) {
         console.log(`Build done`);
+        const queries = [];
 
         for (const item of this.importRefs.values()) {
-          await agent.tryToRemoveFile(
-            this.ingameDirectory + item.ingameFilepath
+          queries.push(
+            agent.tryToRemoveFile(this.ingameDirectory + item.ingameFilepath)
           );
         }
+
+        await Promise.all(queries);
       } else {
         console.log(`Build failed due to ${response.message}`);
       }
