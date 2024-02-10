@@ -12,7 +12,7 @@ Toolkit for GreyScript which is a scripting language used in [Grey Hack](https:/
 
 ## Usage
 
-Automatically detects `.gs` and `.src` files.
+Automatically detects `.gs`, `.src` and `.ms` files.
 
 Commands available (`CTRL+SHIFT+P`):
 - `Greybel: Build` - [info](#build)

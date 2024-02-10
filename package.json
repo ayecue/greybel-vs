@@ -249,7 +249,8 @@
                 ],
                 "extensions": [
                     ".src",
-                    ".gs"
+                    ".gs",
+                    ".ms"
                 ],
                 "icon": {
                     "light": "./icons/file-icon-lightmode.png",
