@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "2.2.10",
+    "version": "2.2.11",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -249,7 +249,8 @@
                 ],
                 "extensions": [
                     ".src",
-                    ".gs"
+                    ".gs",
+                    ".ms"
                 ],
                 "icon": {
                     "light": "./icons/file-icon-lightmode.png",
@@ -566,7 +567,7 @@
         "comment-parser": "^1.4.1",
         "css-color-names": "^1.0.1",
         "greybel-agent": "~1.4.0",
-        "greybel-gh-mock-intrinsics": "~4.5.0",
+        "greybel-gh-mock-intrinsics": "~4.5.1",
         "greybel-intrinsics": "~4.4.0",
         "greyscript-core": "~1.4.2",
         "greyscript-interpreter": "~1.4.0",
