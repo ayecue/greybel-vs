@@ -983,3 +983,8 @@ All notable changes to this project will be documented in this file.
 - allow super being reassigned
 - fix super not using proper origin when calling a function of parent - thanks for reporting apparatusdeus
 - set super to null if there is no parent class
+
+## [2.2.11] - 10.01.2024
+
+- add ms file extension to be detected as GreyScript file
+- fix shell.launch layer counter to decrease on nested script end
