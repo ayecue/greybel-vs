@@ -987,4 +987,4 @@ All notable changes to this project will be documented in this file.
 ## [2.2.11] - 10.01.2024
 
 - add ms file extension to be detected as GreyScript file
-- fix shell.launch layer counter to decrease on nested script end
+- fix shell.launch layer counter to decrease on nested script end - thanks for reporting [@stevenklar](https://github.com/stevenklar)
