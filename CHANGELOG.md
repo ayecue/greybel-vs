@@ -995,3 +995,7 @@ All notable changes to this project will be documented in this file.
 - add missing descriptions for reverse, lastIndexOf and trim in general
 - add placeholders for new intrinsics
 - update headless agent to work with latest version
+
+## [2.2.13] - 13.01.2024
+
+- add missing steam-user packages to .vscodeignore causing extension to fail loading - thanks for reporting [SkidMall](https://github.com/cantemizyurek)
