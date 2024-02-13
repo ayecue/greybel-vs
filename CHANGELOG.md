@@ -988,3 +988,10 @@ All notable changes to this project will be documented in this file.
 
 - add ms file extension to be detected as GreyScript file
 - fix shell.launch layer counter to decrease on nested script end - thanks for reporting [@stevenklar](https://github.com/stevenklar)
+
+## [2.2.12] - 13.01.2024
+
+- add highlighting, signature and description for new reset_password_coin and reset_ctf_password
+- add missing descriptions for reverse, lastIndexOf and trim in general
+- add placeholders for new intrinsics
+- update headless agent to work with latest version
