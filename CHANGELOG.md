@@ -999,3 +999,8 @@ All notable changes to this project will be documented in this file.
 ## [2.2.13] - 13.01.2024
 
 - add missing steam-user packages to .vscodeignore causing extension to fail loading - thanks for reporting [SkidMall](https://github.com/cantemizyurek)
+
+## [2.2.14] - 19.01.2024
+
+- improve parser recovery from invalid syntax
+- use backpatching to enable similar MiniScript parsing of blocks, this may cause previous valid greybel syntax to be invalid especially when it comes to function blocks

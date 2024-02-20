@@ -9,6 +9,7 @@ Toolkit for GreyScript which is a scripting language used in [Grey Hack](https:/
 - Demo Projects: [Minesweeper](https://github.com/ayecue/minesweeper-gs), [JSON](https://github.com/ayecue/json), [TEdit](https://github.com/ayecue/tedit)
 - CLI: [greybel-js](https://github.com/ayecue/greybel-js)
 - GreyScript API: [GreyScript Documentation](https://documentation.greyscript.org)
+- Discord: [dedicated Greybel Discord](https://discord.gg/q8tR8F8u2M)
 
 ## Usage
 
@@ -331,4 +332,4 @@ Shows the color picker if you got color or mark tags.
 
 ## Contact
 
-If you have any questions, feature requests or need help feel free to join the [dedicated Greybel discord](https://discord.gg/q8tR8F8u2M).
+If you have any questions, feature requests or need help feel free to join the [dedicated Greybel Discord](https://discord.gg/q8tR8F8u2M).
