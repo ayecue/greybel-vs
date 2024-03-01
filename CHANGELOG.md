@@ -1008,3 +1008,4 @@ All notable changes to this project will be documented in this file.
 ## [2.2.15] - 01.03.2024
 
 - introduce #line and #filename keyword for debugging
+- fix import_code behaviour in interpreter so it's content is only executed once
