@@ -1013,3 +1013,4 @@ All notable changes to this project will be documented in this file.
 ## [2.2.16] - 02.03.2024
 
 - add @description and @example tag to comment docs
+- fix an issue with scp where the function would try to get the groups via the wrong property potentially causing a crash - thanks for reporting [@stevenklar](https://github.com/stevenklar)
