@@ -1009,3 +1009,7 @@ All notable changes to this project will be documented in this file.
 
 - introduce #line and #filename keyword for debugging
 - fix import_code behaviour in interpreter so it's content is only executed once
+
+## [2.2.16] - 02.03.2024
+
+- add @description and @example tag to comment docs
