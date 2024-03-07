@@ -5,6 +5,7 @@ import { TextEncoderLite as TextEncoder } from 'text-encoder-lite';
 import vscode, { Uri } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
+import { generateAutoCompileCode } from './auto-compile-helper';
 
 type ImportItem = {
   filepath: string;
@@ -13,6 +14,7 @@ type ImportItem = {
 };
 
 interface InstallerFileOptions {
+  rootDirectory: string;
   contentHeader: string;
   maxChars: number;
   previous?: InstallerFile;
@@ -21,11 +23,13 @@ interface InstallerFileOptions {
 class InstallerFile {
   readonly maxChars: number;
 
+  private rootDirectory: string;
   private items: ImportItem[];
   private buffer: string;
   private previous: InstallerFile | null;
 
   constructor(options: InstallerFileOptions) {
+    this.rootDirectory = options.rootDirectory;
     this.maxChars = options.maxChars;
     this.buffer = options.contentHeader;
     this.items = [];
@@ -35,9 +39,8 @@ class InstallerFile {
   insert(item: ImportItem): boolean {
     const isNew = !this.previous?.items.includes(item);
     const remaining = this.getRemainingSpace();
-    let line = `m("${item.ingameFilepath}","${item.content}",${
-      isNew ? '1' : '0'
-    });d`;
+    const filePath = `${this.rootDirectory}${item.ingameFilepath}`;
+    let line = `m("${filePath}","${item.content}",${isNew ? '1' : '0'});d`;
 
     if (remaining > line.length) {
       this.buffer += line.slice(0, -1);
@@ -59,7 +62,7 @@ class InstallerFile {
       content = item.content.slice(0, --diff);
     }
 
-    line = `m("${item.ingameFilepath}","${content}",${isNew ? '1' : '0'});d`;
+    line = `m("${filePath}","${content}",${isNew ? '1' : '0'});d`;
     this.buffer += line;
     this.items.push(item);
 
@@ -109,7 +112,7 @@ class Installer {
 
   constructor(options: InstallerOptions) {
     this.target = options.target;
-    this.ingameDirectory = options.ingameDirectory;
+    this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
     this.buildPath = options.buildPath;
     this.maxChars = options.maxChars;
     this.autoCompile = options.autoCompile;
@@ -141,11 +144,8 @@ class Installer {
     parseResult: TranspilerParseResult
   ): ImportItem[] {
     const imports = Object.entries(parseResult).map(([target, code]) => {
-      const ingameFilepath = `${this.ingameDirectory}${createBasePath(
-        rootTarget,
-        target,
-        ''
-      )}`;
+      const ingameFilepath = createBasePath(rootTarget, target, '');
+
       return {
         filepath: target,
         ingameFilepath,
@@ -188,19 +188,15 @@ class Installer {
 
   createContentFooterAutoCompile(): string[] {
     if (this.autoCompile) {
-      const entryFile = this.importList.find(
+      const rootRef = this.importList.find(
         (item) => item.filepath === this.target
       );
 
-      return [
-        `i=s.build("${entryFile.ingameFilepath}","${path.posix.dirname(
-          entryFile.ingameFilepath
-        )}")`,
-        'if i!="" then exit("Error when building!")',
-        ...this.importList.map(
-          (item) => `c.File("${item.ingameFilepath}").delete`
-        )
-      ];
+      return generateAutoCompileCode(
+        this.ingameDirectory,
+        rootRef.ingameFilepath,
+        this.importList.map((it) => it.ingameFilepath)
+      ).split(';');
     }
 
     return [];
@@ -212,6 +208,7 @@ class Installer {
 
   async build() {
     let file = new InstallerFile({
+      rootDirectory: this.ingameDirectory,
       contentHeader: this.createContentHeader(),
       maxChars: this.maxChars
     });
@@ -225,6 +222,7 @@ class Installer {
 
         if (!done) {
           file = new InstallerFile({
+            rootDirectory: this.ingameDirectory,
             contentHeader: this.createContentHeader(),
             maxChars: this.maxChars,
             previous: file
@@ -238,6 +236,7 @@ class Installer {
 
     if (!file.appendCode(contentFooter)) {
       file = new InstallerFile({
+        rootDirectory: this.ingameDirectory,
         contentHeader: contentFooter,
         maxChars: this.maxChars,
         previous: file
