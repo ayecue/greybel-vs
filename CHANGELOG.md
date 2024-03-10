@@ -1018,3 +1018,4 @@ All notable changes to this project will be documented in this file.
 ## [2.2.17] - 08.03.2024
 
 - add logic to automatically clean up after auto-compile (including folders)
+- update share functionality with new web editor service url
