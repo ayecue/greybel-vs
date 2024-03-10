@@ -1015,7 +1015,7 @@ All notable changes to this project will be documented in this file.
 - add @description and @example tag to comment docs
 - fix an issue with scp where the function would try to get the groups via the wrong property potentially causing a crash - thanks for reporting [@stevenklar](https://github.com/stevenklar)
 
-## [2.2.17] - 08.03.2024
+## [2.2.17] - 10.03.2024
 
 - add logic to automatically clean up after auto-compile (including folders)
 - update share functionality with new web editor service url
