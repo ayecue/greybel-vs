@@ -4,6 +4,7 @@ import path from 'path';
 import vscode, { ExtensionContext } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
+import { generateAutoCompileCode } from './auto-compile-helper';
 const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg;
 
 export enum AgentType {
@@ -60,7 +61,7 @@ class Importer {
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
-    this.ingameDirectory = options.ingameDirectory;
+    this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
     this.importRefs = this.createImportList(options.target, options.result);
     this.agentType = options.agentType;
     this.mode = options.mode;
@@ -183,29 +184,15 @@ class Importer {
 
     if (this.autoCompile) {
       const rootRef = this.importRefs.get(this.target);
-      const binaryFileName = path
-        .basename(rootRef.ingameFilepath)
-        .replace(/\.[^.]+$/, '');
-      const response = await agent.tryToBuild(
-        this.ingameDirectory + path.posix.dirname(rootRef.ingameFilepath),
-        binaryFileName,
-        rootRef.content
+
+      await agent.tryToEvaluate(
+        generateAutoCompileCode(
+          this.ingameDirectory,
+          rootRef.ingameFilepath,
+          Array.from(this.importRefs.values()).map((it) => it.ingameFilepath)
+        ),
+        ({ output }) => console.log(output)
       );
-
-      if (response.success) {
-        console.log(`Build done`);
-        const queries = [];
-
-        for (const item of this.importRefs.values()) {
-          queries.push(
-            agent.tryToRemoveFile(this.ingameDirectory + item.ingameFilepath)
-          );
-        }
-
-        await Promise.all(queries);
-      } else {
-        console.log(`Build failed due to ${response.message}`);
-      }
     }
 
     await agent.dispose();

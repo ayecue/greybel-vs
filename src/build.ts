@@ -99,7 +99,7 @@ export function activate(context: ExtensionContext) {
           target,
           autoCompile,
           buildPath: rootPath,
-          ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
+          ingameDirectory: ingameDirectory.path,
           result,
           maxChars
         });
@@ -112,7 +112,7 @@ export function activate(context: ExtensionContext) {
 
         const importResults = await createImporter({
           target,
-          ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
+          ingameDirectory: ingameDirectory.path,
           result,
           extensionContext: context,
           mode: config
