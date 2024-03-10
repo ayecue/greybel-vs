@@ -27,7 +27,7 @@ export function post(
         res.on('end', () => {
           const payload = Buffer.concat(chunks);
           resolve(
-            res.headers['content-type'] === 'application/json'
+            /application\/json/.test(res.headers['content-type'])
               ? JSON.parse(payload.toString())
               : payload
           );
