@@ -16,7 +16,7 @@ export function activate(context: ExtensionContext) {
       const doc = await vscode.workspace.openTextDocument(eventUri.fsPath);
       const content = doc.getText();
       const response = await post(
-        `${process.env.GREYBEL_EDITOR_URL}/.netlify/functions/code`,
+        `${process.env.EDITOR_SERVICE_URL}/code`,
         {
           json: { content }
         }
