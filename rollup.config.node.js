@@ -48,7 +48,7 @@ const options = {
         "querystring",
         "steam-user",
         "node-json-stream",
-        "greybel-broker"
+        "greybel-agent"
     ]
 };
 
