@@ -1029,3 +1029,4 @@ All notable changes to this project will be documented in this file.
 ## [2.2.19] - 16.03.2024
 
 - fix certain cases of open blocks causing errors in unsafe parsing mode
+- exclude greybel-agent from bundle
