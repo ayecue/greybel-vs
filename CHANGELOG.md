@@ -1030,3 +1030,11 @@ All notable changes to this project will be documented in this file.
 
 - fix certain cases of open blocks causing errors in unsafe parsing mode
 - exclude greybel-agent from bundle
+
+## [2.2.20] - 30.03.2024
+
+- fix format of library version
+- fix build not setting allow_import
+- fix permissions when assigned them via chmod intrinsic
+- fix typeof intrinsic to not check for parent classID
+- fix matches regexp intrinsic causing infinite loop
