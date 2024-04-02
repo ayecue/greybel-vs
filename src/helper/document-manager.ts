@@ -1,7 +1,12 @@
 import EventEmitter from 'events';
 import { ASTChunkGreyScript, Parser } from 'greyscript-core';
 import LRU from 'lru-cache';
-import { ASTBase } from 'miniscript-core';
+import {
+  ASTBase,
+  ASTPosition,
+  ASTRange,
+  LexerException
+} from 'miniscript-core';
 import vscode, { TextDocument, Uri } from 'vscode';
 
 import typeManager from './type-manager';
@@ -169,7 +174,25 @@ export class DocumentParseQueue extends EventEmitter {
         content,
         textDocument: document,
         document: chunk,
-        errors: parser.errors
+        errors: [
+          // TODO: align positions of tokens and lexer exceptions
+          ...parser.lexer.errors.map((item: LexerException) => {
+            return new LexerException(
+              item.message,
+              new ASTRange(
+                new ASTPosition(
+                  item.range.start.line,
+                  item.range.start.character + 1
+                ),
+                new ASTPosition(
+                  item.range.end.line,
+                  item.range.end.character + 1
+                )
+              )
+            );
+          }),
+          ...parser.errors
+        ]
       });
     }
 

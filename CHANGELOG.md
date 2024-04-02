@@ -1042,3 +1042,4 @@ All notable changes to this project will be documented in this file.
 ## [2.2.21] - 02.04.2024
 
 - add NaN check for numeric literal scan in order to show syntax errors on invalid numbers
+- include lexer exceptions in diagnostics

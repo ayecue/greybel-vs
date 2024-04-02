@@ -1,5 +1,4 @@
 import { TranspilerParseResult } from 'greybel-transpiler';
-import path from 'path';
 // @ts-ignore: No type definitions
 import { TextEncoderLite as TextEncoder } from 'text-encoder-lite';
 import vscode, { Uri } from 'vscode';
