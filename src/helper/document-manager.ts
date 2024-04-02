@@ -169,7 +169,7 @@ export class DocumentParseQueue extends EventEmitter {
         content,
         textDocument: document,
         document: chunk,
-        errors: parser.errors
+        errors: [...parser.lexer.errors, ...parser.errors]
       });
     }
 
