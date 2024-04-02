@@ -1038,3 +1038,7 @@ All notable changes to this project will be documented in this file.
 - fix permissions when assigned them via chmod intrinsic
 - fix typeof intrinsic to not check for parent classID
 - fix matches regexp intrinsic causing infinite loop
+
+## [2.2.21] - 02.04.2024
+
+- add NaN check for numeric literal scan in order to show syntax errors on invalid numbers
