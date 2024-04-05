@@ -1047,3 +1047,4 @@ All notable changes to this project will be documented in this file.
 ## [2.2.22] - 05.04.2024
 
 - ignore return statement when it's not within function scope
+- remove any limitations from the vscode web version since everything seems to be compatible with code serve-web
