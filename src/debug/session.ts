@@ -29,10 +29,11 @@ import { init as initIntrinsics } from 'greybel-intrinsics';
 import { Interpreter } from 'greyscript-interpreter';
 import vscode, { Uri } from 'vscode';
 
+import { PseudoFS } from '../helper/fs';
 import { showCustomErrorMessage } from '../helper/show-custom-error';
 import { ansiProvider, useColor } from '../helper/text-mesh-transform';
 import { getPreviewInstance } from '../preview';
-import { InterpreterResourceProvider, PseudoFS } from '../resource';
+import { InterpreterResourceProvider } from '../resource';
 import { GrebyelDebugger, GrebyelPseudoDebugger } from './debugger';
 import { VSOutputHandler } from './output';
 import { DebugSessionLike } from './types';
