@@ -112,27 +112,26 @@
                 },
                 {
                     "command": "greybel.build",
-                    "when": "resourceLangId == greyscript && !isWeb",
+                    "when": "resourceLangId == greyscript",
                     "group": "1_modification"
                 },
                 {
                     "command": "greybel.api",
-                    "when": "resourceLangId == greyscript && !isWeb",
+                    "when": "resourceLangId == greyscript",
                     "group": "z_commands"
                 },
                 {
                     "command": "greybel.preview",
-                    "when": "resourceLangId == greyscript && !isWeb",
+                    "when": "resourceLangId == greyscript",
                     "group": "z_commands"
                 },
                 {
                     "command": "greybel.share",
-                    "when": "resourceLangId == greyscript && !isWeb",
+                    "when": "resourceLangId == greyscript",
                     "group": "z_commands"
                 },
                 {
                     "command": "greybel.import",
-                    "when": "!isWeb",
                     "group": "1_modification"
                 }
             ],
@@ -157,17 +156,16 @@
             "explorer/context": [
                 {
                     "command": "greybel.build",
-                    "when": "resourceLangId == greyscript && !isWeb",
+                    "when": "resourceLangId == greyscript",
                     "group": "1_modification"
                 },
                 {
                     "command": "greybel.share",
-                    "when": "resourceLangId == greyscript && !isWeb",
+                    "when": "resourceLangId == greyscript",
                     "group": "1_modification"
                 },
                 {
                     "command": "greybel.import",
-                    "when": "!isWeb",
                     "group": "1_modification"
                 }
             ],
@@ -210,11 +208,11 @@
                 },
                 {
                     "command": "greybel.build",
-                    "when": "resourceLangId == greyscript && !isWeb"
+                    "when": "resourceLangId == greyscript"
                 },
                 {
                     "command": "greybel.import",
-                    "when": "resourceLangId == greyscript && !isWeb"
+                    "when": "resourceLangId == greyscript"
                 },
                 {
                     "command": "greybel.gotoError",
@@ -230,7 +228,7 @@
                 },
                 {
                     "command": "greybel.clearSecrets",
-                    "when": "resourceLangId == greyscript && !isWeb"
+                    "when": "resourceLangId == greyscript"
                 }
             ]
         },
@@ -279,8 +277,7 @@
             },
             {
                 "command": "greybel.build",
-                "title": "Greybel: Build",
-                "when": "!isWeb"
+                "title": "Greybel: Build"
             },
             {
                 "command": "greybel.transform.clipboard",
@@ -304,13 +301,11 @@
             },
             {
                 "command": "greybel.api",
-                "title": "Greybel: API Documentation",
-                "when": "!isWeb"
+                "title": "Greybel: API Documentation"
             },
             {
                 "command": "greybel.preview",
-                "title": "Greybel: Preview output",
-                "when": "!isWeb"
+                "title": "Greybel: Preview output"
             },
             {
                 "command": "greybel.refresh",
@@ -441,34 +436,29 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Generate installer when building.",
-                    "when": "!isWeb",
                     "scope": "resource"
                 },
                 "greybel.transpiler.installer.maxChars": {
                     "type": "number",
                     "default": 155000,
                     "minimum": 1000,
-                    "description": "Amount of characters allowed in one file before splitting when creating installer.",
-                    "when": "!isWeb"
+                    "description": "Amount of characters allowed in one file before splitting when creating installer."
                 },
                 "greybel.transpiler.installer.autoCompile": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Enable auto compile feature for installer.",
-                    "when": "!isWeb"
+                    "description": "Enable auto compile feature for installer."
                 },
                 "greybel.createIngame.active": {
                     "type": "boolean",
                     "default": false,
                     "description": "Create files automatically in-game.",
-                    "when": "!isWeb",
                     "scope": "resource"
                 },
                 "greybel.createIngame.autoCompile": {
                     "type": "boolean",
                     "default": false,
                     "description": "Build root file automatically.",
-                    "when": "!isWeb",
                     "scope": "resource"
                 },
                 "greybel.createIngame.agent": {
@@ -479,7 +469,6 @@
                     ],
                     "default": "headless",
                     "description": "Agent used for file import.",
-                    "when": "!isWeb",
                     "scope": "resource"
                 },
                 "greybel.createIngame.mode": {
@@ -490,7 +479,6 @@
                     ],
                     "default": "local",
                     "description": "Creation mode.",
-                    "when": "!isWeb",
                     "scope": "resource"
                 },
                 "greybel.createIngame.steamUser": {
@@ -499,8 +487,7 @@
                         "null"
                     ],
                     "default": null,
-                    "description": "Steam user.",
-                    "when": "!isWeb"
+                    "description": "Steam user."
                 }
             }
         },
