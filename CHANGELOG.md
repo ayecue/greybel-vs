@@ -1043,3 +1043,7 @@ All notable changes to this project will be documented in this file.
 
 - add NaN check for numeric literal scan in order to show syntax errors on invalid numbers - thanks for reporting c1ph3r
 - include lexer exceptions in diagnostics
+
+## [2.2.22] - 05.04.2024
+
+- ignore return statement when it's not within function scope
