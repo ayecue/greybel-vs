@@ -1043,3 +1043,10 @@ All notable changes to this project will be documented in this file.
 
 - add NaN check for numeric literal scan in order to show syntax errors on invalid numbers - thanks for reporting c1ph3r
 - include lexer exceptions in diagnostics
+
+## [2.2.22] - 05.04.2024
+
+- ignore return statement when it's not within function scope
+- remove any limitations from the vscode web version since everything seems to be compatible with code serve-web
+- fix hover import and includes with missing extension
+- fix document-manager for includes and imports without file extension

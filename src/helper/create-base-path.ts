@@ -1,6 +1,6 @@
 import { Uri } from 'vscode';
 
-import { PseudoFS } from '../resource';
+import { PseudoFS } from './fs';
 
 export const createBasePath = (
   target: string,

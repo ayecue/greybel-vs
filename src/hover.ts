@@ -15,8 +15,8 @@ import vscode, {
 
 import { LookupHelper } from './helper/lookup-type';
 import { TypeInfoWithDefinition } from './helper/type-manager';
-import { PseudoFS } from './resource';
 import { createHover } from './helper/tooltip';
+import { PseudoFS, tryToGetPath } from './helper/fs';
 
 function formatType(type: string): string {
   const segments = type.split(':');
@@ -74,7 +74,8 @@ export function activate(_context: ExtensionContext) {
         const fileDir = importCodeAst.path;
 
         const rootDir = fileDir.startsWith('/') ? vscode.workspace.workspaceFolders[0]?.uri : Uri.joinPath(Uri.file(document.fileName), '..');
-        const target = Uri.joinPath(rootDir, fileDir);
+        const result = Uri.joinPath(rootDir, fileDir).fsPath;
+        const target = Uri.file(await tryToGetPath(result, `${result}.src`));
 
         const output = [
           `[Inserts file "${PseudoFS.basename(
