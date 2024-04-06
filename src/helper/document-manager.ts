@@ -4,6 +4,7 @@ import LRU from 'lru-cache';
 import { ASTBase } from 'miniscript-core';
 import vscode, { TextDocument, Uri } from 'vscode';
 
+import { tryToGetPath } from './fs';
 import typeManager from './type-manager';
 
 export interface ParseResultOptions {
@@ -219,7 +220,8 @@ export class DocumentParseQueue extends EventEmitter {
 
   async open(target: string): Promise<ParseResult | null> {
     try {
-      const textDocument = await vscode.workspace.openTextDocument(target);
+      const actualPath = await tryToGetPath(target, `${target}.src`);
+      const textDocument = await vscode.workspace.openTextDocument(actualPath);
       return this.get(textDocument);
     } catch (err) {
       return null;
