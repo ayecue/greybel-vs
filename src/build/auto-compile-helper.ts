@@ -11,7 +11,7 @@ export const generateAutoCompileCode = (
       myComputer = host_computer(myShell)
 
       result = build(myShell, rootDirectory + rootFilePath, rootDirectory)
-      if result != "" then exit("Error when building!")
+      if result != "" then exit("Error when building! Reason: " + result)
       print("Build done in " + rootDirectory)
 
       remainingFolderMap = {}

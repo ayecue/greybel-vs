@@ -1050,3 +1050,7 @@ All notable changes to this project will be documented in this file.
 - remove any limitations from the vscode web version since everything seems to be compatible with code serve-web
 - fix hover import and includes with missing extension
 - fix document-manager for includes and imports without file extension
+
+## [2.2.23] - 06.04.2024
+
+- add reason to output when build in auto compile failed

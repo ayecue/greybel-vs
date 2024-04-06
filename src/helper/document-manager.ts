@@ -50,17 +50,17 @@ export class ParseResult {
       );
     const importsAndIncludes = await Promise.all([
       ...rootChunk.imports
-          .filter((nonNativeImport) => nonNativeImport.path)
-          .map((nonNativeImport) => {
-            const result = Uri.joinPath(rootPath, nonNativeImport.path).fsPath;
-            return tryToGetPath(result, `${result}.src`);
-          }),
+        .filter((nonNativeImport) => nonNativeImport.path)
+        .map((nonNativeImport) => {
+          const result = Uri.joinPath(rootPath, nonNativeImport.path).fsPath;
+          return tryToGetPath(result, `${result}.src`);
+        }),
       ...rootChunk.includes
-          .filter((includeImport) => includeImport.path)
-          .map((includeImport) => {
-            const result = Uri.joinPath(rootPath, includeImport.path).fsPath;
-            return tryToGetPath(result, `${result}.src`);
-          })
+        .filter((includeImport) => includeImport.path)
+        .map((includeImport) => {
+          const result = Uri.joinPath(rootPath, includeImport.path).fsPath;
+          return tryToGetPath(result, `${result}.src`);
+        })
     ]);
     const dependencies: Set<string> = new Set([
       ...nativeImports,
