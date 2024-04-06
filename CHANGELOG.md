@@ -1048,3 +1048,5 @@ All notable changes to this project will be documented in this file.
 
 - ignore return statement when it's not within function scope
 - remove any limitations from the vscode web version since everything seems to be compatible with code serve-web
+- fix hover import and includes with missing extension
+- fix document-manager for includes and imports without file extension
