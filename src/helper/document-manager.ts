@@ -32,7 +32,7 @@ export class ParseResult {
     this.errors = options.errors;
   }
 
-  getDependencies(): string[] {
+  async getDependencies(): Promise<string[]> {
     if (this.document == null) {
       return [];
     }
@@ -43,24 +43,28 @@ export class ParseResult {
 
     const rootChunk = this.document as ASTChunkGreyScript;
     const rootPath = Uri.joinPath(Uri.file(this.textDocument.fileName), '..');
-    const dependencies: Set<string> = new Set([
-      ...rootChunk.nativeImports
-        .filter((nativeImport) => nativeImport.directory)
-        .map(
-          (nativeImport) =>
-            Uri.joinPath(rootPath, nativeImport.directory).fsPath
-        ),
+    const nativeImports = rootChunk.nativeImports
+      .filter((nativeImport) => nativeImport.directory)
+      .map(
+        (nativeImport) => Uri.joinPath(rootPath, nativeImport.directory).fsPath
+      );
+    const importsAndIncludes = await Promise.all([
       ...rootChunk.imports
-        .filter((nonNativeImport) => nonNativeImport.path)
-        .map(
-          (nonNativeImport) =>
-            Uri.joinPath(rootPath, nonNativeImport.path).fsPath
-        ),
+          .filter((nonNativeImport) => nonNativeImport.path)
+          .map((nonNativeImport) => {
+            const result = Uri.joinPath(rootPath, nonNativeImport.path).fsPath;
+            return tryToGetPath(result, `${result}.src`);
+          }),
       ...rootChunk.includes
-        .filter((includeImport) => includeImport.path)
-        .map(
-          (includeImport) => Uri.joinPath(rootPath, includeImport.path).fsPath
-        )
+          .filter((includeImport) => includeImport.path)
+          .map((includeImport) => {
+            const result = Uri.joinPath(rootPath, includeImport.path).fsPath;
+            return tryToGetPath(result, `${result}.src`);
+          })
+    ]);
+    const dependencies: Set<string> = new Set([
+      ...nativeImports,
+      ...importsAndIncludes
     ]);
 
     this.dependencies = Array.from(dependencies);
@@ -76,7 +80,7 @@ export class ParseResult {
     const imports: Set<ParseResult> = new Set();
     const visited: Set<string> = new Set([this.textDocument.fileName]);
     const traverse = async (rootResult: ParseResult) => {
-      const dependencies = rootResult.getDependencies();
+      const dependencies = await rootResult.getDependencies();
 
       for (const dependency of dependencies) {
         if (visited.has(dependency)) continue;
@@ -220,8 +224,7 @@ export class DocumentParseQueue extends EventEmitter {
 
   async open(target: string): Promise<ParseResult | null> {
     try {
-      const actualPath = await tryToGetPath(target, `${target}.src`);
-      const textDocument = await vscode.workspace.openTextDocument(actualPath);
+      const textDocument = await vscode.workspace.openTextDocument(target);
       return this.get(textDocument);
     } catch (err) {
       return null;
