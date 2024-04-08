@@ -2,7 +2,7 @@ import { AnotherAnsiProvider, CommandType, EscapeSequence } from 'another-ansi';
 import ansiEscapes from 'ansi-escapes';
 import EventEmitter from 'events';
 import { VM } from 'greybel-interpreter';
-import vscode, { Terminal } from 'vscode';
+import vscode, { Terminal, TerminalDimensions } from 'vscode';
 
 const provider = new AnotherAnsiProvider(EscapeSequence.Hex);
 const normalize = (v: string) => v.replace(/(?<!\r)\n/g, '\r\n');
@@ -17,11 +17,13 @@ export enum PseudoTerminalInputKey {
 }
 
 export default class PseudoTerminal {
-  private terminal: Terminal;
-  private writeEmitter: vscode.EventEmitter<string>;
-  private emitter: EventEmitter;
-  private closed: boolean;
-  previousLinesCount: number;
+  public dimensions: TerminalDimensions;
+  public terminal: Terminal;
+  public writeEmitter: vscode.EventEmitter<string>;
+  public emitter: EventEmitter;
+  public closed: boolean;
+
+  private previousLinesCount: number;
 
   // eslint-disable-next-line no-use-before-define
   static activeTerminals: Set<PseudoTerminal> = new Set<PseudoTerminal>();
@@ -33,13 +35,17 @@ export default class PseudoTerminal {
   public constructor(name: string) {
     this.emitter = new EventEmitter();
     this.writeEmitter = new vscode.EventEmitter<string>();
+    this.dimensions = null;
     this.closed = false;
     this.terminal = vscode.window.createTerminal({
       name,
       pty: {
         onDidWrite: this.writeEmitter.event,
-        open: () => {
-          /* noop */
+        open: (initialDimensions: TerminalDimensions) => {
+          this.dimensions = initialDimensions;
+        },
+        setDimensions: (dimensions: TerminalDimensions) => {
+          this.dimensions = dimensions;
         },
         close: () => {
           this.closed = true;
@@ -55,7 +61,11 @@ export default class PseudoTerminal {
     PseudoTerminal.activeTerminals.add(this);
   }
 
-  waitForInput(vm: VM, isPassword: boolean = false): PromiseLike<string> {
+  waitForInput(
+    vm: VM,
+    label: string,
+    isPassword: boolean = false
+  ): PromiseLike<string> {
     if (this.closed) return Promise.resolve('');
 
     this.focus();
@@ -64,6 +74,20 @@ export default class PseudoTerminal {
       const buffer: string[] = [];
       let cursorIndex = 0;
 
+      const getCursorX = () => {
+        const offsetX = label.length % this.dimensions.columns;
+        const diff = this.dimensions.columns - offsetX;
+        return cursorIndex < diff
+          ? cursorIndex
+          : (cursorIndex - this.dimensions.columns) % this.dimensions.columns;
+      };
+      const getCursorY = () => {
+        const offsetX = label.length % this.dimensions.columns;
+        const diff = this.dimensions.columns - offsetX;
+        return cursorIndex < diff
+          ? 0
+          : 1 + Math.floor((cursorIndex - diff) / this.dimensions.columns);
+      };
       const clear = () => {
         this.writeEmitter.fire('\r\n');
         vm.getSignal().removeListener('exit', onExit);
@@ -92,42 +116,50 @@ export default class PseudoTerminal {
           case PseudoTerminalInputKey.Backspace:
             if (buffer.length > 0) {
               buffer.splice(cursorIndex - 1, 1);
-              this.writeEmitter.fire(ansiEscapes.cursorMove(-cursorIndex));
+              this.writeEmitter.fire(ansiEscapes.cursorRestorePosition);
 
               cursorIndex--;
               this.writeEmitter.fire(
                 (isPassword ? buffer.map(() => '*') : buffer).join('') + ' '
               );
+              this.writeEmitter.fire(ansiEscapes.cursorRestorePosition);
               this.writeEmitter.fire(
-                ansiEscapes.cursorMove(-buffer.length - 1 + cursorIndex)
+                ansiEscapes.cursorMove(getCursorX(), getCursorY())
               );
             }
             break;
           case PseudoTerminalInputKey.ArrowLeft:
             if (cursorIndex > 0) {
               cursorIndex--;
-              this.writeEmitter.fire(ansiEscapes.cursorMove(-1));
+              this.writeEmitter.fire(ansiEscapes.cursorRestorePosition);
+              this.writeEmitter.fire(
+                ansiEscapes.cursorMove(getCursorX(), getCursorY())
+              );
             }
             break;
           case PseudoTerminalInputKey.ArrowRight:
             if (cursorIndex < buffer.length) {
               cursorIndex++;
-              this.writeEmitter.fire(ansiEscapes.cursorMove(1));
+              this.writeEmitter.fire(ansiEscapes.cursorRestorePosition);
+              this.writeEmitter.fire(
+                ansiEscapes.cursorMove(getCursorX(), getCursorY())
+              );
             }
             break;
           case PseudoTerminalInputKey.ArrowDown:
           case PseudoTerminalInputKey.ArrowUp:
             break;
           default: {
-            buffer.splice(cursorIndex, 0, input);
-            this.writeEmitter.fire(ansiEscapes.cursorMove(-cursorIndex));
+            buffer.splice(cursorIndex, 0, ...input);
+            this.writeEmitter.fire(ansiEscapes.cursorRestorePosition);
 
-            cursorIndex++;
+            cursorIndex += input.length;
             this.writeEmitter.fire(
               (isPassword ? buffer.map(() => '*') : buffer).join('')
             );
+            this.writeEmitter.fire(ansiEscapes.cursorRestorePosition);
             this.writeEmitter.fire(
-              ansiEscapes.cursorMove(-buffer.length + cursorIndex)
+              ansiEscapes.cursorMove(getCursorX(), getCursorY())
             );
           }
         }
@@ -136,6 +168,7 @@ export default class PseudoTerminal {
       vm.getSignal().once('exit', onExit);
       this.emitter.addListener('close', onClose);
       this.emitter.addListener('input', onInput);
+      this.writeEmitter.fire(ansiEscapes.cursorSavePosition);
     });
   }
 
