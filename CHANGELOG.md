@@ -1054,3 +1054,8 @@ All notable changes to this project will be documented in this file.
 ## [2.2.23] - 06.04.2024
 
 - add reason to output when build in auto compile failed
+
+## [2.3.0] - 08.04.2024
+
+- still execute method which is called in return statement within global scope
+- major improvement of interpreter in regards of performance by rewriting and optimizing parts of the bytecode-generator, internal hash-map, hashing and more
