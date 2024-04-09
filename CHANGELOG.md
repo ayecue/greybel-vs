@@ -1061,3 +1061,4 @@ All notable changes to this project will be documented in this file.
 - major improvement of interpreter in regards of performance by rewriting and optimizing parts of the bytecode-generator, internal hash-map, hashing and more
 - improve multiline input via pseudo terminal
 - allow key-press input mode to take value from clipboard when copy and pasting
+- fix parsing of add sub expression while being a command
