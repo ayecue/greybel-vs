@@ -1060,3 +1060,4 @@ All notable changes to this project will be documented in this file.
 - still execute method which is called in return statement within global scope
 - major improvement of interpreter in regards of performance by rewriting and optimizing parts of the bytecode-generator, internal hash-map, hashing and more
 - improve multiline input via pseudo terminal
+- allow key-press input mode to take value from clipboard when copy and pasting
