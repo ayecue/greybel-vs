@@ -1055,10 +1055,11 @@ All notable changes to this project will be documented in this file.
 
 - add reason to output when build in auto compile failed
 
-## [2.3.0] - 08.04.2024
+## [2.3.0] - 21.04.2024
 
 - still execute method which is called in return statement within global scope
 - major improvement of interpreter in regards of performance by rewriting and optimizing parts of the bytecode-generator, internal hash-map, hashing and more
 - improve multiline input via pseudo terminal
-- allow key-press input mode to take value from clipboard when copy and pasting
+- allow key-press input mode to take value from clipboard when copy and pasting - thanks for  reporting to [@Olipro](https://github.com/Olipro) - related to [#160](https://github.com/ayecue/greybel-js/issues/139)
 - fix parsing of add sub expression while being a command
+- fix connect_service intrinsic - thanks for reporting to Zicore
