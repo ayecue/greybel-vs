@@ -145,8 +145,8 @@ export const keyCodes: KeyCodeItem[] = [
   }
 ];
 
-export default function transformStringToKeyEvent(key: string): KeyEvent {
-  const sequence = key
+export default function transformStringToKeyEvent(input: string): KeyEvent {
+  const sequence = input
     .split('')
     .map((v: string) => v.charCodeAt(0))
     .join(';');
@@ -162,7 +162,6 @@ export default function transformStringToKeyEvent(key: string): KeyEvent {
   }
 
   return {
-    charCode: key.charCodeAt(0),
-    code: key
+    code: input
   };
 }

@@ -127,7 +127,11 @@ export class VSOutputHandler extends OutputHandler {
 
     this._terminal.print(transformed, false);
 
-    return PseudoTerminal.getActiveTerminal().waitForInput(vm, isPassword);
+    return PseudoTerminal.getActiveTerminal().waitForInput(
+      vm,
+      message,
+      isPassword
+    );
   }
 
   waitForKeyPress(vm: VM, message: string): PromiseLike<KeyEvent> {
