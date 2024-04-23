@@ -2,6 +2,7 @@ import path from 'path';
 // @ts-ignore: No type definitions
 import { TextDecoderLite as TextDecoder } from 'text-encoder-lite';
 import vscode, { Uri } from 'vscode';
+import { crlf, LF } from 'crlf-normalize'; 
 
 const fs = vscode.workspace.fs;
 
@@ -51,5 +52,11 @@ export async function tryToGetPath(
 
 export async function tryToDecode(targetUri: string): Promise<string> {
   const out = await tryToGet(targetUri);
-  return out ? new TextDecoder().decode(out) : '';
+  
+  if (out) {
+    const content = new TextDecoder().decode(out);
+    return crlf(content, LF);
+  }
+
+  return '';
 }
