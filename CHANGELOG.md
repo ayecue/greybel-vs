@@ -1066,4 +1066,4 @@ All notable changes to this project will be documented in this file.
 
 ## [2.3.1] - 23.04.2024
 
-- when reading files automatically transform CRLF to LF
+- when reading files automatically transform CRLF to LF - thanks for reporting to Zicore and Stiffi136
