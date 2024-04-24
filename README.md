@@ -9,6 +9,8 @@ Toolkit for GreyScript which is a scripting language used in [Grey Hack](https:/
 - Demo Projects: [Minesweeper](https://github.com/ayecue/minesweeper-gs), [JSON](https://github.com/ayecue/json), [TEdit](https://github.com/ayecue/tedit)
 - CLI: [greybel-js](https://github.com/ayecue/greybel-js)
 - GreyScript API: [GreyScript Documentation](https://documentation.greyscript.org)
+- Grey Hack Image Transformer: [gh-image-transformer](https://github.com/ayecue/gh-image-transformer)
+- Grey Hack Website Image Generator: [gh-website-image-generator](https://github.com/ayecue/gh-website-image-generator)
 - Discord: [dedicated Greybel Discord](https://discord.gg/q8tR8F8u2M)
 
 ## Usage
