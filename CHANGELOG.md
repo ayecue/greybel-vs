@@ -1072,3 +1072,4 @@ All notable changes to this project will be documented in this file.
 ## [2.3.2] - 03.05.2024
 
 - update headless client due to latest Grey Hack update
+- rename minify transform to uglify transform to prevent confusion
