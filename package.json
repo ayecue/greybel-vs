@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "2.3.1",
+    "version": "2.3.2",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -145,7 +145,7 @@
                     "when": "resourceLangId == greyscript"
                 },
                 {
-                    "command": "greybel.minify.write",
+                    "command": "greybel.uglify.write",
                     "when": "resourceLangId == greyscript"
                 },
                 {
@@ -187,7 +187,7 @@
                     "when": "false"
                 },
                 {
-                    "command": "greybel.minify.write",
+                    "command": "greybel.uglify.write",
                     "when": "false"
                 },
                 {
@@ -288,8 +288,8 @@
                 "title": "Greybel: Transform"
             },
             {
-                "command": "greybel.minify.write",
-                "title": "Greybel: Minify"
+                "command": "greybel.uglify.write",
+                "title": "Greybel: Uglify"
             },
             {
                 "command": "greybel.beautify.write",
@@ -554,7 +554,7 @@
         "comment-parser": "^1.4.1",
         "crlf-normalize": "^1.0.20",
         "css-color-names": "^1.0.1",
-        "greybel-agent": "~1.7.0",
+        "greybel-agent": "~1.7.2",
         "greybel-gh-mock-intrinsics": "~4.8.4",
         "greybel-intrinsics": "~4.7.2",
         "greyscript-core": "~1.6.0",

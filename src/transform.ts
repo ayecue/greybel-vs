@@ -119,7 +119,7 @@ export function activate(context: ExtensionContext) {
       transform
     ),
     vscode.commands.registerTextEditorCommand(
-      'greybel.minify.write',
+      'greybel.uglify.write',
       (editor: TextEditor, edit: TextEditorEdit, args: any[]) =>
         transform(editor, edit, args, BuildType.UGLIFY)
     ),
