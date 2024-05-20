@@ -46,12 +46,14 @@ export const showCustomErrorMessage = (err: CustomError): void => {
         { modal: false },
         'Go to error'
       )
-      .then(async () => {
-        const { textDocument } = await documentManager.open(errTarget);
+      .then(async (selection) => {
+        if (selection === 'Go to error') {
+          const { textDocument } = await documentManager.open(errTarget);
 
-        vscode.window.showTextDocument(textDocument, {
-          selection: range
-        });
+          vscode.window.showTextDocument(textDocument, {
+            selection: range
+          });
+        }
       });
   } else {
     vscode.window.showErrorMessage(
