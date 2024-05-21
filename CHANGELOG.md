@@ -1083,3 +1083,4 @@ All notable changes to this project will be documented in this file.
 ## [2.3.4] - 21.05.2024
 
 - fix is_valid_ip description example - thanks for the contribution to [@Wombynator](https://github.com/Wombynator)
+- move terminal preview into external package in order to decrease size of extension
