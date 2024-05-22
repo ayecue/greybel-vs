@@ -73,7 +73,7 @@ class Preview {
             productName: "TerminalPreview",
             productVersion: "1.0",
             matchWebGLToCanvasSize: true, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-            devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displaysö
+            devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays
           }).then(onUnityInstanceLoad).catch((err) => alert(err.message));
         </script>
       </body>
