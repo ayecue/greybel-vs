@@ -29,11 +29,11 @@ class Preview {
       }
     );
   
-    const indexScript = Uri.joinPath(Uri.file(this.context.extensionPath), 'preview.view.js');
-    const dataResource = Uri.joinPath(Uri.file(this.context.extensionPath), 'preview/preview.data');
-    const frameworkResource =  Uri.joinPath(Uri.file(this.context.extensionPath), 'preview/preview.framework.js');
-    const loaderResource = Uri.joinPath(Uri.file(this.context.extensionPath), 'preview/preview.loader.js');
-    const wasmResource = Uri.joinPath(Uri.file(this.context.extensionPath), 'preview/preview.wasm');
+    const indexScript = `${process.env.GREYBEL_TERMINAL_URL}/dist/view.js`;
+    const dataResource = `${process.env.GREYBEL_TERMINAL_URL}/assets/preview.data`;
+    const frameworkResource =  `${process.env.GREYBEL_TERMINAL_URL}/assets/preview.framework.js`;
+    const loaderResource = `${process.env.GREYBEL_TERMINAL_URL}/assets/preview.loader.js`;
+    const wasmResource = `${process.env.GREYBEL_TERMINAL_URL}/assets/preview.wasm`;
   
     panel.webview.html = `<!DOCTYPE html>
     <html>
@@ -46,8 +46,8 @@ class Preview {
       </head>
       <body>
         <canvas id="unity-canvas" width="100%" height="100%" tabindex="-1" style="width: 960px; height: 600px; background: #231F20"></canvas>
-        <script src="${panel.webview.asWebviewUri(indexScript)}"></script>
-        <script src="${panel.webview.asWebviewUri(loaderResource)}"></script>
+        <script src="${indexScript}"></script>
+        <script src="${loaderResource}"></script>
         <script>
           if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
             // Mobile device style: fill the whole browser client area with the game canvas:
@@ -65,15 +65,15 @@ class Preview {
           }
 
           createUnityInstance(document.querySelector("#unity-canvas"), {
-            dataUrl: "${panel.webview.asWebviewUri(dataResource)}",
-            frameworkUrl: "${panel.webview.asWebviewUri(frameworkResource)}",
-            codeUrl: "${panel.webview.asWebviewUri(wasmResource)}",
+            dataUrl: "${dataResource}",
+            frameworkUrl: "${frameworkResource}",
+            codeUrl: "${wasmResource}",
             streamingAssetsUrl: "StreamingAssets",
             companyName: "None",
             productName: "TerminalPreview",
             productVersion: "1.0",
             matchWebGLToCanvasSize: true, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-            devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displaysö
+            devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays
           }).then(onUnityInstanceLoad).catch((err) => alert(err.message));
         </script>
       </body>

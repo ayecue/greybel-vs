@@ -8,7 +8,7 @@
         "email": "soerenwehmeier@googlemail.com"
     },
     "icon": "icon.png",
-    "version": "2.3.3",
+    "version": "2.3.4",
     "repository": {
         "type": "git",
         "url": "git@github.com:ayecue/greybel-vs.git"
@@ -51,13 +51,12 @@
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
-        "compile": "npm run compile:ts && npm run compile:node && npm run compile:browser && npm run compile:api && npm run compile:preview && npm run move",
+        "compile": "npm run compile:ts && npm run compile:node && npm run compile:browser && npm run compile:api && npm run move",
         "compile:ts": "tsc -p ./",
         "compile:node": "rollup --config rollup.config.node.js --bundleConfigAsCjs",
         "compile:browser": "rollup --config rollup.config.browser.js --bundleConfigAsCjs",
         "compile:extension": "vsce package --out extension.vsix",
         "compile:api": "rollup --config rollup.config.api.js --bundleConfigAsCjs",
-        "compile:preview": "rollup --config rollup.config.preview.js --bundleConfigAsCjs",
         "move": "npm run move:api:stylesheet && npm run move:grammar",
         "move:api:stylesheet": "cp node_modules/greyscript-meta/web/index.css ./api.view.css",
         "move:grammar": "cp -r node_modules/greyscript-textmate/dist/*.json ./",
@@ -555,11 +554,11 @@
         "crlf-normalize": "^1.0.20",
         "css-color-names": "^1.0.1",
         "greybel-agent": "~1.7.2",
-        "greybel-gh-mock-intrinsics": "~4.8.4",
-        "greybel-intrinsics": "~4.7.2",
+        "greybel-gh-mock-intrinsics": "~4.8.5",
+        "greybel-intrinsics": "~4.7.3",
         "greyscript-core": "~1.6.0",
         "greyscript-interpreter": "~1.7.2",
-        "greyscript-meta": "~2.4.1",
+        "greyscript-meta": "~2.4.2",
         "greyscript-textmate": "~1.8.0",
         "greyscript-transpiler": "~0.7.0",
         "lru-cache": "^7.14.1",
