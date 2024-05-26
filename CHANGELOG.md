@@ -1090,5 +1090,5 @@ All notable changes to this project will be documented in this file.
 
 ## [2.3.5] - 26.05.2024
 
-- fix behaviour of to_int intrinsic, only parses integers instead of numbers
+- fix behaviour of to_int intrinsic, only parses integers instead of floating numbers
 - fix behaviour of val intrinsic, properly parse strings which have commas prior to dot
