@@ -1087,3 +1087,8 @@ All notable changes to this project will be documented in this file.
 - move terminal preview into external package in order to decrease size of extension
 - update rnd method to only return the first generated value of a seed and not continuously generate new values of one seed to properly resemble the original MiniScript behaviour
 - fix matches logic which caused skipping of results
+
+## [2.3.5] - 26.05.2024
+
+- fix behaviour of to_int intrinsic, only parses integers instead of numbers
+- fix behaviour of val intrinsic, properly parse strings which have commas prior to dot
