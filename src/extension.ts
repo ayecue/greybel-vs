@@ -18,6 +18,7 @@ import { activate as activateTransform } from './transform';
 import { activate as activateClearSecrets } from './clear-secrets';
 import { activate as activateImport } from './import';
 import { activate as activatePreview } from './preview';
+import { activate as activateFormatter } from './formatter';
 
 export function activate(context: ExtensionContext) {
   const config = vscode.workspace.getConfiguration('greybel');
@@ -40,6 +41,10 @@ export function activate(context: ExtensionContext) {
   activateDefinition(context);
   activateSymbol(context);
 
+  if (config.get<boolean>('formatter')) {
+    activateFormatter(context);
+  }
+
   if (config.get<boolean>('diagnostic')) {
     activateDiagnostic(context);
   }
@@ -53,4 +58,4 @@ export function activate(context: ExtensionContext) {
   activatePreview(context);
 }
 
-export function deactivate() {}
+export function deactivate() { }
