@@ -1,6 +1,11 @@
 import { ASTChunkAdvanced } from 'greybel-core';
 import { greyscriptMeta } from 'greyscript-meta';
-import { SignatureDefinition, SignatureDefinitionArg } from 'meta-utils';
+import {
+  SignatureDefinition,
+  SignatureDefinitionArg,
+  isSignatureFunctionDefinition,
+  isSignaturePropertyDefinition
+} from 'meta-utils';
 import {
   ASTAssignmentStatement,
   ASTBase,
@@ -95,6 +100,22 @@ export class TypeInfoWithDefinition extends TypeInfo {
 
   copy() {
     return new TypeInfoWithDefinition(this.label, this.type, this.definition);
+  }
+
+  get args(): SignatureDefinitionArg[] {
+    if (isSignatureFunctionDefinition(this.definition)) {
+      return this.definition.arguments ?? [];
+    }
+    return [];
+  }
+
+  get returns(): string[] {
+    if (isSignatureFunctionDefinition(this.definition)) {
+      return this.definition.returns;
+    } else if (isSignaturePropertyDefinition(this.definition)) {
+      return this.definition.valueTypes;
+    }
+    return ['any'];
   }
 }
 
@@ -213,8 +234,7 @@ export class TypeMap {
           let definitions = null;
 
           if (currentMetaInfo instanceof TypeInfoWithDefinition) {
-            const definition = currentMetaInfo.definition;
-            definitions = greyscriptMeta.getDefinitions(definition.returns);
+            definitions = greyscriptMeta.getDefinitions(currentMetaInfo.returns);
           } else {
             definitions = greyscriptMeta.getDefinitions(currentMetaInfo.type);
           }
@@ -249,8 +269,7 @@ export class TypeMap {
             let definitions = null;
 
             if (currentMetaInfo instanceof TypeInfoWithDefinition) {
-              const definition = currentMetaInfo.definition;
-              definitions = greyscriptMeta.getDefinitions(definition.returns);
+              definitions = greyscriptMeta.getDefinitions(currentMetaInfo.returns);
             } else {
               definitions = greyscriptMeta.getDefinitions(currentMetaInfo.type);
             }
@@ -399,6 +418,7 @@ export class TypeMap {
     );
 
     return new TypeInfoWithDefinition('anonymous', ['function'], {
+      type: 'function',
       arguments: item.parameters.map((arg: ASTBase) => {
         if (arg.type === ASTType.Identifier) {
           return {
@@ -416,7 +436,7 @@ export class TypeMap {
       }),
       returns: ['any'],
       description
-    });
+    } as SignatureDefinition);
   }
 
   private resolveCallStatement(item: ASTCallStatement): TypeInfo | null {
@@ -598,7 +618,7 @@ export class TypeMap {
             ? new TypeInfo(
               TypeInfoKind.Variable,
               name,
-              resolved.definition.returns || ['any']
+              resolved.returns
             )
             : new TypeInfo(TypeInfoKind.Variable, name, resolved.type);
       }

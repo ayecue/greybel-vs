@@ -1,5 +1,5 @@
 import { parse, Spec } from 'comment-parser';
-import { SignatureDefinitionArg } from 'meta-utils';
+import { SignatureDefinitionArg, SignatureDefinition } from 'meta-utils';
 import {
   Hover,
   MarkdownString,
@@ -56,20 +56,20 @@ const useCommentDefinitionOrDefault = (
       .map(convertSpecToString);
 
     return new TypeInfoWithDefinition(item.label, ['function'], {
+      type: 'function',
       arguments: commentArgs,
       returns: commentReturnValues.type.split('|'),
       description: commentDescription,
       example: commentExample
-    });
+    } as SignatureDefinition);
   }
 
   return item;
 };
 
 export const createTooltipHeader = (item: TypeInfoWithDefinition) => {
-  const definition = item.definition;
-  const args = definition.arguments || [];
-  const returnValues = formatTypes(definition.returns) || 'null';
+  const args = item.args;
+  const returnValues = formatTypes(item.returns) || 'null';
 
   if (args.length === 0) {
     return `(${item.kind}) ${item.label} (): ${returnValues}`;
@@ -78,8 +78,7 @@ export const createTooltipHeader = (item: TypeInfoWithDefinition) => {
   const argValues = args
     .map(
       (item) =>
-        `${item.label}${item.opt ? '?' : ''}: ${formatType(item.type)}${
-          item.default ? ` = ${item.default}` : ''
+        `${item.label}${item.opt ? '?' : ''}: ${formatType(item.type)}${item.default ? ` = ${item.default}` : ''
         }`
     )
     .join(', ');
@@ -116,7 +115,7 @@ export const createSignatureInfo = (
   const typeInfo = useCommentDefinitionOrDefault(item);
   const label = createTooltipHeader(typeInfo);
   const signatureInfo = new SignatureInformation(label);
-  const args = typeInfo.definition.arguments ?? [];
+  const args = typeInfo.args;
   const text = new MarkdownString('');
 
   appendTooltipBody(text, typeInfo);
