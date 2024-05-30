@@ -6,7 +6,7 @@ import vscode, {
   TextEditor,
   TextEditorEdit
 } from 'vscode';
-import { greyscriptMeta } from 'greyscript-meta/dist/meta';
+import { greyscriptMeta } from 'greyscript-meta';
 
 import { showCustomErrorMessage } from './helper/show-custom-error';
 

@@ -3,7 +3,7 @@ import vscode, {
   ExtensionContext,
   Uri
 } from 'vscode';
-import { greyscriptMeta } from 'greyscript-meta/dist/meta';
+import { greyscriptMeta } from 'greyscript-meta';
 
 import { createParseResult } from './build/create-parse-result';
 import { AgentType, ImportResultFailure, ImportResultSuccess, ImporterMode, createImporter } from './build/importer';

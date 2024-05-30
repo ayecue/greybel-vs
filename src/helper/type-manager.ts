@@ -1,5 +1,5 @@
 import { ASTChunkAdvanced } from 'greybel-core';
-import { greyscriptMeta } from 'greyscript-meta/dist/meta';
+import { greyscriptMeta } from 'greyscript-meta';
 import { SignatureDefinition, SignatureDefinitionArg } from 'meta-utils';
 import {
   ASTAssignmentStatement,
@@ -596,10 +596,10 @@ export class TypeMap {
         typeInfo =
           resolved instanceof TypeInfoWithDefinition
             ? new TypeInfo(
-                TypeInfoKind.Variable,
-                name,
-                resolved.definition.returns || ['any']
-              )
+              TypeInfoKind.Variable,
+              name,
+              resolved.definition.returns || ['any']
+            )
             : new TypeInfo(TypeInfoKind.Variable, name, resolved.type);
       }
 
