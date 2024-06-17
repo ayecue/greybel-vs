@@ -63,7 +63,7 @@ export function activate(context: ExtensionContext) {
         excludedNamespaces: [
           'params',
           ...excludedNamespacesFromConfig,
-          ...Array.from(Object.keys(greyscriptMeta.getSignaturesByType('general')))
+          ...Array.from(Object.keys(greyscriptMeta.getTypeSignature('general').getDefinitions()))
         ],
       }).parse();
 

@@ -1,7 +1,5 @@
 import {
-  ASTAssignmentStatement,
-  ASTBaseBlockWithScope,
-  ASTChunk
+  ASTAssignmentStatement
 } from 'miniscript-core';
 import vscode, {
   CancellationToken,
@@ -11,53 +9,40 @@ import vscode, {
   ProviderResult,
   Range,
   SymbolInformation,
-  SymbolKind,
   TextDocument
 } from 'vscode';
 
-import transformASTToString from './helper/ast-stringify';
 import documentParseQueue from './helper/document-manager';
-import { removeContextPrefixInNamespace } from './helper/utils';
+import typeManager from './helper/type-manager';
+import { getSymbolItemKind } from './helper/kind';
 
 const findAllAssignments = (
-  root: ASTChunk,
   document: TextDocument,
-  isValid: (c: string) => boolean = () => true
+  query: string
 ): SymbolInformation[] => {
-  const scopes: ASTBaseBlockWithScope[] = [root, ...root.scopes];
+  const typeDoc = typeManager.get(document);
+  const assignments = typeDoc.resolveAllAssignmentsWithQuery(query);
   const result: SymbolInformation[] = [];
 
-  for (const item of scopes) {
-    for (const assignmentItem of item.assignments) {
-      const assignment = assignmentItem as ASTAssignmentStatement;
-      const current = removeContextPrefixInNamespace(
-        transformASTToString(assignment.variable)
-      );
+  for (const assignmentItem of assignments) {
+    const assignment = assignmentItem as ASTAssignmentStatement;
+    const entity = typeDoc.resolveNamespace(assignment.variable, true);
 
-      if (!isValid(current)) {
-        continue;
-      }
+    const start = new Position(
+      assignment.variable.start.line - 1,
+      assignment.variable.start.character - 1
+    );
+    const end = new Position(
+      assignment.variable.end.line - 1,
+      assignment.variable.end.character - 1
+    );
 
-      if (!assignment.variable.start || !assignment.variable.end) {
-        continue;
-      }
-
-      const start = new Position(
-        assignment.variable.start.line - 1,
-        assignment.variable.start.character - 1
-      );
-      const end = new Position(
-        assignment.variable.end.line - 1,
-        assignment.variable.end.character - 1
-      );
-
-      result.push({
-        name: current,
-        containerName: current,
-        kind: SymbolKind.Variable,
-        location: new Location(document.uri, new Range(start, end))
-      });
-    }
+    result.push({
+      name: entity.label,
+      containerName: entity.label,
+      kind: getSymbolItemKind(entity.kind),
+      location: new Location(document.uri, new Range(start, end))
+    });
   }
 
   return result;
@@ -75,7 +60,7 @@ export function activate(_context: ExtensionContext) {
         return [];
       }
 
-      return findAllAssignments(parseResult.document as ASTChunk, document);
+      return findAllAssignments(document, '');
     }
   });
 
@@ -95,9 +80,8 @@ export function activate(_context: ExtensionContext) {
 
         result.push(
           ...findAllAssignments(
-            parseResult.document as ASTChunk,
             document,
-            (name: string) => name.includes(query)
+            query
           )
         );
       }
