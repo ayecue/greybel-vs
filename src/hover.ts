@@ -15,22 +15,10 @@ import vscode, {
 
 import { LookupHelper } from './helper/lookup-type';
 import {
-  SignatureDefinitionFunction,
-  SignatureDefinitionFunctionArg,
   SignatureDefinitionTypeMeta
 } from 'meta-utils';
 import { PseudoFS, tryToGetPath } from './helper/fs';
-
-function formatTypes(types: SignatureDefinitionTypeMeta[] = []): string {
-  return types.map((item) => item.toString().replace(',', '٫')).join(' or ');
-}
-
-function formatDefaultValue(value: number | string): string {
-  if (typeof value === 'string') {
-    return `"${value}"`;
-  }
-  return value.toString();
-}
+import { createHover, formatTypes } from './helper/tooltip';
 
 export function activate(_context: ExtensionContext) {
   vscode.languages.registerHoverProvider('greyscript', {
@@ -99,41 +87,7 @@ export function activate(_context: ExtensionContext) {
       }
 
       if (entity.isCallable()) {
-        const info: MarkdownString[] = [];
-
-        for (const definition of entity.signatureDefinitions) {
-          const fnDef = definition as SignatureDefinitionFunction;
-          const hoverText = new MarkdownString('');
-          const args = fnDef.getArguments() || [];
-          const example = fnDef.getExample() || [];
-          const returnValues = formatTypes(fnDef.getReturns()) || 'null';
-          let headline;
-
-          if (args.length === 0) {
-            headline = `(${entity.kind}) ${entity.label} (): ${returnValues}`;
-          } else {
-            const argValues = args
-              .map(
-                (item: SignatureDefinitionFunctionArg) =>
-                  `${item.getLabel()}${item.isOptional() ? '?' : ''}: ${formatTypes(item.getTypes())}${item.getDefault() ? ` = ${formatDefaultValue(item.getDefault().value)}` : ''
-                  }`
-              )
-              .join(', ');
-
-            headline = `(${entity.kind}) ${entity.label} (${argValues}): ${returnValues}`;
-          }
-
-          const output = ['```', headline, '```', '***', fnDef.getDescription()];
-
-          if (example.length > 0) {
-            output.push(...['#### Examples:', '```', ...example, '```']);
-          }
-
-          hoverText.appendMarkdown(output.join('\n'));
-          info.push(hoverText);
-        }
-
-        return new Hover(info);
+        return createHover(entity);
       }
 
       const hoverText = new MarkdownString('');

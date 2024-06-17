@@ -555,7 +555,6 @@
     "another-ansi": "^1.0.2",
     "ansi-escapes": "^4.3.2",
     "color-convert": "^2.0.1",
-    "comment-parser": "^1.4.1",
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
     "greybel-agent": "~1.7.2",

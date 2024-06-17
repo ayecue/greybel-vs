@@ -3,24 +3,18 @@ import {
   ASTCallExpression,
   ASTType
 } from 'miniscript-core';
-import {
-  SignatureDefinitionFunction,
-  SignatureDefinitionFunctionArg,
-  SignatureDefinitionBaseType,
-} from 'meta-utils';
 import vscode, {
   CancellationToken,
   ExtensionContext,
-  ParameterInformation,
   Position,
   SignatureHelp,
   SignatureHelpContext,
-  SignatureInformation,
   TextDocument
 } from 'vscode';
 
 import documentParseQueue from './helper/document-manager';
 import { LookupASTResult, LookupHelper } from './helper/lookup-type';
+import { createSignatureInfo } from './helper/tooltip';
 
 const getClosestCallExpression = (astResult: LookupASTResult): ASTCallExpression | null => {
   if (astResult.closest.type === ASTType.CallExpression) {
@@ -90,29 +84,7 @@ export function activate(_context: ExtensionContext) {
           selectedIndex === -1 ? 0 : selectedIndex;
         signatureHelp.signatures = [];
         signatureHelp.activeSignature = 0;
-
-        const fnDef = item.signatureDefinitions.first() as SignatureDefinitionFunction;
-        const args = fnDef.getArguments() || [];
-        const returnValues = fnDef.getReturns().join(' or ') || 'null';
-        const argValues = args
-          .map(
-            (item: SignatureDefinitionFunctionArg) =>
-              `${item.getLabel()}${item.isOptional() ? '?' : ''}: ${item.getTypes().join(' or ')}`
-          )
-          .join(', ');
-        const signatureInfo = new SignatureInformation(
-          `(${SignatureDefinitionBaseType.Function}) ${item.label} (${argValues}): ${returnValues}`
-        );
-        const params: ParameterInformation[] = args.map(
-          (argItem: SignatureDefinitionFunctionArg) => {
-            return new ParameterInformation(
-              `${argItem.getLabel()}${argItem.isOptional() ? '?' : ''}: ${argItem.getTypes().join(' or ')}`
-            );
-          }
-        );
-
-        signatureInfo.parameters = params;
-        signatureHelp.signatures.push(signatureInfo);
+        signatureHelp.signatures.push(...createSignatureInfo(item));
 
         return signatureHelp;
       }
