@@ -31,11 +31,16 @@ export const transformToCompletionItems = (identifer: Map<string, EntityCompleti
   return items;
 }
 
-export const getPropertyCompletionList = (
+export const getPropertyCompletionList = async (
   helper: LookupHelper,
   item: ASTBase
-): CompletionItem[] => {
-  const entity = helper.lookupBasePath(item);
+): Promise<CompletionItem[]> => {
+  const entity = await helper.lookupBasePath(item);
+
+  if (entity === null) {
+    return [];
+  }
+
   return transformToCompletionItems(entity.getAllIdentifier());
 };
 
@@ -68,12 +73,12 @@ export function activate(_context: ExtensionContext) {
         if (
           closest instanceof ASTMemberExpression
         ) {
-          completionItems.push(...getPropertyCompletionList(helper, closest));
+          completionItems.push(...await getPropertyCompletionList(helper, closest));
           isProperty = true;
         } else if (
           closest instanceof ASTIndexExpression
         ) {
-          completionItems.push(...getPropertyCompletionList(helper, closest));
+          completionItems.push(...await getPropertyCompletionList(helper, closest));
           isProperty = true;
         } else {
           completionItems.push(...getDefaultCompletionList());

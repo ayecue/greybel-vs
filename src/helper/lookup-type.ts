@@ -168,14 +168,17 @@ export class LookupHelper {
     return null;
   }
 
-  lookupBasePath(item: ASTBase): IEntity | null {
-    const base = lookupBase(item);
-    const typeMap = typeManager.get(this.document);
+  async lookupBasePath(item: ASTBase): Promise<IEntity | null> {
+    const typeDoc = await this.buildTypeMap();
 
-    if (typeMap && base) {
-      return typeMap
-        .getScopeContext(item.scope)
-        .aggregator.resolveNamespace(base);
+    if (typeDoc === null) {
+      return null;
+    }
+
+    const base = lookupBase(item);
+
+    if (base) {
+      return typeDoc.resolveNamespace(base, true);
     }
 
     return null;
