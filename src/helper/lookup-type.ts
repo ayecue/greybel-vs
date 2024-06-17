@@ -178,7 +178,7 @@ export class LookupHelper {
     const base = lookupBase(item);
 
     if (base) {
-      return typeDoc.resolveNamespace(base, true);
+      return typeDoc.resolveNamespace(base);
     }
 
     return null;
