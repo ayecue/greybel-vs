@@ -9,12 +9,14 @@ import vscode, {
   ProviderResult,
   Range,
   SymbolInformation,
+  SymbolKind,
   TextDocument
 } from 'vscode';
 
 import documentParseQueue from './helper/document-manager';
 import typeManager from './helper/type-manager';
 import { getSymbolItemKind } from './helper/kind';
+import { createExpressionId } from 'miniscript-type-analyzer';
 
 const findAllAssignments = (
   document: TextDocument,
@@ -27,6 +29,8 @@ const findAllAssignments = (
   for (const assignmentItem of assignments) {
     const assignment = assignmentItem as ASTAssignmentStatement;
     const entity = typeDoc.resolveNamespace(assignment.variable, true);
+    const label = entity?.label ?? createExpressionId(assignmentItem.variable);
+    const kind = entity?.kind ? getSymbolItemKind(entity.kind) : SymbolKind.Variable;
 
     const start = new Position(
       assignment.variable.start.line - 1,
@@ -38,9 +42,9 @@ const findAllAssignments = (
     );
 
     result.push({
-      name: entity.label,
-      containerName: entity.label,
-      kind: getSymbolItemKind(entity.kind),
+      name: label,
+      containerName: label,
+      kind,
       location: new Location(document.uri, new Range(start, end))
     });
   }
