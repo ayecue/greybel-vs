@@ -18,6 +18,45 @@ import * as ASTScraper from './ast-scraper';
 import documentParseQueue from './document-manager';
 import typeManager, { lookupBase } from './type-manager';
 
+export async function buildTypeDocument(
+  document: TextDocument,
+  refs: Map<string, TypeDocument | null> = new Map()
+): Promise<TypeDocument> {
+  if (refs.has(document.fileName)) {
+    return refs.get(document.fileName);
+  }
+
+  const typeDoc = typeManager.get(document);
+
+  refs.set(document.fileName, null);
+
+  if (!typeDoc) {
+    return null;
+  }
+
+  const externalTypeDocs = [];
+  const allImports = await documentParseQueue.get(document).getImports();
+
+  await Promise.all(
+    allImports.map(async (item) => {
+      const { document, textDocument } = item;
+
+      if (!document) {
+        return;
+      }
+
+      const itemTypeDoc = await buildTypeDocument(textDocument, refs);
+
+      if (itemTypeDoc === null) return;
+      externalTypeDocs.push(itemTypeDoc);
+    })
+  );
+
+  const mergedTypeDoc = typeDoc.merge(...externalTypeDocs);
+  refs.set(document.fileName, mergedTypeDoc);
+  return mergedTypeDoc;
+}
+
 export type LookupOuter = ASTBase[];
 
 export interface LookupASTResult {
@@ -185,30 +224,7 @@ export class LookupHelper {
   }
 
   async buildTypeMap(): Promise<TypeDocument> {
-    const typeDoc = typeManager.get(this.document);
-
-    if (!typeDoc) {
-      return null;
-    }
-
-    const externalTypeDocs = [];
-    const allImports = await documentParseQueue.get(this.document).getImports();
-
-    for (const item of allImports) {
-      const { document, textDocument } = item;
-
-      if (!document) {
-        continue;
-      }
-
-      const itemTypeDoc = typeManager.get(textDocument);
-
-      if (itemTypeDoc) {
-        externalTypeDocs.push(itemTypeDoc);
-      }
-    }
-
-    return typeDoc.merge(...externalTypeDocs);
+    return await buildTypeDocument(this.document);
   }
 
   async lookupTypeInfo({

@@ -22,7 +22,10 @@ export function formatDefaultValue(value: number | string): string {
   return value.toString();
 }
 
-export const createTooltipHeader = (item: IEntity, definition: SignatureDefinitionFunction) => {
+export const createTooltipHeader = (
+  item: IEntity,
+  definition: SignatureDefinitionFunction
+) => {
   const args = definition.getArguments() || [];
   const returnValues = formatTypes(definition.getReturns()) || 'null';
 
@@ -33,7 +36,12 @@ export const createTooltipHeader = (item: IEntity, definition: SignatureDefiniti
   const argValues = args
     .map(
       (item) =>
-        `${item.getLabel()}${item.isOptional() ? '?' : ''}: ${formatTypes(item.getTypes())}${item.getDefault() ? ` = ${formatDefaultValue(item.getDefault().value)}` : ''
+        `${item.getLabel()}${item.isOptional() ? '?' : ''}: ${formatTypes(
+          item.getTypes()
+        )}${
+          item.getDefault()
+            ? ` = ${formatDefaultValue(item.getDefault().value)}`
+            : ''
         }`
     )
     .join(', ');
@@ -64,9 +72,7 @@ export const appendTooltipBody = (
   }
 };
 
-export const createSignatureInfo = (
-  item: IEntity
-): SignatureInformation[] => {
+export const createSignatureInfo = (item: IEntity): SignatureInformation[] => {
   const signatureInfos: SignatureInformation[] = [];
 
   for (const definition of item.signatureDefinitions) {
@@ -78,11 +84,15 @@ export const createSignatureInfo = (
 
     appendTooltipBody(text, fnDef);
 
-    signatureInfo.parameters = args.map((argItem: SignatureDefinitionFunctionArg) => {
-      return new ParameterInformation(
-        `${argItem.getLabel()}${argItem.isOptional() ? '?' : ''}: ${argItem.getTypes().join(' or ')}`
-      );
-    });
+    signatureInfo.parameters = args.map(
+      (argItem: SignatureDefinitionFunctionArg) => {
+        return new ParameterInformation(
+          `${argItem.getLabel()}${argItem.isOptional() ? '?' : ''}: ${argItem
+            .getTypes()
+            .join(' or ')}`
+        );
+      }
+    );
     signatureInfo.documentation = text;
 
     signatureInfos.push(signatureInfo);
