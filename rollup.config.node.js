@@ -25,7 +25,7 @@ const options = {
     nodeResolve({
       preferBuiltins: false
     }),
-    //terser()
+    terser()
   ],
   external: [
     'vscode',
