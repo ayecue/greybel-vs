@@ -3,7 +3,7 @@ import vscode, {
   ExtensionContext,
   Uri
 } from 'vscode';
-import { greyscriptMeta } from 'greyscript-meta/dist/meta';
+import { greyscriptMeta } from 'greyscript-meta';
 
 import { createParseResult } from './build/create-parse-result';
 import { AgentType, ImportResultFailure, ImportResultSuccess, ImporterMode, createImporter } from './build/importer';
@@ -64,7 +64,7 @@ export function activate(context: ExtensionContext) {
         excludedNamespaces: [
           'params',
           ...excludedNamespacesFromConfig,
-          ...Array.from(Object.keys(greyscriptMeta.getSignaturesByType('general')))
+          ...Array.from(Object.keys(greyscriptMeta.getTypeSignature('general').getDefinitions()))
         ],
         processImportPathCallback: (path: string) => {
           const relativePath = createBasePath(target, path);

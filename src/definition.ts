@@ -1,8 +1,7 @@
 import {
-  ASTBase,
-  ASTIdentifier,
-  ASTIndexExpression,
-  ASTMemberExpression
+  ASTBaseBlockWithScope,
+  ASTMemberExpression,
+  ASTBase
 } from 'miniscript-core';
 import vscode, {
   CancellationToken,
@@ -13,16 +12,15 @@ import vscode, {
   TextDocument
 } from 'vscode';
 
-import transformASTToNamespace from './helper/ast-namespace';
 import documentParseQueue from './helper/document-manager';
 import { LookupHelper } from './helper/lookup-type';
 
 const findAllDefinitions = (
   helper: LookupHelper,
-  identifer: string,
-  root: ASTBase
+  item: ASTBase,
+  root: ASTBaseBlockWithScope
 ): DefinitionLink[] => {
-  const assignments = helper.findAllAssignmentsOfIdentifier(identifer, root);
+  const assignments = helper.findAllAssignmentsOfItem(item, root);
   const definitions: DefinitionLink[] = [];
 
   for (const assignment of assignments) {
@@ -65,28 +63,19 @@ export function activate(_context: ExtensionContext) {
 
       const { outer, closest } = astResult;
 
-      if (!(closest instanceof ASTIdentifier)) {
-        return [];
-      }
-
       const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
-      let identifer = closest.name;
+      let target: ASTBase = closest;
 
       if (previous) {
         if (
           previous instanceof ASTMemberExpression &&
           previous.identifier === closest
         ) {
-          identifer = transformASTToNamespace(previous);
-        } else if (
-          previous instanceof ASTIndexExpression &&
-          previous.index === closest
-        ) {
-          identifer = transformASTToNamespace(previous);
+          target = previous;
         }
       }
 
-      const definitions = findAllDefinitions(helper, identifer, closest.scope!);
+      const definitions = findAllDefinitions(helper, target, target.scope!);
       const allImports = await documentParseQueue.get(document).getImports();
 
       for (const item of allImports) {
@@ -97,7 +86,7 @@ export function activate(_context: ExtensionContext) {
         }
 
         const helper = new LookupHelper(textDocument);
-        const subDefinitions = findAllDefinitions(helper, identifer, document);
+        const subDefinitions = findAllDefinitions(helper, target, document);
 
         definitions.push(...subDefinitions);
       }

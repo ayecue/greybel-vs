@@ -6,7 +6,7 @@ import vscode, {
   TextEditor,
   TextEditorEdit
 } from 'vscode';
-import { greyscriptMeta } from 'greyscript-meta/dist/meta';
+import { greyscriptMeta } from 'greyscript-meta';
 
 import { showCustomErrorMessage } from './helper/show-custom-error';
 
@@ -63,7 +63,7 @@ export function activate(context: ExtensionContext) {
         excludedNamespaces: [
           'params',
           ...excludedNamespacesFromConfig,
-          ...Array.from(Object.keys(greyscriptMeta.getSignaturesByType('general')))
+          ...Array.from(Object.keys(greyscriptMeta.getTypeSignature('general').getDefinitions()))
         ],
       }).parse();
 

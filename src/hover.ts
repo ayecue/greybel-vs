@@ -12,23 +12,14 @@ import vscode, {
   TextDocument,
   Uri
 } from 'vscode';
+import {
+  SignatureDefinitionTypeMeta,
+  SignatureDefinitionBaseType
+} from 'meta-utils';
 
 import { LookupHelper } from './helper/lookup-type';
-import { TypeInfoWithDefinition } from './helper/type-manager';
-import { createHover } from './helper/tooltip';
 import { PseudoFS, tryToGetPath } from './helper/fs';
-
-function formatType(type: string): string {
-  const segments = type.split(':');
-  if (segments.length === 1) {
-    return segments[0];
-  }
-  return `${segments[0]}<${segments[1]}>`;
-}
-
-function formatTypes(types: string[] = []): string {
-  return types.map(formatType).join(' or ');
-}
+import { createHover, formatTypes } from './helper/tooltip';
 
 export function activate(_context: ExtensionContext) {
   vscode.languages.registerHoverProvider('greyscript', {
@@ -90,23 +81,33 @@ export function activate(_context: ExtensionContext) {
         return new Hover(hoverText);
       }
 
-      const typeInfo = await helper.lookupTypeInfo(astResult);
+      const entity = await helper.lookupTypeInfo(astResult);
 
-      if (!typeInfo) {
+      if (!entity) {
         return;
       }
 
-      const hoverText = new MarkdownString('');
+      if (entity.isCallable()) {
+        return createHover(entity);
+      }
 
-      if (
-        typeInfo instanceof TypeInfoWithDefinition &&
-        typeInfo.type.length === 1
-      ) {
-        return createHover(typeInfo);
+      const hoverText = new MarkdownString('');
+      const metaTypes = Array.from(entity.types).map(SignatureDefinitionTypeMeta.parse);
+      let label = `(${entity.kind}) ${entity.label}: ${formatTypes(metaTypes)}`;
+
+      if (entity.types.has(SignatureDefinitionBaseType.Map)) {
+        const records: Record<string, string> = {};
+
+        for (const [key, item] of entity.values) {
+          const metaTypes = Array.from(item.types).map(SignatureDefinitionTypeMeta.parse)
+          records[key.slice(2)] = formatTypes(metaTypes);
+        }
+
+        label += ' ' + JSON.stringify(records, null, 2);
       }
 
       hoverText.appendCodeblock(
-        `(${typeInfo.kind}) ${typeInfo.label}: ${formatTypes(typeInfo.type)}`
+        label
       );
 
       return new Hover(hoverText);

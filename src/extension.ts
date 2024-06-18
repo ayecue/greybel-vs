@@ -2,6 +2,7 @@ import vscode, { ExtensionContext } from 'vscode';
 
 import { activate as activateAPI } from './api';
 import { activate as activateAutocomplete } from './autocomplete';
+import { activate as activateSignature } from './signature';
 import { activate as activateBuild } from './build';
 import { activate as activateColor } from './color';
 import { activate as activateDebug } from './debug';
@@ -18,6 +19,7 @@ import { activate as activateTransform } from './transform';
 import { activate as activateClearSecrets } from './clear-secrets';
 import { activate as activateImport } from './import';
 import { activate as activatePreview } from './preview';
+import { activate as activateFormatter } from './formatter';
 
 export function activate(context: ExtensionContext) {
   const config = vscode.workspace.getConfiguration('greybel');
@@ -31,6 +33,7 @@ export function activate(context: ExtensionContext) {
 
   if (config.get<boolean>('autocomplete')) {
     activateAutocomplete(context);
+    activateSignature(context);
   }
 
   activateDebug(context);
@@ -39,6 +42,10 @@ export function activate(context: ExtensionContext) {
   activateNextError(context);
   activateDefinition(context);
   activateSymbol(context);
+
+  if (config.get<boolean>('formatter')) {
+    activateFormatter(context);
+  }
 
   if (config.get<boolean>('diagnostic')) {
     activateDiagnostic(context);
@@ -53,4 +60,4 @@ export function activate(context: ExtensionContext) {
   activatePreview(context);
 }
 
-export function deactivate() {}
+export function deactivate() { }

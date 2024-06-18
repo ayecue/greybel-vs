@@ -70,6 +70,7 @@ Do not forget to [set up](#settings) Greybel to your needs.
 - [Interpreter](#interpreter)
 - [Debugger](#debugger)
 - [API Browser](#api-browser)
+- [Comment Docs](#comment-docs)
 - [Snippets](#snippets)
 - [Share](#share)
 - [Goto Error](#goto-error)
@@ -284,6 +285,22 @@ Will create a web view that will render actual TextMesh Pro Rich-Text tags in yo
 API Browser for GreyScript. Basically a version of the [GreyScript API Documentation](https://documentation.greyscript.org) page within Visual Studio Code.
 
 ![API Browser](https://github.com/ayecue/greybel-vs/blob/main/assets/api-browser.png?raw=true "API Browser")
+
+## Comment Docs
+
+Provide signatures for your functions to show better hover tooltips. Additionally, the provided return value will be recognized by the implemented type system and thus result in context-sensitive auto-complete suggestions. In the future, it is planned to enable users to create their own custom types just by using comments.
+```js
+// Hello world
+// I am **bold**
+// @description Alternative description
+// @example test("title", 123)
+// @param {string} title - The title of the book.
+// @param {string|number} author - The author of the book.
+// @return {crypto} - Some info about return
+test = function(test, abc)
+  print(test)
+end function
+```
 
 ## Share
 

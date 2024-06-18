@@ -1,7 +1,5 @@
 import vscode, {
   ExtensionContext,
-  TextEditor,
-  TextEditorEdit,
   Uri
 } from 'vscode';
 
