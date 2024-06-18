@@ -12,11 +12,11 @@ import vscode, {
   TextDocument,
   Uri
 } from 'vscode';
-
-import { LookupHelper } from './helper/lookup-type';
 import {
   SignatureDefinitionTypeMeta
 } from 'meta-utils';
+
+import { LookupHelper } from './helper/lookup-type';
 import { PseudoFS, tryToGetPath } from './helper/fs';
 import { createHover, formatTypes } from './helper/tooltip';
 
