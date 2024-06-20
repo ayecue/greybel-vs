@@ -8,9 +8,16 @@ import vscode, {
 export function activate(context: ExtensionContext) {
   function tryFormat(content: string): string | null {
     try {
+      const config = vscode.workspace.getConfiguration('greybel');
+
       return new DirectTranspiler({
         code: content,
-        buildType: BuildType.BEAUTIFY
+        buildType: BuildType.BEAUTIFY,
+        buildOptions: {
+          keepParentheses: config.get<boolean>('transpiler.beautify.indentationSpaces'),
+          indentation: config.get<string>('transpiler.beautify.indentation') === 'Tab' ? 0 : 1,
+          indentationSpaces: config.get<number>('transpiler.beautify.indentationSpaces')
+        }
       }).parse();
     } catch (err) {
       return null;

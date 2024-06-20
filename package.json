@@ -453,6 +453,25 @@
           "default": false,
           "description": "Enable auto compile feature for installer."
         },
+        "greybel.transpiler.beautify.keepParentheses": {
+          "type": "boolean",
+          "default": false,
+          "description": "Always keep the parentheses."
+        },
+        "greybel.transpiler.beautify.indendation": {
+          "type": "string",
+          "enum": [
+            "Tab",
+            "Whitespace"
+          ],
+          "default": "Tab",
+          "description": "Tab or whitespace. What should be used for indentation?"
+        },
+        "greybel.transpiler.beautify.indentationSpaces": {
+          "type": "number",
+          "default": 2,
+          "description": "Define the amount of whitespaces when using whitespaces as indentation."
+        },
         "greybel.createIngame.active": {
           "type": "boolean",
           "default": false,
@@ -565,7 +584,7 @@
     "greyscript-meta": "~4.0.6",
     "greyscript-meta-web": "~1.0.2",
     "greyscript-textmate": "~1.8.1",
-    "greyscript-transpiler": "~0.8.0",
+    "greyscript-transpiler": "~0.8.1",
     "miniscript-type-analyzer": "~0.2.2",
     "lru-cache": "^7.14.1",
     "node-json-stream": "~0.2.6",
