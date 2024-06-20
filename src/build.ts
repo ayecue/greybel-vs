@@ -44,17 +44,24 @@ export function activate(context: ExtensionContext) {
         config.get<string>('transpiler.ingameDirectory')
       );
       let buildType = BuildType.DEFAULT;
+      let buildOptions = {};
 
       if (buildTypeFromConfig === 'Uglify') {
         buildType = BuildType.UGLIFY;
       } else if (buildTypeFromConfig === 'Beautify') {
         buildType = BuildType.BEAUTIFY;
+        buildOptions = {
+          keepParentheses: config.get<boolean>('transpiler.beautify.keepParentheses'),
+          indentation: config.get<string>('transpiler.beautify.indentation') === 'Tab' ? 0 : 1,
+          indentationSpaces: config.get<number>('transpiler.beautify.indentationSpaces')
+        };
       }
 
       const result = await new Transpiler({
         target,
         resourceHandler: new TranspilerResourceProvider().getHandler(),
         buildType,
+        buildOptions,
         environmentVariables: new Map(
           Object.entries(environmentVariablesFromConfig)
         ),
