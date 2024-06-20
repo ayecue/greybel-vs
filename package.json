@@ -458,7 +458,7 @@
           "default": false,
           "description": "Always keep the parentheses."
         },
-        "greybel.transpiler.beautify.indendation": {
+        "greybel.transpiler.beautify.indentation": {
           "type": "string",
           "enum": [
             "Tab",
