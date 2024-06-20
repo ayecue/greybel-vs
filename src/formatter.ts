@@ -14,7 +14,7 @@ export function activate(context: ExtensionContext) {
         code: content,
         buildType: BuildType.BEAUTIFY,
         buildOptions: {
-          keepParentheses: config.get<boolean>('transpiler.beautify.indentationSpaces'),
+          keepParentheses: config.get<boolean>('transpiler.beautify.keepParentheses'),
           indentation: config.get<string>('transpiler.beautify.indentation') === 'Tab' ? 0 : 1,
           indentationSpaces: config.get<number>('transpiler.beautify.indentationSpaces')
         }
