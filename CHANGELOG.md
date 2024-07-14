@@ -1143,3 +1143,4 @@ All notable changes to this project will be documented in this file.
 ## [2.3.13] - 15.07.2024
 
 - add missing map intrinsic description
+- fix autocomplete including map related intrinsics in general
