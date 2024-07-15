@@ -1,3 +1,4 @@
+import { SignatureDefinitionBaseType } from 'meta-utils';
 import {
   ASTAssignmentStatement,
   ASTBase,
@@ -9,9 +10,10 @@ import {
 } from 'miniscript-core';
 import {
   CompletionItem,
+  CompletionItemKind,
   Document as TypeDocument,
   IEntity,
-  CompletionItemKind
+  injectIdentifers
 } from 'miniscript-type-analyzer';
 import { Position, TextDocument } from 'vscode';
 
@@ -129,9 +131,10 @@ export class LookupHelper {
       });
     }
 
-    const assignments = Array.from(
-      scopeContext.scope.locals.getAllIdentifier().entries()
-    )
+    const localIdentifer = new Map<string, CompletionItem>();
+    injectIdentifers(localIdentifer, scopeContext.scope);
+
+    const assignments = Array.from(localIdentifer.entries())
       .map(([key, item]) => {
         return {
           identifier: key,
@@ -150,23 +153,14 @@ export class LookupHelper {
       });
     }
 
-    if (typeDoc.globals !== scopeContext.scope.locals) {
-      const outer = scopeContext.scope.outer;
+    if (scopeContext.scope.locals !== scopeContext.scope.globals)
+      injectIdentifers(result, scopeContext.scope.globals);
+    if (scopeContext.scope.outer)
+      injectIdentifers(result, scopeContext.scope.outer);
 
-      for (const assignment of outer.getAllIdentifier()) {
-        result.set(...assignment);
-      }
-
-      if (typeDoc.globals !== outer) {
-        const globals = scopeContext.scope.globals;
-
-        for (const assignment of globals.getAllIdentifier()) {
-          result.set(...assignment);
-        }
-      }
-    }
-
-    for (const assignment of typeDoc.api.getAllIdentifier()) {
+    for (const assignment of typeDoc.container.getAllIdentifier(
+      SignatureDefinitionBaseType.General
+    )) {
       result.set(...assignment);
     }
 
