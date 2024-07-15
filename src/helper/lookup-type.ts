@@ -13,7 +13,8 @@ import {
   CompletionItemKind,
   Document as TypeDocument,
   IEntity,
-  injectIdentifers
+  injectIdentifers,
+  isValidIdentifierLiteral
 } from 'miniscript-type-analyzer';
 import { Position, TextDocument } from 'vscode';
 
@@ -265,7 +266,7 @@ export class LookupHelper {
     } else if (
       previous?.type === ASTType.IndexExpression &&
       closest === (previous as ASTIndexExpression).index &&
-      closest.type === ASTType.StringLiteral
+      isValidIdentifierLiteral(closest)
     ) {
       return typeDoc.resolveType(previous, true);
     }
