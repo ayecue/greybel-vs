@@ -1149,3 +1149,7 @@ All notable changes to this project will be documented in this file.
 
 - properly check in type-analyzer if string in index is valid identifier
 - let type-analyzer resolve isa expressions as number
+
+## [2.3.15] - 17.07.2024
+
+- enforce LF in import functionality just as in the build feature - related to [#222](https://github.com/ayecue/greybel-vs/issues/222)
