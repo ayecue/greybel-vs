@@ -5,10 +5,11 @@ import vscode, {
 
 import { showCustomErrorMessage } from './helper/show-custom-error';
 import { AgentType, ImportResultFailure, ImportResultSuccess, ImporterMode, createImporter } from './build/importer';
+import { tryToDecode } from './helper/fs';
 
 const getFiles = async (uri: vscode.Uri): Promise<vscode.Uri[]> => {
   const stat = await vscode.workspace.fs.stat(uri);
-  
+
   if (stat.type === vscode.FileType.Directory) {
     const target = vscode.workspace.asRelativePath(uri.fsPath);
     return await vscode.workspace.findFiles(`${target}/**/*`);
@@ -41,8 +42,7 @@ export function activate(context: ExtensionContext) {
         config.get<string>('transpiler.ingameDirectory')
       );
       const filesWithContent = await Promise.all(files.map(async (file) => {
-        const buffer = await vscode.workspace.fs.readFile(file);
-        const content = new TextDecoder().decode(buffer);
+        const content = await tryToDecode(file.fsPath);
 
         return {
           path: file.fsPath,
@@ -58,11 +58,11 @@ export function activate(context: ExtensionContext) {
         }, {}),
         extensionContext: context,
         mode: vscode.workspace
-            .getConfiguration('greybel')
-            .get<ImporterMode>('createIngame.mode'),
-          agentType: vscode.workspace
-            .getConfiguration('greybel')
-            .get<AgentType>('createIngame.agent'),
+          .getConfiguration('greybel')
+          .get<ImporterMode>('createIngame.mode'),
+        agentType: vscode.workspace
+          .getConfiguration('greybel')
+          .get<AgentType>('createIngame.agent'),
         autoCompile: false
       });
       const successfulItems = results.filter((item) => item.success) as ImportResultSuccess[];
