@@ -1155,3 +1155,11 @@ All notable changes to this project will be documented in this file.
 - enforce LF in import functionality just as in the build feature - related to [#222](https://github.com/ayecue/greybel-vs/issues/222) - thanks for reporting to Ren 
 - let type-analyzer resolve logical expressions as number
 - let type-analyzer set proper label for binary expression
+
+## [2.3.16] - 18.07.2024
+
+- keep multiline comments in devMode when beautifying
+- fix beautify regarding multiline comments
+- fix beautify when having multiple commands in one line via semicolon
+- fix signature parser for multiline comments
+- add support for envar, file and line in type-analyzer
