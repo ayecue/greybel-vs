@@ -1163,3 +1163,7 @@ All notable changes to this project will be documented in this file.
 - fix beautify when having multiple commands in one line via semicolon
 - fix signature parser for multiline comments
 - add support for envar, file and line in type-analyzer
+
+## [2.3.17] - 18.07.2024
+
+- fix misplacement of colorpicker in multiline strings
