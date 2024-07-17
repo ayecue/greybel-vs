@@ -90,14 +90,17 @@ export function activate(_context: ExtensionContext) {
       }): Range => {
         const colorStartIndex = match.index + markup.indexOf('=') + 1;
         const colorEndIndex = colorStartIndex + value.length;
-        const colorStart = new Position(
-          astPosition.line + lineIndex - 1,
-          astPosition.character + colorStartIndex
-        );
-        const colorEnd = new Position(
-          astPosition.line + lineIndex - 1,
-          astPosition.character + colorEndIndex
-        );
+        const line = (astPosition.line - 1) + lineIndex;
+        let start = colorStartIndex;
+        let end = colorEndIndex;
+
+        if (lineIndex === 0) {
+          start += astPosition.character;
+          end += astPosition.character;
+        }
+
+        const colorStart = new Position(line, start);
+        const colorEnd = new Position(line, end);
 
         return new Range(colorStart, colorEnd);
       };
