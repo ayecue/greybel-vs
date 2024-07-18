@@ -44,6 +44,8 @@ const ColorMap: {
   yellow: '#FFFF00'
 };
 
+const createColorRegExp = () => new RegExp(`(?:mark|color)=(${Object.keys(ColorMap).join('|')}|(?:#[0-9a-f]{6}|#[0-9a-f]{3}))`, 'ig');
+
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 export function activate(_context: ExtensionContext) {
@@ -90,14 +92,17 @@ export function activate(_context: ExtensionContext) {
       }): Range => {
         const colorStartIndex = match.index + markup.indexOf('=') + 1;
         const colorEndIndex = colorStartIndex + value.length;
-        const colorStart = new Position(
-          astPosition.line + lineIndex - 1,
-          astPosition.character + colorStartIndex
-        );
-        const colorEnd = new Position(
-          astPosition.line + lineIndex - 1,
-          astPosition.character + colorEndIndex
-        );
+        const line = (astPosition.line - 1) + lineIndex;
+        let start = colorStartIndex;
+        let end = colorEndIndex;
+
+        if (lineIndex === 0) {
+          start += astPosition.character;
+          end += astPosition.character;
+        }
+
+        const colorStart = new Position(line, start);
+        const colorEnd = new Position(line, end);
 
         return new Range(colorStart, colorEnd);
       };
@@ -112,23 +117,24 @@ export function activate(_context: ExtensionContext) {
 
         for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
           const line = lines[lineIndex];
-          const regexp = new RegExp('<(?:mark|color)=([^>]+)>', 'ig');
+          const regexp = createColorRegExp();
           let match;
 
           while ((match = regexp.exec(line))) {
             const [markup, value] = match;
+            const range = getRange({
+              match,
+              markup,
+              value,
+              astPosition: start,
+              lineIndex
+            });
 
             if (value.startsWith('#')) {
               const [red, green, blue] = colorConvert.hex.rgb(value.slice(1));
 
               result.push({
-                range: getRange({
-                  match,
-                  markup,
-                  value,
-                  astPosition: start,
-                  lineIndex
-                }),
+                range,
                 color: new Color(red / 255, green / 255, blue / 255, 1)
               });
             } else if (hasOwnProperty.call(ColorMap, value)) {
@@ -137,24 +143,12 @@ export function activate(_context: ExtensionContext) {
               );
 
               result.push({
-                range: getRange({
-                  match,
-                  markup,
-                  value,
-                  astPosition: start,
-                  lineIndex
-                }),
+                range,
                 color: new Color(red / 255, green / 255, blue / 255, 1)
               });
             } else {
               result.push({
-                range: getRange({
-                  match,
-                  markup,
-                  value,
-                  astPosition: start,
-                  lineIndex
-                }),
+                range,
                 color: new Color(0, 0, 0, 1)
               });
             }
