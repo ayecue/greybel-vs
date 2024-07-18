@@ -1167,3 +1167,5 @@ All notable changes to this project will be documented in this file.
 ## [2.3.17] - 18.07.2024
 
 - fix misplacement of colorpicker in multiline strings
+- fix launch_path meta example
+- improve launch_path, program_path and launch meta descriptions
