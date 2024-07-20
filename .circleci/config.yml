@@ -7,12 +7,6 @@ commands:
   build:  
     steps:
       - run:
-          name: Install vsce
-          command: npm install vsce
-      - run:
-          name: Install deps
-          command: npm ci
-      - run:
           name: Build extension
           command: npm run compile:extension
 
@@ -22,7 +16,8 @@ jobs:
       - image: cimg/node:19.8.1
     steps:
       - checkout
-      - node/install-packages
+      - node/install-packages:
+          override-ci-command: npm i --force
       - build
   build-and-publish: 
     docker:
