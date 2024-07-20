@@ -153,7 +153,7 @@ export function activate(context: ExtensionContext) {
       }
 
       vscode.window.showInformationMessage(
-        `Build done. Available [here](${buildPath.toString(true)}).`,
+        `Build done. Available [here](${buildPath.toString()}).`,
         { modal: false }
       );
     } catch (err: any) {

@@ -44,7 +44,7 @@ export function activate(_context: ExtensionContext) {
         const output = [
           `[Imports file "${PseudoFS.basename(
             target.fsPath
-          )}" inside this code](${target.toString(true)})`,
+          )}" inside this code](${target.toString()})`,
           '***',
           'Click the link above to open the file.',
           '',
@@ -71,7 +71,7 @@ export function activate(_context: ExtensionContext) {
         const output = [
           `[Inserts file "${PseudoFS.basename(
             target.fsPath
-          )}" inside this code when building](${target.toString(true)})`,
+          )}" inside this code when building](${target.toString()})`,
           '***',
           'Click the link above to open the file.'
         ];

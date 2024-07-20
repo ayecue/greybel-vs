@@ -1173,3 +1173,7 @@ All notable changes to this project will be documented in this file.
 ## [2.3.18] - 19.07.2024
 
 - automatically save dirty files on build, including imports - thanks for the suggestion [@midsubspace](https://github.com/midsubspace)
+
+## [2.3.19] - 20.07.2024
+
+- use encoding for links in imports tooltip
