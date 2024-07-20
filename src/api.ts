@@ -31,8 +31,8 @@ export async function displayAPIDocumentation(
         <title>GreyScript API</title>
         <link defer href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link defer rel="stylesheet" type="text/css" href="${panel.webview.asWebviewUri(
-          indexStylesheet
-        )}">
+    indexStylesheet
+  )}">
         <link defer rel="stylesheet" type="text/css" href="https://unpkg.com/prismjs@1.29.0/themes/prism-twilight.min.css">
         <script defer crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
         <script defer crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
