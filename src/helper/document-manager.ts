@@ -103,6 +103,18 @@ export class ParseResult {
 
     return Array.from(imports);
   }
+
+  async getDirtyFiles(includeImports?: boolean): Promise<ParseResult[]> {
+    const results: ParseResult[] = [];
+
+    if (this.textDocument.isDirty) results.push(this);
+    if (includeImports) {
+      const imports = await this.getImports();
+      results.push(...imports.filter((it) => it.textDocument.isDirty));
+    }
+
+    return results;
+  }
 }
 
 export interface QueueItem {
