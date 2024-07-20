@@ -1177,3 +1177,4 @@ All notable changes to this project will be documented in this file.
 ## [2.3.19] - 20.07.2024
 
 - use encoding for links in imports tooltip
+- optimize build size
