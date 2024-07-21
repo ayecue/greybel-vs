@@ -1178,3 +1178,7 @@ All notable changes to this project will be documented in this file.
 
 - use encoding for links in imports tooltip
 - optimize build size
+
+## [2.3.20] - 21.07.2024
+
+- optimize interpreter task schedule
