@@ -1,5 +1,4 @@
 .vscode
-scripts
 .vscode-test-web
 out
 grammar
@@ -18,6 +17,7 @@ tsconfig.json
 package-lock.json
 assets
 node_modules
+scripts
 styles
 #json-stream
 !node_modules/node-json-stream
