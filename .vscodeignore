@@ -1,4 +1,5 @@
 .vscode
+scripts
 .vscode-test-web
 out
 grammar
