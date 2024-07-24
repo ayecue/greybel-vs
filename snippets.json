@@ -26,6 +26,15 @@
       ],
       "description": "Defines a for loop"
   },
+  "while": {
+      "prefix": "while",
+      "body": [
+          "while ${1:condition}",
+          "\t$0",
+          "end while"
+      ],
+      "description": "Defines a while loop"
+  },
   "if block": {
       "prefix": "if",
       "body": [
