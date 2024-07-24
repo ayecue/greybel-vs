@@ -495,7 +495,7 @@
             "public"
           ],
           "default": "local",
-          "description": "Creation mode.",
+          "description": "Creation mode. (only required for headless agent)",
           "scope": "resource"
         },
         "greybel.createIngame.steamUser": {
@@ -504,7 +504,13 @@
             "null"
           ],
           "default": null,
-          "description": "Steam user."
+          "description": "Steam user. (only required for headless agent)"
+        },
+        "greybel.createIngame.postCommand": {
+          "type": "string",
+          "default": "",
+          "description": "Command which gets executed after creation of files. (only available for message-hook agent)",
+          "scope": "resource"
         }
       }
     },
@@ -570,7 +576,7 @@
     "color-convert": "^2.0.1",
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
-    "greybel-agent": "~1.8.0",
+    "greybel-agent": "~1.8.1",
     "greybel-gh-mock-intrinsics": "~4.11.1",
     "greybel-intrinsics": "~4.10.1",
     "greyscript-core": "~1.7.0",

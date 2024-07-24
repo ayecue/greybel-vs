@@ -131,6 +131,8 @@ export function activate(context: ExtensionContext) {
             .get<AgentType>('createIngame.agent'),
           autoCompile: config
             .get<boolean>('createIngame.autoCompile'),
+          postCommand: config
+            .get<string>('createIngame.postCommand')
         });
         const successfulItems = importResults.filter((item) => item.success) as ImportResultSuccess[];
         const failedItems = importResults.filter((item) => !item.success) as ImportResultFailure[];

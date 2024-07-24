@@ -5,6 +5,7 @@ import vscode, { ExtensionContext } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
 import { generateAutoCompileCode } from './auto-compile-helper';
+import { wait } from '../helper/wait';
 const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg;
 
 export enum ErrorResponseMessage {
@@ -60,6 +61,7 @@ export interface ImporterOptions {
   result: TranspilerParseResult;
   extensionContext: ExtensionContext;
   autoCompile: boolean;
+  postCommand: string;
 }
 
 class Importer {
@@ -70,6 +72,7 @@ class Importer {
   private mode: ImporterMode;
   private extensionContext: ExtensionContext;
   private autoCompile: boolean;
+  private postCommand: string;
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
@@ -79,6 +82,7 @@ class Importer {
     this.mode = options.mode;
     this.extensionContext = options.extensionContext;
     this.autoCompile = options.autoCompile;
+    this.postCommand = options.postCommand;
   }
 
   private createImportList(
@@ -222,6 +226,22 @@ class Importer {
         ),
         ({ output }) => console.log(output)
       );
+    }
+
+    if (this.postCommand.length > 0) {
+      agent.tryToRun(
+        null,
+        'cd ' + this.ingameDirectory,
+        ({ output }) => console.log(output)
+      );
+      await wait(500);
+      agent.tryToRun(
+        null,
+        this.postCommand,
+        ({ output }) => console.log(output)
+      );
+      await wait(500);
+      agent.terminal = null;
     }
 
     await agent.dispose();
