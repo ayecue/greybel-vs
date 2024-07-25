@@ -228,20 +228,26 @@ class Importer {
       );
     }
 
-    if (this.postCommand.length > 0) {
-      agent.tryToRun(
-        null,
-        'cd ' + this.ingameDirectory,
-        ({ output }) => console.log(output)
-      );
-      await wait(500);
-      agent.tryToRun(
-        null,
-        this.postCommand,
-        ({ output }) => console.log(output)
-      );
-      await wait(500);
-      agent.terminal = null;
+    if (this.postCommand !== '') {
+      if (this.agentType === AgentType.C2Light) {
+        agent.tryToRun(
+          null,
+          'cd ' + this.ingameDirectory,
+          ({ output }) => console.log(output)
+        );
+        await wait(500);
+        agent.tryToRun(
+          null,
+          this.postCommand,
+          ({ output }) => console.log(output)
+        );
+        await wait(500);
+        agent.terminal = null;
+      } else {
+        console.warn(
+          `Warning: Post command can only be executed when agent type is ${AgentType.C2Light}`
+        );
+      }
     }
 
     await agent.dispose();
