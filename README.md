@@ -211,6 +211,75 @@ By setting up the in-game directory in the settings you can also define to which
 
 Additionally, it is important to mention that **nested** `import_code` is supported as well. This is made possible by moving all imports into the entry file depending on their usage throughout the project. It is recommended to only use `import_code` at the head of the file since the import locations of nested files cannot be guaranteed.
 
+### Syntax
+
+Any valid MiniScript or GreyScript syntax is supported. Additionally, some minor syntax sugar is added to those languages. If you use those keep in mind to transpile your code first. Using these is completely optional though.
+
+### No trailing comma is required in maps or lists
+```
+myList = [
+	false,
+	null
+]
+
+myMap = {
+	"test": {
+		"level2": {
+			"bar": true
+		}
+	}
+}
+```
+
+### Math - shorthand
+```
+a /= b
+a *= b
+a -= b
+a += b
+```
+
+### Bitwise - shorthand
+```
+a = b << c
+a = b >> c
+a = b >>> c
+a = b | c
+a = b & c
+```
+
+### Block comment
+```
+/*
+	My block comment
+*/
+print("test")
+```
+
+### Filename expression
+```
+print(#filename)
+```
+The filename expression will be replaced with the string literal containing the name of the file before transpiling. Can be useful for debugging.
+
+### Line expression
+```
+print(#line)
+```
+The line expression will be replaced with the number literal containing the line of the expression before transpiling. Can be useful for debugging.
+
+### Envar expression
+```
+print(#envar MY_TEST_VAR)
+```
+The envar expression will be replaced with the value of the provided environment variable. Make sure you defined an environment variable for the provided namespace if there is no value found it will instead use `null`.
+
+### Inject expression
+```
+print(#inject "path/to/file";)
+```
+The inject expression will be replaced with the content of whatever file exists at the provided path. In case the file does not exist it will be replaced with `null`. Content that gets injected will automatically be escaped.
+
 ## Upload
 
 In case you are not interested at all in the build functionality or require to upload a lot of files into the game you can also use the "Import files into game" command. It will pretty much have the same behavior as the [create-ingame build feature](#auto-create-files-in-game) just without building.
