@@ -7,9 +7,6 @@ commands:
   build:  
     steps:
       - run:
-          name: Install esbuild package
-          command: npm i @esbuild/darwin-x64@0.21.0
-      - run:
           name: Build extension
           command: npm run compile:extension
 
