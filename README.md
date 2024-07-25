@@ -134,14 +134,14 @@ A minor caveat is that a Steam account and password need to be provided. The ref
 The message-hook agent will essentially send messages to the game server through the game client. For that to work you'll have to install [BepInEx](https://github.com/BepInEx/BepInEx) first and then the plugin second. You can find a description for both versions of BepInEx below.
 
 ##### BepInEx 5.x.x
-- Download + Install [BepInEx version 5.x.x](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.1) ([Installation guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html))
-- Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/ada96de7fae26d6aca85b1e6aba6873799cd37e6/GreyHackMessageHook5.dll)
+- Download + Install [BepInEx version 5.x.x](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2) ([Installation guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html))
+- Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/af926c972880e331ec0c9d7f0cce1bea055c02bc/GreyHackMessageHook5.dll) (Latest version: 0.5)
 - Put GreyHackMessageHook5.dll into the plugins folder of BepInEx
 - modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%` (**ONLY FOR NONE WINDOWS USERS**)
 
 ##### BepInEx 6.x.x
 - Download + Install [BepInEx version 6.0.0-pre.1 UnityMono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.1) ([Installation guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html))
-- Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/ada96de7fae26d6aca85b1e6aba6873799cd37e6/GreyHackMessageHook.dll)
+- Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/af926c972880e331ec0c9d7f0cce1bea055c02bc/GreyHackMessageHook.dll) (Latest version: 0.5)
 - Put GreyHackMessageHook.dll into the plugins folder of BepInEx
 - modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%` (**ONLY FOR NONE WINDOWS USERS**)
 
@@ -210,6 +210,75 @@ By having the installer option active Greybel will create one or more installer 
 By setting up the in-game directory in the settings you can also define to which in-game space you want to import the files. By default `/root/` will be used.
 
 Additionally, it is important to mention that **nested** `import_code` is supported as well. This is made possible by moving all imports into the entry file depending on their usage throughout the project. It is recommended to only use `import_code` at the head of the file since the import locations of nested files cannot be guaranteed.
+
+### Syntax
+
+Any valid MiniScript or GreyScript syntax is supported. Additionally, some minor syntax sugar is added to those languages. If you use those keep in mind to transpile your code first. Using these is completely optional though.
+
+### No trailing comma is required in maps or lists
+```
+myList = [
+	false,
+	null
+]
+
+myMap = {
+	"test": {
+		"level2": {
+			"bar": true
+		}
+	}
+}
+```
+
+### Math - shorthand
+```
+a /= b
+a *= b
+a -= b
+a += b
+```
+
+### Bitwise - shorthand
+```
+a = b << c
+a = b >> c
+a = b >>> c
+a = b | c
+a = b & c
+```
+
+### Block comment
+```
+/*
+	My block comment
+*/
+print("test")
+```
+
+### Filename expression
+```
+print(#filename)
+```
+The filename expression will be replaced with the string literal containing the name of the file before transpiling. Can be useful for debugging.
+
+### Line expression
+```
+print(#line)
+```
+The line expression will be replaced with the number literal containing the line of the expression before transpiling. Can be useful for debugging.
+
+### Envar expression
+```
+print(#envar MY_TEST_VAR)
+```
+The envar expression will be replaced with the value of the provided environment variable. Make sure you defined an environment variable for the provided namespace if there is no value found it will instead use `null`.
+
+### Inject expression
+```
+print(#inject "path/to/file";)
+```
+The inject expression will be replaced with the content of whatever file exists at the provided path. In case the file does not exist it will be replaced with `null`. Content that gets injected will automatically be escaped.
 
 ## Upload
 

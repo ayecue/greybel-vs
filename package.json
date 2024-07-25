@@ -8,14 +8,12 @@
     "email": "soerenwehmeier@googlemail.com"
   },
   "icon": "icon.png",
-  "version": "2.3.20",
+  "version": "2.4.0",
   "repository": {
     "type": "git",
     "url": "git@github.com:ayecue/greybel-vs.git"
   },
   "devDependencies": {
-    "@esbuild/darwin-arm64": "^0.21.0",
-    "@esbuild/darwin-x64": "^0.21.0",
     "@monaco-editor/loader": "^1.3.2",
     "@types/color-convert": "^2.0.0",
     "@types/node": "^12.12.0",
@@ -27,9 +25,9 @@
     "@vscode/test-electron": "^2.0.3",
     "@vscode/test-web": "^0.0.29",
     "dotenv": "^16.4.5",
-    "esbuild": "^0.21.0",
-    "esbuild-plugin-globals": "^0.2.0",
-    "esbuild-plugin-polyfill-node": "^0.3.0",
+    "esbuild": "0.21.0",
+    "esbuild-plugin-globals": "0.2.0",
+    "esbuild-plugin-polyfill-node": "0.3.0",
     "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",
@@ -495,7 +493,7 @@
             "public"
           ],
           "default": "local",
-          "description": "Creation mode.",
+          "description": "Creation mode. (only required for headless agent)",
           "scope": "resource"
         },
         "greybel.createIngame.steamUser": {
@@ -504,7 +502,13 @@
             "null"
           ],
           "default": null,
-          "description": "Steam user."
+          "description": "Steam user. (only required for headless agent)"
+        },
+        "greybel.createIngame.postCommand": {
+          "type": "string",
+          "default": "",
+          "description": "Command which gets executed after creation of files. (only available for message-hook agent)",
+          "scope": "resource"
         }
       }
     },
@@ -570,17 +574,17 @@
     "color-convert": "^2.0.1",
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
-    "greybel-agent": "~1.7.2",
-    "greybel-gh-mock-intrinsics": "~4.11.1",
-    "greybel-intrinsics": "~4.10.1",
-    "greyscript-core": "~1.7.0",
-    "greyscript-interpreter": "~1.10.1",
+    "greybel-agent": "~1.8.1",
+    "greybel-gh-mock-intrinsics": "~4.12.0",
+    "greybel-intrinsics": "~4.11.0",
+    "greyscript-core": "~1.8.4",
+    "greyscript-interpreter": "~1.11.0",
     "greyscript-meta": "~4.0.10",
     "greyscript-meta-web": "~1.0.6",
-    "greyscript-textmate": "~1.8.1",
-    "greyscript-transpiler": "~0.9.0",
+    "greyscript-textmate": "~1.9.0",
+    "greyscript-transpiler": "~0.10.1",
     "lru-cache": "^7.14.1",
-    "miniscript-type-analyzer": "~0.6.0",
+    "miniscript-type-analyzer": "~0.7.0",
     "node-json-stream": "~0.2.6",
     "text-encoder-lite": "^2.0.0",
     "text-mesh-transformer": "^1.4.1"

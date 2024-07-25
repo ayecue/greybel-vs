@@ -63,7 +63,8 @@ export function activate(context: ExtensionContext) {
         agentType: vscode.workspace
           .getConfiguration('greybel')
           .get<AgentType>('createIngame.agent'),
-        autoCompile: false
+        autoCompile: false,
+        postCommand: ''
       });
       const successfulItems = results.filter((item) => item.success) as ImportResultSuccess[];
       const failedItems = results.filter((item) => !item.success) as ImportResultFailure[];

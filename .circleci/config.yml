@@ -16,16 +16,14 @@ jobs:
       - image: cimg/node:19.8.1
     steps:
       - checkout
-      - node/install-packages:
-          override-ci-command: npm i --force
+      - node/install-packages
       - build
   build-and-publish: 
     docker:
       - image: cimg/node:19.8.1
     steps:
       - checkout
-      - node/install-packages:
-          override-ci-command: npm i --force
+      - node/install-packages
       - build
       - run:
           name: Determining package version
