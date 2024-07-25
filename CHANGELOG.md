@@ -1188,4 +1188,5 @@ All notable changes to this project will be documented in this file.
 - fix beautify indent on shorthand if else
 - make installer code more verbose, including more error messages
 - update message-hook agent to version 0.5, being able to properly sync windows between the two clients (NOTE: you'll need download the newest dll manually)
-- add while snippet
+- add while snippet - thanks for the suggestion Angelic
+- add postCommand option to build - thanks for the suggestion [@midsubspace](https://github.com/midsubspace)
