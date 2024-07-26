@@ -11,8 +11,12 @@ const getFiles = async (uri: vscode.Uri): Promise<vscode.Uri[]> => {
   const stat = await vscode.workspace.fs.stat(uri);
 
   if (stat.type === vscode.FileType.Directory) {
-    const target = vscode.workspace.asRelativePath(uri.fsPath);
-    return await vscode.workspace.findFiles(`${target}/**/*`);
+    const relativePattern: vscode.RelativePattern = new vscode.RelativePattern(
+      uri,
+      '**/*'
+    );
+
+    return await vscode.workspace.findFiles(relativePattern);
   } else if (stat.type === vscode.FileType.File) {
     return [
       uri

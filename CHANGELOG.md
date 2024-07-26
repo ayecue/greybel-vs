@@ -1191,3 +1191,7 @@ All notable changes to this project will be documented in this file.
 - add while snippet - thanks for the suggestion Angelic
 - add postCommand option to build - thanks for the suggestion [@midsubspace](https://github.com/midsubspace)
 - add inject expression - related to [#218](https://github.com/ayecue/greybel-vs/issues/218) - thanks for the suggestion [@midsubspace](https://github.com/midsubspace)
+
+## [2.4.1] - 26.07.2024
+
+- fix folder import on workspaces - thanks for reporting to [@midsubspace](https://github.com/midsubspace)
