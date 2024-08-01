@@ -14,12 +14,8 @@ export async function displayAPIDocumentation(
     }
   );
 
-  const indexStylesheet = Uri.file(
-    Uri.joinPath(Uri.file(context.extensionPath), 'api.view.css').fsPath
-  );
-  const indexScript = Uri.file(
-    Uri.joinPath(Uri.file(context.extensionPath), 'api.view.js').fsPath
-  );
+  const indexStylesheet = Uri.joinPath(Uri.file(context.extensionPath), 'api.view.css');
+  const indexScript = Uri.joinPath(Uri.file(context.extensionPath), 'api.view.js');
 
   panel.webview.html = `<!DOCTYPE html>
   <html>

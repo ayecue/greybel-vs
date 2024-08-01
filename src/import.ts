@@ -40,21 +40,21 @@ export function activate(context: ExtensionContext) {
         return;
       }
 
-      const target = eventUri.fsPath;
+      const targetUri = eventUri;
       const config = vscode.workspace.getConfiguration('greybel');
       const ingameDirectory = Uri.file(
         config.get<string>('transpiler.ingameDirectory')
       );
       const filesWithContent = await Promise.all(files.map(async (file) => {
-        const content = await tryToDecode(file.fsPath);
+        const content = await tryToDecode(file);
 
         return {
-          path: file.fsPath,
+          path: file.toString(true),
           content
         };
       }));
       const results = await createImporter({
-        target,
+        target: targetUri,
         ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
         result: filesWithContent.reduce((result, item) => {
           result[item.path] = item.content;
@@ -79,12 +79,12 @@ export function activate(context: ExtensionContext) {
           detail: failedItems.map((it) => it.reason).join('\n')
         });
       } else if (failedItems.length > 0) {
-        vscode.window.showInformationMessage(`Import was only partially successful. Only ${successfulItems.length} files got imported to ${ingameDirectory.fsPath}!`, {
+        vscode.window.showInformationMessage(`Import was only partially successful. Only ${successfulItems.length} files got imported to ${ingameDirectory.path}!`, {
           modal: true,
           detail: failedItems.map((it) => it.reason).join('\n')
         });
       } else {
-        vscode.window.showInformationMessage(`${successfulItems.length} files got imported to ${ingameDirectory.fsPath}!`, {
+        vscode.window.showInformationMessage(`${successfulItems.length} files got imported to ${ingameDirectory.path}!`, {
           modal: false
         });
       }

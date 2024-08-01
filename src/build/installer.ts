@@ -7,7 +7,7 @@ import { createBasePath } from '../helper/create-base-path';
 import { generateAutoCompileCode } from './auto-compile-helper';
 
 type ImportItem = {
-  filepath: string;
+  filepath: Uri;
   ingameFilepath: string;
   content: string;
 };
@@ -90,7 +90,7 @@ class InstallerFile {
 }
 
 export interface InstallerOptions {
-  target: string;
+  target: Uri;
   ingameDirectory: string;
   buildPath: Uri;
   result: TranspilerParseResult;
@@ -100,7 +100,7 @@ export interface InstallerOptions {
 
 class Installer {
   private importList: ImportItem[];
-  private target: string;
+  private target: Uri;
   private ingameDirectory: string;
   private buildPath: Uri;
   private maxChars: number;
@@ -139,14 +139,14 @@ class Installer {
   }
 
   private createImportList(
-    rootTarget: string,
+    rootTarget: Uri,
     parseResult: TranspilerParseResult
   ): ImportItem[] {
     const imports = Object.entries(parseResult).map(([target, code]) => {
       const ingameFilepath = createBasePath(rootTarget, target, '');
 
       return {
-        filepath: target,
+        filepath: Uri.parse(target),
         ingameFilepath,
         content: code
           .replace(/"/g, '""')
@@ -211,7 +211,7 @@ class Installer {
   createContentFooterAutoCompile(): string[] {
     if (this.autoCompile) {
       const rootRef = this.importList.find(
-        (item) => item.filepath === this.target
+        (item) => item.filepath.toString(true) === this.target.toString(true)
       );
 
       return generateAutoCompileCode(

@@ -7,10 +7,6 @@ import vscode, { Uri } from 'vscode';
 const fs = vscode.workspace.fs;
 
 export class PseudoFS {
-  static sep: string = path.sep;
-  static win32 = path.win32;
-  static posix = path.posix;
-
   static basename(file: string): string {
     return path.basename(file);
   }
@@ -22,15 +18,11 @@ export class PseudoFS {
   static resolve(file: string): string {
     return path.resolve(file);
   }
-
-  static isWindows() {
-    return this.win32.sep === this.sep;
-  }
 }
 
-export async function tryToGet(targetUri: string): Promise<Uint8Array | null> {
+export async function tryToGet(targetUri: Uri): Promise<Uint8Array | null> {
   try {
-    return await fs.readFile(Uri.file(targetUri));
+    return await fs.readFile(targetUri);
   } catch (err) {
     console.error(err);
   }
@@ -39,9 +31,9 @@ export async function tryToGet(targetUri: string): Promise<Uint8Array | null> {
 }
 
 export async function tryToGetPath(
-  targetUri: string,
-  altTargetUri: string
-): Promise<string> {
+  targetUri: Uri,
+  altTargetUri: Uri
+): Promise<Uri> {
   if (await tryToGet(targetUri)) {
     return targetUri;
   } else if (await tryToGet(altTargetUri)) {
@@ -50,7 +42,7 @@ export async function tryToGetPath(
   return targetUri;
 }
 
-export async function tryToDecode(targetUri: string): Promise<string> {
+export async function tryToDecode(targetUri: Uri): Promise<string> {
   const out = await tryToGet(targetUri);
 
   if (out) {

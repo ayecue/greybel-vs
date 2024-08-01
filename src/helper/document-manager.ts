@@ -42,29 +42,32 @@ export class ParseResult {
     }
 
     const rootChunk = this.document as ASTChunkGreyScript;
-    const rootPath = Uri.joinPath(Uri.file(this.textDocument.fileName), '..');
+    const rootPath = Uri.joinPath(this.textDocument.uri, '..');
     const nativeImports = rootChunk.nativeImports
       .filter((nativeImport) => nativeImport.directory)
-      .map(
-        (nativeImport) => Uri.joinPath(rootPath, nativeImport.directory).fsPath
-      );
+      .map((nativeImport) => Uri.joinPath(rootPath, nativeImport.directory));
     const importsAndIncludes = await Promise.all([
       ...rootChunk.imports
         .filter((nonNativeImport) => nonNativeImport.path)
         .map((nonNativeImport) => {
-          const result = Uri.joinPath(rootPath, nonNativeImport.path).fsPath;
-          return tryToGetPath(result, `${result}.src`);
+          const target = Uri.joinPath(rootPath, nonNativeImport.path);
+          const altTarget = Uri.joinPath(
+            rootPath,
+            `${nonNativeImport.path}.src`
+          );
+          return tryToGetPath(target, altTarget);
         }),
       ...rootChunk.includes
         .filter((includeImport) => includeImport.path)
         .map((includeImport) => {
-          const result = Uri.joinPath(rootPath, includeImport.path).fsPath;
-          return tryToGetPath(result, `${result}.src`);
+          const target = Uri.joinPath(rootPath, includeImport.path);
+          const altTarget = Uri.joinPath(rootPath, `${includeImport.path}.src`);
+          return tryToGetPath(target, altTarget);
         })
     ]);
     const dependencies: Set<string> = new Set([
-      ...nativeImports,
-      ...importsAndIncludes
+      ...nativeImports.map((uri) => uri.toString(true)),
+      ...importsAndIncludes.map((uri) => uri.toString(true))
     ]);
 
     this.dependencies = Array.from(dependencies);
@@ -78,14 +81,16 @@ export class ParseResult {
     }
 
     const imports: Set<ParseResult> = new Set();
-    const visited: Set<string> = new Set([this.textDocument.fileName]);
+    const visited: Set<string> = new Set([
+      this.textDocument.uri.toString(true)
+    ]);
     const traverse = async (rootResult: ParseResult) => {
       const dependencies = await rootResult.getDependencies();
 
       for (const dependency of dependencies) {
         if (visited.has(dependency)) continue;
 
-        const item = await this.documentManager.open(dependency);
+        const item = await this.documentManager.open(Uri.parse(dependency));
 
         visited.add(dependency);
 
@@ -157,7 +162,7 @@ export class DocumentParseQueue extends EventEmitter {
   }
 
   refresh(document: TextDocument): ParseResult {
-    const key = document.fileName;
+    const key = document.uri.toString(true);
 
     if (!this.queue.has(key) && this.results.has(key)) {
       return this.results.get(key)!;
@@ -179,7 +184,7 @@ export class DocumentParseQueue extends EventEmitter {
     const chunk = parser.parseChunk() as ASTChunkGreyScript;
 
     if (chunk.body?.length > 0) {
-      typeManager.analyze(document.uri.fsPath, chunk);
+      typeManager.analyze(document.uri.toString(true), chunk);
 
       return new ParseResult({
         documentManager: this,
@@ -194,7 +199,7 @@ export class DocumentParseQueue extends EventEmitter {
       const strictParser = new Parser(document.getText());
       const strictChunk = strictParser.parseChunk() as ASTChunkGreyScript;
 
-      typeManager.analyze(document.uri.fsPath, strictChunk);
+      typeManager.analyze(document.uri.toString(true), strictChunk);
 
       return new ParseResult({
         documentManager: this,
@@ -215,18 +220,18 @@ export class DocumentParseQueue extends EventEmitter {
   }
 
   update(document: TextDocument): boolean {
-    const fileName = document.fileName;
+    const fileUri = document.uri.toString(true);
     const content = document.getText();
 
-    if (this.queue.has(fileName)) {
+    if (this.queue.has(fileUri)) {
       return false;
     }
 
-    if (this.results.get(fileName)?.content === content) {
+    if (this.results.get(fileUri)?.content === content) {
       return false;
     }
 
-    this.queue.set(fileName, {
+    this.queue.set(fileUri, {
       document,
       createdAt: Date.now()
     });
@@ -234,7 +239,7 @@ export class DocumentParseQueue extends EventEmitter {
     return true;
   }
 
-  async open(target: string): Promise<ParseResult | null> {
+  async open(target: Uri): Promise<ParseResult | null> {
     try {
       const textDocument = await vscode.workspace.openTextDocument(target);
       return this.get(textDocument);
@@ -244,20 +249,22 @@ export class DocumentParseQueue extends EventEmitter {
   }
 
   get(document: TextDocument): ParseResult {
-    return this.results.get(document.fileName) || this.refresh(document);
+    return (
+      this.results.get(document.uri.toString(true)) || this.refresh(document)
+    );
   }
 
   next(document: TextDocument, timeout: number = 5000): Promise<ParseResult> {
     const me = this;
 
-    if (me.queue.has(document.fileName)) {
+    if (me.queue.has(document.uri.toString(true))) {
       return new Promise((resolve) => {
         const onTimeout = () => {
           me.removeListener('parsed', onParse);
           resolve(me.get(document));
         };
         const onParse = (evDocument: TextDocument) => {
-          if (evDocument.fileName === document.fileName) {
+          if (evDocument.uri.toString(true) === document.uri.toString(true)) {
             me.removeListener('parsed', onParse);
             clearTimeout(timer);
             resolve(me.get(document));
@@ -273,7 +280,7 @@ export class DocumentParseQueue extends EventEmitter {
   }
 
   clear(document: TextDocument): void {
-    this.results.delete(document.fileName);
+    this.results.delete(document.uri.toString(true));
     this.emit('cleared', document);
   }
 }

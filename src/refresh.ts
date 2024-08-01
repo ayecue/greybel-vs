@@ -7,7 +7,7 @@ export function activate(context: ExtensionContext) {
   async function refresh(
     eventUri: Uri = vscode.window.activeTextEditor?.document?.uri
   ) {
-    const result = await documentManager.open(eventUri.fsPath);
+    const result = await documentManager.open(eventUri);
 
     if (result === null) {
       return;

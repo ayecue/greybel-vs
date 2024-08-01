@@ -17,7 +17,7 @@ export function activate(context: ExtensionContext) {
   async function build(
     eventUri: Uri = vscode.window.activeTextEditor?.document?.uri
   ) {
-    const result = await documentManager.open(eventUri.fsPath);
+    const result = await documentManager.open(eventUri);
 
     if (result === null) {
       vscode.window.showErrorMessage(
@@ -33,7 +33,7 @@ export function activate(context: ExtensionContext) {
 
     try {
       const config = vscode.workspace.getConfiguration('greybel');
-      const target = eventUri.fsPath;
+      const targetUri = eventUri;
       const buildTypeFromConfig = config.get('transpiler.buildType');
       const environmentVariablesFromConfig =
         config.get<object>('transpiler.environmentVariables') || {};
@@ -61,7 +61,7 @@ export function activate(context: ExtensionContext) {
       }
 
       const result = await new Transpiler({
-        target,
+        target: targetUri.toString(true),
         resourceHandler: new TranspilerResourceProvider().getHandler(),
         buildType,
         buildOptions,
@@ -77,15 +77,15 @@ export function activate(context: ExtensionContext) {
           ...Array.from(Object.keys(greyscriptMeta.getTypeSignature('general').getDefinitions()))
         ],
         processImportPathCallback: (path: string) => {
-          const relativePath = createBasePath(target, path);
+          const relativePath = createBasePath(targetUri, path);
           return Uri.joinPath(ingameDirectory, relativePath).path;
         }
       }).parse();
 
-      const rootPath = vscode.workspace.rootPath
+      const rootPathUri = vscode.workspace.rootPath
         ? Uri.file(vscode.workspace.rootPath)
-        : Uri.joinPath(Uri.file(eventUri.fsPath), '..');
-      const buildPath = Uri.joinPath(rootPath, './build');
+        : Uri.joinPath(eventUri, '..');
+      const buildPath = Uri.joinPath(rootPathUri, './build');
 
       try {
         await vscode.workspace.fs.delete(buildPath, { recursive: true });
@@ -94,7 +94,7 @@ export function activate(context: ExtensionContext) {
       }
 
       await vscode.workspace.fs.createDirectory(buildPath);
-      await createParseResult(target, buildPath, result);
+      await createParseResult(targetUri, buildPath, result);
 
       if (config.get<boolean>('transpiler.installer.active')) {
         const maxChars =
@@ -106,9 +106,9 @@ export function activate(context: ExtensionContext) {
           modal: false
         });
         await createInstaller({
-          target,
+          target: targetUri,
           autoCompile,
-          buildPath: rootPath,
+          buildPath: rootPathUri,
           ingameDirectory: ingameDirectory.path,
           result,
           maxChars
@@ -121,7 +121,7 @@ export function activate(context: ExtensionContext) {
         });
 
         const importResults = await createImporter({
-          target,
+          target: targetUri,
           ingameDirectory: ingameDirectory.path,
           result,
           extensionContext: context,
@@ -143,12 +143,12 @@ export function activate(context: ExtensionContext) {
             detail: failedItems.map((it) => it.reason).join('\n')
           });
         } else if (failedItems.length > 0) {
-          vscode.window.showInformationMessage(`Import was only partially successful. Only ${successfulItems.length} files got imported to ${ingameDirectory.fsPath}!`, {
+          vscode.window.showInformationMessage(`Import was only partially successful. Only ${successfulItems.length} files got imported to ${ingameDirectory.path}!`, {
             modal: true,
             detail: failedItems.map((it) => it.reason).join('\n')
           });
         } else {
-          vscode.window.showInformationMessage(`${successfulItems.length} files got imported to ${ingameDirectory.fsPath}!`, {
+          vscode.window.showInformationMessage(`${successfulItems.length} files got imported to ${ingameDirectory.path}!`, {
             modal: false
           });
         }

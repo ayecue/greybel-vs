@@ -1,11 +1,11 @@
 import GreybelAgentPkg from 'greybel-agent';
 import { TranspilerParseResult } from 'greybel-transpiler';
 import path from 'path';
-import vscode, { ExtensionContext } from 'vscode';
+import vscode, { ExtensionContext, Uri } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
-import { generateAutoCompileCode } from './auto-compile-helper';
 import { wait } from '../helper/wait';
+import { generateAutoCompileCode } from './auto-compile-helper';
 const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg;
 
 export enum ErrorResponseMessage {
@@ -54,7 +54,7 @@ export type ImportResultFailure = {
 export type ImportResult = ImportResultSuccess | ImportResultFailure;
 
 export interface ImporterOptions {
-  target: string;
+  target: Uri;
   mode: ImporterMode;
   ingameDirectory: string;
   agentType: AgentType;
@@ -67,7 +67,7 @@ export interface ImporterOptions {
 class Importer {
   private importRefs: Map<string, ImportItem>;
   private agentType: AgentType;
-  private target: string;
+  private target: Uri;
   private ingameDirectory: string;
   private mode: ImporterMode;
   private extensionContext: ExtensionContext;
@@ -86,7 +86,7 @@ class Importer {
   }
 
   private createImportList(
-    rootTarget: string,
+    rootTarget: Uri,
     parseResult: TranspilerParseResult
   ): Map<string, ImportItem> {
     return Object.entries(parseResult).reduce<Map<string, ImportItem>>(
@@ -216,7 +216,7 @@ class Importer {
     }
 
     if (this.autoCompile) {
-      const rootRef = this.importRefs.get(this.target);
+      const rootRef = this.importRefs.get(this.target.toString(true));
 
       await agent.tryToEvaluate(
         generateAutoCompileCode(
@@ -230,16 +230,12 @@ class Importer {
 
     if (this.postCommand !== '') {
       if (this.agentType === AgentType.C2Light) {
-        agent.tryToRun(
-          null,
-          'cd ' + this.ingameDirectory,
-          ({ output }) => console.log(output)
+        agent.tryToRun(null, 'cd ' + this.ingameDirectory, ({ output }) =>
+          console.log(output)
         );
         await wait(500);
-        agent.tryToRun(
-          null,
-          this.postCommand,
-          ({ output }) => console.log(output)
+        agent.tryToRun(null, this.postCommand, ({ output }) =>
+          console.log(output)
         );
         await wait(500);
         agent.terminal = null;
