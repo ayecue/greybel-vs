@@ -4,13 +4,13 @@ import vscode, { Uri } from 'vscode';
 import { createBasePath } from '../helper/create-base-path';
 
 export const createParseResult = async (
-  target: string,
+  targetUri: Uri,
   buildPath: Uri,
   result: TranspilerParseResult
 ): Promise<void> => {
   const relativePathFactory: (filePath: string) => string = createBasePath.bind(
     null,
-    target
+    targetUri
   );
 
   await Promise.all(

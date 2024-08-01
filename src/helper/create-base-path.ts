@@ -1,16 +1,13 @@
 import { Uri } from 'vscode';
 
-import { PseudoFS } from './fs';
-
 export const createBasePath = (
-  target: string,
+  targetUri: Uri,
   path: string,
   base: string = '.'
 ): string => {
-  const targetRootSegments = Uri.joinPath(Uri.file(target), '..').fsPath.split(
-    PseudoFS.sep
-  );
-  const pathSegments = path.split(PseudoFS.sep);
+  const targetRootSegments = Uri.joinPath(targetUri, '..').path.split('/');
+  const pathUri = Uri.parse(path);
+  const pathSegments = pathUri.path.split('/');
   const filtered = [];
 
   for (const segment of targetRootSegments) {
@@ -23,12 +20,5 @@ export const createBasePath = (
     filtered.push(current);
   }
 
-  if (PseudoFS.isWindows()) {
-    return path
-      .replace(`${filtered.join(PseudoFS.sep)}`, base)
-      .split(PseudoFS.win32.sep)
-      .join(PseudoFS.posix.sep);
-  }
-
-  return path.replace(`${filtered.join(PseudoFS.sep)}`, base);
+  return pathUri.path.replace(`${filtered.join('/')}`, base);
 };

@@ -1,13 +1,13 @@
 import { Instruction } from 'greybel-interpreter';
 import { ASTRange } from 'miniscript-core';
-import vscode, { Position, Range } from 'vscode';
+import vscode, { Position, Range, Uri } from 'vscode';
 
 import documentManager from './document-manager';
 
 export type CustomError = {
   message: string;
   range?: ASTRange;
-  target: string;
+  target: Uri;
   stack?: string;
   stackTrace?: Instruction[];
 };

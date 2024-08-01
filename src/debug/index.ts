@@ -29,7 +29,7 @@ export function activate(
               type: 'greyscript',
               name: 'Run File',
               request: 'launch',
-              program: targetResource.fsPath
+              program: targetResource.toString(true)
             },
             { noDebug: true }
           );
@@ -48,7 +48,7 @@ export function activate(
             type: 'greyscript',
             name: 'Debug File',
             request: 'launch',
-            program: targetResource.fsPath
+            program: targetResource.toString(true)
           });
         }
       }
@@ -59,7 +59,8 @@ export function activate(
     vscode.commands.registerCommand(
       'greybel.debug.getProgramName',
       async (_config) => {
-        const target = vscode.window.activeTextEditor?.document.uri.fsPath;
+        const target =
+          vscode.window.activeTextEditor?.document.uri.toString(true);
 
         if (target) {
           return target;
@@ -90,7 +91,7 @@ export function activate(
           return;
         }
 
-        return Uri.joinPath(Uri.file(rootPath), value).fsPath;
+        return Uri.joinPath(Uri.file(rootPath), value).toString(true);
       }
     )
   );

@@ -11,7 +11,7 @@ export function activate(context: ExtensionContext) {
     eventUri: Uri = vscode.window.activeTextEditor?.document?.uri
   ) {
     try {
-      const doc = await vscode.workspace.openTextDocument(eventUri.fsPath);
+      const doc = await vscode.workspace.openTextDocument(eventUri.toString(true));
       const content = doc.getText();
       const response = await post(
         `${process.env.EDITOR_SERVICE_URL}/code`,

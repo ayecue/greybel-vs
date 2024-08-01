@@ -39,11 +39,11 @@ export function activate(_context: ExtensionContext) {
         // shows link to importCode resource
         const hoverText = new MarkdownString('');
         const importAst = astResult.closest as ASTImportCodeExpression;
-        const rootDir = importAst.directory.startsWith('/') ? vscode.workspace.workspaceFolders[0]?.uri : Uri.joinPath(Uri.file(document.fileName), '..');
+        const rootDir = importAst.directory.startsWith('/') ? vscode.workspace.workspaceFolders[0]?.uri : Uri.joinPath(document.uri, '..');
         const target = Uri.joinPath(rootDir, importAst.directory);
         const output = [
           `[Imports file "${PseudoFS.basename(
-            target.fsPath
+            target.path
           )}" inside this code](${target.toString()})`,
           '***',
           'Click the link above to open the file.',
@@ -64,13 +64,14 @@ export function activate(_context: ExtensionContext) {
         const importCodeAst = astResult.closest as ASTFeatureImportExpression;
         const fileDir = importCodeAst.path;
 
-        const rootDir = fileDir.startsWith('/') ? vscode.workspace.workspaceFolders[0]?.uri : Uri.joinPath(Uri.file(document.fileName), '..');
-        const result = Uri.joinPath(rootDir, fileDir).fsPath;
-        const target = Uri.file(await tryToGetPath(result, `${result}.src`));
+        const rootDir = fileDir.startsWith('/') ? vscode.workspace.workspaceFolders[0]?.uri : Uri.joinPath(document.uri, '..');
+        const result = Uri.joinPath(rootDir, fileDir);
+        const resultAlt = Uri.joinPath(rootDir, `${fileDir}`);
+        const target = await tryToGetPath(result, resultAlt);
 
         const output = [
           `[Inserts file "${PseudoFS.basename(
-            target.fsPath
+            target.path
           )}" inside this code when building](${target.toString()})`,
           '***',
           'Click the link above to open the file.'

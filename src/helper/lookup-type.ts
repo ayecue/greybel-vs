@@ -26,13 +26,15 @@ export async function buildTypeDocument(
   document: TextDocument,
   refs: Map<string, TypeDocument | null> = new Map()
 ): Promise<TypeDocument> {
-  if (refs.has(document.fileName)) {
-    return refs.get(document.fileName);
+  const documentUri = document.uri.toString(true);
+
+  if (refs.has(documentUri)) {
+    return refs.get(documentUri);
   }
 
-  const typeDoc = typeManager.get(document.uri.fsPath);
+  const typeDoc = typeManager.get(document.uri.toString(true));
 
-  refs.set(document.fileName, null);
+  refs.set(documentUri, null);
 
   if (!typeDoc) {
     return null;
@@ -57,7 +59,7 @@ export async function buildTypeDocument(
   );
 
   const mergedTypeDoc = typeDoc.merge(...externalTypeDocs);
-  refs.set(document.fileName, mergedTypeDoc);
+  refs.set(documentUri, mergedTypeDoc);
   return mergedTypeDoc;
 }
 
@@ -80,7 +82,7 @@ export class LookupHelper {
     root: ASTBaseBlockWithScope
   ): ASTAssignmentStatement[] {
     return typeManager
-      .get(this.document.uri.fsPath)
+      .get(this.document.uri.toString(true))
       .getScopeContext(root)
       .aggregator.resolveAvailableAssignmentsWithQuery(identifier);
   }
@@ -90,14 +92,14 @@ export class LookupHelper {
     root: ASTBaseBlockWithScope
   ): ASTAssignmentStatement[] {
     return typeManager
-      .get(this.document.uri.fsPath)
+      .get(this.document.uri.toString(true))
       .getScopeContext(root)
       .aggregator.resolveAvailableAssignments(item);
   }
 
   findAllAvailableIdentifierInRoot(): Map<string, CompletionItem> {
     return typeManager
-      .get(this.document.uri.fsPath)
+      .get(this.document.uri.toString(true))
       .getRootScopeContext()
       .scope.getAllIdentifier();
   }
@@ -106,7 +108,7 @@ export class LookupHelper {
     root: ASTBaseBlockWithScope
   ): Map<string, CompletionItem> {
     return typeManager
-      .get(this.document.uri.fsPath)
+      .get(this.document.uri.toString(true))
       .getScopeContext(root)
       .scope.getAllIdentifier();
   }
@@ -114,7 +116,7 @@ export class LookupHelper {
   findAllAvailableIdentifierRelatedToPosition(
     item: ASTBase
   ): Map<string, CompletionItem> {
-    const typeDoc = typeManager.get(this.document.uri.fsPath);
+    const typeDoc = typeManager.get(this.document.uri.toString(true));
     const result: Map<string, CompletionItem> = new Map();
     const scopeContext = typeDoc.getScopeContext(item.scope);
 

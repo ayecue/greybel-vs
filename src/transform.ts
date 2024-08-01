@@ -110,7 +110,7 @@ export function activate(context: ExtensionContext) {
       showCustomErrorMessage({
         message: err.message,
         range: err.range,
-        target: editor.document.uri.fsPath,
+        target: editor.document.uri,
         stack: err.stack
       });
     }

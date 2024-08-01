@@ -15,8 +15,8 @@ export class GrebyelDebugger extends Debugger {
 
   getBreakpoint(vm: VM): boolean {
     const currentInstruction = vm.getFrame().getCurrentInstruction();
-    const uri = Uri.file(currentInstruction.source.path);
-    const breakpoints = this.session.breakpoints.get(uri.fsPath) || [];
+    const uri = Uri.parse(currentInstruction.source.path);
+    const breakpoints = this.session.breakpoints.get(uri.toString(true)) || [];
     const actualBreakpoint = breakpoints.find(
       (bp: DebugProtocol.Breakpoint) => {
         return bp.line === currentInstruction?.source.start.line;
