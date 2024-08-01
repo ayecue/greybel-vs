@@ -1195,3 +1195,8 @@ All notable changes to this project will be documented in this file.
 ## [2.4.1] - 26.07.2024
 
 - fix folder import on workspaces - thanks for reporting to [@midsubspace](https://github.com/midsubspace)
+
+## [2.4.2] - 01.08.2024
+
+- show proper error message when trying to call propery from null value instead of throwing ".getWithOrigin is not a function"
+- replace usage of fs paths with vscode uris to prepare for language server port
