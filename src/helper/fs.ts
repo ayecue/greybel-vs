@@ -2,7 +2,7 @@ import { crlf, LF } from 'crlf-normalize';
 import path from 'path';
 // @ts-ignore: No type definitions
 import { TextDecoderLite as TextDecoder } from 'text-encoder-lite';
-import vscode from 'vscode';
+import vscode, { Uri } from 'vscode';
 
 const fs = vscode.workspace.fs;
 
@@ -20,9 +20,7 @@ export class PseudoFS {
   }
 }
 
-export async function tryToGet(
-  targetUri: vscode.Uri
-): Promise<Uint8Array | null> {
+export async function tryToGet(targetUri: Uri): Promise<Uint8Array | null> {
   try {
     return await fs.readFile(targetUri);
   } catch (err) {
@@ -33,9 +31,9 @@ export async function tryToGet(
 }
 
 export async function tryToGetPath(
-  targetUri: vscode.Uri,
-  altTargetUri: vscode.Uri
-): Promise<vscode.Uri> {
+  targetUri: Uri,
+  altTargetUri: Uri
+): Promise<Uri> {
   if (await tryToGet(targetUri)) {
     return targetUri;
   } else if (await tryToGet(altTargetUri)) {
@@ -44,7 +42,7 @@ export async function tryToGetPath(
   return targetUri;
 }
 
-export async function tryToDecode(targetUri: vscode.Uri): Promise<string> {
+export async function tryToDecode(targetUri: Uri): Promise<string> {
   const out = await tryToGet(targetUri);
 
   if (out) {

@@ -32,7 +32,7 @@ export async function buildTypeDocument(
     return refs.get(documentUri);
   }
 
-  const typeDoc = typeManager.get(document.uri.toString(true));
+  const typeDoc = typeManager.get(documentUri);
 
   refs.set(documentUri, null);
 

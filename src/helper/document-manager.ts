@@ -280,7 +280,7 @@ export class DocumentParseQueue extends EventEmitter {
   }
 
   clear(document: TextDocument): void {
-    this.results.delete(document.uri.toString());
+    this.results.delete(document.uri.toString(true));
     this.emit('cleared', document);
   }
 }
