@@ -1,13 +1,14 @@
 import { Uri } from 'vscode';
+import unixify from 'unixify';
 
 export const createBasePath = (
   targetUri: Uri,
   path: string,
   base: string = '.'
 ): string => {
-  const targetRootSegments = Uri.joinPath(targetUri, '..').path.split('/');
+  const targetRootSegments = unixify(Uri.joinPath(targetUri, '..').fsPath).split('/');
   const pathUri = Uri.parse(path);
-  const pathSegments = pathUri.path.split('/');
+  const pathSegments = unixify(pathUri.fsPath).split('/');
   const filtered = [];
 
   for (const segment of targetRootSegments) {
@@ -20,5 +21,5 @@ export const createBasePath = (
     filtered.push(current);
   }
 
-  return pathUri.path.replace(`${filtered.join('/')}`, base);
+  return unixify(pathUri.fsPath).replace(`${filtered.join('/')}`, base);
 };
