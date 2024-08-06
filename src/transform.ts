@@ -86,7 +86,9 @@ export function activate(context: ExtensionContext) {
             lastLine.range.end
           );
 
-          editBuilder.replace(textRange, result);
+          await editor.edit((editBuilder) => {
+            editBuilder.replace(textRange, result);
+          });
           vscode.window.showInformationMessage('Transform done.', {
             modal: false
           });
