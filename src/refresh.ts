@@ -1,6 +1,5 @@
 import vscode, { ExtensionContext, Uri } from 'vscode';
 
-import documentParseQueue from './helper/document-manager';
 import documentManager from './helper/document-manager';
 
 export function activate(context: ExtensionContext) {
@@ -13,7 +12,7 @@ export function activate(context: ExtensionContext) {
       return;
     }
 
-    documentParseQueue.refresh(result.textDocument);
+    documentManager.refresh(result.textDocument);
   }
 
   context.subscriptions.push(

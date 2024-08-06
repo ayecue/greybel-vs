@@ -19,6 +19,8 @@ assets
 node_modules
 scripts
 styles
+#languageserver
+!node_modules/greybel-languageserver
 #json-stream
 !node_modules/node-json-stream
 #greybel-agent
