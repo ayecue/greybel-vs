@@ -18,7 +18,6 @@ export enum ShareType {
 export function activate(context: ExtensionContext) {
   async function transform(
     editor: TextEditor,
-    editBuilder: TextEditorEdit,
     _args: any[],
     specificBuildType?: BuildType,
     shareType: ShareType = ShareType.WRITE
@@ -121,22 +120,23 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerTextEditorCommand(
       'greybel.transform.clipboard',
-      (editor: TextEditor, edit: TextEditorEdit, args: any[]) =>
-        transform(editor, edit, args, BuildType.UGLIFY, ShareType.CLIPBOARD)
+      (editor: TextEditor, _edit: TextEditorEdit, args: any[]) =>
+        transform(editor, args, BuildType.UGLIFY, ShareType.CLIPBOARD)
     ),
     vscode.commands.registerTextEditorCommand(
       'greybel.transform.write',
-      transform
+      (editor: TextEditor, _edit: TextEditorEdit, args: any[]) =>
+        transform(editor, args)
     ),
     vscode.commands.registerTextEditorCommand(
       'greybel.uglify.write',
-      (editor: TextEditor, edit: TextEditorEdit, args: any[]) =>
-        transform(editor, edit, args, BuildType.UGLIFY)
+      (editor: TextEditor, _edit: TextEditorEdit, args: any[]) =>
+        transform(editor, args, BuildType.UGLIFY)
     ),
     vscode.commands.registerTextEditorCommand(
       'greybel.beautify.write',
-      (editor: TextEditor, edit: TextEditorEdit, args: any[]) =>
-        transform(editor, edit, args, BuildType.BEAUTIFY)
+      (editor: TextEditor, _edit: TextEditorEdit, args: any[]) =>
+        transform(editor, args, BuildType.BEAUTIFY)
     )
   );
 }
