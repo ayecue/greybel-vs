@@ -1204,3 +1204,7 @@ All notable changes to this project will be documented in this file.
 ## [2.4.3] - 05.08.2024
 
 - fix "Error: EINVAL: invalid argument, mkdir" error on build - related to [#232](https://github.com/ayecue/greybel-vs/issues/232) - thanks for reporting Pungent Bonfire
+
+## [2.4.4] - 07.08.2024
+
+- fix "Edit is only valid while callback runs" on transform - thanks for reporting Pungent Bonfire
