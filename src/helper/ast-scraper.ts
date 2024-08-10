@@ -5,7 +5,9 @@ import {
   ASTCallStatement,
   ASTChunk,
   ASTElseClause,
-  ASTEvaluationExpression,
+  ASTBinaryExpression,
+  ASTLogicalExpression,
+  ASTIsaExpression,
   ASTForGenericStatement,
   ASTFunctionStatement,
   ASTIfClause,
@@ -21,7 +23,8 @@ import {
   ASTSliceExpression,
   ASTType,
   ASTUnaryExpression,
-  ASTWhileStatement
+  ASTWhileStatement,
+  ASTComparisonGroupExpression
 } from 'miniscript-core';
 
 export interface ScraperMap {
@@ -47,20 +50,20 @@ const getScraperMap = function (
       visit(item.identifier, level);
     },
     FunctionDeclaration: function (item: ASTFunctionStatement, level: number) {
-      for (const parameterItem of item.parameters) {
-        visit(parameterItem, level);
+      for (let index = 0; index < item.parameters.length; index++) {
+        visit(item.parameters[index], level);
       }
 
-      for (const bodyItem of item.body) {
-        visit(bodyItem, level);
+      for (let index = 0; index < item.body.length; index++) {
+        visit(item.body[index], level);
       }
     },
     MapConstructorExpression: function (
       item: ASTMapConstructorExpression,
       level: number
     ) {
-      for (const fieldItem of item.fields) {
-        visit(fieldItem, level);
+      for (let index = 0; index < item.fields.length; index++) {
+        visit(item.fields[index], level);
       }
     },
     ReturnStatement: function (item: ASTReturnStatement, level: number) {
@@ -71,8 +74,8 @@ const getScraperMap = function (
     WhileStatement: function (item: ASTWhileStatement, level: number) {
       visit(item.condition, level);
 
-      for (const bodyItem of item.body) {
-        visit(bodyItem, level);
+      for (let index = 0; index < item.body.length; index++) {
+        visit(item.body[index], level);
       }
     },
     IndexExpression: function (item: ASTIndexExpression, level: number) {
@@ -92,27 +95,27 @@ const getScraperMap = function (
       visit(item.value, level);
     },
     IfShortcutStatement: function (item: ASTIfStatement, level: number) {
-      for (const clausesItem of item.clauses) {
-        visit(clausesItem, level);
+      for (let index = 0; index < item.clauses.length; index++) {
+        visit(item.clauses[index], level);
       }
     },
     IfShortcutClause: function (item: ASTIfClause, level: number) {
       visit(item.condition, level);
 
-      for (const bodyItem of item.body) {
-        visit(bodyItem, level);
+      for (let index = 0; index < item.body.length; index++) {
+        visit(item.body[index], level);
       }
     },
     ElseifShortcutClause: function (item: ASTIfClause, level: number) {
       visit(item.condition, level);
 
-      for (const bodyItem of item.body) {
-        visit(bodyItem, level);
+      for (let index = 0; index < item.body.length; index++) {
+        visit(item.body[index], level);
       }
     },
     ElseShortcutClause: function (item: ASTElseClause, level: number) {
-      for (const bodyItem of item.body) {
-        visit(bodyItem, level);
+      for (let index = 0; index < item.body.length; index++) {
+        visit(item.body[index], level);
       }
     },
     ForGenericStatement: function (
@@ -122,32 +125,32 @@ const getScraperMap = function (
       visit(item.variable, level);
       visit(item.iterator, level);
 
-      for (const bodyItem of item.body) {
-        visit(bodyItem, level);
+      for (let index = 0; index < item.body.length; index++) {
+        visit(item.body[index], level);
       }
     },
     IfStatement: function (item: ASTIfStatement, level: number) {
-      for (const clausesItem of item.clauses) {
-        visit(clausesItem, level);
+      for (let index = 0; index < item.clauses.length; index++) {
+        visit(item.clauses[index], level);
       }
     },
     IfClause: function (item: ASTIfClause, level: number) {
       visit(item.condition, level);
 
-      for (const bodyItem of item.body) {
-        visit(bodyItem, level);
+      for (let index = 0; index < item.body.length; index++) {
+        visit(item.body[index], level);
       }
     },
     ElseifClause: function (item: ASTIfClause, level: number) {
       visit(item.condition, level);
 
-      for (const bodyItem of item.body) {
-        visit(bodyItem, level);
+      for (let index = 0; index < item.body.length; index++) {
+        visit(item.body[index], level);
       }
     },
     ElseClause: function (item: ASTElseClause, level: number) {
-      for (const bodyItem of item.body) {
-        visit(bodyItem, level);
+      for (let index = 0; index < item.body.length; index++) {
+        visit(item.body[index], level);
       }
     },
     NegationExpression: function (item: ASTUnaryExpression, level: number) {
@@ -156,8 +159,8 @@ const getScraperMap = function (
     CallExpression: function (item: ASTCallExpression, level: number) {
       visit(item.base, level);
 
-      for (const argItem of item.arguments) {
-        visit(argItem, level);
+      for (let index = 0; index < item.arguments.length; index++) {
+        visit(item.arguments[index], level);
       }
     },
     CallStatement: function (item: ASTCallStatement, level: number) {
@@ -167,11 +170,11 @@ const getScraperMap = function (
       item: ASTListConstructorExpression,
       level: number
     ) {
-      for (const fieldItem of item.fields) {
-        visit(fieldItem, level);
+      for (let index = 0; index < item.fields.length; index++) {
+        visit(item.fields[index], level);
       }
     },
-    BinaryExpression: function (item: ASTEvaluationExpression, level: number) {
+    BinaryExpression: function (item: ASTBinaryExpression, level: number) {
       visit(item.left, level);
       visit(item.right, level);
     },
@@ -181,20 +184,25 @@ const getScraperMap = function (
     ) {
       visit(item.argument, level);
     },
-    IsaExpression: function (item: ASTEvaluationExpression, level: number) {
+    IsaExpression: function (item: ASTIsaExpression, level: number) {
       visit(item.left, level);
       visit(item.right, level);
     },
-    LogicalExpression: function (item: ASTEvaluationExpression, level: number) {
+    LogicalExpression: function (item: ASTLogicalExpression, level: number) {
       visit(item.left, level);
       visit(item.right, level);
+    },
+    ComparisonGroupExpression: function (item: ASTComparisonGroupExpression, level: number) {
+      for (let index = 0; index < item.expressions.length; index++) {
+        visit(item.expressions[index], level);
+      }
     },
     UnaryExpression: function (item: ASTUnaryExpression, level: number) {
       visit(item.argument, level);
     },
     Chunk: function (item: ASTChunk, level: number) {
-      for (const bodyItem of item.body) {
-        visit(bodyItem, level);
+      for (let index = 0; index < item.body.length; index++) {
+        visit(item.body[index], level);
       }
     },
     InvalidCodeExpression: () => {}
