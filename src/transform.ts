@@ -121,7 +121,7 @@ export function activate(context: ExtensionContext) {
     vscode.commands.registerTextEditorCommand(
       'greybel.transform.clipboard',
       (editor: TextEditor, _edit: TextEditorEdit, args: any[]) =>
-        transform(editor, args, BuildType.UGLIFY, ShareType.CLIPBOARD)
+        transform(editor, args, undefined, ShareType.CLIPBOARD)
     ),
     vscode.commands.registerTextEditorCommand(
       'greybel.transform.write',

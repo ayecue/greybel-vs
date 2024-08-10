@@ -173,7 +173,7 @@ export class LookupHelper {
   lookupAST(position: Position): LookupASTResult | null {
     const me = this;
     const chunk = documentParseQueue.get(me.document).document as ASTChunk;
-    const lineItems = chunk.lines.get(position.line + 1);
+    const lineItems = chunk.lines[position.line + 1];
 
     if (!lineItems) {
       return null;
