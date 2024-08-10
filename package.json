@@ -8,7 +8,7 @@
     "email": "soerenwehmeier@googlemail.com"
   },
   "icon": "icon.png",
-  "version": "2.4.5",
+  "version": "2.4.6",
   "repository": {
     "type": "git",
     "url": "git@github.com:ayecue/greybel-vs.git"
@@ -582,7 +582,7 @@
     "greyscript-meta": "~4.0.10",
     "greyscript-meta-web": "~1.0.6",
     "greyscript-textmate": "~1.9.0",
-    "greyscript-transpiler": "~1.0.5",
+    "greyscript-transpiler": "~1.0.6",
     "lru-cache": "^7.14.1",
     "miniscript-type-analyzer": "~0.8.1",
     "node-json-stream": "~0.2.6",
