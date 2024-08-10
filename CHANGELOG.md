@@ -1220,3 +1220,7 @@ All notable changes to this project will be documented in this file.
 - fix beautify not properly appending comment if keepParentheses option is active
 - fix beautify not handling if shorthands with function blocks in them correctly resulting in unwanted new lines
 - minor performance improvements in parser
+
+## [2.4.6] - 10.08.2024
+
+- fix beautify not properly appending comment to index expression
