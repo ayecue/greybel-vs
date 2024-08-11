@@ -16,7 +16,7 @@ export class GrebyelDebugger extends Debugger {
   getBreakpoint(vm: VM): boolean {
     const currentInstruction = vm.getFrame().getCurrentInstruction();
     const uri = Uri.parse(currentInstruction.source.path);
-    const breakpoints = this.session.breakpoints.get(uri.toString(true)) || [];
+    const breakpoints = this.session.breakpoints.get(uri.toString()) || [];
     const actualBreakpoint = breakpoints.find(
       (bp: DebugProtocol.Breakpoint) => {
         return bp.line === currentInstruction?.source.start.line;
@@ -45,5 +45,5 @@ export class GrebyelPseudoDebugger extends Debugger {
     return false;
   }
 
-  interact(_vm: VM) {}
+  interact(_vm: VM) { }
 }

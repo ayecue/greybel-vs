@@ -58,8 +58,7 @@ interface IRuntimeStack {
 
 export class GreybelDebugSession
   extends LoggingDebugSession
-  implements DebugSessionLike
-{
+  implements DebugSessionLike {
   public threadID: number;
   public lastInstruction: Instruction | undefined;
   public breakpoints: Map<string, DebugProtocol.Breakpoint[]> = new Map();
@@ -202,7 +201,7 @@ export class GreybelDebugSession
       args.noDebug ? new GrebyelPseudoDebugger() : new GrebyelDebugger(me)
     );
     me._env.getLocal().programPath.content =
-      await me._runtime.handler.resourceHandler.get(uri.toString(true));
+      await me._runtime.handler.resourceHandler.get(uri.toString());
 
     me._restart = false;
 
@@ -211,9 +210,9 @@ export class GreybelDebugSession
       const params = this._useDefaultArgs
         ? this._defaultArgs
         : await vscode.window.showInputBox({
-            title: 'Enter execution parameters',
-            ignoreFocusOut: true
-          });
+          title: 'Enter execution parameters',
+          ignoreFocusOut: true
+        });
       const paramSegments =
         params && params.length > 0 ? params.split(' ') : [];
 
@@ -226,8 +225,7 @@ export class GreybelDebugSession
         this._out.terminal.print(
           useColor(
             'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
-              err.message
+            `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${err.message
             } at ${err.target}:${err.range?.start || 0}`
           )
         );
@@ -235,8 +233,7 @@ export class GreybelDebugSession
         this._out.terminal.print(
           useColor(
             'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
-              err.message
+            `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${err.message
             } in ${err.target}\n${err.stack}`
           )
         );
@@ -244,8 +241,7 @@ export class GreybelDebugSession
         this._out.terminal.print(
           useColor(
             'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
-              err.message
+            `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
             }\n${err.stack}`
           )
         );
@@ -480,7 +476,7 @@ export class GreybelDebugSession
         false,
         line,
         0,
-        new Source(uri.toString(true), uri.toString(true))
+        new Source(uri.toString(), uri.toString())
       ) as DebugProtocol.Breakpoint;
       bp.id = me._breakpointIncrement++;
       return bp;
@@ -489,7 +485,7 @@ export class GreybelDebugSession
       actualBreakpoints0
     );
 
-    me.breakpoints.set(uri.toString(true), actualBreakpoints);
+    me.breakpoints.set(uri.toString(), actualBreakpoints);
 
     response.body = {
       breakpoints: actualBreakpoints
@@ -505,7 +501,7 @@ export class GreybelDebugSession
   ): void {
     if (args.source.path) {
       const uri = Uri.parse(args.source.path);
-      const breakpoints = this.breakpoints.get(uri.toString(true)) || [];
+      const breakpoints = this.breakpoints.get(uri.toString()) || [];
       const actualBreakpoint = breakpoints.find(
         (bp: DebugProtocol.Breakpoint) => {
           return bp.line === args.line;

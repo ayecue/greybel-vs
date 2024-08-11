@@ -29,7 +29,7 @@ export function activate(
               type: 'greyscript',
               name: 'Run File',
               request: 'launch',
-              program: targetResource.toString(true)
+              program: targetResource.toString()
             },
             { noDebug: true }
           );
@@ -48,7 +48,7 @@ export function activate(
             type: 'greyscript',
             name: 'Debug File',
             request: 'launch',
-            program: targetResource.toString(true)
+            program: targetResource.toString()
           });
         }
       }
@@ -60,7 +60,7 @@ export function activate(
       'greybel.debug.getProgramName',
       async (_config) => {
         const target =
-          vscode.window.activeTextEditor?.document.uri.toString(true);
+          vscode.window.activeTextEditor?.document.uri.toString();
 
         if (target) {
           return target;
@@ -91,7 +91,7 @@ export function activate(
           return;
         }
 
-        return Uri.joinPath(Uri.file(rootPath), value).toString(true);
+        return Uri.joinPath(Uri.file(rootPath), value).toString();
       }
     )
   );
@@ -177,8 +177,7 @@ class MockConfigurationProvider implements vscode.DebugConfigurationProvider {
 }
 
 class InlineDebugAdapterFactory
-  implements vscode.DebugAdapterDescriptorFactory
-{
+  implements vscode.DebugAdapterDescriptorFactory {
   createDebugAdapterDescriptor(
     _session: vscode.DebugSession
   ): ProviderResult<vscode.DebugAdapterDescriptor> {

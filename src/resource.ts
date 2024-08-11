@@ -17,7 +17,7 @@ export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
         const uri = Uri.joinPath(base, target);
         const uriAlt = Uri.joinPath(base, `${target}.src`);
         const result = await tryToGetPath(uri, uriAlt);
-        return result.toString(true);
+        return result.toString();
       },
       has: async (target: string): Promise<boolean> => {
         return !!(await tryToGet(Uri.parse(target)));
@@ -26,7 +26,7 @@ export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
         return tryToDecode(Uri.parse(target));
       },
       resolve: (target: string): Promise<string> => {
-        return Promise.resolve(Uri.parse(target).toString(true));
+        return Promise.resolve(Uri.parse(target).toString());
       }
     };
   }
@@ -38,7 +38,7 @@ export class InterpreterResourceProvider extends InterpreterResourceHandler {
     const uri = Uri.joinPath(base, target);
     const uriAlt = Uri.joinPath(base, `${target}.src`);
     const result = await tryToGetPath(uri, uriAlt);
-    return result.toString(true);
+    return result.toString();
   }
 
   async has(target: string): Promise<boolean> {
@@ -50,6 +50,6 @@ export class InterpreterResourceProvider extends InterpreterResourceHandler {
   }
 
   resolve(target: string): Promise<string> {
-    return Promise.resolve(Uri.parse(target).toString(true));
+    return Promise.resolve(Uri.parse(target).toString());
   }
 }

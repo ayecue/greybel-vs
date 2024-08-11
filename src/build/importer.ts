@@ -216,7 +216,7 @@ class Importer {
     }
 
     if (this.autoCompile) {
-      const rootRef = this.importRefs.get(this.target.toString(true));
+      const rootRef = this.importRefs.get(this.target.toString());
 
       await agent.tryToEvaluate(
         generateAutoCompileCode(
