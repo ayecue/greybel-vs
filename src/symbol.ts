@@ -22,7 +22,7 @@ const findAllAssignments = (
   document: TextDocument,
   query: string
 ): SymbolInformation[] => {
-  const typeDoc = typeManager.get(document.uri.toString(true));
+  const typeDoc = typeManager.get(document.uri.toString());
   const assignments = typeDoc.resolveAllAssignmentsWithQuery(query);
   const result: SymbolInformation[] = [];
 

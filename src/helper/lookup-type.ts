@@ -26,7 +26,7 @@ export async function buildTypeDocument(
   document: TextDocument,
   refs: Map<string, TypeDocument | null> = new Map()
 ): Promise<TypeDocument> {
-  const documentUri = document.uri.toString(true);
+  const documentUri = document.uri.toString();
 
   if (refs.has(documentUri)) {
     return refs.get(documentUri);
@@ -82,7 +82,7 @@ export class LookupHelper {
     root: ASTBaseBlockWithScope
   ): ASTAssignmentStatement[] {
     return typeManager
-      .get(this.document.uri.toString(true))
+      .get(this.document.uri.toString())
       .getScopeContext(root)
       .aggregator.resolveAvailableAssignmentsWithQuery(identifier);
   }
@@ -92,14 +92,14 @@ export class LookupHelper {
     root: ASTBaseBlockWithScope
   ): ASTAssignmentStatement[] {
     return typeManager
-      .get(this.document.uri.toString(true))
+      .get(this.document.uri.toString())
       .getScopeContext(root)
       .aggregator.resolveAvailableAssignments(item);
   }
 
   findAllAvailableIdentifierInRoot(): Map<string, CompletionItem> {
     return typeManager
-      .get(this.document.uri.toString(true))
+      .get(this.document.uri.toString())
       .getRootScopeContext()
       .scope.getAllIdentifier();
   }
@@ -108,7 +108,7 @@ export class LookupHelper {
     root: ASTBaseBlockWithScope
   ): Map<string, CompletionItem> {
     return typeManager
-      .get(this.document.uri.toString(true))
+      .get(this.document.uri.toString())
       .getScopeContext(root)
       .scope.getAllIdentifier();
   }
@@ -116,7 +116,7 @@ export class LookupHelper {
   findAllAvailableIdentifierRelatedToPosition(
     item: ASTBase
   ): Map<string, CompletionItem> {
-    const typeDoc = typeManager.get(this.document.uri.toString(true));
+    const typeDoc = typeManager.get(this.document.uri.toString());
     const result: Map<string, CompletionItem> = new Map();
     const scopeContext = typeDoc.getScopeContext(item.scope);
 

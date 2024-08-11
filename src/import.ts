@@ -49,7 +49,7 @@ export function activate(context: ExtensionContext) {
         const content = await tryToDecode(file);
 
         return {
-          path: file.toString(true),
+          path: file.toString(),
           content
         };
       }));

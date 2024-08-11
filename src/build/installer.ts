@@ -211,7 +211,7 @@ class Installer {
   createContentFooterAutoCompile(): string[] {
     if (this.autoCompile) {
       const rootRef = this.importList.find(
-        (item) => item.filepath.toString(true) === this.target.toString(true)
+        (item) => item.filepath.toString() === this.target.toString()
       );
 
       return generateAutoCompileCode(

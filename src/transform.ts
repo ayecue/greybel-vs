@@ -111,7 +111,7 @@ export function activate(context: ExtensionContext) {
       showCustomErrorMessage({
         message: err.message,
         range: err.range,
-        target: editor.document.uri,
+        target: editor.document.uri.toString(),
         stack: err.stack
       });
     }

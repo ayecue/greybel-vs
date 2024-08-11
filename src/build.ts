@@ -61,7 +61,7 @@ export function activate(context: ExtensionContext) {
       }
 
       const result = await new Transpiler({
-        target: targetUri.toString(true),
+        target: targetUri.toString(),
         resourceHandler: new TranspilerResourceProvider().getHandler(),
         buildType,
         buildOptions,
