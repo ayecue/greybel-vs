@@ -1,6 +1,8 @@
 # greybel-vs
 
-Toolkit for GreyScript which is a scripting language used in [Grey Hack](https://greyhackgame.com). This extension includes highlighting, code execution, bundling and minifying among other features. 
+Toolkit for GreyScript which is a scripting language used in [Grey Hack](https://greyhackgame.com). This extension includes highlighting, code execution, bundling and minifying among other features.
+
+If you're not a fan of VSCode you can also use the [GreyScript language server](https://github.com/ayecue/greybel-languageserver).
 
 # Links
 
