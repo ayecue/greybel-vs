@@ -20,9 +20,9 @@ const build = async () => {
         target: 'ESNext',
         platform: 'browser',
         treeShaking: true,
+        format: 'esm',
         external: [
-          'vscode',
-          'greybel-languageserver'
+          'vscode'
         ],
         define: {
           'process.env.NODE_ENV': '"production"',
