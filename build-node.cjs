@@ -22,7 +22,8 @@ const build = async () => {
           'vscode',
           'steam-user',
           'node-json-stream',
-          'greybel-agent'
+          'greybel-agent',
+          'greybel-languageserver'
         ],
         define: {
           'process.env.NODE_ENV': '"production"',

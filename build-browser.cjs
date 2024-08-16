@@ -20,6 +20,10 @@ const build = async () => {
         target: 'ESNext',
         platform: 'browser',
         treeShaking: true,
+        external: [
+          'vscode',
+          'greybel-languageserver'
+        ],
         define: {
           'process.env.NODE_ENV': '"production"',
           ...Object.entries(envObj).reduce((result, [key, value]) => {
@@ -28,9 +32,6 @@ const build = async () => {
           }, {})
         },
         plugins: [
-          globalsPlugin({
-            'vscode': 'require(\'vscode\')'
-          }),
           polyfillNode({
             globals: false
           })

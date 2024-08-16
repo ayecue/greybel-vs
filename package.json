@@ -577,7 +577,7 @@
     "greybel-agent": "~1.8.1",
     "greybel-gh-mock-intrinsics": "~5.0.4",
     "greybel-intrinsics": "~5.0.4",
-    "greybel-languageserver": "^0.4.0",
+    "greybel-languageserver": "^0.5.0",
     "greyscript-core": "~2.0.3",
     "greyscript-interpreter": "~2.0.4",
     "greyscript-meta": "~4.0.10",

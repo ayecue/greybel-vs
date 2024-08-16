@@ -1,4 +1,4 @@
-import vscode, { ExtensionContext } from 'vscode';
+import { ExtensionContext } from 'vscode';
 
 import { activate as activateAPI } from './api';
 import { activate as activateBuild } from './build';

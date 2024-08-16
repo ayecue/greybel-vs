@@ -1,26 +1,22 @@
-import * as path from 'path';
-import { workspace, ExtensionContext } from 'vscode';
+import { workspace, ExtensionContext, Uri } from 'vscode';
 
 import {
   LanguageClient,
   LanguageClientOptions
 } from 'vscode-languageclient/browser';
-import { LanguageId } from 'greybel-languageserver/dist/types';
 
 let client: LanguageClient;
 
 export function activate(context: ExtensionContext) {
-  const serverModule = context.asAbsolutePath(
-    path.join('node_modules', 'greybel-languageserver', 'dist', 'browser.js')
-  );
-  const worker = new Worker(serverModule);
+  const serverMain = Uri.joinPath(context.extensionUri, 'node_modules/greybel-languageserver/browser.js');
+  const worker = new Worker(serverMain.toString(true));
 
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [{ scheme: 'file', language: LanguageId }],
+    documentSelector: [{ scheme: 'file', language: 'greyscript' }],
     synchronize: {
       fileEvents: workspace.createFileSystemWatcher('**/*')
     },
-    diagnosticCollectionName: LanguageId
+    diagnosticCollectionName: 'greyscript'
   };
 
   client = new LanguageClient(
