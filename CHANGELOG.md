@@ -1238,3 +1238,5 @@ All notable changes to this project will be documented in this file.
 ## [2.4.9] - 14.08.2024
 
 - move IntelliSense functionality into greybel-languageserver
+- fix IntelliSense of web version of extension
+- fix beautify causing misbehaviour when list/map one-liners had comment at end
