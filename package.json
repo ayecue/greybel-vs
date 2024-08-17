@@ -210,10 +210,6 @@
           "when": "false"
         },
         {
-          "command": "greybel.refresh",
-          "when": "resourceLangId == greyscript"
-        },
-        {
           "command": "greybel.snippets",
           "when": "resourceLangId == greyscript"
         },
@@ -297,10 +293,6 @@
       {
         "command": "greybel.preview",
         "title": "Greybel: Preview output"
-      },
-      {
-        "command": "greybel.refresh",
-        "title": "Greybel: Refresh"
       },
       {
         "command": "greybel.clearSecrets",

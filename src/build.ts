@@ -11,15 +11,14 @@ import { createInstaller } from './build/installer';
 import { createBasePath } from './helper/create-base-path';
 import { showCustomErrorMessage } from './helper/show-custom-error';
 import { TranspilerResourceProvider } from './resource';
-import documentManager from './helper/document-manager';
 
 export function activate(context: ExtensionContext) {
   async function build(
     eventUri: Uri = vscode.window.activeTextEditor?.document?.uri
   ) {
-    const result = await documentManager.open(eventUri);
+    const textDocument = await vscode.workspace.openTextDocument(eventUri);
 
-    if (result === null) {
+    if (textDocument === null) {
       vscode.window.showErrorMessage(
         'You cannot build a file which does not exist in the file system.',
         { modal: false }
