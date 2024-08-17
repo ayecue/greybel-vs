@@ -4,12 +4,18 @@ import {
   LanguageClient,
   LanguageClientOptions
 } from 'vscode-languageclient/lib/browser/main';
+import { tryToDecode } from './helper/fs';
 
 let client: LanguageClient;
 
-export async function activate(context: ExtensionContext) {
+function createWorker(context: ExtensionContext): Worker {
   const serverMain = Uri.joinPath(context.extensionUri, 'node_modules/greybel-languageserver-browser/index.js');
   const worker = new Worker(serverMain.toString(true));
+
+  return worker;
+}
+
+function createClient(context: ExtensionContext, worker: Worker) {
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ scheme: 'file', language: 'greyscript' }],
     synchronize: {
@@ -17,13 +23,26 @@ export async function activate(context: ExtensionContext) {
     },
     diagnosticCollectionName: 'greyscript'
   };
-
-  client = new LanguageClient(
+  const client = new LanguageClient(
     'greyscript-language-server',
     'GreyScript Language Server',
     clientOptions,
     worker
   );
+
+  client.onRequest('custom/read-file', async (filePath: string) => {
+    const uri = Uri.parse(filePath);
+    const fileContent = await tryToDecode(uri);
+    return fileContent;
+  });
+
+  return client;
+}
+
+export async function activate(context: ExtensionContext) {
+  const worker = createWorker(context);
+
+  client = createClient(context, worker);
 
   client.registerProposedFeatures();
 
