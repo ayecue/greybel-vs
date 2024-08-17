@@ -29,6 +29,7 @@ export function activate(context: ExtensionContext) {
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ scheme: 'file', language: 'greyscript' }],
     synchronize: {
+      configurationSection: 'greybel',
       fileEvents: workspace.createFileSystemWatcher('**/*')
     },
     diagnosticCollectionName: 'greyscript'

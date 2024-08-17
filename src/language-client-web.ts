@@ -19,6 +19,7 @@ function createClient(context: ExtensionContext, worker: Worker) {
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ scheme: 'file', language: 'greyscript' }],
     synchronize: {
+      configurationSection: 'greybel',
       fileEvents: workspace.createFileSystemWatcher('**/*')
     },
     diagnosticCollectionName: 'greyscript'
