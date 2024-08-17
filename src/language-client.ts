@@ -11,11 +11,14 @@ let client: LanguageClient;
 
 export function activate(context: ExtensionContext) {
   // The server is implemented in node
-  const serverModule = Uri.joinPath(context.extensionUri, 'node_modules/greybel-languageserver/node.js');
+  const serverModule = Uri.joinPath(context.extensionUri, 'node_modules/greybel-languageserver/index.js');
   const serverOptions: ServerOptions = {
     run: {
       module: serverModule.fsPath,
-      transport: TransportKind.ipc
+      transport: TransportKind.ipc,
+      options: {
+        execArgv: ['--nolazy', '--inspect=6009']
+      }
     },
     debug: {
       module: serverModule.fsPath,
