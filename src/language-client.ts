@@ -15,10 +15,7 @@ export function activate(context: ExtensionContext) {
   const serverOptions: ServerOptions = {
     run: {
       module: serverModule.fsPath,
-      transport: TransportKind.ipc,
-      options: {
-        execArgv: ['--nolazy', '--inspect=6009']
-      }
+      transport: TransportKind.ipc
     },
     debug: {
       module: serverModule.fsPath,
