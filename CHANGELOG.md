@@ -1235,7 +1235,7 @@ All notable changes to this project will be documented in this file.
 
 - fix goto error functionality not working due to latest uri changes
 
-## [2.4.9] - 14.08.2024
+## [2.4.9] - 17.08.2024
 
 - move IntelliSense functionality into greybel-languageserver
 - fix IntelliSense of web version of extension
