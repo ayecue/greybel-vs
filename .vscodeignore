@@ -21,6 +21,7 @@ scripts
 styles
 #languageserver
 !node_modules/greybel-languageserver
+!node_modules/greybel-languageserver-browser
 #json-stream
 !node_modules/node-json-stream
 #greybel-agent
