@@ -59,8 +59,7 @@ export function activate(
     vscode.commands.registerCommand(
       'greybel.debug.getProgramName',
       async (_config) => {
-        const target =
-          vscode.window.activeTextEditor?.document.uri.toString();
+        const target = vscode.window.activeTextEditor?.document.uri.toString();
 
         if (target) {
           return target;
@@ -177,7 +176,8 @@ class MockConfigurationProvider implements vscode.DebugConfigurationProvider {
 }
 
 class InlineDebugAdapterFactory
-  implements vscode.DebugAdapterDescriptorFactory {
+  implements vscode.DebugAdapterDescriptorFactory
+{
   createDebugAdapterDescriptor(
     _session: vscode.DebugSession
   ): ProviderResult<vscode.DebugAdapterDescriptor> {

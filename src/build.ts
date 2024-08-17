@@ -17,9 +17,9 @@ export function activate(context: ExtensionContext) {
   async function build(
     eventUri: Uri = vscode.window.activeTextEditor?.document?.uri
   ) {
-    const result = await documentManager.open(eventUri);
+    const parseResult = await documentManager.open(eventUri);
 
-    if (result === null) {
+    if (parseResult === null) {
       vscode.window.showErrorMessage(
         'You cannot build a file which does not exist in the file system.',
         { modal: false }
@@ -27,7 +27,7 @@ export function activate(context: ExtensionContext) {
       return;
     }
 
-    const dirtyFiles = await result.getDirtyFiles(true);
+    const dirtyFiles = await parseResult.getDirtyFiles(true);
 
     await Promise.all(dirtyFiles.map((it) => it.textDocument.save()))
 

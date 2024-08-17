@@ -45,5 +45,5 @@ export class GrebyelPseudoDebugger extends Debugger {
     return false;
   }
 
-  interact(_vm: VM) { }
+  interact(_vm: VM) {}
 }

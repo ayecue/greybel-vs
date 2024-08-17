@@ -5,7 +5,6 @@ import { ASTBaseBlockWithScope } from 'miniscript-core';
 import vscode, { TextDocument, Uri } from 'vscode';
 
 import { tryToGetPath } from './fs';
-import typeManager from './type-manager';
 
 export interface ParseResultOptions {
   documentManager: DocumentParseQueue;
@@ -184,8 +183,6 @@ export class DocumentParseQueue extends EventEmitter {
     const chunk = parser.parseChunk() as ASTChunkGreyScript;
 
     if (chunk.body?.length > 0) {
-      typeManager.analyze(document.uri.toString(), chunk);
-
       return new ParseResult({
         documentManager: this,
         content,
@@ -198,8 +195,6 @@ export class DocumentParseQueue extends EventEmitter {
     try {
       const strictParser = new Parser(document.getText());
       const strictChunk = strictParser.parseChunk() as ASTChunkGreyScript;
-
-      typeManager.analyze(document.uri.toString(), strictChunk);
 
       return new ParseResult({
         documentManager: this,

@@ -17,6 +17,7 @@ const build = async () => {
         minifySyntax: true,
         target: 'ESNext',
         platform: 'node',
+        format: 'cjs',
         treeShaking: true,
         external: [
           'vscode',
