@@ -14,6 +14,28 @@ export interface ParseResultOptions {
   errors: Error[];
 }
 
+export class DocumentURIBuilder {
+  readonly workspaceFolderUri: Uri | null;
+  readonly rootPath: Uri;
+
+  constructor(rootPath: Uri, workspaceFolderUri: Uri = null) {
+    this.workspaceFolderUri = workspaceFolderUri;
+    this.rootPath = rootPath;
+  }
+
+  getFromWorkspaceFolder(path: string): Uri {
+    if (this.workspaceFolderUri == null) {
+      throw new Error('Workspace folder is not defined!');
+    }
+
+    return Uri.joinPath(this.workspaceFolderUri, path);
+  }
+
+  getFromRootPath(path: string): Uri {
+    return Uri.joinPath(this.rootPath, path);
+  }
+}
+
 export class ParseResult {
   documentManager: DocumentParseQueue;
   content: string;
@@ -31,6 +53,62 @@ export class ParseResult {
     this.errors = options.errors;
   }
 
+  getDirectory(): Uri {
+    return Uri.joinPath(this.textDocument.uri, '..');
+  }
+
+  private getNativeImports(workspaceFolderUri: Uri = null): Uri[] {
+    if (this.document == null) {
+      return [];
+    }
+
+    const rootChunk = this.document as ASTChunkGreyScript;
+    const rootPath = this.getDirectory();
+    const builder = new DocumentURIBuilder(rootPath, workspaceFolderUri);
+
+    return rootChunk.nativeImports
+      .filter((nativeImport) => nativeImport.directory)
+      .map((nativeImport) => {
+        if (nativeImport.directory.startsWith('/')) {
+          return builder.getFromWorkspaceFolder(nativeImport.directory);
+        }
+        return builder.getFromRootPath(nativeImport.directory);
+      });
+  }
+
+  private async getImportsAndIncludes(
+    workspaceFolderUri: Uri = null
+  ): Promise<Uri[]> {
+    if (this.document == null) {
+      return [];
+    }
+
+    const rootChunk = this.document as ASTChunkGreyScript;
+    const rootPath = this.getDirectory();
+    const builder = new DocumentURIBuilder(rootPath, workspaceFolderUri);
+    const getPath = (path: string) => {
+      if (path.startsWith('/')) {
+        return tryToGetPath(
+          builder.getFromWorkspaceFolder(path),
+          builder.getFromWorkspaceFolder(`${path}.src`)
+        );
+      }
+      return tryToGetPath(
+        builder.getFromRootPath(path),
+        builder.getFromRootPath(`${path}.src`)
+      );
+    };
+
+    return await Promise.all([
+      ...rootChunk.imports
+        .filter((nonNativeImport) => nonNativeImport.path)
+        .map((nonNativeImport) => getPath(nonNativeImport.path)),
+      ...rootChunk.includes
+        .filter((includeImport) => includeImport.path)
+        .map((includeImport) => getPath(includeImport.path))
+    ]);
+  }
+
   async getDependencies(): Promise<string[]> {
     if (this.document == null) {
       return [];
@@ -40,33 +118,14 @@ export class ParseResult {
       return this.dependencies;
     }
 
-    const rootChunk = this.document as ASTChunkGreyScript;
-    const rootPath = Uri.joinPath(this.textDocument.uri, '..');
-    const nativeImports = rootChunk.nativeImports
-      .filter((nativeImport) => nativeImport.directory)
-      .map((nativeImport) => Uri.joinPath(rootPath, nativeImport.directory));
-    const importsAndIncludes = await Promise.all([
-      ...rootChunk.imports
-        .filter((nonNativeImport) => nonNativeImport.path)
-        .map((nonNativeImport) => {
-          const target = Uri.joinPath(rootPath, nonNativeImport.path);
-          const altTarget = Uri.joinPath(
-            rootPath,
-            `${nonNativeImport.path}.src`
-          );
-          return tryToGetPath(target, altTarget);
-        }),
-      ...rootChunk.includes
-        .filter((includeImport) => includeImport.path)
-        .map((includeImport) => {
-          const target = Uri.joinPath(rootPath, includeImport.path);
-          const altTarget = Uri.joinPath(rootPath, `${includeImport.path}.src`);
-          return tryToGetPath(target, altTarget);
-        })
-    ]);
+    const workspacePaths = vscode.workspace.workspaceFolders;
+    const nativeImports = this.getNativeImports(workspacePaths[0].uri);
+    const importsAndIncludes = await this.getImportsAndIncludes(
+      workspacePaths[0].uri
+    );
     const dependencies: Set<string> = new Set([
-      ...nativeImports.map((uri) => uri.toString()),
-      ...importsAndIncludes.map((uri) => uri.toString())
+      ...nativeImports.map((it) => it.toString()),
+      ...importsAndIncludes.map((it) => it.toString())
     ]);
 
     this.dependencies = Array.from(dependencies);
@@ -80,9 +139,7 @@ export class ParseResult {
     }
 
     const imports: Set<ParseResult> = new Set();
-    const visited: Set<string> = new Set([
-      this.textDocument.uri.toString()
-    ]);
+    const visited: Set<string> = new Set([this.textDocument.uri.toString()]);
     const traverse = async (rootResult: ParseResult) => {
       const dependencies = await rootResult.getDependencies();
 
@@ -121,7 +178,7 @@ export class ParseResult {
   }
 }
 
-export interface QueueItem {
+export interface ScheduledItem {
   document: TextDocument;
   createdAt: number;
 }
@@ -132,7 +189,7 @@ export const DOCUMENT_PARSE_QUEUE_PARSE_TIMEOUT = 2500;
 export class DocumentParseQueue extends EventEmitter {
   results: LRU<string, ParseResult>;
 
-  private queue: Map<string, QueueItem>;
+  private scheduledItems: Map<string, ScheduledItem>;
   private interval: NodeJS.Timeout | null;
   private readonly parseTimeout: number;
 
@@ -142,7 +199,7 @@ export class DocumentParseQueue extends EventEmitter {
       ttl: 1000 * 60 * 20,
       ttlAutopurge: true
     });
-    this.queue = new Map();
+    this.scheduledItems = new Map();
     this.interval = setInterval(
       () => this.tick(),
       DOCUMENT_PARSE_QUEUE_INTERVAL
@@ -153,7 +210,7 @@ export class DocumentParseQueue extends EventEmitter {
   private tick() {
     const currentTime = Date.now();
 
-    for (const item of this.queue.values()) {
+    for (const item of this.scheduledItems.values()) {
       if (currentTime - item.createdAt > this.parseTimeout) {
         this.refresh(item.document);
       }
@@ -163,14 +220,14 @@ export class DocumentParseQueue extends EventEmitter {
   refresh(document: TextDocument): ParseResult {
     const key = document.uri.toString();
 
-    if (!this.queue.has(key) && this.results.has(key)) {
+    if (!this.scheduledItems.has(key) && this.results.has(key)) {
       return this.results.get(key)!;
     }
 
     const result = this.create(document);
     this.results.set(key, result);
     this.emit('parsed', document, result);
-    this.queue.delete(key);
+    this.scheduledItems.delete(key);
 
     return result;
   }
@@ -218,7 +275,7 @@ export class DocumentParseQueue extends EventEmitter {
     const fileUri = document.uri.toString();
     const content = document.getText();
 
-    if (this.queue.has(fileUri)) {
+    if (this.scheduledItems.has(fileUri)) {
       return false;
     }
 
@@ -226,7 +283,7 @@ export class DocumentParseQueue extends EventEmitter {
       return false;
     }
 
-    this.queue.set(fileUri, {
+    this.scheduledItems.set(fileUri, {
       document,
       createdAt: Date.now()
     });
@@ -244,15 +301,16 @@ export class DocumentParseQueue extends EventEmitter {
   }
 
   get(document: TextDocument): ParseResult {
-    return (
-      this.results.get(document.uri.toString()) || this.refresh(document)
-    );
+    return this.results.get(document.uri.toString()) || this.refresh(document);
   }
 
-  next(document: TextDocument, timeout: number = 5000): Promise<ParseResult> {
+  getLatest(
+    document: TextDocument,
+    timeout: number = 5000
+  ): Promise<ParseResult> {
     const me = this;
 
-    if (me.queue.has(document.uri.toString())) {
+    if (me.scheduledItems.has(document.uri.toString())) {
       return new Promise((resolve) => {
         const onTimeout = () => {
           me.removeListener('parsed', onParse);
