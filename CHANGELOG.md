@@ -1240,3 +1240,8 @@ All notable changes to this project will be documented in this file.
 - move IntelliSense functionality into greybel-languageserver
 - fix IntelliSense of web version of extension
 - fix beautify causing misbehaviour when list/map one-liners had comment at end
+
+## [2.4.10] - 19.08.2024
+
+- allow binary expression to be executed as statement
+- cleanup open handles of binary/logical expression that are statements
