@@ -1249,3 +1249,7 @@ All notable changes to this project will be documented in this file.
 ## [2.4.11] - 19.08.2024
 
 - reduce lsp document manager tick frequency
+
+## [2.4.12] - 19.08.2024
+
+- properly handle missing files in ls - related to [#243](https://github.com/ayecue/greybel-vs/issues/243) - thanks for reporting to [@linuxgruven](https://github.com/linuxgruven)
