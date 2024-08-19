@@ -1245,3 +1245,7 @@ All notable changes to this project will be documented in this file.
 
 - allow binary expression to be executed as statement
 - cleanup open handles of binary/logical expression that are statements
+
+## [2.4.11] - 19.08.2024
+
+- reduce lsp document manager tick frequency
