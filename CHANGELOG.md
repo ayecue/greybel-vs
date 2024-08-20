@@ -1256,4 +1256,4 @@ All notable changes to this project will be documented in this file.
 
 ## [2.4.13] - 20.08.2024
 
-- fix handling textDocument/documentSymbol failed error, which was caused when there was invalid syntax at some point - related to [#243](https://github.com/ayecue/greybel-vs/issues/243) - thanks for reporting to [@linuxgruven](https://github.com/linuxgruven)
+- fix handling textDocument/documentSymbol failed error in ls, which was caused when there was invalid syntax at some point - related to [#243](https://github.com/ayecue/greybel-vs/issues/243) - thanks for reporting to [@linuxgruven](https://github.com/linuxgruven)
