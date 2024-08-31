@@ -1261,3 +1261,7 @@ All notable changes to this project will be documented in this file.
 ## [2.4.14] - 29.08.2024
 
 - update set_content tooltip to include lacking permissions as reason to return 0
+
+## [2.4.15] - 31.08.2024
+
+- fix tooltip formatting logic which could potentially cause "Cannot read properties of null"
