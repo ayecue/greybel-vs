@@ -1282,3 +1282,4 @@ All notable changes to this project will be documented in this file.
 
 - fix beautify for parentheses and comments where a comment would be right after closing parenthese
 - fix function argument recovery if invalid syntax was provided in function arguments
+- rather fallback than throw error if leading slash is used but workpace is not available
