@@ -65,9 +65,9 @@ export function activate(
           return target;
         }
 
-        const rootFolder = vscode.workspace.getWorkspaceFolder(vscode.window.activeTextEditor?.document.uri);
+        const rootPath = vscode.workspace.rootPath;
 
-        if (!rootFolder) {
+        if (!rootPath) {
           const value = await vscode.window.showInputBox({
             placeHolder: 'Please enter the full file path',
             value: 'test.src'
@@ -90,7 +90,7 @@ export function activate(
           return;
         }
 
-        return Uri.joinPath(rootFolder.uri, value).toString();
+        return Uri.joinPath(Uri.file(rootPath), value).toString();
       }
     )
   );
