@@ -65,9 +65,9 @@ export function activate(
           return target;
         }
 
-        const rootPath = vscode.workspace.rootPath;
+        const rootFolder = vscode.workspace.getWorkspaceFolder(vscode.window.activeTextEditor?.document.uri);
 
-        if (!rootPath) {
+        if (!rootFolder) {
           const value = await vscode.window.showInputBox({
             placeHolder: 'Please enter the full file path',
             value: 'test.src'
@@ -90,7 +90,7 @@ export function activate(
           return;
         }
 
-        return Uri.joinPath(Uri.file(rootPath), value).toString();
+        return Uri.joinPath(rootFolder.uri, value).toString();
       }
     )
   );
@@ -176,8 +176,7 @@ class MockConfigurationProvider implements vscode.DebugConfigurationProvider {
 }
 
 class InlineDebugAdapterFactory
-  implements vscode.DebugAdapterDescriptorFactory
-{
+  implements vscode.DebugAdapterDescriptorFactory {
   createDebugAdapterDescriptor(
     _session: vscode.DebugSession
   ): ProviderResult<vscode.DebugAdapterDescriptor> {

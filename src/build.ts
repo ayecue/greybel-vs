@@ -82,8 +82,9 @@ export function activate(context: ExtensionContext) {
         }
       }).parse();
 
-      const rootPathUri = vscode.workspace.rootPath
-        ? Uri.file(vscode.workspace.rootPath)
+      const rootPath = vscode.workspace.getWorkspaceFolder(targetUri);
+      const rootPathUri = rootPath
+        ? rootPath.uri
         : Uri.joinPath(eventUri, '..');
       const buildPath = Uri.joinPath(rootPathUri, './build');
 

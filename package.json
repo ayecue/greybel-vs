@@ -556,6 +556,25 @@
           "AskForProgramName": "greybel.debug.getProgramName"
         }
       }
+    ],
+    "semanticTokenScopes": [
+      {
+        "language": "greyscript",
+        "scopes": {
+          "variable": [
+            "variable.other.greyscript"
+          ],
+          "variable.native": [
+            "support.function.greyscript"
+          ],
+          "property": [
+            "entity.other.attribute.greyscript"
+          ],
+          "property.native": [
+            "support.function.greyscript"
+          ]
+        }
+      }
     ]
   },
   "dependencies": {
@@ -569,8 +588,8 @@
     "greybel-agent": "~1.8.1",
     "greybel-gh-mock-intrinsics": "~5.0.5",
     "greybel-intrinsics": "~5.0.5",
-    "greybel-languageserver": "~1.4.7",
-    "greybel-languageserver-browser": "~1.0.7",
+    "greybel-languageserver": "~1.5.0",
+    "greybel-languageserver-browser": "~1.1.0",
     "greyscript-core": "~2.0.3",
     "greyscript-interpreter": "~2.0.5",
     "greyscript-meta": "~4.0.11",
