@@ -556,25 +556,6 @@
           "AskForProgramName": "greybel.debug.getProgramName"
         }
       }
-    ],
-    "semanticTokenScopes": [
-      {
-        "language": "greyscript",
-        "scopes": {
-          "variable": [
-            "variable.other.greyscript"
-          ],
-          "variable.native": [
-            "support.function.greyscript"
-          ],
-          "property": [
-            "entity.other.attribute.greyscript"
-          ],
-          "property.native": [
-            "support.function.greyscript"
-          ]
-        }
-      }
     ]
   },
   "dependencies": {
