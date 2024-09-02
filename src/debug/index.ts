@@ -176,8 +176,7 @@ class MockConfigurationProvider implements vscode.DebugConfigurationProvider {
 }
 
 class InlineDebugAdapterFactory
-  implements vscode.DebugAdapterDescriptorFactory
-{
+  implements vscode.DebugAdapterDescriptorFactory {
   createDebugAdapterDescriptor(
     _session: vscode.DebugSession
   ): ProviderResult<vscode.DebugAdapterDescriptor> {
