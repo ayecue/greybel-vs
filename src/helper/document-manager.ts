@@ -25,7 +25,7 @@ export class DocumentURIBuilder {
 
   getFromWorkspaceFolder(path: string): Uri {
     if (this.workspaceFolderUri == null) {
-      console.warn('Workspace folders is not available. Falling back to only relative paths.');
+      console.warn('Workspace folders are not available. Falling back to only relative paths.');
       return Uri.joinPath(this.rootPath, path);
     }
 
