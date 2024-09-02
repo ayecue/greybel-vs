@@ -1268,8 +1268,12 @@ All notable changes to this project will be documented in this file.
 
 ## [2.4.16] - 31.08.2024
 
-- properly handle if workspaces are null which could potentially cause "Cannot read properties of null"
+- properly handle if workspaces are null which could potentially cause "Cannot read properties of null" - thanks for reporting to Unlisted_dev
 
 ## [2.4.17] - 02.09.2024
 
 - improve handling of workspaces in extension and lsp
+
+## [2.4.18] - 02.09.2024
+
+- fix error related to type analyzer that could cause "Cannot read properties of undefined (reading 'start')" in lsp - thanks for reporting to serdartpkl
