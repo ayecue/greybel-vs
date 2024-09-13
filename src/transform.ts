@@ -47,6 +47,10 @@ export function activate(context: ExtensionContext) {
 
       if (buildTypeFromConfig === 'Uglify') {
         buildType = BuildType.UGLIFY;
+        buildOptions = {
+          disableLiteralsOptimization: config.get('transpiler.dlo'),
+          disableNamespacesOptimization: config.get('transpiler.dno'),
+        };
       } else if (buildTypeFromConfig === 'Beautify') {
         buildType = BuildType.BEAUTIFY;
         buildOptions = {
@@ -65,8 +69,6 @@ export function activate(context: ExtensionContext) {
           Object.entries(environmentVariablesFromConfig)
         ),
         obfuscation,
-        disableLiteralsOptimization: config.get('transpiler.dlo'),
-        disableNamespacesOptimization: config.get('transpiler.dno'),
         excludedNamespaces: [
           'params',
           ...excludedNamespacesFromConfig,
