@@ -1299,6 +1299,6 @@ All notable changes to this project will be documented in this file.
 ## [2.5.2] - 27.10.2024
 
 - properly handle values that cannot be iterated through on for loop
-- fix type analyzer failing if slice expression was used after expression - related to [#255](https://github.com/ayecue/greybel-js/issues/255) - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
+- fix type analyzer failing if slice expression was used after expression - related to [#255](https://github.com/ayecue/greybel-vs/issues/255) - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
 - add meta description for intrinsics of current nightly version
 - update textmate with methods and types of current nightly version
