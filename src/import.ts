@@ -6,6 +6,7 @@ import vscode, {
 import { showCustomErrorMessage } from './helper/show-custom-error';
 import { AgentType, ImportResultFailure, ImportResultSuccess, ImporterMode, createImporter } from './build/importer';
 import { tryToDecode } from './helper/fs';
+import { getIngameDirectory } from './helper/get-ingame-directory';
 
 const getFiles = async (uri: vscode.Uri): Promise<vscode.Uri[]> => {
   const stat = await vscode.workspace.fs.stat(uri);
@@ -42,9 +43,7 @@ export function activate(context: ExtensionContext) {
 
       const targetUri = eventUri;
       const config = vscode.workspace.getConfiguration('greybel');
-      const ingameDirectory = Uri.file(
-        config.get<string>('transpiler.ingameDirectory')
-      );
+      const ingameDirectory = await getIngameDirectory(config);
       const filesWithContent = await Promise.all(files.map(async (file) => {
         const content = await tryToDecode(file);
 

@@ -25,7 +25,9 @@ export class DocumentURIBuilder {
 
   getFromWorkspaceFolder(path: string): Uri {
     if (this.workspaceFolderUri == null) {
-      console.warn('Workspace folders are not available. Falling back to only relative paths.');
+      console.warn(
+        'Workspace folders are not available. Falling back to only relative paths.'
+      );
       return Uri.joinPath(this.rootPath, path);
     }
 
@@ -119,7 +121,9 @@ export class ParseResult {
       return this.dependencies;
     }
 
-    const workspaceFolder = vscode.workspace.getWorkspaceFolder(this.textDocument.uri);
+    const workspaceFolder = vscode.workspace.getWorkspaceFolder(
+      this.textDocument.uri
+    );
     const nativeImports = this.getNativeImports(workspaceFolder?.uri);
     const importsAndIncludes = await this.getImportsAndIncludes(
       workspaceFolder?.uri
@@ -240,36 +244,13 @@ export class DocumentParseQueue extends EventEmitter {
     });
     const chunk = parser.parseChunk() as ASTChunkGreyScript;
 
-    if (chunk.body?.length > 0) {
-      return new ParseResult({
-        documentManager: this,
-        content,
-        textDocument: document,
-        document: chunk,
-        errors: [...parser.lexer.errors, ...parser.errors]
-      });
-    }
-
-    try {
-      const strictParser = new Parser(document.getText());
-      const strictChunk = strictParser.parseChunk() as ASTChunkGreyScript;
-
-      return new ParseResult({
-        documentManager: this,
-        content,
-        textDocument: document,
-        document: strictChunk,
-        errors: []
-      });
-    } catch (err: any) {
-      return new ParseResult({
-        documentManager: this,
-        content,
-        textDocument: document,
-        document: null,
-        errors: [err]
-      });
-    }
+    return new ParseResult({
+      documentManager: this,
+      content,
+      textDocument: document,
+      document: chunk,
+      errors: [...parser.lexer.errors, ...parser.errors]
+    });
   }
 
   update(document: TextDocument): boolean {

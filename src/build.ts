@@ -12,6 +12,7 @@ import { createBasePath } from './helper/create-base-path';
 import { showCustomErrorMessage } from './helper/show-custom-error';
 import { TranspilerResourceProvider } from './resource';
 import documentManager from './helper/document-manager';
+import { getIngameDirectory } from './helper/get-ingame-directory';
 
 export function activate(context: ExtensionContext) {
   async function build(
@@ -40,9 +41,7 @@ export function activate(context: ExtensionContext) {
       const excludedNamespacesFromConfig =
         config.get<string[]>('transpiler.excludedNamespaces') || [];
       const obfuscation = config.get<boolean>('transpiler.obfuscation');
-      const ingameDirectory = Uri.file(
-        config.get<string>('transpiler.ingameDirectory')
-      );
+      const ingameDirectory = await getIngameDirectory(config);
       let buildType = BuildType.DEFAULT;
       let buildOptions: any = {
         isDevMode: false
