@@ -244,36 +244,13 @@ export class DocumentParseQueue extends EventEmitter {
     });
     const chunk = parser.parseChunk() as ASTChunkGreyScript;
 
-    if (chunk.body?.length > 0) {
-      return new ParseResult({
-        documentManager: this,
-        content,
-        textDocument: document,
-        document: chunk,
-        errors: [...parser.lexer.errors, ...parser.errors]
-      });
-    }
-
-    try {
-      const strictParser = new Parser(document.getText());
-      const strictChunk = strictParser.parseChunk() as ASTChunkGreyScript;
-
-      return new ParseResult({
-        documentManager: this,
-        content,
-        textDocument: document,
-        document: strictChunk,
-        errors: []
-      });
-    } catch (err: any) {
-      return new ParseResult({
-        documentManager: this,
-        content,
-        textDocument: document,
-        document: null,
-        errors: [err]
-      });
-    }
+    return new ParseResult({
+      documentManager: this,
+      content,
+      textDocument: document,
+      document: chunk,
+      errors: [...parser.lexer.errors, ...parser.errors]
+    });
   }
 
   update(document: TextDocument): boolean {
