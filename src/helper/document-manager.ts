@@ -25,7 +25,9 @@ export class DocumentURIBuilder {
 
   getFromWorkspaceFolder(path: string): Uri {
     if (this.workspaceFolderUri == null) {
-      console.warn('Workspace folders are not available. Falling back to only relative paths.');
+      console.warn(
+        'Workspace folders are not available. Falling back to only relative paths.'
+      );
       return Uri.joinPath(this.rootPath, path);
     }
 
@@ -119,7 +121,9 @@ export class ParseResult {
       return this.dependencies;
     }
 
-    const workspaceFolder = vscode.workspace.getWorkspaceFolder(this.textDocument.uri);
+    const workspaceFolder = vscode.workspace.getWorkspaceFolder(
+      this.textDocument.uri
+    );
     const nativeImports = this.getNativeImports(workspaceFolder?.uri);
     const importsAndIncludes = await this.getImportsAndIncludes(
       workspaceFolder?.uri

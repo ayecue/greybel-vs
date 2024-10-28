@@ -415,6 +415,11 @@
           "default": false,
           "description": "Allow special characters when uglifying."
         },
+        "greybel.transpiler.ingameDirectoryPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompts you to select a destination for the files on each import."
+        },
         "greybel.transpiler.ingameDirectory": {
           "type": "string",
           "default": "/root/",
