@@ -1308,3 +1308,7 @@ All notable changes to this project will be documented in this file.
 - add custom types handling in type analyzer - related to [#198](https://github.com/ayecue/greybel-vs/issues/198)
 - fix issue related to building of larger projects which could lead to maximum call stack size exceeded error to be thrown - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
 - add option to enable prompt for every import to enter ingame directory - thanks for the suggestion to Phreaker
+
+## [2.5.4] - 29.10.2024
+
+- improve type resolve performance
