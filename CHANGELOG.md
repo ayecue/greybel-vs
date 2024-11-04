@@ -1316,3 +1316,9 @@ All notable changes to this project will be documented in this file.
 ## [2.5.5] - 03.11.2024
 
 - improve type document merger performance
+
+## [2.5.6] - 04.11.2024
+
+- extend custom types with virtual properties
+- allow "custom type" type docs above new statements
+- show inherited properties of custom types properly in autocomplete
