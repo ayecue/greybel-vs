@@ -374,27 +374,35 @@ end function
 ```
 There is also the possibility of custom types. Here an example:
 ```js
-// @type test
-foo = {}
-foo.moo = "hello"
-// @description This function returns a string!
-// @param {string} a
-// @param {string} b
-// @param {string} c
-// @return {string}
-foo.myFunc = function(a, b, c)
+// @type Bar
+// @property {string} virtualMoo
+Bar = {}
+Bar.moo = ""
 
+// Hello world
+// I am **bold**
+// @description Alternative description
+// @example test("title", 123)
+// @param {string} title - The title of the book.
+// @param {string|number} author - The author of the book.
+// @return {Bar} - Some info about return
+Bar.test = function(test, abc)
+  print "test"
+  return self
 end function
 
-
-// @description This function returns a test object!
-// @param {string} name
-// @return {test}
-bar = function
+// @type Foo
+Foo = new Bar
+// @return {Foo}
+Foo.New = function(message)
+  result = new Foo
+  return result
 end function
 
-bar.moo // hovering will show type string
-bar.myFunc // hovering will show the signature of foo.myFunc
+myVar = Foo.New
+
+myVar.test // shows defined signature of Bar.test on hover
+myVar.virtualMoo // shows virtual property of type string on hover
 ```
 
 ## Share
