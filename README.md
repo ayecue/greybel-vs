@@ -376,6 +376,7 @@ There is also the possibility of custom types. Here an example:
 ```js
 // @type Bar
 // @property {string} virtualMoo
+// @property {string} nested.virtalMoo
 Bar = {}
 Bar.moo = ""
 
@@ -387,22 +388,23 @@ Bar.moo = ""
 // @param {string|number} author - The author of the book.
 // @return {Bar} - Some info about return
 Bar.test = function(test, abc)
-  print "test"
-  return self
+	print("test")
+	return self
 end function
 
 // @type Foo
 Foo = new Bar
 // @return {Foo}
 Foo.New = function(message)
-  result = new Foo
-  return result
+	result = new Foo
+	return result
 end function
 
 myVar = Foo.New
 
 myVar.test // shows defined signature of Bar.test on hover
 myVar.virtualMoo // shows virtual property of type string on hover
+myVar.nested.virtalMoo // shows nested virtual property of type string on hover
 ```
 
 ## Share
