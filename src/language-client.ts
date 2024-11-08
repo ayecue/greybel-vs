@@ -32,7 +32,12 @@ export function activate(context: ExtensionContext) {
       configurationSection: 'greybel',
       fileEvents: workspace.createFileSystemWatcher('**/*')
     },
-    diagnosticCollectionName: 'greyscript'
+    diagnosticCollectionName: 'greyscript',
+    middleware: {
+      provideDocumentSemanticTokens: () => {
+        return undefined;
+      }
+    }
   };
 
   client = new LanguageClient(
