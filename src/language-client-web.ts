@@ -22,7 +22,12 @@ function createClient(context: ExtensionContext, worker: Worker) {
       configurationSection: 'greybel',
       fileEvents: workspace.createFileSystemWatcher('**/*')
     },
-    diagnosticCollectionName: 'greyscript'
+    diagnosticCollectionName: 'greyscript',
+    middleware: {
+      provideDocumentSemanticTokens: () => {
+        return undefined;
+      }
+    }
   };
   const client = new LanguageClient(
     'greyscript-language-server',

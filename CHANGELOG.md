@@ -1322,3 +1322,9 @@ All notable changes to this project will be documented in this file.
 - extend custom types with virtual properties
 - allow "custom type" type docs above new statements
 - show inherited properties of custom types properly in autocomplete
+
+## [2.5.7] - 09.11.2024
+
+- improve definition provider
+- fix hover cache issue which resulted in tooltips not showing up
+- improve autocompletion logic to use type analyzer merged document
