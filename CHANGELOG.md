@@ -1329,6 +1329,10 @@ All notable changes to this project will be documented in this file.
 - fix hover cache issue which resulted in tooltips not showing up
 - improve autocompletion logic to use type analyzer merged document
 
-## [2.5.7] - 10.11.2024
+## [2.5.8] - 10.11.2024
 
 - properly handle cyclic isa defintions in type analyzer
+
+## [2.5.9] - 10.11.2024
+
+- include all custom type definitions of entities with multiple types
