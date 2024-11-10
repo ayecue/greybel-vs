@@ -1328,3 +1328,7 @@ All notable changes to this project will be documented in this file.
 - improve definition provider
 - fix hover cache issue which resulted in tooltips not showing up
 - improve autocompletion logic to use type analyzer merged document
+
+## [2.5.7] - 10.11.2024
+
+- properly handle cyclic isa defintions in type analyzer
