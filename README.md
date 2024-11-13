@@ -1,19 +1,28 @@
 # greybel-vs
 
-Toolkit for GreyScript which is a scripting language used in [Grey Hack](https://greyhackgame.com). This extension includes highlighting, code execution, bundling and minifying among other features.
+This toolkit provides essential tools for developing in GreyScript, the scripting language used in [Grey Hack](https://greyhackgame.com). The extension offers syntax highlighting, code execution, bundling, minification, and more to streamline GreyScript development in VSCode.
 
-If you're not a fan of VSCode you can also use the [GreyScript language server](https://github.com/ayecue/greybel-languageserver).
+**Prefer a different editor?** The [GreyScript Language Server](https://github.com/ayecue/greybel-languageserver/blob/main/packages/node/README.md) is also available and compatible with IDEs like Sublime Text, IntelliJ, nvim and more. Examples for setting up these editors are included in the repository.
 
 # Links
 
-- Latest changes: [Changelog](https://github.com/ayecue/greybel-vs/blob/main/CHANGELOG.md)
-- Projects using Greybel: [viper-3.0](https://github.com/cantemizyurek/viper-3.0)
-- Demo Projects: [Minesweeper](https://github.com/ayecue/minesweeper-gs), [JSON](https://github.com/ayecue/json), [TEdit](https://github.com/ayecue/tedit)
-- CLI: [greybel-js](https://github.com/ayecue/greybel-js)
-- GreyScript API: [GreyScript Documentation](https://documentation.greyscript.org)
-- Grey Hack Image Transformer: [gh-image-transformer](https://github.com/ayecue/gh-image-transformer)
-- Grey Hack Website Image Generator: [gh-website-image-generator](https://github.com/ayecue/gh-website-image-generator)
-- Discord: [dedicated Greybel Discord](https://discord.gg/q8tR8F8u2M)
+**Project Resources**
+- [Changelog](https://github.com/ayecue/greybel-vs/blob/main/CHANGELOG.md): View the latest changes and updates.
+- [greybel-js CLI](https://github.com/ayecue/greybel-js): Command-line interface for Greybel.
+- [GreyScript Documentation](https://documentation.greyscript.org): API documentation for GreyScript.
+
+**Demo Projects Using Greybel**
+- [Viper 3.0](https://github.com/cantemizyurek/viper-3.0): Example project demonstrating Greybel.
+- [Minesweeper](https://github.com/ayecue/minesweeper-gs): A Minesweeper game created in GreyScript.
+- [JSON Parser](https://github.com/ayecue/json): JSON parsing functionality.
+- [TEdit](https://github.com/ayecue/tedit): Text editor built with GreyScript.
+
+**Grey Hack Tools**
+- [Image Transformer](https://github.com/ayecue/gh-image-transformer): Tool for transforming images in Grey Hack.
+- [Website Image Generator](https://github.com/ayecue/gh-website-image-generator): Tool for generating Grey Hack website images.
+
+**Community**
+- [Greybel Discord](https://discord.gg/q8tR8F8u2M): Join the community on Discord for support and discussion.
 
 # Usage
 
