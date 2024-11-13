@@ -1336,3 +1336,7 @@ All notable changes to this project will be documented in this file.
 ## [2.5.9] - 10.11.2024
 
 - include all custom type definitions of entities with multiple types
+
+## [2.5.10] - 14.11.2024
+
+- update extension readme with introductions for Linux
