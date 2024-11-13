@@ -26,21 +26,21 @@ This toolkit provides essential tools for developing in GreyScript, the scriptin
 
 # Usage
 
-Automatically detects `.gs`, `.src` and `.ms` files.
+This extension automatically detects `.gs`, `.src`, and `.ms` files and provides convenient commands to streamline your workflow.
 
 Commands available (`CTRL+SHIFT+P`):
-- `Greybel: Build` - [info](#build)
-- `Greybel: Share` - [info](#share)
-- `Greybel: Refresh` - [info](#refresh)
-- `Greybel: API` - [info](#api-browser)
-- `Greybel: Snippets` - [info](#snippets)
-- `Greybel: Preview output` - [info](#preview-output)
+- `Greybel: Build` - Transpile your GreyScript code. [More info](#build)
+- `Greybel: Share` - Share your code with others easily. [More info](#share)
+- `Greybel: API` - Open the API browser for quick reference. [More info](#api-browser)
+- `Greybel: Snippets` - Insert GreyScript snippets into your code. [More info](#snippets)
+- `Greybel: Preview output` – View a preview of the ingame like output. [More info](#preview-output)
+- `Greybel: Import file into the game` – Upload files into the game. [More info](#upload)
 
-You can also access most of the commands via the context menu:
+You can also access these commands through the context menu for quick right-click access:
 
 ![Context Menu](https://github.com/ayecue/greybel-vs/blob/main/assets/context-menu.png?raw=true "ContextMenu")
 
-Do not forget to [set up](#settings) Greybel to your needs.
+**Tip**: Make sure to [configure settings](#settings) to customize Greybel to your preferences.
 
 # Settings
 
