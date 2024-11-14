@@ -11,11 +11,12 @@ This toolkit provides essential tools for developing in GreyScript, the scriptin
 - [greybel-js CLI](https://github.com/ayecue/greybel-js): Command-line interface for Greybel.
 - [GreyScript Documentation](https://documentation.greyscript.org): API documentation for GreyScript.
 
-**Demo Projects Using Greybel**
-- [Viper 3.0](https://github.com/cantemizyurek/viper-3.0): Example project demonstrating Greybel.
-- [Minesweeper](https://github.com/ayecue/minesweeper-gs): A Minesweeper game created in GreyScript.
-- [JSON Parser](https://github.com/ayecue/json): JSON parsing functionality.
-- [TEdit](https://github.com/ayecue/tedit): Text editor built with GreyScript.
+**Projects Using Greybel**
+- [minizod](https://github.com/cantemizyurek/minizod): A lightweight, Zod-inspired validation library for MiniScript.
+- [Viper 3.0](https://github.com/cantemizyurek/viper-3.0): Viper is a hacking shell tool for game named Grey Hack.
+- [Minesweeper](https://github.com/ayecue/minesweeper-gs): A Minesweeper game created in GreyScript. (Demo project)
+- [JSON Parser](https://github.com/ayecue/json): JSON parsing functionality. (Demo project)
+- [TEdit](https://github.com/ayecue/tedit): Text editor built with GreyScript. (Demo project)
 
 **Grey Hack Tools**
 - [Image Transformer](https://github.com/ayecue/gh-image-transformer): Tool for transforming images in Grey Hack.
@@ -75,20 +76,18 @@ You can also access these commands through the context menu for quick right-clic
 
 # Features
 
-- **Tooling**
-  - [Transform](#transform)
-  - [Build](#build)
-  - [Upload](#upload)
-  - [Interpreter](#interpreter)
-  - [Debugger](#debugger)
-  - [API Browser](#api-browser)
-  - [Comment Docs](#comment-docs)
-  - [Snippets](#snippets)
-  - [Share](#share)
-  - [Goto Error](#goto-error)
-  - [Preview output](#preview-output)
-  - [Providers](#supporting-providers)
-
+- [Transform](#transform)
+- [Build](#build)
+- [Upload](#upload)
+- [Interpreter](#interpreter)
+- [Debugger](#debugger)
+- [API Browser](#api-browser)
+- [Comment Docs](#comment-docs)
+- [Snippets](#snippets)
+- [Share](#share)
+- [Goto Error](#goto-error)
+- [Preview output](#preview-output)
+- [Providers](#supporting-providers)
 
 ## Transform
 
