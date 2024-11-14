@@ -471,4 +471,4 @@ This extension includes several IntelliSense providers to enhance your coding ex
 
 # Contact
 
-If you have any questions, feature requests or need help feel free to join the [dedicated Greybel Discord](https://discord.gg/q8tR8F8u2M).
+For questions, feature requests, or support, feel free to join the [dedicated Greybel Discord](https://discord.gg/q8tR8F8u2M).
