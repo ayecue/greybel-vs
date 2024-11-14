@@ -44,55 +44,51 @@ You can also access these commands through the context menu for quick right-clic
 
 # Settings
 
-- Autocomplete: Activate/Deactivate
-- Create in-game
-  - Active: Activate/Deactivate
-  - Agent: headless, message-hook
-  - Mode: local, public
-  - Steam User: Steam username
-  - Auto Compile: Auto compile and delete source files
-- Diagnostic: Activate/Deactivate
-- Hoverdocs: Activate/Deactivate
-- Interpreter
-  - Default Args: Default call arguments
-  - Environment Variables: JSON which can be used to define ENVs
-  - Hide Unsupported Text Mesh Pro Rich Text Tags: Hides none supported rich tags in pseudo-terminal
-  - Seed: Seed is used to generate the testing environment
-  - Silence Error Popups: Silences any error popups that might show up due to execution failure
-- Transpiler
-  - Build Type: Default, Uglify, Beautify
-  - Literals optimizations: Activate/Deactivate
-  - Namespaces optimizations: Activate/Deactivate
-  - Environment Variables: JSON which can be used to define ENVs
-  - Excluded Namespaces: List which defines namespaces which should not be optimized
-  - Ingame directory: Destination folder which should be used in the game
-  - Installer
-    - Active: Activate/Deactivate
-    - Auto Compile: Adds boilerplate code to the installer which enables the script to delete itself after execution
-    - Max chars: Define the amount characters by which the installer should be split
-  - Obfuscation: Enables the transpiler to use special characters for minification of namespaces
+- **Autocomplete**: Activate/Deactivate
+- **Create in-game**
+  - **Active**: Activate/Deactivate
+  - **Agent**: headless, message-hook
+  - **Mode**: local, public
+  - **Steam User**: Steam username
+  - **Auto Compile**: Auto compile and delete source files
+- **Diagnostic**: Activate/Deactivate
+- **Hoverdocs**: Activate/Deactivate
+- **Interpreter**
+  - **Default Args**: Default call arguments
+  - **Environment Variables**: JSON used to define environment variables (ENVs)
+  - **Hide Unsupported Text Mesh Pro Rich Text Tags**: Hides unsupported rich tags in the pseudo-terminal
+  - **Seed**: Seed used to generate the testing environment
+  - **Silence Error Popups**: Silences error popups due to execution failure
+- **Transpiler**
+  - **Build Type**: Default, Uglify, Beautify
+  - **Literals Optimizations**: Activate/Deactivate
+  - **Namespaces Optimizations**: Activate/Deactivate
+  - **Environment Variables**: JSON used to define environment variables (ENVs)
+  - **Excluded Namespaces**: List of namespaces that should not be optimized
+  - **In-game Directory**: Destination folder used in the game
+  - **Installer**
+    - **Active**: Activate/Deactivate
+    - **Auto Compile**: Adds boilerplate code to the installer for auto-deletion of the script after execution
+    - **Max Chars**: Define the maximum number of characters at which the installer should split the code
+  - **Obfuscation**: Enables minification of namespaces using special characters
+
 
 # Features
 
-- Syntax Highlighting
-- [Transform](#transform)
-- [Build](#build)
-- [Upload](#upload)
-- [Interpreter](#interpreter)
-- [Debugger](#debugger)
-- [API Browser](#api-browser)
-- [Comment Docs](#comment-docs)
-- [Snippets](#snippets)
-- [Share](#share)
-- [Goto Error](#goto-error)
-- [Preview output](#preview-output)
-- [Providers](#supporting-providers)
-    - [Autocompletion](#autocompletion-provider)
-    - [Hover Tooltips](#hover-tooltips-provider)
-    - [Diagnostics](#diagnostics-provider)
-    - [Symbol](#symbol-provider)
-    - [Definition](#definition-provider)
-    - [Colorpicker](#colorpicker-provider)
+- **Tooling**
+  - [Transform](#transform)
+  - [Build](#build)
+  - [Upload](#upload)
+  - [Interpreter](#interpreter)
+  - [Debugger](#debugger)
+  - [API Browser](#api-browser)
+  - [Comment Docs](#comment-docs)
+  - [Snippets](#snippets)
+  - [Share](#share)
+  - [Goto Error](#goto-error)
+  - [Preview output](#preview-output)
+  - [Providers](#supporting-providers)
+
 
 ## Transform
 
@@ -439,10 +435,13 @@ Jumps to the next existing syntax error.
 
 ## Supporting Providers
 
-This extension includes several providers to enhance your coding experience with GreyScript:
+This extension includes several IntelliSense providers to enhance your coding experience with GreyScript:
 
 - **Autocompletion Provider**  
   Offers context-aware suggestions based on your current position in the code.
+
+- **Signature Helper Provider**  
+  Displays function signatures with parameter types and return values as you type, helping you use functions correctly and efficiently without needing to reference documentation.
 
 - **Hover Tooltips Provider**  
   Displays helpful information about functions and types when you hover over them.
