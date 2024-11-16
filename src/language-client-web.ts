@@ -26,6 +26,9 @@ function createClient(context: ExtensionContext, worker: Worker) {
     middleware: {
       provideDocumentSemanticTokens: () => {
         return undefined;
+      },
+      provideFoldingRanges: () => {
+        return undefined;
       }
     }
   };
