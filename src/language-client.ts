@@ -36,6 +36,9 @@ export function activate(context: ExtensionContext) {
     middleware: {
       provideDocumentSemanticTokens: () => {
         return undefined;
+      },
+      provideFoldingRanges: () => {
+        return undefined;
       }
     }
   };

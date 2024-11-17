@@ -1344,3 +1344,8 @@ All notable changes to this project will be documented in this file.
 ## [2.5.11] - 14.11.2024
 
 - fix readme in regards of projects
+
+## [2.5.12] - 16.11.2024
+
+- add check in symbol provider to filter map key values out
+- fix mock env folder deletion behaviour - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
