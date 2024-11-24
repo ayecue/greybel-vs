@@ -1349,3 +1349,8 @@ All notable changes to this project will be documented in this file.
 
 - add check in symbol provider to filter map key values out
 - fix mock env folder deletion behaviour - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
+
+## [2.5.13] - 24.11.2024
+
+- forbid keywords in uglify namespaces opimization - thanks for reporting to [@linuxgruven](https://github.com/linuxgruven)
+- fix for iteration namespace optimization of __i_idx variables - thanks for reporting to [@linuxgruven](https://github.com/linuxgruven)
