@@ -8,7 +8,7 @@
     "email": "soerenwehmeier@googlemail.com"
   },
   "icon": "icon.png",
-  "version": "2.5.14",
+  "version": "2.5.15",
   "repository": {
     "type": "git",
     "url": "git@github.com:ayecue/greybel-vs.git"
@@ -324,6 +324,22 @@
     "configuration": {
       "title": "Greybel VS",
       "properties": {
+        "greybel.typeAnalyzer.exclude": {
+          "type": "string",
+          "default": "",
+          "description": "Glob pattern to exclude files.",
+          "scope": "resource"
+        },
+        "greybel.typeAnalyzer.strategy": {
+          "type": "string",
+          "enum": [
+            "Dependency",
+            "Workspace"
+          ],
+          "default": "Dependency",
+          "description": "Strategy that determines which files are used for type resolver.",
+          "scope": "resource"
+        },
         "greybel.formatter": {
           "type": "boolean",
           "default": true,
@@ -572,10 +588,10 @@
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
     "greybel-agent": "~1.8.1",
-    "greybel-gh-mock-intrinsics": "~5.1.3",
-    "greybel-intrinsics": "~5.1.2",
-    "greybel-languageserver": "~1.9.2",
-    "greybel-languageserver-browser": "~1.5.2",
+    "greybel-gh-mock-intrinsics": "~5.1.4",
+    "greybel-intrinsics": "~5.1.3",
+    "greybel-languageserver": "~1.10.0",
+    "greybel-languageserver-browser": "~1.6.0",
     "greyscript-core": "~2.1.1",
     "greyscript-interpreter": "~2.1.2",
     "greyscript-meta": "~4.1.0",
