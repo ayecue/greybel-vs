@@ -72,6 +72,10 @@ You can also access these commands through the context menu for quick right-clic
     - **Auto Compile**: Adds boilerplate code to the installer for auto-deletion of the script after execution
     - **Max Chars**: Define the maximum number of characters at which the installer should split the code
   - **Obfuscation**: Enables minification of namespaces using special characters
+- **Type Analyzer**
+  - **Strategy**: Specifies which files are used for type resolution. The "Dependency" strategy resolves types from all files imported into the current file. Alternatively, the "Workspace" strategy resolves types from all files within the workspace.
+  - **Exclude**: Specifies files to ignore based on matching glob patterns.
+ 
 
 
 # Features
