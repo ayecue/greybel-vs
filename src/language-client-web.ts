@@ -39,10 +39,17 @@ function createClient(context: ExtensionContext, worker: Worker) {
     worker
   );
 
-  client.onRequest('custom/read-file', async (filePath: string) => {
-    const uri = Uri.parse(filePath);
-    const fileContent = await tryToDecode(uri);
+  client.onRequest('custom/read-file', async (params: string) => {
+    const { uri } = JSON.parse(params) as { uri: string };
+    const uriInstance = Uri.parse(uri);
+    const fileContent = await tryToDecode(uriInstance);
     return fileContent;
+  });
+
+  client.onRequest('custom/find-files', async (params: string) => {
+    const { include, exclude } = JSON.parse(params) as { include: string, exclude?: string };
+    const fileUris = await workspace.findFiles(include, exclude);
+    return fileUris.map((uri) => uri.toString());
   });
 
   return client;
