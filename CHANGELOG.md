@@ -1364,3 +1364,7 @@ All notable changes to this project will be documented in this file.
 - fix rnd intrinsic seed behaviour - thanks for reporting to GSQ
 - fix bitwise intrinsic to properly do 64bit bitwise operations - thanks for reporting to GSQ
 - extend type analyzer with workspace strategy
+
+## [2.5.16] - 29.11.2024
+
+- fix file resolve in workspace strategy
