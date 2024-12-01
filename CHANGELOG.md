@@ -1368,3 +1368,7 @@ All notable changes to this project will be documented in this file.
 ## [2.5.16] - 29.11.2024
 
 - fix file resolve in workspace strategy
+
+## [2.5.17] - 01.12.2024
+
+- minor improvement to assumption logic of non existing properties
