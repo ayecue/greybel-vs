@@ -54,6 +54,7 @@ You can also access these commands through the context menu for quick right-clic
   - **Auto Compile**: Auto compile and delete source files
 - **Diagnostic**: Activate/Deactivate
 - **Hoverdocs**: Activate/Deactivate
+- **Formatter**: Activate/Deactivate
 - **Interpreter**
   - **Default Args**: Default call arguments
   - **Environment Variables**: JSON used to define environment variables (ENVs)
@@ -62,6 +63,10 @@ You can also access these commands through the context menu for quick right-clic
   - **Silence Error Popups**: Silences error popups due to execution failure
 - **Transpiler**
   - **Build Type**: Default, Uglify, Beautify
+  - **Beautify**
+    - **Indentation**: Tab or whitespace. What should be used for indentation?
+    - **Indentation Spaces**: In case whitespace is used this will determine the amount of whitespaces.
+    - **Keep Parentheses**: Will always use parentheses.
   - **Literals Optimizations**: Activate/Deactivate
   - **Namespaces Optimizations**: Activate/Deactivate
   - **Environment Variables**: JSON used to define environment variables (ENVs)
