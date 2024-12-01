@@ -126,7 +126,7 @@ Building transforms and bundles your scripts in a way that makes them easy to im
 
 ### Auto create files in-game
 
-You can automatically create transpiled files in the game by enabling the "create-ingame" option. Additionally, you can choose between two agents. Depending on the selected agent, there are certain prerequisites to meet and behaviors to consider.
+You can automatically create transpiled files in the game by enabling the "create-ingame" option. Additionally, you can choose between two agents. Depending on the selected agent, there are certain prerequisites to meet and behaviors to consider. Generally it is recommended to use message-hook if possible.
 
 #### Headless
 
@@ -302,6 +302,8 @@ The inject expression will be replaced with the content of whatever file exists 
 If you're not interested in the build functionality or need to upload many files into the game, you can use the "Import files into game" command. This will behave similarly to the [create-in-game build feature](#auto-create-files-in-game), but without the building step.
 
 This feature will also use the transpiler's "Ingame directory" setting as the in-game destination.
+
+**IMPORTANT**: Please read about the two available agent options [headless](#headless) and [message-hook](#message-hook). It is recommended to use [message-hook](#message-hook) but it requires to [setup BepInEx](#bepinex-5xx).
 
 ## Interpreter
 
