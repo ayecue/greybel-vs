@@ -1372,3 +1372,8 @@ All notable changes to this project will be documented in this file.
 ## [2.5.17] - 01.12.2024
 
 - minor improvement to assumption logic of non existing properties
+
+## [2.5.18] - 04.12.2024
+
+- remove map and list properties from assignment registry resulting in less noise within the symbol provider
+- add new entity kinds to improve visibility of interal intrinsics in auto complete
