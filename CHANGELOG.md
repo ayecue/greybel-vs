@@ -1376,4 +1376,5 @@ All notable changes to this project will be documented in this file.
 ## [2.5.18] - 04.12.2024
 
 - remove map and list properties from assignment registry resulting in less noise within the symbol provider
+- include full namespace in symbol provider
 - add new entity kinds to improve visibility of internal intrinsics in auto complete
