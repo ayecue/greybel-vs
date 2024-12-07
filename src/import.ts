@@ -4,7 +4,7 @@ import vscode, {
 } from 'vscode';
 
 import { showCustomErrorMessage } from './helper/show-custom-error';
-import { AgentType, ImportResultFailure, ImportResultSuccess, ImporterMode, createImporter } from './build/importer';
+import { AgentType, executeImport, ImporterMode } from './build/importer';
 import { tryToDecode } from './helper/fs';
 import { getIngameDirectory } from './helper/get-ingame-directory';
 
@@ -52,7 +52,8 @@ export function activate(context: ExtensionContext) {
           content
         };
       }));
-      const results = await createImporter({
+
+      await executeImport({
         target: targetUri,
         ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
         result: filesWithContent.reduce((result, item) => {
@@ -69,24 +70,6 @@ export function activate(context: ExtensionContext) {
         autoCompile: false,
         postCommand: ''
       });
-      const successfulItems = results.filter((item) => item.success) as ImportResultSuccess[];
-      const failedItems = results.filter((item) => !item.success) as ImportResultFailure[];
-
-      if (successfulItems.length === 0) {
-        vscode.window.showInformationMessage(`File import failed! This can happen if Grey Hack received an update and sometimes due to other issues.`, {
-          modal: true,
-          detail: failedItems.map((it) => it.reason).join('\n')
-        });
-      } else if (failedItems.length > 0) {
-        vscode.window.showInformationMessage(`Import was only partially successful. Only ${successfulItems.length} files got imported to ${ingameDirectory.path}!`, {
-          modal: true,
-          detail: failedItems.map((it) => it.reason).join('\n')
-        });
-      } else {
-        vscode.window.showInformationMessage(`${successfulItems.length} files got imported to ${ingameDirectory.path}!`, {
-          modal: false
-        });
-      }
     } catch (err: any) {
       showCustomErrorMessage(err);
     }
