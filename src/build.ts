@@ -6,7 +6,7 @@ import vscode, {
 import { greyscriptMeta } from 'greyscript-meta';
 
 import { createParseResult } from './build/create-parse-result';
-import { AgentType, ImportResultFailure, ImportResultSuccess, ImporterMode, createImporter } from './build/importer';
+import { AgentType, ImporterMode, executeImport } from './build/importer';
 import { createInstaller } from './build/installer';
 import { createBasePath } from './helper/create-base-path';
 import { showCustomErrorMessage } from './helper/show-custom-error';
@@ -122,7 +122,7 @@ export function activate(context: ExtensionContext) {
           modal: false
         });
 
-        const importResults = await createImporter({
+        await executeImport({
           target: targetUri,
           ingameDirectory: ingameDirectory.path,
           result,
@@ -136,24 +136,6 @@ export function activate(context: ExtensionContext) {
           postCommand: config
             .get<string>('createIngame.postCommand')
         });
-        const successfulItems = importResults.filter((item) => item.success) as ImportResultSuccess[];
-        const failedItems = importResults.filter((item) => !item.success) as ImportResultFailure[];
-
-        if (successfulItems.length === 0) {
-          vscode.window.showInformationMessage(`File import failed! This can happen if Grey Hack received an update and sometimes due to other issues.`, {
-            modal: true,
-            detail: failedItems.map((it) => it.reason).join('\n')
-          });
-        } else if (failedItems.length > 0) {
-          vscode.window.showInformationMessage(`Import was only partially successful. Only ${successfulItems.length} files got imported to ${ingameDirectory.path}!`, {
-            modal: true,
-            detail: failedItems.map((it) => it.reason).join('\n')
-          });
-        } else {
-          vscode.window.showInformationMessage(`${successfulItems.length} files got imported to ${ingameDirectory.path}!`, {
-            modal: false
-          });
-        }
       }
 
       vscode.window.showInformationMessage(
