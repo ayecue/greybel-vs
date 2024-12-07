@@ -284,7 +284,7 @@ For detailed troubleshooting steps related to the headless agent, please consult
     } else if (singularErrorReason.indexOf(CommonImportErrorReason.NewGameVersion) !== -1) {
       vscode.window.showInformationMessage(`File import failed!`, {
         modal: true,
-        detail: `It seems that the game has received an update. This can sometimes cause issues with the import process. Please wait for the Greybel developers to update the game and try again later.`
+        detail: `It seems that the game has received an update. This can sometimes cause issues with the import process. Please wait for the Greybel developers to update the extension and try again later.`
       });
       return;
     }
