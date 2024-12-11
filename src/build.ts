@@ -103,6 +103,8 @@ export function activate(context: ExtensionContext) {
           config.get<number>('transpiler.installer.maxChars') || 160000;
         const autoCompile =
           config.get<boolean>('transpiler.installer.autoCompile') || false;
+        const allowImport =
+          config.get<boolean>('transpiler.installer.allowImport') || false;
 
         vscode.window.showInformationMessage('Creating installer.', {
           modal: false
@@ -113,7 +115,8 @@ export function activate(context: ExtensionContext) {
           buildPath: rootPathUri,
           ingameDirectory: ingameDirectory.path,
           result,
-          maxChars
+          maxChars,
+          allowImport
         });
       }
 
@@ -134,7 +137,9 @@ export function activate(context: ExtensionContext) {
           autoCompile: config
             .get<boolean>('createIngame.autoCompile'),
           postCommand: config
-            .get<string>('createIngame.postCommand')
+            .get<string>('createIngame.postCommand'),
+          allowImport: config
+            .get<boolean>('createIngame.allowImport'),
         });
       }
 

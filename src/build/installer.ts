@@ -96,6 +96,7 @@ export interface InstallerOptions {
   result: TranspilerParseResult;
   maxChars: number;
   autoCompile: boolean;
+  allowImport: boolean;
 }
 
 class Installer {
@@ -105,6 +106,7 @@ class Installer {
   private buildPath: Uri;
   private maxChars: number;
   private autoCompile: boolean;
+  private allowImport: boolean;
 
   private files: InstallerFile[];
   private createdFiles: string[];
@@ -115,6 +117,7 @@ class Installer {
     this.buildPath = options.buildPath;
     this.maxChars = options.maxChars;
     this.autoCompile = options.autoCompile;
+    this.allowImport = options.allowImport;
     this.files = [];
     this.importList = this.createImportList(options.target, options.result);
     this.createdFiles = [];
@@ -217,7 +220,8 @@ class Installer {
       return generateAutoCompileCode(
         this.ingameDirectory,
         rootRef.ingameFilepath,
-        this.importList.map((it) => it.ingameFilepath)
+        this.importList.map((it) => it.ingameFilepath),
+        this.allowImport
       ).split(';');
     }
 
