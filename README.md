@@ -52,6 +52,7 @@ You can also access these commands through the context menu for quick right-clic
   - **Mode**: local, public
   - **Steam User**: Steam username
   - **Auto Compile**: Auto compile and delete source files
+  - **Allow Import**: Enable allowImport on auto compile
 - **Diagnostic**: Activate/Deactivate
 - **Hoverdocs**: Activate/Deactivate
 - **Formatter**: Activate/Deactivate
@@ -75,6 +76,7 @@ You can also access these commands through the context menu for quick right-clic
   - **Installer**
     - **Active**: Activate/Deactivate
     - **Auto Compile**: Adds boilerplate code to the installer for auto-deletion of the script after execution
+    - **Allow Import**: Enable allowImport when performing auto compile in installer
     - **Max Chars**: Define the maximum number of characters at which the installer should split the code
   - **Obfuscation**: Enables minification of namespaces using special characters
 - **Type Analyzer**

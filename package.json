@@ -458,6 +458,11 @@
           "default": false,
           "description": "Enable auto compile feature for installer."
         },
+        "greybel.transpiler.installer.allowImport": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable allowImport when performing auto compile in installer."
+        },
         "greybel.transpiler.beautify.keepParentheses": {
           "type": "boolean",
           "default": false,
@@ -488,6 +493,11 @@
           "default": false,
           "description": "Build root file automatically.",
           "scope": "resource"
+        },
+        "greybel.createIngame.allowImport": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable allowImport on auto compile."
         },
         "greybel.createIngame.agent": {
           "type": "string",
