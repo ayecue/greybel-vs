@@ -1,7 +1,8 @@
 export const generateAutoCompileCode = (
   rootDirectory: string,
   rootFilePath: string,
-  importPaths: string[]
+  importPaths: string[],
+  allowImport: boolean
 ): string => {
   return `
       rootDirectory = "${rootDirectory.trim().replace(/\/$/, '')}"
@@ -10,7 +11,7 @@ export const generateAutoCompileCode = (
       myShell = get_shell
       myComputer = host_computer(myShell)
 
-      result = build(myShell, rootDirectory + rootFilePath, rootDirectory)
+      result = build(myShell, rootDirectory + rootFilePath, rootDirectory, ${allowImport ? 1 : 0})
       if result != "" then exit("Error when building! Reason: " + result)
       print("Build done in " + rootDirectory)
 

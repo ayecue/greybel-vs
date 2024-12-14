@@ -62,6 +62,7 @@ export interface ImporterOptions {
   extensionContext: ExtensionContext;
   autoCompile: boolean;
   postCommand: string;
+  allowImport: boolean;
 }
 
 class Importer {
@@ -73,6 +74,7 @@ class Importer {
   private extensionContext: ExtensionContext;
   private autoCompile: boolean;
   private postCommand: string;
+  private allowImport: boolean;
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
@@ -83,6 +85,7 @@ class Importer {
     this.extensionContext = options.extensionContext;
     this.autoCompile = options.autoCompile;
     this.postCommand = options.postCommand;
+    this.allowImport = options.allowImport;
   }
 
   private createImportList(
@@ -222,7 +225,8 @@ class Importer {
         generateAutoCompileCode(
           this.ingameDirectory,
           rootRef.ingameFilepath,
-          Array.from(this.importRefs.values()).map((it) => it.ingameFilepath)
+          Array.from(this.importRefs.values()).map((it) => it.ingameFilepath),
+          this.allowImport
         ),
         ({ output }) => console.log(output)
       );
