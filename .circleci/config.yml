@@ -13,14 +13,14 @@ commands:
 jobs:
   build:  
     docker:
-      - image: cimg/node:19.8.1
+      - image: cimg/node:20.18.0
     steps:
       - checkout
       - node/install-packages
       - build
   build-and-publish: 
     docker:
-      - image: cimg/node:19.8.1
+      - image: cimg/node:20.18.0
     steps:
       - checkout
       - node/install-packages
