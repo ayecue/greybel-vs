@@ -1396,3 +1396,7 @@ All notable changes to this project will be documented in this file.
 - add allowImport option for both installer and create ingame flow
 - fix line registry in parser which could potentially mess up auto complete items within block openers - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
 - improve beautifier transformation in regards of comments within lists and maps
+
+## [2.5.22] - 15.12.2024
+
+- add open vsx to deployments
