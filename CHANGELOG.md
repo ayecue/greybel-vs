@@ -1391,7 +1391,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.5.21] - 14.12.2024
 
-- prevent the transpiler from using special patterns when inserting transformed code - this fix resolves issues with code combinations that include special patterns such as $$, $&, $', $n, and $<name>
+- prevent the transpiler from using special patterns when inserting transformed code - this fix resolves issues with code combinations that include special patterns such as `$$`, `$&`, `$'`, `$n`, and `$<name>`
 - update hashing method in interpreter in favor of lower collision but worse performance
 - add allowImport option for both installer and create ingame flow
 - fix line registry in parser which could potentially mess up auto complete items within block openers - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
@@ -1400,3 +1400,7 @@ All notable changes to this project will be documented in this file.
 ## [2.5.22] - 15.12.2024
 
 - add open vsx to deployments
+
+## [2.5.23] - 19.12.2024
+
+- fix parsing of file path for breakpoints in windows - would cause breakpoints not getting triggered - thanks for reporting to foskon
