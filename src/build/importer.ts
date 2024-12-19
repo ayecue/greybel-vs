@@ -261,13 +261,19 @@ enum CommonImportErrorReason {
   NewGameVersion = 'A new game update is available.'
 }
 
-const reportFailure = (failedItems: ImportResultFailure[], agentType: AgentType): void => {
+const reportFailure = (
+  failedItems: ImportResultFailure[],
+  agentType: AgentType
+): void => {
   const uniqueErrorReasons = new Set(failedItems.map((it) => it.reason));
 
   if (uniqueErrorReasons.size === 1) {
     const singularErrorReason = failedItems[0].reason;
 
-    if (singularErrorReason.indexOf(CommonImportErrorReason.NoAvailableSocket) !== -1) {
+    if (
+      singularErrorReason.indexOf(CommonImportErrorReason.NoAvailableSocket) !==
+      -1
+    ) {
       if (agentType === AgentType.C2Light) {
         vscode.window.showInformationMessage(`File import failed!`, {
           modal: true,
@@ -285,7 +291,9 @@ const reportFailure = (failedItems: ImportResultFailure[], agentType: AgentType)
 For detailed troubleshooting steps related to the headless agent, please consult the documentation: https://github.com/ayecue/greybel-vs?tab=readme-ov-file#headless.`
       });
       return;
-    } else if (singularErrorReason.indexOf(CommonImportErrorReason.NewGameVersion) !== -1) {
+    } else if (
+      singularErrorReason.indexOf(CommonImportErrorReason.NewGameVersion) !== -1
+    ) {
       vscode.window.showInformationMessage(`File import failed!`, {
         modal: true,
         detail: `It seems that the game has received an update. This can sometimes cause issues with the import process. Please wait for the Greybel developers to update the extension and try again later.`
@@ -298,15 +306,16 @@ For detailed troubleshooting steps related to the headless agent, please consult
       detail: `The reason seems to be unknown for now. Please either join the discord or create an issue on GitHub. Following reason was reported: ${singularErrorReason}`
     });
 
-
     return;
   }
 
   vscode.window.showInformationMessage(`File import failed!`, {
     modal: true,
-    detail: `The reason seems to be unknown for now. Please either join the discord or create an issue on GitHub. Following reasons were reported:\n${failedItems.map((it) => it.reason).join('\n')}`
+    detail: `The reason seems to be unknown for now. Please either join the discord or create an issue on GitHub. Following reasons were reported:\n${failedItems
+      .map((it) => it.reason)
+      .join('\n')}`
   });
-}
+};
 
 export const executeImport = async (
   options: ImporterOptions
@@ -314,23 +323,33 @@ export const executeImport = async (
   const importer = new Importer(options);
   const results = await importer.import();
 
-  const successfulItems = results.filter((item) => item.success) as ImportResultSuccess[];
-  const failedItems = results.filter((item) => !item.success) as ImportResultFailure[];
+  const successfulItems = results.filter(
+    (item) => item.success
+  ) as ImportResultSuccess[];
+  const failedItems = results.filter(
+    (item) => !item.success
+  ) as ImportResultFailure[];
 
   if (successfulItems.length === 0) {
     reportFailure(failedItems, options.agentType);
     return false;
   } else if (failedItems.length > 0) {
-    vscode.window.showInformationMessage(`Import was only partially successful. Only ${successfulItems.length} files got imported to ${options.ingameDirectory}!`, {
-      modal: true,
-      detail: failedItems.map((it) => it.reason).join('\n')
-    });
+    vscode.window.showInformationMessage(
+      `Import was only partially successful. Only ${successfulItems.length} files got imported to ${options.ingameDirectory}!`,
+      {
+        modal: true,
+        detail: failedItems.map((it) => it.reason).join('\n')
+      }
+    );
     return false;
   }
 
-  vscode.window.showInformationMessage(`${successfulItems.length} files got imported to ${options.ingameDirectory}!`, {
-    modal: false
-  });
+  vscode.window.showInformationMessage(
+    `${successfulItems.length} files got imported to ${options.ingameDirectory}!`,
+    {
+      modal: false
+    }
+  );
 
   return true;
 };
