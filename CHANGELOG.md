@@ -1403,4 +1403,4 @@ All notable changes to this project will be documented in this file.
 
 ## [2.5.23] - 19.12.2024
 
-- fix parsing of file paths for breakpoint in windows - would cause breakpoints not getting triggered - thanks for reporting to foskon
+- fix parsing of file path for breakpoints in windows - would cause breakpoints not getting triggered - thanks for reporting to foskon
