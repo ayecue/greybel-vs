@@ -1404,3 +1404,10 @@ All notable changes to this project will be documented in this file.
 ## [2.5.23] - 19.12.2024
 
 - fix parsing of file path for breakpoints in windows - would cause breakpoints not getting triggered - thanks for reporting to foskon
+
+## [2.5.24] - 02.01.2025
+
+- support nested type signatures for maps and lists such as `map<string,number>` or `list<string>`
+- add support to resolve type of for-in iterator
+- add support to resolve type of #import namespace correctly
+- resolve all possible value types if `any` type is existing in index expression
