@@ -606,7 +606,7 @@
     "greyscript-core": "~2.4.0",
     "greyscript-interpreter": "~2.4.0",
     "greyscript-meta": "~4.2.0",
-    "greyscript-meta-web": "~1.2.0",
+    "greyscript-meta-web": "~1.2.1",
     "greyscript-textmate": "~1.10.0",
     "greyscript-transpiler": "~1.5.0",
     "lru-cache": "^7.14.1",
