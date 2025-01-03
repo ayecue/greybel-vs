@@ -6,6 +6,12 @@ This toolkit provides essential tools for developing in GreyScript, the scriptin
 
 # Links
 
+[![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/ayecue.greybel-vs?style=for-the-badge&label=VS%20Marketplace&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=ayecue.greybel-vs)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/ayecue.greybel-vs?style=for-the-badge&logo=microsoft)](https://marketplace.visualstudio.com/items?itemName=ayecue.greybel-vs)
+[![GitHub Repo stars](https://img.shields.io/github/stars/ayecue/greybel-vs?style=for-the-badge)](https://github.com/ayecue/greybel-vs)
+[![License](https://img.shields.io/github/license/ayecue/greybel-vs?style=for-the-badge)](https://github.com/ayecue/greybel-vs/blob/master/LICENSE)
+[![OpenVSX Registry](https://img.shields.io/open-vsx/dt/ayecue/greybel-vs?color=purple&label=OpenVSX%20Downloads&style=for-the-badge)](https://open-vsx.org/extension/ayecue/greybel-vs)
+
 **Project Resources**
 - [Changelog](https://github.com/ayecue/greybel-vs/blob/main/CHANGELOG.md): View the latest changes and updates.
 - [greybel-js CLI](https://github.com/ayecue/greybel-js): Command-line interface for Greybel.
