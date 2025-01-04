@@ -1415,3 +1415,7 @@ All notable changes to this project will be documented in this file.
 ## [2.5.25] - 03.01.2025
 
 - support nested type signatures for maps and lists in property comment docs
+
+## [2.5.26] - 04.01.2025
+
+- fix index expression behaviour within statement
