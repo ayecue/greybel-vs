@@ -1423,3 +1423,8 @@ All notable changes to this project will be documented in this file.
 ## [2.5.27] - 05.01.2025
 
 - fix comment docs not recognising comments in nested functions - thanks for reporting to [@redit0](https://github.com/redit0)
+
+## [2.5.28] - 06.01.2025
+
+- fix index expression behaviour within statement
+- fix type resolve of index expression
