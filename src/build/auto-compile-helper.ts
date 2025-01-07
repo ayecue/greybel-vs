@@ -1,3 +1,7 @@
+import { randomString } from '../helper/random-string';
+
+const SHORTEST_NAME = 'dddd' as const;
+
 export const generateAutoCompileCode = (
   rootDirectory: string,
   rootFilePath: string,
@@ -8,14 +12,38 @@ export const generateAutoCompileCode = (
       rootDirectory = "${rootDirectory.trim().replace(/\/$/, '')}"
       rootFilePath = "${rootFilePath}"
       filePaths = [${importPaths.map((it) => `"${it}"`).join(',')}]
+      tmpDirectory = "${randomString(5)}"
       myShell = get_shell
       myComputer = host_computer(myShell)
 
-      result = build(myShell, rootDirectory + rootFilePath, rootDirectory, ${
-        allowImport ? 1 : 0
-      })
+      srcFile = File(myComputer, rootDirectory + rootFilePath)
+      if srcFile == null then exit("Couldn't find source file in " + rootDirectory + rootFilePath)
+
+      fileName = name(srcFile)
+      binaryName = replace_regex(fileName, "\\.[^.]+$", "")
+      destination = parent_path(path(srcFile))
+
+      result = create_folder(myComputer, destination, tmpDirectory)
+      if result != 1 then exit("Error when creating temporary build folder! Reason: " + result)
+
+      tmpFolder = File(myComputer, destination + "/" + tmpDirectory)
+      if tmpFolder == null then exit("Couldn't find temporary build folder in " + destination + "/" + tmpDirectory)
+
+      result = move(srcFile, tmpFolder.path, "${SHORTEST_NAME}.src")
+      if result != 1 then exit("Error when moving source file into temporary build folder! Reason: " + result)
+
+      result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${
+    allowImport ? 1 : 0
+  })
       if result != "" then exit("Error when building! Reason: " + result)
-      print("Build done in " + rootDirectory)
+
+      binaryFile = File(myComputer, tmpFolder.path + "/${SHORTEST_NAME}")
+      if binaryFile == null then exit("Couldn't find binary file in " + tmpFolder.path + "/${SHORTEST_NAME}")
+
+      result = move(binaryFile, destination, binaryName)
+      if result != 1 then exit("Error when moving binary file into destination folder! Reason: " + result)
+      delete(tmpFolder)
+      print("Build done in " + destination)
 
       remainingFolderMap = {}
 
