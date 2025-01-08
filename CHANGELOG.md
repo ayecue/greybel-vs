@@ -1440,3 +1440,7 @@ All notable changes to this project will be documented in this file.
 ## [2.5.31] - 08.01.2025
 
 - use temporary folder to use "dddd.src" as file name when building to force smallest possible binary size - thanks for the suggestion to [@redit0](https://github.com/redit0)
+
+## [2.5.32] - 08.01.2025
+
+- move final binary after deleting files in auto compile - thanks for reporting to [@redit0](https://github.com/redit0)
