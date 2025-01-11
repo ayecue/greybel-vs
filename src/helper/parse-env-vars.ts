@@ -5,7 +5,7 @@ export const parseEnvVars = (
   const entries = Object.entries(environmentVariablesObj);
 
   for (const [key, value] of entries) {
-    if (typeof value === 'object') {
+    if (typeof value !== 'string') {
       map.set(key, JSON.stringify(value));
       continue;
     }
