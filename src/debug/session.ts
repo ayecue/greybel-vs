@@ -30,6 +30,7 @@ import { Interpreter } from 'greyscript-interpreter';
 import vscode, { Uri } from 'vscode';
 
 import { PseudoFS } from '../helper/fs';
+import { parseEnvVars } from '../helper/parse-env-vars';
 import { showCustomErrorMessage } from '../helper/show-custom-error';
 import { ansiProvider, useColor } from '../helper/text-mesh-transform';
 import { getPreviewInstance } from '../preview';
@@ -104,12 +105,7 @@ export class GreybelDebugSession
         outputHandler: this._out
       }),
       debugger: new GrebyelDebugger(me),
-      environmentVariables: new Map(
-        Object.entries(environmentVariables).map(([key, value]) => [
-          key,
-          value.toString()
-        ])
-      )
+      environmentVariables: parseEnvVars(environmentVariables)
     });
     this._env = createGHMockEnv(this._runtime, {
       seed
