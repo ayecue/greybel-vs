@@ -1444,3 +1444,9 @@ All notable changes to this project will be documented in this file.
 ## [2.5.32] - 08.01.2025
 
 - move final binary after deleting files in auto compile - thanks for reporting to [@redit0](https://github.com/redit0)
+
+## [2.5.33] - 11.01.2025
+
+- fix comment doc parsing swallowing first asterisk - thanks for reporting to [@redit0](https://github.com/redit0)
+- fix overflow optional arg - thanks for reporting to Stigma
+- automatically stringify env vars if value is an object - thanks for the suggestion to [@redit0](https://github.com/redit0)
