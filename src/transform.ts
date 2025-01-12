@@ -66,7 +66,7 @@ export function activate(context: ExtensionContext) {
         code: editor.document.getText(),
         buildType: specificBuildType || buildType,
         buildOptions,
-        environmentVariables: parseEnvVars(environmentVariablesFromConfig),
+        environmentVariables: parseEnvVars(environmentVariablesFromConfig, true),
         obfuscation,
         excludedNamespaces: [
           'params',
