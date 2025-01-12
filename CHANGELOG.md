@@ -1450,3 +1450,8 @@ All notable changes to this project will be documented in this file.
 - fix comment doc parsing swallowing first asterisk - thanks for reporting to [@redit0](https://github.com/redit0)
 - fix overflow optional arg - thanks for reporting to Stigma
 - automatically stringify env vars if value is an object - thanks for the suggestion to [@redit0](https://github.com/redit0)
+
+## [2.5.34] - 12.01.2025
+
+- escape env vars for transpiler - thanks for reporting to [@redit0](https://github.com/redit0)
+- fix documentation example for move intrinsic
