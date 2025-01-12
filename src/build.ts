@@ -69,7 +69,7 @@ export function activate(context: ExtensionContext) {
         resourceHandler: new TranspilerResourceProvider().getHandler(),
         buildType,
         buildOptions,
-        environmentVariables: parseEnvVars(environmentVariablesFromConfig),
+        environmentVariables: parseEnvVars(environmentVariablesFromConfig, true),
         obfuscation,
         excludedNamespaces: [
           'params',
