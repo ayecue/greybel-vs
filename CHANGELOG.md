@@ -1458,7 +1458,7 @@ All notable changes to this project will be documented in this file.
 - fix documentation description for range - thanks for reporting to Stigma
 - fix beautify transpilation handling of call expressions with arguments that have new lines - thanks for reporting to Stigma
 
-## [2.5.35] - 12.01.2025
+## [2.5.35] - 18.01.2025
 
 - show error when continue or break are used if there is no wrapping iterator block - related to [#289](https://github.com/ayecue/greybel-vs/issues/289) - thanks for reporting to Stigma
 - fix lib_name not appending `.so` - thanks for reporting to Stigma
