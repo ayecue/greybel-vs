@@ -599,7 +599,7 @@
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
     "greybel-agent": "~1.8.1",
-    "greybel-gh-mock-intrinsics": "~5.5.6",
+    "greybel-gh-mock-intrinsics": "~5.5.7",
     "greybel-intrinsics": "~5.5.2",
     "greybel-languageserver": "~1.12.6",
     "greybel-languageserver-browser": "~1.8.6",
