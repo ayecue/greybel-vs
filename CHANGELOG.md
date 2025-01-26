@@ -1468,3 +1468,7 @@ All notable changes to this project will be documented in this file.
 ## [2.5.36] - 26.01.2025
 
 - fix rename intrinsic - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
+
+## [2.5.37] - 26.01.2025
+
+- fix aireplay cap creation using wrong value - related to [#292](https://github.com/ayecue/greybel-vs/issues/292) - thanks for reporting to [@Patrick-van-Halm](https://github.com/Patrick-van-Halm)
