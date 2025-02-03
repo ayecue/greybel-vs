@@ -1476,3 +1476,7 @@ All notable changes to this project will be documented in this file.
 ## [2.5.38] - 30.01.2025
 
 - raise client version in headless client to latest public Grey Hack version
+
+## [2.5.39] - 03.02.2025
+
+- update language server to latest version
