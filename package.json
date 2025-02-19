@@ -8,7 +8,7 @@
     "email": "soerenwehmeier@googlemail.com"
   },
   "icon": "icon.png",
-  "version": "2.5.40",
+  "version": "2.5.41",
   "repository": {
     "type": "git",
     "url": "git@github.com:ayecue/greybel-vs.git"
@@ -213,10 +213,6 @@
         {
           "command": "greybel.snippets",
           "when": "resourceLangId == greyscript"
-        },
-        {
-          "command": "greybel.clearSecrets",
-          "when": "resourceLangId == greyscript"
         }
       ]
     },
@@ -294,10 +290,6 @@
       {
         "command": "greybel.preview",
         "title": "Greybel: Preview output"
-      },
-      {
-        "command": "greybel.clearSecrets",
-        "title": "Greybel: Clear secrets"
       },
       {
         "command": "greybel.import",
@@ -499,40 +491,6 @@
           "type": "boolean",
           "default": false,
           "description": "Enable allowImport on auto compile."
-        },
-        "greybel.createIngame.agent": {
-          "type": "string",
-          "enum": [
-            "headless",
-            "message-hook"
-          ],
-          "default": "headless",
-          "description": "Agent used for file import.",
-          "scope": "resource"
-        },
-        "greybel.createIngame.mode": {
-          "type": "string",
-          "enum": [
-            "local",
-            "public"
-          ],
-          "default": "local",
-          "description": "Creation mode. (only required for headless agent)",
-          "scope": "resource"
-        },
-        "greybel.createIngame.steamUser": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "default": null,
-          "description": "Steam user. (only required for headless agent)"
-        },
-        "greybel.createIngame.postCommand": {
-          "type": "string",
-          "default": "",
-          "description": "Command which gets executed after creation of files. (only available for message-hook agent)",
-          "scope": "resource"
         }
       }
     },
@@ -598,7 +556,7 @@
     "color-convert": "^2.0.1",
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
-    "greybel-agent": "~1.8.2",
+    "greybel-agent": "~1.9.0",
     "greybel-gh-mock-intrinsics": "~5.5.8",
     "greybel-intrinsics": "~5.5.2",
     "greybel-languageserver": "~1.12.11",

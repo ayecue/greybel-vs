@@ -25,16 +25,6 @@ export enum AgentType {
   C2Light = 'message-hook'
 }
 
-export enum ImporterMode {
-  Local = 'local',
-  Public = 'public'
-}
-
-const IMPORTER_MODE_MAP = {
-  [ImporterMode.Local]: 2,
-  [ImporterMode.Public]: 0
-};
-
 type ImportItem = {
   ingameFilepath: string;
   content: string;
@@ -55,13 +45,11 @@ export type ImportResult = ImportResultSuccess | ImportResultFailure;
 
 export interface ImporterOptions {
   target: Uri;
-  mode: ImporterMode;
   ingameDirectory: string;
   agentType: AgentType;
   result: TranspilerParseResult;
   extensionContext: ExtensionContext;
   autoCompile: boolean;
-  postCommand: string;
   allowImport: boolean;
 }
 
@@ -70,10 +58,8 @@ class Importer {
   private agentType: AgentType;
   private target: Uri;
   private ingameDirectory: string;
-  private mode: ImporterMode;
   private extensionContext: ExtensionContext;
   private autoCompile: boolean;
-  private postCommand: string;
   private allowImport: boolean;
 
   constructor(options: ImporterOptions) {
@@ -81,10 +67,8 @@ class Importer {
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
     this.importRefs = this.createImportList(options.target, options.result);
     this.agentType = options.agentType;
-    this.mode = options.mode;
     this.extensionContext = options.extensionContext;
     this.autoCompile = options.autoCompile;
-    this.postCommand = options.postCommand;
     this.allowImport = options.allowImport;
   }
 
@@ -107,63 +91,10 @@ class Importer {
     );
   }
 
-  private getUsername(): PromiseLike<string> {
-    const username = vscode.workspace
-      .getConfiguration('greybel')
-      .get<string>('createIngame.steamUser');
-
-    if (username != null) {
-      return Promise.resolve(username);
-    }
-
-    return vscode.window.showInputBox({
-      title: 'Enter steam account name',
-      ignoreFocusOut: true
-    });
-  }
-
-  private getPassword(): PromiseLike<string> {
-    return vscode.window.showInputBox({
-      title: 'Enter steam password',
-      ignoreFocusOut: true,
-      password: true
-    });
-  }
-
   async createAgent(): Promise<any> {
     switch (this.agentType) {
       case AgentType.C2: {
-        const refreshToken = await this.extensionContext.secrets.get(
-          'greybel.steam.refreshToken'
-        );
-
-        return new GreybelC2Agent(
-          {
-            connectionType: IMPORTER_MODE_MAP[this.mode],
-            steamGuardGetter: async (domain, callback) => {
-              const code = await vscode.window.showInputBox({
-                title: `Enter steam guard code (send to ${domain})`,
-                ignoreFocusOut: true,
-                password: true
-              });
-              callback(code);
-            },
-            refreshToken,
-            onSteamRefreshToken: (code: string) => {
-              this.extensionContext.secrets.store(
-                'greybel.steam.refreshToken',
-                code
-              );
-            },
-            credentialsGetter: async (label: string) => {
-              if (label.includes('password')) {
-                return await this.getPassword();
-              }
-              return await this.getUsername();
-            }
-          },
-          [125, 150]
-        );
+        throw new Error('Headless mode is no longer supported.');
       }
       case AgentType.C2Light: {
         return new GreybelC2LightAgent([125, 150]);
@@ -172,10 +103,6 @@ class Importer {
   }
 
   async import(): Promise<ImportResult[]> {
-    if (!Object.prototype.hasOwnProperty.call(IMPORTER_MODE_MAP, this.mode)) {
-      throw new Error('Unknown import mode.');
-    }
-
     const agent = await this.createAgent();
     const results: ImportResult[] = [];
 
@@ -232,24 +159,6 @@ class Importer {
       );
     }
 
-    if (this.postCommand !== '') {
-      if (this.agentType === AgentType.C2Light) {
-        agent.tryToRun(null, 'cd ' + this.ingameDirectory, ({ output }) =>
-          console.log(output)
-        );
-        await wait(500);
-        agent.tryToRun(null, this.postCommand, ({ output }) =>
-          console.log(output)
-        );
-        await wait(500);
-        agent.terminal = null;
-      } else {
-        console.warn(
-          `Warning: Post command can only be executed when agent type is ${AgentType.C2Light}`
-        );
-      }
-    }
-
     await agent.dispose();
 
     return results;
@@ -262,8 +171,7 @@ enum CommonImportErrorReason {
 }
 
 const reportFailure = (
-  failedItems: ImportResultFailure[],
-  agentType: AgentType
+  failedItems: ImportResultFailure[]
 ): void => {
   const uniqueErrorReasons = new Set(failedItems.map((it) => it.reason));
 
@@ -274,34 +182,24 @@ const reportFailure = (
       singularErrorReason.indexOf(CommonImportErrorReason.NoAvailableSocket) !==
       -1
     ) {
-      if (agentType === AgentType.C2Light) {
-        vscode.window.showInformationMessage(`File import failed!`, {
-          modal: true,
-          detail: `The issue appears to be due to the lack of an available socket. This could suggest that the BepInEx plugin is not installed correctly, or the game is not running. Double-check the plugin installation and ensure the game is running.
-  
-For detailed troubleshooting steps, please consult the documentation: https://github.com/ayecue/greybel-vs?tab=readme-ov-file#message-hook.`
-        });
-        return;
-      }
-
-      vscode.window.showInformationMessage(`File import failed!`, {
+      vscode.window.showInformationMessage(`File import failed`, {
         modal: true,
-        detail: `The issue appears to be due to the lack of an available socket. This might indicate that the game is not running. Please ensure the game is started before proceeding. Additionally note that it is recommend to rather use the message-hook agent but that requires installing BepInEx: https://github.com/ayecue/greybel-vs?tab=readme-ov-file#message-hook.
+        detail: `The issue appears to be due to the lack of an available socket. This could suggest that the BepInEx plugin is not installed correctly, or the game is not running. Double-check the plugin installation and ensure the game is running.
 
-For detailed troubleshooting steps related to the headless agent, please consult the documentation: https://github.com/ayecue/greybel-vs?tab=readme-ov-file#headless.`
+For detailed troubleshooting steps, please consult the documentation: https://github.com/ayecue/greybel-vs?tab=readme-ov-file#message-hook.`
       });
       return;
     } else if (
       singularErrorReason.indexOf(CommonImportErrorReason.NewGameVersion) !== -1
     ) {
-      vscode.window.showInformationMessage(`File import failed!`, {
+      vscode.window.showInformationMessage(`File import failed`, {
         modal: true,
         detail: `It seems that the game has received an update. This can sometimes cause issues with the import process. Please wait for the Greybel developers to update the extension and try again later.`
       });
       return;
     }
 
-    vscode.window.showInformationMessage(`File import failed!`, {
+    vscode.window.showInformationMessage(`File import failed`, {
       modal: true,
       detail: `The reason seems to be unknown for now. Please either join the discord or create an issue on GitHub. Following reason was reported: ${singularErrorReason}`
     });
@@ -309,7 +207,7 @@ For detailed troubleshooting steps related to the headless agent, please consult
     return;
   }
 
-  vscode.window.showInformationMessage(`File import failed!`, {
+  vscode.window.showInformationMessage(`File import failed`, {
     modal: true,
     detail: `The reason seems to be unknown for now. Please either join the discord or create an issue on GitHub. Following reasons were reported:\n${failedItems
       .map((it) => it.reason)
@@ -331,7 +229,7 @@ export const executeImport = async (
   ) as ImportResultFailure[];
 
   if (successfulItems.length === 0) {
-    reportFailure(failedItems, options.agentType);
+    reportFailure(failedItems);
     return false;
   } else if (failedItems.length > 0) {
     vscode.window.showInformationMessage(

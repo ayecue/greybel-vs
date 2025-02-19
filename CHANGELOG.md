@@ -1485,3 +1485,8 @@ All notable changes to this project will be documented in this file.
 
 - update language server to latest version
 - update meta descriptions
+
+## [2.5.41] - 19.02.2025
+
+- deprecate post command feature due to exploiting
+- deprecate headless client due no further support

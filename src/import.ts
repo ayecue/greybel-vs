@@ -4,7 +4,7 @@ import vscode, {
 } from 'vscode';
 
 import { showCustomErrorMessage } from './helper/show-custom-error';
-import { AgentType, executeImport, ImporterMode } from './build/importer';
+import { AgentType, executeImport } from './build/importer';
 import { tryToDecode } from './helper/fs';
 import { getIngameDirectory } from './helper/get-ingame-directory';
 
@@ -61,14 +61,8 @@ export function activate(context: ExtensionContext) {
           return result;
         }, {}),
         extensionContext: context,
-        mode: vscode.workspace
-          .getConfiguration('greybel')
-          .get<ImporterMode>('createIngame.mode'),
-        agentType: vscode.workspace
-          .getConfiguration('greybel')
-          .get<AgentType>('createIngame.agent'),
+        agentType: AgentType.C2Light,
         autoCompile: false,
-        postCommand: '',
         allowImport: false
       });
     } catch (err: any) {

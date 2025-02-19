@@ -55,9 +55,6 @@ You can also access these commands through the context menu for quick right-clic
 - **Autocomplete**: Activate/Deactivate
 - **Create in-game**
   - **Active**: Activate/Deactivate
-  - **Agent**: headless, message-hook
-  - **Mode**: local, public
-  - **Steam User**: Steam username
   - **Auto Compile**: Auto compile and delete source files
   - **Allow Import**: Enable allowImport on auto compile
 - **Diagnostic**: Activate/Deactivate
@@ -140,17 +137,7 @@ Building transforms and bundles your scripts in a way that makes them easy to im
 
 ### Auto create files in-game
 
-You can automatically create transpiled files in the game by enabling the "create-ingame" option. Additionally, you can choose between two agents. Depending on the selected agent, there are certain prerequisites to meet and behaviors to consider. Generally it is recommended to use message-hook if possible.
-
-#### Headless
-
-When using headless mode, you connect to the game without the native game client. Depending on your selected mode, either `local` or `public`, the agent will import files into either a single-player or multiplayer session.
-
-By default, `local` mode is selected. Note that for `local` to work, the game must have a single-player session running. In `public` mode, there is no need for the game client to be running.
-
-One important requirement is that a Steam account and password must be provided. The refresh token will be cached, so you won’t need to provide credentials continuously. You can clear the refresh token at any time using the "Clear secrets" command.
-
-**Note**: This agent may log you out of Grey Hack since the game only allows one active session at a time.
+You can automatically create transpiled files in the game by enabling the "create-ingame" option.
 
 #### Message Hook
 
@@ -179,8 +166,6 @@ The message-hook agent allows you to send messages to the game server through th
 With all that done you can now start the game and start either a single-player or multiplayer session. You'll be now able to sync files with the game without getting disconnected.
 
 Also, keep in mind that if you use BepInEx 6.x.x you'll use bleeding edge meaning that it won't be as stable as BepInEx 5.x.x leading to potential crashes. If you suffer too many crashes with 6.x.x may try out version 5.x.x!
-
-Additionally, you won't need to provide any Steam credentials nor do you need to select a mode.
 
 **Note**: For this agent to work you **have to have Grey Hack running**.
 
@@ -317,7 +302,7 @@ If you're not interested in the build functionality or need to upload many files
 
 This feature will also use the transpiler's "Ingame directory" setting as the in-game destination.
 
-**IMPORTANT**: Please read about the two available agent options [headless](#headless) and [message-hook](#message-hook). It is recommended to use [message-hook](#message-hook) but it requires to [setup BepInEx](#bepinex-5xx).
+**IMPORTANT**: Please keep in mind that you first need to setup the [message-hook](#message-hook) agent.
 
 ## Interpreter
 
