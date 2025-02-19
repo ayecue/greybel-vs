@@ -213,10 +213,6 @@
         {
           "command": "greybel.snippets",
           "when": "resourceLangId == greyscript"
-        },
-        {
-          "command": "greybel.clearSecrets",
-          "when": "resourceLangId == greyscript"
         }
       ]
     },
@@ -294,10 +290,6 @@
       {
         "command": "greybel.preview",
         "title": "Greybel: Preview output"
-      },
-      {
-        "command": "greybel.clearSecrets",
-        "title": "Greybel: Clear secrets"
       },
       {
         "command": "greybel.import",
