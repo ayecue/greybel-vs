@@ -8,7 +8,7 @@
     "email": "soerenwehmeier@googlemail.com"
   },
   "icon": "icon.png",
-  "version": "2.5.40",
+  "version": "2.5.41",
   "repository": {
     "type": "git",
     "url": "git@github.com:ayecue/greybel-vs.git"
@@ -527,12 +527,6 @@
           ],
           "default": null,
           "description": "Steam user. (only required for headless agent)"
-        },
-        "greybel.createIngame.postCommand": {
-          "type": "string",
-          "default": "",
-          "description": "Command which gets executed after creation of files. (only available for message-hook agent)",
-          "scope": "resource"
         }
       }
     },

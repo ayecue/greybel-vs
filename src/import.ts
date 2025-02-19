@@ -68,7 +68,6 @@ export function activate(context: ExtensionContext) {
           .getConfiguration('greybel')
           .get<AgentType>('createIngame.agent'),
         autoCompile: false,
-        postCommand: '',
         allowImport: false
       });
     } catch (err: any) {

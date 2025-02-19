@@ -61,7 +61,6 @@ export interface ImporterOptions {
   result: TranspilerParseResult;
   extensionContext: ExtensionContext;
   autoCompile: boolean;
-  postCommand: string;
   allowImport: boolean;
 }
 
@@ -73,7 +72,6 @@ class Importer {
   private mode: ImporterMode;
   private extensionContext: ExtensionContext;
   private autoCompile: boolean;
-  private postCommand: string;
   private allowImport: boolean;
 
   constructor(options: ImporterOptions) {
@@ -84,7 +82,6 @@ class Importer {
     this.mode = options.mode;
     this.extensionContext = options.extensionContext;
     this.autoCompile = options.autoCompile;
-    this.postCommand = options.postCommand;
     this.allowImport = options.allowImport;
   }
 
@@ -230,24 +227,6 @@ class Importer {
         ),
         ({ output }) => console.log(output)
       );
-    }
-
-    if (this.postCommand !== '') {
-      if (this.agentType === AgentType.C2Light) {
-        agent.tryToRun(null, 'cd ' + this.ingameDirectory, ({ output }) =>
-          console.log(output)
-        );
-        await wait(500);
-        agent.tryToRun(null, this.postCommand, ({ output }) =>
-          console.log(output)
-        );
-        await wait(500);
-        agent.terminal = null;
-      } else {
-        console.warn(
-          `Warning: Post command can only be executed when agent type is ${AgentType.C2Light}`
-        );
-      }
     }
 
     await agent.dispose();

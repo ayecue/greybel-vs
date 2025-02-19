@@ -135,8 +135,6 @@ export function activate(context: ExtensionContext) {
             .get<AgentType>('createIngame.agent'),
           autoCompile: config
             .get<boolean>('createIngame.autoCompile'),
-          postCommand: config
-            .get<string>('createIngame.postCommand'),
           allowImport: config
             .get<boolean>('createIngame.allowImport'),
         });
