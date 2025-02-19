@@ -26,5 +26,4 @@ styles
 !node_modules/node-json-stream
 #greybel-agent
 !node_modules/greybel-agent
-!node_modules/greybel-c2
 !node_modules/greybel-c2-light

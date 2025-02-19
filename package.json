@@ -564,7 +564,7 @@
     "color-convert": "^2.0.1",
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
-    "greybel-agent": "~1.8.2",
+    "greybel-agent": "~1.9.0",
     "greybel-gh-mock-intrinsics": "~5.5.8",
     "greybel-intrinsics": "~5.5.2",
     "greybel-languageserver": "~1.12.11",
