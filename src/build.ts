@@ -6,7 +6,7 @@ import vscode, {
 import { greyscriptMeta } from 'greyscript-meta';
 
 import { createParseResult } from './build/create-parse-result';
-import { AgentType, ImporterMode, executeImport } from './build/importer';
+import { AgentType, executeImport } from './build/importer';
 import { createInstaller } from './build/installer';
 import { createBasePath } from './helper/create-base-path';
 import { showCustomErrorMessage } from './helper/show-custom-error';
@@ -129,10 +129,7 @@ export function activate(context: ExtensionContext) {
           ingameDirectory: ingameDirectory.path,
           result,
           extensionContext: context,
-          mode: config
-            .get<ImporterMode>('createIngame.mode'),
-          agentType: config
-            .get<AgentType>('createIngame.agent'),
+          agentType: AgentType.C2Light,
           autoCompile: config
             .get<boolean>('createIngame.autoCompile'),
           allowImport: config

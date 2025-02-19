@@ -499,34 +499,6 @@
           "type": "boolean",
           "default": false,
           "description": "Enable allowImport on auto compile."
-        },
-        "greybel.createIngame.agent": {
-          "type": "string",
-          "enum": [
-            "headless",
-            "message-hook"
-          ],
-          "default": "headless",
-          "description": "Agent used for file import.",
-          "scope": "resource"
-        },
-        "greybel.createIngame.mode": {
-          "type": "string",
-          "enum": [
-            "local",
-            "public"
-          ],
-          "default": "local",
-          "description": "Creation mode. (only required for headless agent)",
-          "scope": "resource"
-        },
-        "greybel.createIngame.steamUser": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "default": null,
-          "description": "Steam user. (only required for headless agent)"
         }
       }
     },
