@@ -91,29 +91,6 @@ class Importer {
     );
   }
 
-  private getUsername(): PromiseLike<string> {
-    const username = vscode.workspace
-      .getConfiguration('greybel')
-      .get<string>('createIngame.steamUser');
-
-    if (username != null) {
-      return Promise.resolve(username);
-    }
-
-    return vscode.window.showInputBox({
-      title: 'Enter steam account name',
-      ignoreFocusOut: true
-    });
-  }
-
-  private getPassword(): PromiseLike<string> {
-    return vscode.window.showInputBox({
-      title: 'Enter steam password',
-      ignoreFocusOut: true,
-      password: true
-    });
-  }
-
   async createAgent(): Promise<any> {
     switch (this.agentType) {
       case AgentType.C2: {
