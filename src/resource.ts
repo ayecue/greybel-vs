@@ -4,16 +4,13 @@ import {
   ResourceProvider as TranspilerResourceProviderBase
 } from 'greybel-transpiler';
 import vscode, { Uri } from 'vscode';
-import { tryToDecode, tryToGet, tryToGetPath } from './helper/fs';
+import { tryToDecode, tryToGet } from './helper/fs';
+import { DocumentURIBuilder } from './helper/document-manager';
 
-const getBasePath = (source: string, target: string) => {
+const createDocumentUriBuilder = (source: string) => {
   const sourceUri = Uri.parse(source);
   const workspaceFolder = vscode.workspace.getWorkspaceFolder(sourceUri);
-  if (workspaceFolder == null) {
-    console.warn('Workspace folders is not available. Falling back to only relative paths.');
-    return Uri.joinPath(sourceUri, '..');
-  }
-  return target.startsWith('/') ? workspaceFolder.uri : Uri.joinPath(sourceUri, '..');
+  return new DocumentURIBuilder(Uri.joinPath(sourceUri, '..'), workspaceFolder.uri);
 };
 
 export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
@@ -23,10 +20,8 @@ export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
         source: string,
         target: string
       ): Promise<string> => {
-        const base = getBasePath(source, target);
-        const uri = Uri.joinPath(base, target);
-        const uriAlt = Uri.joinPath(base, `${target}.src`);
-        const result = await tryToGetPath(uri, uriAlt);
+        const documentUriBuilder = createDocumentUriBuilder(source);
+        const result = await documentUriBuilder.getPath(target);
         return result.toString();
       },
       has: async (target: string): Promise<boolean> => {
@@ -44,10 +39,8 @@ export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
 
 export class InterpreterResourceProvider extends InterpreterResourceHandler {
   async getTargetRelativeTo(source: string, target: string): Promise<string> {
-    const base = getBasePath(source, target);
-    const uri = Uri.joinPath(base, target);
-    const uriAlt = Uri.joinPath(base, `${target}.src`);
-    const result = await tryToGetPath(uri, uriAlt);
+    const documentUriBuilder = createDocumentUriBuilder(source);
+    const result = await documentUriBuilder.getPath(target);
     return result.toString();
   }
 
