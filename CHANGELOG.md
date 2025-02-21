@@ -1494,3 +1494,4 @@ All notable changes to this project will be documented in this file.
 ## [2.5.42] - 21.02.2025
 
 - decrease extension size
+- auto resolve file extensions
