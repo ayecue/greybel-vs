@@ -1490,3 +1490,7 @@ All notable changes to this project will be documented in this file.
 
 - deprecate post command feature due to exploiting
 - deprecate headless client due no further support
+
+## [2.5.42] - 21.02.2025
+
+- decrease extension size
