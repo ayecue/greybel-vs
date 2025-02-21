@@ -8,7 +8,7 @@
     "email": "soerenwehmeier@googlemail.com"
   },
   "icon": "icon.png",
-  "version": "2.5.41",
+  "version": "2.5.42",
   "repository": {
     "type": "git",
     "url": "git@github.com:ayecue/greybel-vs.git"
@@ -336,7 +336,7 @@
         "greybel.formatter": {
           "type": "boolean",
           "default": true,
-          "description": "Enable MiniScript formatter."
+          "description": "Enable GreyScript formatter."
         },
         "greybel.autocomplete": {
           "type": "boolean",
@@ -549,8 +549,8 @@
     ]
   },
   "dependencies": {
-    "@vscode/debugadapter": "^1.51.1",
-    "@vscode/debugprotocol": "^1.51.0",
+    "@vscode/debugadapter": "^1.68.0",
+    "@vscode/debugprotocol": "^1.68.0",
     "another-ansi": "^1.0.2",
     "ansi-escapes": "^4.3.2",
     "color-convert": "^2.0.1",
