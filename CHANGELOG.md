@@ -1499,3 +1499,5 @@ All notable changes to this project will be documented in this file.
 - use new client package in preparation of new message-hook version
 
 ## [2.6.1] - 22.02.2025
+
+- fix browser file auto extension resolve
