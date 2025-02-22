@@ -49,7 +49,7 @@ export function activate(context: ExtensionContext) {
 
         return {
           path: file.toString(),
-          content
+          content: content ?? ''
         };
       }));
 
