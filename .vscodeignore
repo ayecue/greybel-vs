@@ -25,5 +25,4 @@ styles
 #json-stream
 !node_modules/node-json-stream
 #greybel-agent
-!node_modules/greybel-agent
-!node_modules/greybel-c2-light
+!node_modules/greyhack-message-hook-client
