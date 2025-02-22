@@ -1501,3 +1501,7 @@ All notable changes to this project will be documented in this file.
 ## [2.6.1] - 22.02.2025
 
 - fix browser file auto extension resolve
+
+## [2.6.2] - 22.02.2025
+
+- support meta tags for import_code

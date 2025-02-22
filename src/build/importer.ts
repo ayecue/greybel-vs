@@ -1,5 +1,5 @@
-import GreyHackMessageHookClientPkg from 'greyhack-message-hook-client';
 import { TranspilerParseResult } from 'greybel-transpiler';
+import GreyHackMessageHookClientPkg from 'greyhack-message-hook-client';
 import path from 'path';
 import vscode, { ExtensionContext, Uri } from 'vscode';
 
@@ -93,10 +93,10 @@ class Importer {
     switch (this.agentType) {
       case AgentType.C2Light: {
         return new Agent({
-          warn: () => { },
-          error: () => { },
-          info: () => { },
-          debug: () => { }
+          warn: () => {},
+          error: () => {},
+          info: () => {},
+          debug: () => {}
         });
       }
     }
@@ -170,9 +170,7 @@ enum CommonImportErrorReason {
   NewGameVersion = 'A new game update is available.'
 }
 
-const reportFailure = (
-  failedItems: ImportResultFailure[]
-): void => {
+const reportFailure = (failedItems: ImportResultFailure[]): void => {
   const uniqueErrorReasons = new Set(failedItems.map((it) => it.reason));
 
   if (uniqueErrorReasons.size === 1) {

@@ -31,7 +31,7 @@ export function activate(context: ExtensionContext) {
 
     const dirtyFiles = await parseResult.getDirtyFiles(true);
 
-    await Promise.all(dirtyFiles.map((it) => it.textDocument.save()))
+    await Promise.all(dirtyFiles.map((it) => it.textDocument.save()));
 
     try {
       const config = vscode.workspace.getConfiguration('greybel');

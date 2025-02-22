@@ -1,4 +1,4 @@
-import { escapeMSString } from "./escape-ms-string";
+import { escapeMSString } from './escape-ms-string';
 
 const parseEnvVarsValue = (value: any): string => {
   if (typeof value === 'string') {
@@ -6,11 +6,11 @@ const parseEnvVarsValue = (value: any): string => {
   }
 
   return JSON.stringify(value);
-}
+};
 
 const parseEnvVarsValueEscaped = (value: any): string => {
   return escapeMSString(parseEnvVarsValue(value));
-}
+};
 
 export const parseEnvVars = (
   environmentVariablesObj: object,
