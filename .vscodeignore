@@ -20,10 +20,9 @@ node_modules
 scripts
 styles
 #languageserver
-!node_modules/greybel-languageserver
-!node_modules/greybel-languageserver-browser
+!node_modules/greybel-languageserver/index.js
+!node_modules/greybel-languageserver-browser/index.js
 #json-stream
 !node_modules/node-json-stream
 #greybel-agent
-!node_modules/greybel-agent
-!node_modules/greybel-c2-light
+!node_modules/greyhack-message-hook-client

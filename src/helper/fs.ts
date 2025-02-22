@@ -20,26 +20,51 @@ export class PseudoFS {
   }
 }
 
-export async function tryToGet(targetUri: Uri): Promise<Uint8Array | null> {
+export async function tryToGet(targetUri: Uri, unsafe: boolean = false): Promise<Uint8Array | null> {
   try {
     return await fs.readFile(targetUri);
   } catch (err) {
-    console.error(err);
+    if (!unsafe) console.error(err);
   }
 
   return null;
 }
 
-export async function tryToGetPath(
-  targetUri: Uri,
-  altTargetUri: Uri
-): Promise<Uri> {
-  if (await tryToGet(targetUri)) {
-    return targetUri;
-  } else if (await tryToGet(altTargetUri)) {
-    return altTargetUri;
+export function getWorkspaceFolderUri(source: Uri): Uri | null {
+  const uris = vscode.workspace.workspaceFolders;
+  return (
+    uris.find((folderUri) => source.path.startsWith(folderUri.uri.path))?.uri ?? null
+  );
+}
+
+export async function findExistingPath(
+  mainUri: Uri,
+  ...altUris: Uri[]
+): Promise<Uri | null> {
+  const mainItem = await tryToGet(mainUri, true);
+  if (mainItem != null) return mainUri;
+
+  if (altUris.length === 0) {
+    return null;
   }
-  return targetUri;
+
+  try {
+    const altItemUri = await Promise.any(
+      altUris.map(async (uri) => {
+        const item = await tryToGet(uri, true);
+        if (item != null) return uri;
+        throw new Error('Alternative path could not resolve');
+      })
+    );
+
+    if (altItemUri != null) {
+      return altItemUri;
+    }
+
+    return null;
+  } catch (err) {
+    return null;
+  }
 }
 
 export async function tryToDecode(targetUri: Uri): Promise<string> {

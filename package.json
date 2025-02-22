@@ -8,7 +8,7 @@
     "email": "soerenwehmeier@googlemail.com"
   },
   "icon": "icon.png",
-  "version": "2.5.41",
+  "version": "2.5.42",
   "repository": {
     "type": "git",
     "url": "git@github.com:ayecue/greybel-vs.git"
@@ -336,7 +336,7 @@
         "greybel.formatter": {
           "type": "boolean",
           "default": true,
-          "description": "Enable MiniScript formatter."
+          "description": "Enable GreyScript formatter."
         },
         "greybel.autocomplete": {
           "type": "boolean",
@@ -549,18 +549,18 @@
     ]
   },
   "dependencies": {
-    "@vscode/debugadapter": "^1.51.1",
-    "@vscode/debugprotocol": "^1.51.0",
+    "@vscode/debugadapter": "^1.68.0",
+    "@vscode/debugprotocol": "^1.68.0",
     "another-ansi": "^1.0.2",
     "ansi-escapes": "^4.3.2",
     "color-convert": "^2.0.1",
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
-    "greybel-agent": "~1.9.0",
+    "greyhack-message-hook-client": "~0.5.0",
     "greybel-gh-mock-intrinsics": "~5.5.8",
     "greybel-intrinsics": "~5.5.2",
-    "greybel-languageserver": "~1.12.11",
-    "greybel-languageserver-browser": "~1.8.11",
+    "greybel-languageserver": "~1.13.0",
+    "greybel-languageserver-browser": "~1.9.0",
     "greyscript-core": "~2.5.2",
     "greyscript-interpreter": "~2.5.2",
     "greyscript-meta": "~4.2.3",

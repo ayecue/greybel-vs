@@ -1,12 +1,11 @@
-import GreybelAgentPkg from 'greybel-agent';
+import GreyHackMessageHookClientPkg from 'greyhack-message-hook-client';
 import { TranspilerParseResult } from 'greybel-transpiler';
 import path from 'path';
 import vscode, { ExtensionContext, Uri } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
-import { wait } from '../helper/wait';
 import { generateAutoCompileCode } from './auto-compile-helper';
-const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg;
+const { Agent } = GreyHackMessageHookClientPkg;
 
 export enum ErrorResponseMessage {
   OutOfRam = 'I can not open the program. There is not enough RAM available. Close some program and try again.',
@@ -21,7 +20,6 @@ export enum ErrorResponseMessage {
 }
 
 export enum AgentType {
-  C2 = 'headless',
   C2Light = 'message-hook'
 }
 
@@ -93,11 +91,13 @@ class Importer {
 
   async createAgent(): Promise<any> {
     switch (this.agentType) {
-      case AgentType.C2: {
-        throw new Error('Headless mode is no longer supported.');
-      }
       case AgentType.C2Light: {
-        return new GreybelC2LightAgent([125, 150]);
+        return new Agent({
+          warn: () => { },
+          error: () => { },
+          info: () => { },
+          debug: () => { }
+        });
       }
     }
   }

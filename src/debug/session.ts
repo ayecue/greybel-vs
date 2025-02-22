@@ -59,8 +59,7 @@ interface IRuntimeStack {
 
 export class GreybelDebugSession
   extends LoggingDebugSession
-  implements DebugSessionLike
-{
+  implements DebugSessionLike {
   public threadID: number;
   public lastInstruction: Instruction | undefined;
   public breakpoints: Map<string, DebugProtocol.Breakpoint[]> = new Map();
@@ -207,9 +206,9 @@ export class GreybelDebugSession
       const params = this._useDefaultArgs
         ? this._defaultArgs
         : await vscode.window.showInputBox({
-            title: 'Enter execution parameters',
-            ignoreFocusOut: true
-          });
+          title: 'Enter execution parameters',
+          ignoreFocusOut: true
+        });
       const paramSegments =
         params && params.length > 0 ? params.split(' ') : [];
 
@@ -222,8 +221,7 @@ export class GreybelDebugSession
         this._out.terminal.print(
           useColor(
             'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
-              err.message
+            `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${err.message
             } at ${err.target}:${err.range?.start || 0}`
           )
         );
@@ -231,8 +229,7 @@ export class GreybelDebugSession
         this._out.terminal.print(
           useColor(
             'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
-              err.message
+            `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${err.message
             } in ${err.target}\n${err.stack}`
           )
         );
@@ -240,8 +237,7 @@ export class GreybelDebugSession
         this._out.terminal.print(
           useColor(
             'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
-              err.message
+            `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
             }\n${err.stack}`
           )
         );
@@ -421,7 +417,7 @@ export class GreybelDebugSession
       const stackFrame: IRuntimeStackFrame = {
         index,
         name: current.source.name, // use a word of the line as the stackframe name
-        file: current.source.path,
+        file: current.source.path, // source.path is fileUrl
         line: current.source.start.line,
         column: current.source.start.character
       };
@@ -454,12 +450,9 @@ export class GreybelDebugSession
 
         return sf;
       }),
-      // 4 options for 'totalFrames':
-      // omit totalFrames property: 	// VS Code has to probe/guess. Should result in a max. of two requests
-      totalFrames: stk.count // stk.count is the correct size, should result in a max. of two requests
-      // totalFrames: 1000000 			// not the correct size, should result in a max. of two requests
-      // totalFrames: endFrame + 20 	// dynamically increases the size with every requested chunk, results in paging
+      totalFrames: stk.count
     };
+
     this.sendResponse(response);
   }
 

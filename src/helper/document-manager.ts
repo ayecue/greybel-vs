@@ -4,7 +4,7 @@ import LRU from 'lru-cache';
 import { ASTBaseBlockWithScope } from 'miniscript-core';
 import vscode, { TextDocument, Uri } from 'vscode';
 
-import { tryToGetPath } from './fs';
+import { findExistingPath, getWorkspaceFolderUri } from './fs';
 
 export interface ParseResultOptions {
   documentManager: DocumentParseQueue;
@@ -17,13 +17,24 @@ export interface ParseResultOptions {
 export class DocumentURIBuilder {
   readonly workspaceFolderUri: Uri | null;
   readonly rootPath: Uri;
+  readonly fileExtensions: string[];
+
+  static async fromTextDocument(textDocument: TextDocument): Promise<DocumentURIBuilder> {
+    const workspaceFolderUri = getWorkspaceFolderUri(textDocument.uri);
+
+    return new DocumentURIBuilder(
+      Uri.joinPath(textDocument.uri, '..'),
+      workspaceFolderUri
+    );
+  }
 
   constructor(rootPath: Uri, workspaceFolderUri: Uri = null) {
     this.workspaceFolderUri = workspaceFolderUri;
     this.rootPath = rootPath;
+    this.fileExtensions = ['gs', 'ms', 'src'];
   }
 
-  getFromWorkspaceFolder(path: string): Uri {
+  private getFromWorkspaceFolder(path: string): Uri {
     if (this.workspaceFolderUri == null) {
       console.warn(
         'Workspace folders are not available. Falling back to only relative paths.'
@@ -34,8 +45,33 @@ export class DocumentURIBuilder {
     return Uri.joinPath(this.workspaceFolderUri, path);
   }
 
-  getFromRootPath(path: string): Uri {
+  private getFromRootPath(path: string): Uri {
     return Uri.joinPath(this.rootPath, path);
+  }
+
+  private getAlternativePaths(path: string): Uri[] {
+    if (path.startsWith('/')) {
+      return this.fileExtensions.map((ext) => {
+        return this.getFromWorkspaceFolder(`${path}.${ext}`);
+      });
+    }
+    return this.fileExtensions.map((ext) => {
+      return this.getFromRootPath(`${path}.${ext}`);
+    });
+  }
+
+  private getOriginalPath(path: string): Uri {
+    if (path.startsWith('/')) {
+      return this.getFromWorkspaceFolder(path);
+    }
+    return this.getFromRootPath(path);
+  }
+
+  getPath(path: string): Promise<Uri | null> {
+    return findExistingPath(
+      this.getOriginalPath(path),
+      ...this.getAlternativePaths(path)
+    );
   }
 }
 
@@ -60,7 +96,7 @@ export class ParseResult {
     return Uri.joinPath(this.textDocument.uri, '..');
   }
 
-  private getNativeImports(workspaceFolderUri: Uri = null): Uri[] {
+  private async getNativeImports(workspaceFolderUri: Uri = null): Promise<Uri[]> {
     if (this.document == null) {
       return [];
     }
@@ -69,14 +105,11 @@ export class ParseResult {
     const rootPath = this.getDirectory();
     const builder = new DocumentURIBuilder(rootPath, workspaceFolderUri);
 
-    return rootChunk.nativeImports
+    return Promise.all(rootChunk.nativeImports
       .filter((nativeImport) => nativeImport.directory)
-      .map((nativeImport) => {
-        if (nativeImport.directory.startsWith('/')) {
-          return builder.getFromWorkspaceFolder(nativeImport.directory);
-        }
-        return builder.getFromRootPath(nativeImport.directory);
-      });
+      .map(async (nativeImport) => {
+        return builder.getPath(nativeImport.directory);
+      }));
   }
 
   private async getImportsAndIncludes(
@@ -90,16 +123,7 @@ export class ParseResult {
     const rootPath = this.getDirectory();
     const builder = new DocumentURIBuilder(rootPath, workspaceFolderUri);
     const getPath = (path: string) => {
-      if (path.startsWith('/')) {
-        return tryToGetPath(
-          builder.getFromWorkspaceFolder(path),
-          builder.getFromWorkspaceFolder(`${path}.src`)
-        );
-      }
-      return tryToGetPath(
-        builder.getFromRootPath(path),
-        builder.getFromRootPath(`${path}.src`)
-      );
+      return builder.getPath(path);
     };
 
     return await Promise.all([
@@ -124,7 +148,7 @@ export class ParseResult {
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(
       this.textDocument.uri
     );
-    const nativeImports = this.getNativeImports(workspaceFolder?.uri);
+    const nativeImports = await this.getNativeImports(workspaceFolder?.uri);
     const importsAndIncludes = await this.getImportsAndIncludes(
       workspaceFolder?.uri
     );
