@@ -4,8 +4,8 @@ import { TextEncoderLite as TextEncoder } from 'text-encoder-lite';
 import vscode, { Uri } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
-import { generateAutoCompileCode } from './auto-compile-helper';
 import { escapeMSString } from '../helper/escape-ms-string';
+import { generateAutoCompileCode } from './auto-compile-helper';
 
 type ImportItem = {
   filepath: Uri;
@@ -152,8 +152,10 @@ class Installer {
       return {
         filepath: Uri.parse(target),
         ingameFilepath,
-        content: escapeMSString(code)
-          .replace(/import_code\(/gi, 'import"+"_"+"code(')
+        content: escapeMSString(code).replace(
+          /import_code\(/gi,
+          'import"+"_"+"code('
+        )
       };
     });
 

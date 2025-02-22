@@ -19,7 +19,9 @@ export class DocumentURIBuilder {
   readonly rootPath: Uri;
   readonly fileExtensions: string[];
 
-  static async fromTextDocument(textDocument: TextDocument): Promise<DocumentURIBuilder> {
+  static async fromTextDocument(
+    textDocument: TextDocument
+  ): Promise<DocumentURIBuilder> {
     const workspaceFolderUri = getWorkspaceFolderUri(textDocument.uri);
 
     return new DocumentURIBuilder(
@@ -96,7 +98,9 @@ export class ParseResult {
     return Uri.joinPath(this.textDocument.uri, '..');
   }
 
-  private async getNativeImports(workspaceFolderUri: Uri = null): Promise<Uri[]> {
+  private async getNativeImports(
+    workspaceFolderUri: Uri = null
+  ): Promise<Uri[]> {
     if (this.document == null) {
       return [];
     }
@@ -105,11 +109,13 @@ export class ParseResult {
     const rootPath = this.getDirectory();
     const builder = new DocumentURIBuilder(rootPath, workspaceFolderUri);
 
-    return Promise.all(rootChunk.nativeImports
-      .filter((nativeImport) => nativeImport.directory && nativeImport.eval)
-      .map(async (nativeImport) => {
-        return builder.getPath(nativeImport.directory);
-      }));
+    return Promise.all(
+      rootChunk.nativeImports
+        .filter((nativeImport) => nativeImport.directory && nativeImport.eval)
+        .map(async (nativeImport) => {
+          return builder.getPath(nativeImport.directory);
+        })
+    );
   }
 
   private async getImportsAndIncludes(

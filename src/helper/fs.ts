@@ -20,7 +20,10 @@ export class PseudoFS {
   }
 }
 
-export async function tryToGet(targetUri: Uri, unsafe: boolean = false): Promise<Uint8Array | null> {
+export async function tryToGet(
+  targetUri: Uri,
+  unsafe: boolean = false
+): Promise<Uint8Array | null> {
   try {
     return await fs.readFile(targetUri);
   } catch (err) {
@@ -33,7 +36,8 @@ export async function tryToGet(targetUri: Uri, unsafe: boolean = false): Promise
 export function getWorkspaceFolderUri(source: Uri): Uri | null {
   const uris = vscode.workspace.workspaceFolders;
   return (
-    uris.find((folderUri) => source.path.startsWith(folderUri.uri.path))?.uri ?? null
+    uris.find((folderUri) => source.path.startsWith(folderUri.uri.path))?.uri ??
+    null
   );
 }
 
@@ -67,7 +71,10 @@ export async function findExistingPath(
   }
 }
 
-export async function tryToDecode(targetUri: Uri, unsafe: boolean = false): Promise<string | null> {
+export async function tryToDecode(
+  targetUri: Uri,
+  unsafe: boolean = false
+): Promise<string | null> {
   const out = await tryToGet(targetUri, unsafe);
 
   if (out != null) {
