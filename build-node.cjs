@@ -21,9 +21,7 @@ const build = async () => {
         treeShaking: true,
         external: [
           'vscode',
-          'steam-user',
-          'node-json-stream',
-          'greybel-agent'
+          'greyhack-message-hook-client'
         ],
         define: {
           'process.env.NODE_ENV': '"production"',
