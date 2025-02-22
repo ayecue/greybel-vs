@@ -1495,3 +1495,4 @@ All notable changes to this project will be documented in this file.
 
 - decrease extension size
 - auto resolve file extensions
+- update BepInEx plugin dependencies - should be now compatible with latest 6.0.0 version
