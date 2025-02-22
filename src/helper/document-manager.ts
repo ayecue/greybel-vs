@@ -106,7 +106,7 @@ export class ParseResult {
     const builder = new DocumentURIBuilder(rootPath, workspaceFolderUri);
 
     return Promise.all(rootChunk.nativeImports
-      .filter((nativeImport) => nativeImport.directory)
+      .filter((nativeImport) => nativeImport.directory && nativeImport.eval)
       .map(async (nativeImport) => {
         return builder.getPath(nativeImport.directory);
       }));
