@@ -1497,3 +1497,5 @@ All notable changes to this project will be documented in this file.
 - auto resolve file extensions
 - update BepInEx plugin dependencies - should be now compatible with latest 6.0.0 version
 - use new client package in preparation of new message-hook version
+
+## [2.6.1] - 22.02.2025

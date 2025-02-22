@@ -67,13 +67,13 @@ export async function findExistingPath(
   }
 }
 
-export async function tryToDecode(targetUri: Uri): Promise<string> {
-  const out = await tryToGet(targetUri);
+export async function tryToDecode(targetUri: Uri, unsafe: boolean = false): Promise<string | null> {
+  const out = await tryToGet(targetUri, unsafe);
 
-  if (out) {
+  if (out != null) {
     const content = new TextDecoder().decode(out);
     return crlf(content, LF);
   }
 
-  return '';
+  return null;
 }

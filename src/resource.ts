@@ -27,8 +27,9 @@ export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
       has: async (target: string): Promise<boolean> => {
         return !!(await tryToGet(Uri.parse(target)));
       },
-      get: (target: string): Promise<string> => {
-        return tryToDecode(Uri.parse(target));
+      get: async (target: string): Promise<string> => {
+        const result = await tryToDecode(Uri.parse(target));
+        return result ?? '';
       },
       resolve: (target: string): Promise<string> => {
         return Promise.resolve(Uri.parse(target).toString());
@@ -48,8 +49,9 @@ export class InterpreterResourceProvider extends InterpreterResourceHandler {
     return !!(await tryToGet(Uri.parse(target)));
   }
 
-  get(target: string): Promise<string> {
-    return tryToDecode(Uri.parse(target));
+  async get(target: string): Promise<string> {
+    const result = await tryToDecode(Uri.parse(target));
+    return result ?? '';
   }
 
   resolve(target: string): Promise<string> {
