@@ -1505,3 +1505,7 @@ All notable changes to this project will be documented in this file.
 ## [2.6.2] - 22.02.2025
 
 - support meta tags for import_code
+
+## [2.6.3] - 23.02.2025
+
+- fixed issue with documentation comments where omitting the return type but including other tags resulted in no type being assigned
