@@ -21,7 +21,7 @@ export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
         target: string
       ): Promise<string> => {
         const documentUriBuilder = createDocumentUriBuilder(source);
-        const result = await documentUriBuilder.getPath(target);
+        const result = await documentUriBuilder.getPathUseReturnOriginal(target);
         return result.toString();
       },
       has: async (target: string): Promise<boolean> => {
@@ -41,7 +41,7 @@ export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
 export class InterpreterResourceProvider extends InterpreterResourceHandler {
   async getTargetRelativeTo(source: string, target: string): Promise<string> {
     const documentUriBuilder = createDocumentUriBuilder(source);
-    const result = await documentUriBuilder.getPath(target);
+    const result = await documentUriBuilder.getPathUseReturnOriginal(target);
     return result.toString();
   }
 

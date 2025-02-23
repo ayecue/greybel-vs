@@ -69,6 +69,10 @@ export class DocumentURIBuilder {
     return this.getFromRootPath(path);
   }
 
+  async getPathUseReturnOriginal(path: string): Promise<Uri | null> {
+    return (await this.getPath(path)) ?? this.getOriginalPath(path);
+  }
+
   getPath(path: string): Promise<Uri | null> {
     return findExistingPath(
       this.getOriginalPath(path),
@@ -113,7 +117,7 @@ export class ParseResult {
       rootChunk.nativeImports
         .filter((nativeImport) => nativeImport.directory && nativeImport.eval)
         .map(async (nativeImport) => {
-          return builder.getPath(nativeImport.directory);
+          return builder.getPathUseReturnOriginal(nativeImport.directory);
         })
     );
   }
@@ -129,7 +133,7 @@ export class ParseResult {
     const rootPath = this.getDirectory();
     const builder = new DocumentURIBuilder(rootPath, workspaceFolderUri);
     const getPath = (path: string) => {
-      return builder.getPath(path);
+      return builder.getPathUseReturnOriginal(path);
     };
 
     return await Promise.all([
