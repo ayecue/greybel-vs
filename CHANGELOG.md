@@ -1509,3 +1509,8 @@ All notable changes to this project will be documented in this file.
 ## [2.6.3] - 23.02.2025
 
 - fixed issue with documentation comments where omitting the return type but including other tags resulted in no type being assigned
+
+
+## [2.6.4] - 23.02.2025
+
+- fixed behaviour of path resolve if path points to non existing file
