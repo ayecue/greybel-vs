@@ -1514,3 +1514,8 @@ All notable changes to this project will be documented in this file.
 ## [2.6.4] - 23.02.2025
 
 - fixed behaviour of path resolve if path points to non existing file
+
+## [2.6.5] - 25.02.2025
+
+- update aireplay documentation
+- fixed issue with documentation comments where @description was still visible after the recent changes
