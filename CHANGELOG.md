@@ -1519,3 +1519,8 @@ All notable changes to this project will be documented in this file.
 
 - update aireplay documentation
 - fixed issue with documentation comments where @description was still visible after the recent changes
+
+## [2.6.6] - 01.03.2025
+
+- update api docs to use optimised version
+- fixed issue with documentation comments where @example was still visible after the recent changes - thanks for reporting to [@redit0](https://github.com/redit0)
