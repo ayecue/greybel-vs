@@ -1524,3 +1524,7 @@ All notable changes to this project will be documented in this file.
 
 - update api docs to use optimised version
 - fixed issue with documentation comments where @example was still visible after the recent changes - thanks for reporting to [@redit0](https://github.com/redit0)
+
+## [2.6.7] - 02.03.2025
+
+- fixed issue with workspace strategy which resulted in errors due to toposort not being able to handle unknown nodes - thanks for reporting to [@Tofferbear](https://github.com/Tofferbear)
