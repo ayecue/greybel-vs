@@ -14,6 +14,7 @@ function shareLink(type: string, methodName: string) {
 const root = createRoot(document.querySelector('#root')!);
 root.render(
   React.createElement(WebAppView, {
+    defaultTags: ['detached'],
     externalLinks: [],
     filterInit: (window as any).filterInit || '',
     scrollToInit: '',
