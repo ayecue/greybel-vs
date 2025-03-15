@@ -1542,4 +1542,4 @@ All notable changes to this project will be documented in this file.
 
 ## [2.6.10] - 15.03.2025
 
-- fixed is_closed meta description
+- fixed is_closed meta description - thanks for reporting to Ephy
