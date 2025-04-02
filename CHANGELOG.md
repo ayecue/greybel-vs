@@ -1553,3 +1553,7 @@ All notable changes to this project will be documented in this file.
 
 - fixed values to return identical instance of list
 - fixed sort ascending and descending
+
+## [2.7.0] - 02.04.2025
+
+- support experimental version
