@@ -1708,3 +1708,7 @@ All notable changes to this project will be documented in this file.
 - separated resource loading from dependency tree creation in transpiler
 - run resource loading for transpiler in parallel for better performance
 - optimized the transpiler to fetch metadata only when needed
+
+## [2.7.x] - xx.xx.2025
+
+- support experimental version
