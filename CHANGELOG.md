@@ -1683,3 +1683,7 @@ All notable changes to this project will be documented in this file.
 - fixed display of type definitions for exported namespaces when using #import (applies to both type analyzer strategies)
 - resolved issues with nested #import statements failing to recognize exported namespaces (applies to both type analyzer strategies)
 - updated LRU cache dependency
+
+## [2.7.x] - xx.xx.2025
+
+- support experimental version
