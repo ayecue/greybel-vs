@@ -1702,3 +1702,7 @@ All notable changes to this project will be documented in this file.
 - updated message-hook-client regarding login payload
 - significantly reduced build time, for projects with a lot of small files, by caching I/O operations - thanks for reporting to IDelta
 - prevented unnecessary deletion retries during auto-compile - thanks for reporting to Dough San and IDelta
+
+## [2.7.x] - xx.xx.2025
+
+- support experimental version
