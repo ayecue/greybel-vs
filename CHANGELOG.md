@@ -1724,3 +1724,8 @@ All notable changes to this project will be documented in this file.
 ## [2.6.46] - 09.08.2025
 
 - resolve union types properly if only one variant is available in type analyser
+- fix doubled occurrences of globals, outer, params and locals
+
+## [2.7.x] - xx.xx.2025
+
+- support experimental version
