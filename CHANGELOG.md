@@ -1769,3 +1769,9 @@ All notable changes to this project will be documented in this file.
 
 - allow overidding of globals, locals and outer in interpreter runtime
 - remove check on map.push in case of already existing key to emulate in-game behaviour
+- improve binary expression type infer (related to type analyser)
+- improve for loop iterator type infer (related to type analyser)
+
+## [2.7.x] - xx.xx.2025
+
+- support experimental version
