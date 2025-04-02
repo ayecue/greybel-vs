@@ -5,7 +5,8 @@ import vscode, { ExtensionContext, Uri } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
 import { generateAutoCompileCode } from './auto-compile-helper';
-// const { Agent } = GreyHackMessageHookClientPkg;
+import { randomString } from '../helper/random-string';
+import { generateAutoGenerateFoldersCode } from './auto-generate-folders';
 
 export enum ErrorResponseMessage {
   OutOfRam = 'I can not open the program. There is not enough RAM available. Close some program and try again.',
@@ -48,8 +49,21 @@ export interface ImporterOptions {
 }
 
 class Importer {
+  static readonly BlockingErrorMessages = new Set<string>([
+    ErrorResponseMessage.OutOfRam,
+    ErrorResponseMessage.DesktopUI,
+    ErrorResponseMessage.CanOnlyRunOnComputer,
+    ErrorResponseMessage.CannotBeExecutedRemotely,
+    ErrorResponseMessage.CannotLaunch,
+    ErrorResponseMessage.NotAttached,
+    ErrorResponseMessage.DeviceNotFound,
+    ErrorResponseMessage.NoInternet,
+    ErrorResponseMessage.InvalidCommand
+  ]);
+
   private importRefs: Map<string, ImportItem>;
   private target: Uri;
+  private agent: any;
   private port: number;
   private ingameDirectory: string;
   private extensionContext: ExtensionContext;
@@ -57,6 +71,15 @@ class Importer {
   private allowImport: boolean;
 
   constructor(options: ImporterOptions) {
+    this.agent = new Agent(
+      {
+        warn: () => {},
+        error: () => {},
+        info: () => {},
+        debug: () => {}
+      },
+      this.port
+    );
     this.target = options.target;
     this.port = options.port;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
@@ -85,24 +108,40 @@ class Importer {
     );
   }
 
-  async createAgent(): Promise<any> {
-    return new Agent(
-      {
-        warn: () => {},
-        error: () => {},
-        info: () => {},
-        debug: () => {}
-      },
-      this.port
-    );
+  private isBlockingError(message: string): boolean {
+    return Importer.BlockingErrorMessages.has(message);
   }
 
-  async import(): Promise<ImportResult[]> {
-    const agent = await this.createAgent();
+  private async startDefaultTerminal(): Promise<void> {
+    const bashFile = await this.agent.tryToGetFileEntitiy('/bin/bash');
+
+    if (bashFile) {
+      const tmpBashFileName = randomString(5);
+
+      await this.agent.tryToMoveFile('/bin/bash', tmpBashFileName, '/bin');
+      await this.agent.getTerminal();
+      await this.agent.tryToMoveFile(`/bin/${tmpBashFileName}`, 'bash', '/bin');
+    }
+  }
+
+  private async prepareFolders(): Promise<boolean> {
+    const ingamePaths = Array.from(this.importRefs.values()).map((it) => it.ingameFilepath);
+    const response = await this.agent.tryToEvaluate(
+      generateAutoGenerateFoldersCode(
+        this.ingameDirectory,
+        ingamePaths
+      ),
+      (output) => console.log(output)
+    );
+
+    return response.success;
+  }
+
+  private async processImportRefs(): Promise<ImportResult[]> {
     const results: ImportResult[] = [];
 
     for (const item of this.importRefs.values()) {
-      const response = await agent.tryToCreateFile(
+      const response = await this.agent.tryToCreateFile(
         this.ingameDirectory + path.posix.dirname(item.ingameFilepath),
         path.basename(item.ingameFilepath),
         item.content
@@ -118,45 +157,56 @@ class Importer {
           reason: response.message
         });
 
-        switch (response.message) {
-          case ErrorResponseMessage.OutOfRam:
-          case ErrorResponseMessage.DesktopUI:
-          case ErrorResponseMessage.CanOnlyRunOnComputer:
-          case ErrorResponseMessage.CannotBeExecutedRemotely:
-          case ErrorResponseMessage.CannotLaunch:
-          case ErrorResponseMessage.NotAttached:
-          case ErrorResponseMessage.DeviceNotFound:
-          case ErrorResponseMessage.NoInternet:
-          case ErrorResponseMessage.InvalidCommand: {
-            console.log(`Importing got aborted due to ${response.message}`);
-            return results;
-          }
-          default: {
-            console.error(
-              `Importing of ${item.ingameFilepath} failed due to ${response.message}`
-            );
-          }
+        if (this.isBlockingError(response.message)) {
+          console.log(`Importing got aborted due to ${response.message}`);
+          return results;
         }
+
+        console.error(
+          `Importing of ${item.ingameFilepath} failed due to ${response.message}`
+        );
       }
     }
 
-    if (this.autoCompile) {
-      const rootRef = this.importRefs.get(this.target.toString());
+    return results;
+  }
 
-      await agent.tryToEvaluate(
-        generateAutoCompileCode(
-          this.ingameDirectory,
-          rootRef.ingameFilepath,
-          Array.from(this.importRefs.values()).map((it) => it.ingameFilepath),
-          this.allowImport
-        ),
-        ({ output }) => console.log(output)
-      );
+  private async executeAutoCompile(): Promise<boolean> {
+    const rootRef = this.importRefs.get(this.target.toString());
+    const ingamePaths = Array.from(this.importRefs.values()).map((it) => it.ingameFilepath);
+    const response = await this.agent.tryToEvaluate(
+      generateAutoCompileCode(
+        this.ingameDirectory,
+        rootRef.ingameFilepath,
+        ingamePaths,
+        this.allowImport
+      ),
+      (output) => console.log(output)
+    );
+
+    return response.success;
+  }
+
+  async import(): Promise<ImportResult[]> {
+    await this.startDefaultTerminal();
+
+    const preperationResult = await this.prepareFolders();
+
+    if (!preperationResult) {
+      console.error('Failed to generate ingame directories');
+      await this.agent.dispose();
+      return [];
     }
 
-    await agent.dispose();
+    const importResults = await this.processImportRefs()
 
-    return results;
+    if (this.autoCompile) {
+      await this.executeAutoCompile()
+    }
+
+    await this.agent.dispose();
+
+    return importResults;
   }
 }
 
