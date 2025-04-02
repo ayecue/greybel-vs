@@ -1691,3 +1691,7 @@ All notable changes to this project will be documented in this file.
 ## [2.6.40] - 06.07.2025
 
 - added tutorial video on setting up the extension and installing the message-hook plugin - huge thanks to [@redit0](https://github.com/redit0)
+
+## [2.7.x] - xx.xx.2025
+
+- support experimental version
