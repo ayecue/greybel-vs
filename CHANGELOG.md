@@ -1666,3 +1666,7 @@ All notable changes to this project will be documented in this file.
 ## [2.6.35] - 03.06.2025
 
 - use fs path in in-game environment debugger as well to ensure resources are correctly found on Windows - related to [#337](https://github.com/ayecue/greybel-vs/issues/337)
+
+## [2.7.x] - xx.xx.2025
+
+- support experimental version
