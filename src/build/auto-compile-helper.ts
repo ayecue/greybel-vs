@@ -12,18 +12,15 @@ export const generateAutoCompileCode = (
       tryGetFile = function(pc, path, maxTries = 100)
         handle = File(pc, path)
         tries = 0
-
         while (handle == null)
           if (tries > maxTries) then
             break
           end if
-
           handle = File(pc, path)
           tries = tries + 1
           print("Failed to get file """ + path + """. (" + tries + "/" + maxTries + " tries)")
           wait(0.1)
         end while
-
         return handle
       end function
 

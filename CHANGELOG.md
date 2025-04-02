@@ -1656,3 +1656,7 @@ All notable changes to this project will be documented in this file.
 
 - use BepInEx threading helper instead of directly accessing the Unity thread to prevent race conditions in the message hook
 - update assembly to latest version
+
+## [2.7.x] - xx.xx.2025
+
+- support experimental version
