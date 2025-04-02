@@ -1559,3 +1559,7 @@ All notable changes to this project will be documented in this file.
 - add new debugger which is able to interact with game environment (message-hook has to be updated)
 - make upload agent port configurable
 - make interpreter agent port configurable
+
+## [2.7.0] - 02.04.2025
+
+- support experimental version
