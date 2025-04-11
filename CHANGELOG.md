@@ -1548,3 +1548,8 @@ All notable changes to this project will be documented in this file.
 
 - fixed program_path to return current program path
 - fixed launch_path to return original program path
+
+## [2.6.12] - 12.04.2025
+
+- fixed values to return identical instance of list
+- fixed sort ascending and descending
