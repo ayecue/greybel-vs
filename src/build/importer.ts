@@ -5,6 +5,7 @@ import vscode, { ExtensionContext, Uri } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
 import { generateAutoCompileCode } from './auto-compile-helper';
+import { randomString } from '../helper/random-string';
 // const { Agent } = GreyHackMessageHookClientPkg;
 
 export enum ErrorResponseMessage {
@@ -142,6 +143,18 @@ class Importer {
 
     if (this.autoCompile) {
       const rootRef = this.importRefs.get(this.target.toString());
+      const bashFile = await agent.tryToGetFileEntitiy('/bin/bash');
+
+      if (bashFile) {
+        const tmpBashFileName = randomString(5);
+
+        await agent.tryToMoveFile('/bin/bash', tmpBashFileName, '/bin');
+        await agent.getTerminal();
+        await agent.tryToMoveFile(`/bin/${tmpBashFileName}`, 'bash', '/bin');
+        await agent.disposeEditor();
+      } else {
+        await agent.disposeEditor();
+      }
 
       await agent.tryToEvaluate(
         generateAutoCompileCode(
@@ -150,7 +163,7 @@ class Importer {
           Array.from(this.importRefs.values()).map((it) => it.ingameFilepath),
           this.allowImport
         ),
-        ({ output }) => console.log(output)
+        (output) => console.log(output)
       );
     }
 
