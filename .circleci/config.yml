@@ -29,11 +29,11 @@ jobs:
           name: Determining package version
           command: echo 'export PACKAGE_VERSION=$(node -pe "require(\"./package.json\").version")' >> $BASH_ENV
       - run:
-          name: Publish extension to Open VSX
-          command: ./node_modules/.bin/ovsx publish -p ${OPEN_VSX_TOKEN}
-      - run:
           name: Publish extension to MS Marketplace
           command: ./node_modules/.bin/vsce publish -p ${VSCE_TOKEN} ${PACKAGE_VERSION}
+      - run:
+          name: Publish extension to Open VSX
+          command: ./node_modules/.bin/ovsx publish -p ${OPEN_VSX_TOKEN}
 
 workflows:
   main:
