@@ -1,6 +1,7 @@
 import * as Net from 'net';
 
-import { GreybelDebugSession } from './session';
+import { GreybelDebugSession } from './local/session';
+import { AgentDebugSession } from './agent/session';
 
 // first parse command line arguments to see whether the debug adapter should run as a server
 let port = 0;
@@ -20,13 +21,13 @@ if (port > 0) {
     socket.on('end', () => {
       console.error('>> client connection closed\n');
     });
-    const session = new GreybelDebugSession();
+    const session = new AgentDebugSession();
     session.setRunAsServer(true);
     session.start(socket, socket);
   }).listen(port);
 } else {
   // start a single session that communicates via stdin/stdout
-  const session = new GreybelDebugSession();
+  const session = new AgentDebugSession();
   process.on('SIGTERM', () => {
     session.shutdown();
   });

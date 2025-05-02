@@ -1,11 +1,11 @@
 import { TranspilerParseResult } from 'greybel-transpiler';
-import GreyHackMessageHookClientPkg from 'greyhack-message-hook-client';
+import { GameAgent as Agent } from 'greyhack-message-hook-client';
 import path from 'path';
 import vscode, { ExtensionContext, Uri } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
 import { generateAutoCompileCode } from './auto-compile-helper';
-const { Agent } = GreyHackMessageHookClientPkg;
+// const { Agent } = GreyHackMessageHookClientPkg;
 
 export enum ErrorResponseMessage {
   OutOfRam = 'I can not open the program. There is not enough RAM available. Close some program and try again.',
@@ -93,10 +93,10 @@ class Importer {
     switch (this.agentType) {
       case AgentType.C2Light: {
         return new Agent({
-          warn: () => {},
-          error: () => {},
-          info: () => {},
-          debug: () => {}
+          warn: () => { },
+          error: () => { },
+          info: () => { },
+          debug: () => { }
         });
       }
     }

@@ -11,33 +11,18 @@ import {
 import { DebugProtocol } from '@vscode/debugprotocol';
 import { ModifierType } from 'another-ansi';
 import {
-  createGHMockEnv,
-  GHMockIntrinsicEnv,
-  init as initGHIntrinsics
-} from 'greybel-gh-mock-intrinsics';
-import {
-  ContextType,
-  CustomValue,
-  HandlerContainer,
   Instruction,
-  ObjectValue,
-  OperationContext,
   PrepareError,
   RuntimeError
 } from 'greybel-interpreter';
-import { init as initIntrinsics } from 'greybel-intrinsics';
-import { Interpreter } from 'greyscript-interpreter';
 import vscode, { Uri } from 'vscode';
 
-import { PseudoFS } from '../helper/fs';
-import { parseEnvVars } from '../helper/parse-env-vars';
-import { showCustomErrorMessage } from '../helper/show-custom-error';
-import { ansiProvider, useColor } from '../helper/text-mesh-transform';
-import { getPreviewInstance } from '../preview';
-import { InterpreterResourceProvider } from '../resource';
-import { GrebyelDebugger, GrebyelPseudoDebugger } from './debugger';
-import { VSOutputHandler } from './output';
-import { DebugSessionLike } from './types';
+import { PseudoFS } from '../../helper/fs';
+import { showCustomErrorMessage } from '../../helper/show-custom-error';
+import { ansiProvider, useColor } from '../../helper/text-mesh-transform';
+import { getPreviewInstance } from '../../preview';
+import { DebugSessionLike } from '../types';
+import { SessionHandler } from './handler';
 
 interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
   program: string;
@@ -57,33 +42,27 @@ interface IRuntimeStack {
   frames: IRuntimeStackFrame[];
 }
 
-export class GreybelDebugSession
+export class AgentDebugSession
   extends LoggingDebugSession
-  implements DebugSessionLike
-{
+  implements DebugSessionLike {
   public threadID: number;
-  public lastInstruction: Instruction | undefined;
   public breakpoints: Map<string, DebugProtocol.Breakpoint[]> = new Map();
 
-  private _runtime: Interpreter;
-  private _env: GHMockIntrinsicEnv;
+  private _runtime: SessionHandler;
   private _breakpointIncrement: number = 0;
   private _restart: boolean = false;
-  private _out: VSOutputHandler;
+  private _environmentVariables: Record<string, string>;
 
   private _useDefaultArgs: boolean = false;
   private _defaultArgs: string = '';
   private _silenceErrorPopups: boolean = false;
 
   public constructor() {
-    super('greybel-debug.txt');
+    super('agent-debug.txt');
 
     // this debugger uses zero-based lines and columns
     const me = this;
     const config = vscode.workspace.getConfiguration('greybel');
-    const seed = config.get<string>('interpreter.seed');
-    const environmentVariables =
-      config.get<object>('interpreter.environmentVariables') || {};
     const hideUnsupportedTextMeshProRichTextTags =
       config.get<boolean>(
         'interpreter.hideUnsupportedTextMeshProRichTextTags'
@@ -98,22 +77,8 @@ export class GreybelDebugSession
     this._silenceErrorPopups = config.get<boolean>(
       'interpreter.silenceErrorPopups'
     );
-    this._out = new VSOutputHandler(hideUnsupportedTextMeshProRichTextTags);
-    this._runtime = new Interpreter({
-      handler: new HandlerContainer({
-        resourceHandler: new InterpreterResourceProvider(),
-        outputHandler: this._out
-      }),
-      debugger: new GrebyelDebugger(me),
-      environmentVariables: parseEnvVars(environmentVariables)
-    });
-    this._env = createGHMockEnv(this._runtime, {
-      seed
-    });
-
-    this._runtime.setApi(
-      initIntrinsics(initGHIntrinsics(new ObjectValue(), this._env))
-    );
+    this._runtime = new SessionHandler(this, hideUnsupportedTextMeshProRichTextTags);
+    this._environmentVariables = config.get<Record<string, string>>('interpreter.environmentVariables') || {}
   }
 
   /**
@@ -192,14 +157,6 @@ export class GreybelDebugSession
     const uri = Uri.parse(args.program);
 
     getPreviewInstance().clear();
-    me._runtime.debugMode = !args.noDebug;
-    me._runtime.setTarget(uri.toString());
-    me._runtime.setDebugger(
-      args.noDebug ? new GrebyelPseudoDebugger() : new GrebyelDebugger(me)
-    );
-    me._env.getLocal().programPath.content =
-      await me._runtime.handler.resourceHandler.get(uri.toString());
-
     me._restart = false;
 
     // start the program in the runtime
@@ -207,41 +164,38 @@ export class GreybelDebugSession
       const params = this._useDefaultArgs
         ? this._defaultArgs
         : await vscode.window.showInputBox({
-            title: 'Enter execution parameters',
-            ignoreFocusOut: true
-          });
+          title: 'Enter execution parameters',
+          ignoreFocusOut: true
+        });
       const paramSegments =
         params && params.length > 0 ? params.split(' ') : [];
 
-      me._runtime.params = paramSegments;
-      await me._runtime.run();
-      console.debug('Open handles', me._runtime.vm.getOpenHandles());
+      await me._runtime.start(uri, paramSegments, !args.noDebug, this._environmentVariables);
+      await me._runtime.waitForFinished();
+
       me.sendResponse(response);
     } catch (err: any) {
       if (err instanceof PrepareError) {
-        this._out.terminal.print(
+        this._runtime.outputHandler.terminal.print(
           useColor(
             'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
-              err.message
+            `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${err.message
             } at ${err.target}:${err.range?.start || 0}`
           )
         );
       } else if (err instanceof RuntimeError) {
-        this._out.terminal.print(
+        this._runtime.outputHandler.terminal.print(
           useColor(
             'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
-              err.message
+            `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${err.message
             } in ${err.target}\n${err.stack}`
           )
         );
       } else {
-        this._out.terminal.print(
+        this._runtime.outputHandler.terminal.print(
           useColor(
             'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
-              err.message
+            `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
             }\n${err.stack}`
           )
         );
@@ -283,27 +237,23 @@ export class GreybelDebugSession
     _request?: DebugProtocol.Request
   ): Promise<void> {
     const me = this;
-    const frame = me._runtime.vm.getFrame();
+    const breakpoint = me._runtime.getLastBreakpoint();
     const variables: DebugProtocol.Variable[] = [];
-    const setVariables = (current: OperationContext, ref: number) => {
-      current.scope.value.forEach((item: CustomValue, name: CustomValue) => {
+    const setVariables = (current: Record<string, string>, ref: number) => {
+      Object.entries(current).forEach(([key, value]) => {
         const v: DebugProtocol.Variable = {
-          name: name.toString(),
-          value: item.toString(),
-          type: item.getCustomType(),
+          name: key,
+          value: value.toString(),
+          type: typeof value,
           variablesReference: ref,
-          evaluateName: '$' + name
+          evaluateName: '$' + key
         };
 
         variables.push(v);
       });
     };
 
-    if (frame && frame.type !== ContextType.Global) {
-      setVariables(frame, 0);
-    }
-
-    setVariables(me._runtime.globalContext, 0);
+    setVariables(breakpoint.variables, 0);
 
     response.body = {
       variables
@@ -315,7 +265,7 @@ export class GreybelDebugSession
     response: DebugProtocol.ContinueResponse,
     _args: DebugProtocol.ContinueArguments
   ): void {
-    this._runtime.debugger.setBreakpoint(false);
+    this._runtime.setDebugMode(false);
     this.sendResponse(response);
   }
 
@@ -323,7 +273,7 @@ export class GreybelDebugSession
     response: DebugProtocol.NextResponse,
     _args: DebugProtocol.NextArguments
   ): void {
-    this._runtime.debugger.next();
+    this._runtime.goToNextLine();
     this.sendResponse(response);
   }
 
@@ -332,10 +282,10 @@ export class GreybelDebugSession
     _args: DebugProtocol.DisconnectArguments,
     _request?: DebugProtocol.Request
   ): Promise<void> {
-    this._runtime.debugger.setBreakpoint(false);
+    this._runtime.setDebugMode(false);
 
     try {
-      await this._runtime.exit();
+      await this._runtime.stop();
     } catch (err: any) {
       console.warn(`WARNING: ${err.message}`);
     }
@@ -349,7 +299,7 @@ export class GreybelDebugSession
     _args: DebugProtocol.PauseArguments,
     _request?: DebugProtocol.Request
   ): void {
-    this._runtime.debugger.setBreakpoint(true);
+    this._runtime.setDebugMode(true);
     this.sendResponse(response);
   }
 
@@ -358,11 +308,11 @@ export class GreybelDebugSession
     _args: DebugProtocol.RestartArguments,
     _request?: DebugProtocol.Request
   ): Promise<void> {
-    this._runtime.debugger.setBreakpoint(false);
+    this._runtime.setDebugMode(false);
 
     try {
       this._restart = true;
-      await this._runtime.exit();
+      await this._runtime.stop();
     } catch (err: any) {
       console.warn(`WARNING: ${err.message}`);
     }
@@ -375,10 +325,10 @@ export class GreybelDebugSession
     _args: DebugProtocol.TerminateArguments,
     _request?: DebugProtocol.Request
   ): Promise<void> {
-    this._runtime.debugger.setBreakpoint(false);
+    this._runtime.setDebugMode(false);
 
     try {
-      await this._runtime.exit();
+      await this._runtime.stop();
     } catch (err: any) {
       console.warn(`WARNING: ${err.message}`);
     }
@@ -391,8 +341,7 @@ export class GreybelDebugSession
     args: DebugProtocol.EvaluateArguments
   ): Promise<void> {
     try {
-      this._runtime.debugger.setBreakpoint(false);
-      await this._runtime.injectInLastContext(args.expression);
+      await this._runtime.injectCode(args.expression);
 
       response.body = {
         result: `Execution of ${args.expression} was successful.`,
@@ -403,8 +352,6 @@ export class GreybelDebugSession
         result: err.toString(),
         variablesReference: 0
       };
-    } finally {
-      this._runtime.debugger.setBreakpoint(true);
     }
 
     this.sendResponse(response);
@@ -413,17 +360,17 @@ export class GreybelDebugSession
   public getStack(): IRuntimeStack {
     const me = this;
     const frames: IRuntimeStackFrame[] = [];
-    const instructions = me._runtime.vm.getStacktrace();
+    const breakpoint = me._runtime.getLastBreakpoint();
 
-    for (let index = instructions.length - 1; index >= 0; index--) {
-      const current = instructions[index];
+    for (let index = breakpoint.stacktrace.length - 1; index >= 0; index--) {
+      const current = breakpoint.stacktrace[index];
 
       const stackFrame: IRuntimeStackFrame = {
         index,
-        name: current.source.name, // use a word of the line as the stackframe name
-        file: current.source.path, // source.path is fileUrl
-        line: current.source.start.line,
-        column: current.source.start.character
+        name: current.name, // use a word of the line as the stackframe name
+        file: current.filepath, // source.path is fileUrl
+        line: current.lineNum,
+        column: 0
       };
 
       frames.unshift(stackFrame);
@@ -491,7 +438,8 @@ export class GreybelDebugSession
     this.sendResponse(response);
   }
 
-  protected breakpointLocationsRequest(
+  protected
+  LocationsRequest(
     response: DebugProtocol.BreakpointLocationsResponse,
     args: DebugProtocol.BreakpointLocationsArguments,
     _request?: DebugProtocol.Request

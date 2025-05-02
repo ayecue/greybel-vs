@@ -62,7 +62,7 @@ export default class PseudoTerminal {
   }
 
   waitForInput(
-    vm: VM,
+    eventEmitter: EventEmitter,
     label: string,
     isPassword: boolean = false
   ): PromiseLike<string> {
@@ -90,7 +90,7 @@ export default class PseudoTerminal {
       };
       const clear = () => {
         this.writeEmitter.fire('\r\n');
-        vm.getSignal().removeListener('exit', onExit);
+        eventEmitter.removeListener('exit', onExit);
         this.emitter.removeListener('close', onClose);
         this.emitter.removeListener('input', onInput);
       };
@@ -165,21 +165,21 @@ export default class PseudoTerminal {
         }
       };
 
-      vm.getSignal().once('exit', onExit);
+      eventEmitter.once('exit', onExit);
       this.emitter.addListener('close', onClose);
       this.emitter.addListener('input', onInput);
       this.writeEmitter.fire(ansiEscapes.cursorSavePosition);
     });
   }
 
-  waitForKeyPress(vm: VM): PromiseLike<string> {
+  waitForKeyPress(eventEmitter: EventEmitter): PromiseLike<string> {
     if (this.closed) return Promise.resolve(String.fromCharCode(13));
 
     this.focus();
 
     return new Promise((resolve) => {
       const clear = () => {
-        vm.getSignal().removeListener('exit', onExit);
+        eventEmitter.removeListener('exit', onExit);
         this.emitter.removeListener('close', onClose);
         this.emitter.removeListener('input', onInput);
       };
@@ -196,7 +196,7 @@ export default class PseudoTerminal {
         resolve('');
       };
 
-      vm.getSignal().once('exit', onExit);
+      eventEmitter.once('exit', onExit);
       this.emitter.addListener('input', onInput);
       this.emitter.addListener('close', onClose);
     });

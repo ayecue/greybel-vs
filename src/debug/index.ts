@@ -8,7 +8,8 @@ import vscode, {
   WorkspaceFolder
 } from 'vscode';
 
-import { GreybelDebugSession } from './session';
+import { GreybelDebugSession } from './local/session';
+import { AgentDebugSession } from './agent/session';
 
 export function activate(
   context: ExtensionContext,
@@ -176,13 +177,12 @@ class MockConfigurationProvider implements vscode.DebugConfigurationProvider {
 }
 
 class InlineDebugAdapterFactory
-  implements vscode.DebugAdapterDescriptorFactory
-{
+  implements vscode.DebugAdapterDescriptorFactory {
   createDebugAdapterDescriptor(
     _session: vscode.DebugSession
   ): ProviderResult<vscode.DebugAdapterDescriptor> {
     return new vscode.DebugAdapterInlineImplementation(
-      new GreybelDebugSession()
+      new AgentDebugSession()
     );
   }
 }
