@@ -19,10 +19,6 @@ export enum ErrorResponseMessage {
   InvalidCommand = 'Unknown error: invalid command.'
 }
 
-export enum AgentType {
-  C2Light = 'message-hook'
-}
-
 type ImportItem = {
   ingameFilepath: string;
   content: string;
@@ -53,7 +49,6 @@ export interface ImporterOptions {
 
 class Importer {
   private importRefs: Map<string, ImportItem>;
-  private agentType: AgentType;
   private target: Uri;
   private port: number;
   private ingameDirectory: string;
@@ -91,16 +86,12 @@ class Importer {
   }
 
   async createAgent(): Promise<any> {
-    switch (this.agentType) {
-      case AgentType.C2Light: {
-        return new Agent({
-          warn: () => { },
-          error: () => { },
-          info: () => { },
-          debug: () => { }
-        }, this.port);
-      }
-    }
+    return new Agent({
+      warn: () => { },
+      error: () => { },
+      info: () => { },
+      debug: () => { }
+    }, this.port);
   }
 
   async import(): Promise<ImportResult[]> {
