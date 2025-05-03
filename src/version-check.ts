@@ -73,7 +73,7 @@ async function checkGameAgentHealth(): Promise<HealthCheckResult> {
 
 function analyzeHealth(/*gameClient: HealthCheckResult,*/ contextClient: HealthCheckResult) {
   if (!isNotOutdated(contextClient.pluginVersion) && contextClient.error == null) {
-    vscode.window.showWarningMessage(`Context Agent is outdated! Version: ${contextClient.pluginVersion}, Minimum Version: ${LATEST_MESSAGE_HOOK_VERSION}`);
+    vscode.window.showWarningMessage(`Greybel Context Agent is outdated! Version: ${contextClient.pluginVersion}, Minimum Version: ${LATEST_MESSAGE_HOOK_VERSION}`);
   }
 
   /*if (!isNotOutdated(gameClient.pluginVersion) && gameClient.error == null) {
