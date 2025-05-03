@@ -4,6 +4,5 @@ import { Instruction } from 'greybel-interpreter';
 
 export interface DebugSessionLike extends LoggingDebugSession {
   threadID: number;
-  lastInstruction: Instruction | undefined;
   breakpoints: Map<string, DebugProtocol.Breakpoint[]>;
 }

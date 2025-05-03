@@ -6,10 +6,10 @@ import {
   VM
 } from 'greybel-interpreter';
 
-import PseudoTerminal from '../helper/pseudo-terminal';
-import transform from '../helper/text-mesh-transform';
-import transformStringToKeyEvent from '../helper/transform-string-to-key-event';
-import { getPreviewInstance } from '../preview';
+import PseudoTerminal from '../pseudo-terminal';
+import transform from '../../helper/text-mesh-transform';
+import transformStringToKeyEvent from '../../helper/transform-string-to-key-event';
+import { getPreviewInstance } from '../../preview';
 
 export class VSOutputHandler extends OutputHandler {
   static previousTerminal: PseudoTerminal | null;
@@ -128,7 +128,7 @@ export class VSOutputHandler extends OutputHandler {
     this._terminal.print(transformed, false);
 
     return PseudoTerminal.getActiveTerminal().waitForInput(
-      vm,
+      vm.getSignal(),
       message,
       isPassword
     );
@@ -145,7 +145,7 @@ export class VSOutputHandler extends OutputHandler {
     this._terminal.print(transformed, false);
 
     return PseudoTerminal.getActiveTerminal()
-      .waitForKeyPress(vm)
+      .waitForKeyPress(vm.getSignal())
       .then((key) => {
         return transformStringToKeyEvent(key);
       });

@@ -1,11 +1,11 @@
 import { TranspilerParseResult } from 'greybel-transpiler';
-import GreyHackMessageHookClientPkg from 'greyhack-message-hook-client';
+import { GameAgent as Agent } from 'greyhack-message-hook-client';
 import path from 'path';
 import vscode, { ExtensionContext, Uri } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
 import { generateAutoCompileCode } from './auto-compile-helper';
-const { Agent } = GreyHackMessageHookClientPkg;
+// const { Agent } = GreyHackMessageHookClientPkg;
 
 export enum ErrorResponseMessage {
   OutOfRam = 'I can not open the program. There is not enough RAM available. Close some program and try again.',
@@ -17,10 +17,6 @@ export enum ErrorResponseMessage {
   DeviceNotFound = 'Error: device not found.',
   NoInternet = 'Error: No internet connection',
   InvalidCommand = 'Unknown error: invalid command.'
-}
-
-export enum AgentType {
-  C2Light = 'message-hook'
 }
 
 type ImportItem = {
@@ -44,8 +40,8 @@ export type ImportResult = ImportResultSuccess | ImportResultFailure;
 export interface ImporterOptions {
   target: Uri;
   ingameDirectory: string;
-  agentType: AgentType;
   result: TranspilerParseResult;
+  port: number;
   extensionContext: ExtensionContext;
   autoCompile: boolean;
   allowImport: boolean;
@@ -53,8 +49,8 @@ export interface ImporterOptions {
 
 class Importer {
   private importRefs: Map<string, ImportItem>;
-  private agentType: AgentType;
   private target: Uri;
+  private port: number;
   private ingameDirectory: string;
   private extensionContext: ExtensionContext;
   private autoCompile: boolean;
@@ -62,9 +58,9 @@ class Importer {
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
+    this.port = options.port;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
     this.importRefs = this.createImportList(options.target, options.result);
-    this.agentType = options.agentType;
     this.extensionContext = options.extensionContext;
     this.autoCompile = options.autoCompile;
     this.allowImport = options.allowImport;
@@ -90,16 +86,15 @@ class Importer {
   }
 
   async createAgent(): Promise<any> {
-    switch (this.agentType) {
-      case AgentType.C2Light: {
-        return new Agent({
-          warn: () => {},
-          error: () => {},
-          info: () => {},
-          debug: () => {}
-        });
-      }
-    }
+    return new Agent(
+      {
+        warn: () => {},
+        error: () => {},
+        info: () => {},
+        debug: () => {}
+      },
+      this.port
+    );
   }
 
   async import(): Promise<ImportResult[]> {

@@ -4,7 +4,7 @@ import vscode, {
 } from 'vscode';
 
 import { showCustomErrorMessage } from './helper/show-custom-error';
-import { AgentType, executeImport } from './build/importer';
+import { executeImport } from './build/importer';
 import { tryToDecode } from './helper/fs';
 import { getIngameDirectory } from './helper/get-ingame-directory';
 
@@ -61,7 +61,8 @@ export function activate(context: ExtensionContext) {
           return result;
         }, {}),
         extensionContext: context,
-        agentType: AgentType.C2Light,
+        port: config
+          .get<number>('createIngame.port'),
         autoCompile: false,
         allowImport: false
       });
