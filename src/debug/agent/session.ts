@@ -10,11 +10,6 @@ import {
 } from '@vscode/debugadapter';
 import { DebugProtocol } from '@vscode/debugprotocol';
 import { ModifierType } from 'another-ansi';
-import {
-  Instruction,
-  PrepareError,
-  RuntimeError
-} from 'greybel-interpreter';
 import vscode, { Uri } from 'vscode';
 
 import { PseudoFS } from '../../helper/fs';
@@ -180,31 +175,13 @@ export class AgentDebugSession
 
       me.sendResponse(response);
     } catch (err: any) {
-      if (err instanceof PrepareError) {
-        this._runtime.outputHandler.terminal.print(
-          useColor(
-            'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${err.message
-            } at ${err.target}:${err.range?.start || 0}`
-          )
-        );
-      } else if (err instanceof RuntimeError) {
-        this._runtime.outputHandler.terminal.print(
-          useColor(
-            'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${err.message
-            } in ${err.target}\n${err.stack}`
-          )
-        );
-      } else {
-        this._runtime.outputHandler.terminal.print(
-          useColor(
-            'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
-            }\n${err.stack}`
-          )
-        );
-      }
+      this._runtime.outputHandler.terminal.print(
+        useColor(
+          'red',
+          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
+          }\n${err.stack}`
+        )
+      );
 
       if (!this._silenceErrorPopups) {
         showCustomErrorMessage(err);

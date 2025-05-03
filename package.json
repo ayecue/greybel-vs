@@ -576,7 +576,7 @@
     "color-convert": "^2.0.1",
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
-    "greyhack-message-hook-client": "~0.6.0",
+    "greyhack-message-hook-client": "~0.6.1",
     "greybel-gh-mock-intrinsics": "~5.5.12",
     "greybel-intrinsics": "~5.5.5",
     "greybel-languageserver": "~1.14.1",
