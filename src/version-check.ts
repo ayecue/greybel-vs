@@ -1,4 +1,4 @@
-import vscode, { ExtensionContext } from 'vscode';
+import vscode from 'vscode';
 import { ContextAgent, GameAgent } from "greyhack-message-hook-client";
 
 const LATEST_MESSAGE_HOOK_VERSION = '0.6.0';
@@ -71,26 +71,25 @@ async function checkGameAgentHealth(): Promise<HealthCheckResult> {
   return await performHealthCheck(GameAgent, port);
 }
 
-function analyzeHealth(gameClient: HealthCheckResult, contextClient: HealthCheckResult) {
+function analyzeHealth(/*gameClient: HealthCheckResult,*/ contextClient: HealthCheckResult) {
   if (!isNotOutdated(contextClient.pluginVersion) && contextClient.error == null) {
-    vscode.window.showWarningMessage(`Context Agent is outdated! Version: ${gameClient.pluginVersion}, Minimum Version: ${LATEST_MESSAGE_HOOK_VERSION}`);
+    vscode.window.showWarningMessage(`Context Agent is outdated! Version: ${contextClient.pluginVersion}, Minimum Version: ${LATEST_MESSAGE_HOOK_VERSION}`);
   }
 
-  if (!isNotOutdated(gameClient.pluginVersion) && gameClient.error == null) {
+  /*if (!isNotOutdated(gameClient.pluginVersion) && gameClient.error == null) {
     vscode.window.showWarningMessage(`Game Agent is outdated! Version: ${gameClient.pluginVersion}, Minimum Version: ${LATEST_MESSAGE_HOOK_VERSION}`);
-  }
+  }*/
 }
 
 export function activate() {
   const job = async () => {
-    const [contextAgentVersion, gameAgentVersion] = await Promise.all([
+    const [contextAgentVersion /*, gameAgentVersion*/] = await Promise.all([
       checkContextAgentHealth(),
-      checkGameAgentHealth()
+      //checkGameAgentHealth()
     ]);
 
-    analyzeHealth(gameAgentVersion, contextAgentVersion);
-    // setTimeout(job, 10000);
+    analyzeHealth(/*gameAgentVersion,*/ contextAgentVersion);
   }
 
-  job();
+  setTimeout(job, 5000);
 }
