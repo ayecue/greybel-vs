@@ -86,12 +86,15 @@ class Importer {
   }
 
   async createAgent(): Promise<any> {
-    return new Agent({
-      warn: () => { },
-      error: () => { },
-      info: () => { },
-      debug: () => { }
-    }, this.port);
+    return new Agent(
+      {
+        warn: () => {},
+        error: () => {},
+        info: () => {},
+        debug: () => {}
+      },
+      this.port
+    );
   }
 
   async import(): Promise<ImportResult[]> {

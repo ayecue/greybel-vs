@@ -1,3 +1,4 @@
+import { LoggingDebugSession } from '@vscode/debugadapter';
 import vscode, {
   CancellationToken,
   DebugAdapterDescriptorFactory,
@@ -8,9 +9,8 @@ import vscode, {
   WorkspaceFolder
 } from 'vscode';
 
-import { GreybelDebugSession } from './local/session';
 import { AgentDebugSession } from './agent/session';
-import { LoggingDebugSession } from '@vscode/debugadapter';
+import { GreybelDebugSession } from './local/session';
 
 export enum InterpreterEnvironmentType {
   Mock = 'Mock',
@@ -19,7 +19,9 @@ export enum InterpreterEnvironmentType {
 
 export function getSession(): LoggingDebugSession {
   const config = vscode.workspace.getConfiguration('greybel');
-  const environmentType = config.get<InterpreterEnvironmentType>('interpreter.environmentType');
+  const environmentType = config.get<InterpreterEnvironmentType>(
+    'interpreter.environmentType'
+  );
 
   if (environmentType === InterpreterEnvironmentType.Ingame) {
     return new AgentDebugSession();
@@ -194,12 +196,11 @@ class MockConfigurationProvider implements vscode.DebugConfigurationProvider {
 }
 
 class InlineDebugAdapterFactory
-  implements vscode.DebugAdapterDescriptorFactory {
+  implements vscode.DebugAdapterDescriptorFactory
+{
   createDebugAdapterDescriptor(
     _session: vscode.DebugSession
   ): ProviderResult<vscode.DebugAdapterDescriptor> {
-    return new vscode.DebugAdapterInlineImplementation(
-      getSession()
-    );
+    return new vscode.DebugAdapterInlineImplementation(getSession());
   }
 }
