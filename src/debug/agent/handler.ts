@@ -1,5 +1,4 @@
 import { ContextAgent } from "greyhack-message-hook-client";
-import { GreyHackContext } from "greyhack-message-hook-client/dist/client/context";
 import vscode, { SourceBreakpoint, Uri } from 'vscode';
 import { findExistingPath, tryToDecode } from "../../helper/fs";
 import PseudoTerminal from "../pseudo-terminal";
@@ -59,7 +58,7 @@ export class SessionHandler extends EventEmitter {
   private _running: boolean = false;
   private _lastPath: Uri = null;
   private _basePath: Uri = null;
-  private _instance: GreyHackContext = null;
+  private _instance: any = null;
   private _lastBreakpoint: ContextBreakpoint;
   private _internalFileMap: Record<string, string>;
   private _temporaryPath: string;

@@ -353,10 +353,25 @@
           "default": true,
           "description": "Enable Greybel diagnostic."
         },
+        "greybel.interpreter.environmentType": {
+          "type": "string",
+          "default": "Mock",
+          "enum": [
+            "Mock",
+            "In-Game"
+          ],
+          "description": "Interpreter environment type."
+        },
+        "greybel.interpreter.port": {
+          "type": "number",
+          "default": 7777,
+          "description": "Message-hook port for interpreter. (Only in-game env)",
+          "scope": "resource"
+        },
         "greybel.interpreter.seed": {
           "type": "string",
           "default": "test",
-          "description": "Interpreter seed."
+          "description": "Interpreter seed. (Only mock env)"
         },
         "greybel.interpreter.environmentVariables": {
           "type": "object",
@@ -475,6 +490,12 @@
           "default": 2,
           "description": "Define the amount of whitespaces when using whitespaces as indentation."
         },
+        "greybel.createIngame.port": {
+          "type": "number",
+          "default": 7777,
+          "description": "Message-hook port for file upload.",
+          "scope": "resource"
+        },
         "greybel.createIngame.active": {
           "type": "boolean",
           "default": false,
@@ -506,7 +527,6 @@
           "greyscript"
         ],
         "label": "Greybel Debug",
-        "program": "./out/debug/adapter.js",
         "runtime": "node",
         "configurationAttributes": {
           "launch": {
@@ -556,7 +576,7 @@
     "color-convert": "^2.0.1",
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
-    "greyhack-message-hook-client": "~0.5.0",
+    "greyhack-message-hook-client": "~0.6.0",
     "greybel-gh-mock-intrinsics": "~5.5.12",
     "greybel-intrinsics": "~5.5.5",
     "greybel-languageserver": "~1.14.1",
