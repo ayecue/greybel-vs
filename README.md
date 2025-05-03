@@ -325,14 +325,6 @@ The local computer configuration is hardcoded, with admin credentials set to roo
 
 Note that the mock environment runs locally and is independent from the actual game. As a result, some intrinsic game behaviors may not be fully supported. If you need highly accurate debugging, consider using the [In-game Environment](#ingame-environment) instead.
 
-### Ingame Environment
-
-This environment uses the actual in-game setup. To use it, you must have [message-hook](#message-hook) installed and the game running in singleplayer mode.
-
-The key advantage of the in-game environment is that it mirrors real gameplay behavior exactly—unlike the mock environment, which is an approximation.
-
-![Preview Demo](https://github.com/ayecue/greybel-vs/blob/main/assets/preview-debugger.gif?raw=true)
-
 #### Examples:
 ```
 metax = include_lib("/lib/metaxploit.so") //returns metaxploit interface
@@ -340,6 +332,14 @@ print(metax) //prints metaxploit
 
 myShell = get_shell("root", "test") //get local root shell
 ```
+
+### Ingame Environment
+
+This environment uses the actual in-game setup. To use it, you must have [message-hook](#message-hook) installed and the game running in singleplayer mode.
+
+The key advantage of the in-game environment is that it mirrors real gameplay behavior exactly—unlike the mock environment, which is an approximation.
+
+![Preview Demo](https://github.com/ayecue/greybel-vs/blob/main/assets/preview-debugger.gif?raw=true)
 
 ### TextMesh Pro Rich Text Support
 
