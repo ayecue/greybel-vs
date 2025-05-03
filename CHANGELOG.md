@@ -1560,6 +1560,6 @@ All notable changes to this project will be documented in this file.
 - make upload agent port configurable
 - make interpreter agent port configurable
 
-## [2.6.14] - 03.05.2025
+## [2.6.14] - 04.05.2025
 
 - use compression for large message related to in-game debugging
