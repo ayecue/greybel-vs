@@ -58,6 +58,7 @@ You can also access these commands through the context menu for quick right-clic
   - **Active**: Activate/Deactivate
   - **Auto Compile**: Auto compile and delete source files
   - **Allow Import**: Enable allowImport on auto compile
+  - **Port**: Select the port of the message-hook server
 - **Diagnostic**: Activate/Deactivate
 - **Hoverdocs**: Activate/Deactivate
 - **Formatter**: Activate/Deactivate
@@ -67,12 +68,14 @@ You can also access these commands through the context menu for quick right-clic
   - **Hide Unsupported Text Mesh Pro Rich Text Tags**: Hides unsupported rich tags in the pseudo-terminal
   - **Seed**: Seed used to generate the testing environment
   - **Silence Error Popups**: Silences error popups due to execution failure
+  - **Port**: Select the port of the message-hook server
+  - **Port**: Interpreter environment type
 - **Transpiler**
   - **Build Type**: Default, Uglify, Beautify
   - **Beautify**
     - **Indentation**: Tab or whitespace. What should be used for indentation?
     - **Indentation Spaces**: In case whitespace is used this will determine the amount of whitespaces.
-    - **Keep Parentheses**: Will always use parentheses.
+    - **Keep Parentheses**: Will always use parentheses
   - **Literals Optimizations**: Activate/Deactivate
   - **Namespaces Optimizations**: Activate/Deactivate
   - **Environment Variables**: JSON used to define environment variables (ENVs)
@@ -85,8 +88,8 @@ You can also access these commands through the context menu for quick right-clic
     - **Max Chars**: Define the maximum number of characters at which the installer should split the code
   - **Obfuscation**: Enables minification of namespaces using special characters
 - **Type Analyzer**
-  - **Strategy**: Specifies which files are used for type resolution. The "Dependency" strategy resolves types from all files imported into the current file. Alternatively, the "Workspace" strategy resolves types from all files within the workspace.
-  - **Exclude**: Specifies files to ignore based on matching glob patterns.
+  - **Strategy**: Specifies which files are used for type resolution. The "Dependency" strategy resolves types from all files imported into the current file. Alternatively, the "Workspace" strategy resolves types from all files within the workspace
+  - **Exclude**: Specifies files to ignore based on matching glob patterns
  
 
 
