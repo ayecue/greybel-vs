@@ -69,7 +69,7 @@ You can also access these commands through the context menu for quick right-clic
   - **Seed**: Seed used to generate the testing environment
   - **Silence Error Popups**: Silences error popups due to execution failure
   - **Port**: Select the port of the message-hook server
-  - **Port**: Interpreter environment type
+  - **Environment type**: Interpreter environment type
 - **Transpiler**
   - **Build Type**: Default, Uglify, Beautify
   - **Beautify**
