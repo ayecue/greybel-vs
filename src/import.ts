@@ -61,7 +61,8 @@ export function activate(context: ExtensionContext) {
           return result;
         }, {}),
         extensionContext: context,
-        agentType: AgentType.C2Light,
+        port: config
+          .get<number>('createIngame.port'),
         autoCompile: false,
         allowImport: false
       });

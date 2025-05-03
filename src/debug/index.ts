@@ -10,6 +10,23 @@ import vscode, {
 
 import { GreybelDebugSession } from './local/session';
 import { AgentDebugSession } from './agent/session';
+import { LoggingDebugSession } from '@vscode/debugadapter';
+
+export enum InterpreterEnvironmentType {
+  Mock = 'Mock',
+  Ingame = 'In-Game'
+}
+
+export function getSession(): LoggingDebugSession {
+  const config = vscode.workspace.getConfiguration('greybel');
+  const environmentType = config.get<InterpreterEnvironmentType>('interpreter.environmentType');
+
+  if (environmentType === InterpreterEnvironmentType.Ingame) {
+    return new AgentDebugSession();
+  }
+
+  return new GreybelDebugSession();
+}
 
 export function activate(
   context: ExtensionContext,
@@ -182,7 +199,7 @@ class InlineDebugAdapterFactory
     _session: vscode.DebugSession
   ): ProviderResult<vscode.DebugAdapterDescriptor> {
     return new vscode.DebugAdapterInlineImplementation(
-      new AgentDebugSession()
+      getSession()
     );
   }
 }

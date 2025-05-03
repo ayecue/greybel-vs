@@ -129,7 +129,8 @@ export function activate(context: ExtensionContext) {
           ingameDirectory: ingameDirectory.path,
           result,
           extensionContext: context,
-          agentType: AgentType.C2Light,
+          port: config
+            .get<number>('createIngame.port'),
           autoCompile: config
             .get<boolean>('createIngame.autoCompile'),
           allowImport: config

@@ -66,10 +66,15 @@ export class SessionHandler extends EventEmitter {
 
   private _outputHandler: OutputHandler;
 
-  constructor(session: DebugSessionLike, hideUnsupportedTags: boolean) {
+  constructor(session: DebugSessionLike, port: number, hideUnsupportedTags: boolean) {
     super();
     this.session = session;
-    this._agent = new ContextAgent();
+    this._agent = new ContextAgent({
+      warn: () => { },
+      error: () => { },
+      info: () => { },
+      debug: () => { }
+    }, port);
     this._outputHandler = new OutputHandler(this, hideUnsupportedTags);
     this._internalFileMap = {};
     this._temporaryPath = "temp-" + randomString(10);

@@ -44,8 +44,8 @@ export type ImportResult = ImportResultSuccess | ImportResultFailure;
 export interface ImporterOptions {
   target: Uri;
   ingameDirectory: string;
-  agentType: AgentType;
   result: TranspilerParseResult;
+  port: number;
   extensionContext: ExtensionContext;
   autoCompile: boolean;
   allowImport: boolean;
@@ -55,6 +55,7 @@ class Importer {
   private importRefs: Map<string, ImportItem>;
   private agentType: AgentType;
   private target: Uri;
+  private port: number;
   private ingameDirectory: string;
   private extensionContext: ExtensionContext;
   private autoCompile: boolean;
@@ -62,9 +63,9 @@ class Importer {
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
+    this.port = options.port;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
     this.importRefs = this.createImportList(options.target, options.result);
-    this.agentType = options.agentType;
     this.extensionContext = options.extensionContext;
     this.autoCompile = options.autoCompile;
     this.allowImport = options.allowImport;
@@ -97,7 +98,7 @@ class Importer {
           error: () => { },
           info: () => { },
           debug: () => { }
-        });
+        }, this.port);
       }
     }
   }

@@ -56,6 +56,7 @@ export class AgentDebugSession
   private _useDefaultArgs: boolean = false;
   private _defaultArgs: string = '';
   private _silenceErrorPopups: boolean = false;
+  private 
 
   public constructor() {
     super('agent-debug.txt');
@@ -67,6 +68,10 @@ export class AgentDebugSession
       config.get<boolean>(
         'interpreter.hideUnsupportedTextMeshProRichTextTags'
       ) ?? false;
+    const port =
+      config.get<number>(
+        'interpreter.port'
+      );
 
     me.setDebuggerLinesStartAt1(false);
     me.setDebuggerColumnsStartAt1(false);
@@ -77,7 +82,7 @@ export class AgentDebugSession
     this._silenceErrorPopups = config.get<boolean>(
       'interpreter.silenceErrorPopups'
     );
-    this._runtime = new SessionHandler(this, hideUnsupportedTextMeshProRichTextTags);
+    this._runtime = new SessionHandler(this, port, hideUnsupportedTextMeshProRichTextTags);
     this._environmentVariables = config.get<Record<string, string>>('interpreter.environmentVariables') || {}
   }
 
