@@ -249,14 +249,11 @@ export class SessionHandler extends EventEmitter {
   private async resolveFile(path: string) {
     if (this._instance == null) return;
     const resolvedPath = await resolveFileExtension(path);
-    const content = await tryToDecode(resolvedPath);
-
-    if (content == null) {
-      console.error(`Failed to resolve file: ${path}`);
-      await this.stop();
+    if (resolvedPath == null) {
+      await this._instance.resolvedFile(path, null);
       return;
     }
-
+    const content = await tryToDecode(resolvedPath);
     await this._instance.resolvedFile(resolvedPath.fsPath, content);
   }
 
@@ -272,11 +269,15 @@ export class SessionHandler extends EventEmitter {
       this._agent = null;
       await instance.dispose().catch(() => { });
       await agent.dispose();
-      await vscode.workspace.fs.delete(tempFolderUri, {
-        recursive: true,
-        useTrash: false,
-      });
-      await vscode.workspace.fs.delete(tempFolderUri);
+      try {
+        await vscode.workspace.fs.delete(tempFolderUri, {
+          recursive: true,
+          useTrash: false,
+        });
+        await vscode.workspace.fs.delete(tempFolderUri);
+      } catch (err) {
+        console.warn(`Failed to delete temporary folder: ${tempFolderUri.fsPath}`, err);
+      }
       this.emit('exit');
     }
   }
