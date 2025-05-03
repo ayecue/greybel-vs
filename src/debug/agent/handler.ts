@@ -10,9 +10,9 @@ import { DebugProtocol } from "@vscode/debugprotocol";
 import { randomString } from "../../helper/random-string";
 
 enum ClientMessageType {
-  ClearScreenClientRpc = 79,
-  InputSentClientRpc = 80,
-  PrintSentClientRpc = 81,
+  ClearScreenClientRpc = 77,
+  InputSentClientRpc = 78,
+  PrintSentClientRpc = 79,
   CreatedContextRpc = 1000,
   FinishedContextRpc = 1002,
   ContextRuntimeStateRpc = 1003,
