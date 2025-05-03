@@ -262,12 +262,11 @@ export class SessionHandler extends EventEmitter {
       const instance = this._instance;
       const tempFolderUri = Uri.joinPath(this._basePath, this._temporaryPath);
 
-      this._running = false;
       this._instance = null;
       this._lastBreakpoint = null;
       this._agent = null;
-      await instance.dispose().catch(() => { });
-      await agent.dispose();
+      instance.dispose().catch(() => { });
+      agent.dispose().catch(() => { });
       try {
         await vscode.workspace.fs.delete(tempFolderUri, {
           recursive: true,
@@ -277,6 +276,7 @@ export class SessionHandler extends EventEmitter {
       } catch (err) {
         console.warn(`Failed to delete temporary folder: ${tempFolderUri.fsPath}`, err);
       }
+      this._running = false;
       this.emit('exit');
     }
   }
