@@ -1567,3 +1567,7 @@ All notable changes to this project will be documented in this file.
 ## [2.6.15] - 04.05.2025
 
 - wait for context disposal when disconnecting in order to get process properly killed in game
+
+## [2.6.16] - 04.05.2025
+
+- fix decipher process for in-game runtime

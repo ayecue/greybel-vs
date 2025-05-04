@@ -10,6 +10,7 @@ import { DebugProtocol } from "@vscode/debugprotocol";
 import { randomString } from "../../helper/random-string";
 
 enum ClientMessageType {
+  DecipherTimeClientRpc = 77,
   ClearScreenClientRpc = 79,
   InputSentClientRpc = 80,
   PrintSentClientRpc = 81,
@@ -182,6 +183,10 @@ export class SessionHandler extends EventEmitter {
           );
           break;
         }
+        case ClientMessageType.DecipherTimeClientRpc: {
+          await this.endDecipher();
+          break;
+        }
         case ClientMessageType.ContextLoadFileRpc: {
           await this.resolveFile(response.filepath);
           break;
@@ -233,6 +238,11 @@ export class SessionHandler extends EventEmitter {
   async setDebugMode(debugMode: boolean) {
     if (this._instance == null) return;
     await this._instance.setDebugMode(debugMode);
+  }
+
+  async endDecipher() {
+    if (this._instance == null) return;
+    await this._instance.endDecipher();
   }
 
   async goToNextLine() {
