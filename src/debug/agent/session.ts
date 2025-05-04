@@ -243,19 +243,19 @@ export class AgentDebugSession
     this.sendResponse(response);
   }
 
-  protected continueRequest(
+  protected async continueRequest(
     response: DebugProtocol.ContinueResponse,
     _args: DebugProtocol.ContinueArguments
-  ): void {
-    this._runtime.setDebugMode(false);
+  ): Promise<void> {
+    await this._runtime.setDebugMode(false);
     this.sendResponse(response);
   }
 
-  protected nextRequest(
+  protected async nextRequest(
     response: DebugProtocol.NextResponse,
     _args: DebugProtocol.NextArguments
-  ): void {
-    this._runtime.goToNextLine();
+  ): Promise<void> {
+    await this._runtime.goToNextLine();
     this.sendResponse(response);
   }
 
@@ -264,7 +264,7 @@ export class AgentDebugSession
     _args: DebugProtocol.DisconnectArguments,
     _request?: DebugProtocol.Request
   ): Promise<void> {
-    this._runtime.setDebugMode(false);
+    await this._runtime.setDebugMode(false);
 
     try {
       await this._runtime.stop();
@@ -276,12 +276,12 @@ export class AgentDebugSession
     this.shutdown();
   }
 
-  protected pauseRequest(
+  protected async pauseRequest(
     response: DebugProtocol.PauseResponse,
     _args: DebugProtocol.PauseArguments,
     _request?: DebugProtocol.Request
-  ): void {
-    this._runtime.setDebugMode(true);
+  ): Promise<void> {
+    await this._runtime.setDebugMode(true);
     this.sendResponse(response);
   }
 
@@ -290,7 +290,7 @@ export class AgentDebugSession
     _args: DebugProtocol.RestartArguments,
     _request?: DebugProtocol.Request
   ): Promise<void> {
-    this._runtime.setDebugMode(false);
+    await this._runtime.setDebugMode(false);
 
     try {
       this._restart = true;
@@ -307,7 +307,7 @@ export class AgentDebugSession
     _args: DebugProtocol.TerminateArguments,
     _request?: DebugProtocol.Request
   ): Promise<void> {
-    this._runtime.setDebugMode(false);
+    await this._runtime.setDebugMode(false);
 
     try {
       await this._runtime.stop();

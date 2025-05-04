@@ -1563,3 +1563,7 @@ All notable changes to this project will be documented in this file.
 ## [2.6.14] - 04.05.2025
 
 - use compression for large message related to in-game debugging
+
+## [2.6.15] - 04.05.2025
+
+- wait for context disposal when disconnecting in order to get process properly killed in game
