@@ -184,6 +184,7 @@ export class SessionHandler extends EventEmitter {
           break;
         }
         case ClientMessageType.DecipherTimeClientRpc: {
+          this._outputHandler.print('Deciphering...');
           await this.endDecipher();
           break;
         }
