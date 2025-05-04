@@ -8,7 +8,7 @@
     "email": "soerenwehmeier@googlemail.com"
   },
   "icon": "icon.png",
-  "version": "2.7.4",
+  "version": "2.7.5",
   "repository": {
     "type": "git",
     "url": "git@github.com:ayecue/greybel-vs.git"
@@ -578,7 +578,7 @@
     "css-color-names": "^1.0.1",
     "greybel-gh-mock-intrinsics": "~5.5.12",
     "greybel-intrinsics": "~5.5.5",
-    "greyhack-message-hook-client": "~1.1.1",
+    "greyhack-message-hook-client": "~1.1.2",
     "greybel-languageserver": "~1.14.1",
     "greybel-languageserver-browser": "~1.10.1",
     "greyscript-core": "~2.5.5",
