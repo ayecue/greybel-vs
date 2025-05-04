@@ -1560,6 +1560,14 @@ All notable changes to this project will be documented in this file.
 - make upload agent port configurable
 - make interpreter agent port configurable
 
+## [2.6.14] - 04.05.2025
+
+- use compression for large message related to in-game debugging
+
+## [2.6.15] - 04.05.2025
+
+- wait for context disposal when disconnecting in order to get process properly killed in game
+
 ## [2.7.0] - 02.04.2025
 
 - support experimental version

@@ -265,8 +265,8 @@ export class SessionHandler extends EventEmitter {
       this._instance = null;
       this._lastBreakpoint = null;
       this._agent = null;
-      instance.dispose().catch(() => { });
-      agent.dispose().catch(() => { });
+      await instance.dispose().catch(console.warn);
+      agent.dispose().catch(console.warn);
       try {
         await vscode.workspace.fs.delete(tempFolderUri, {
           recursive: true,
