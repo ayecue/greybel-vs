@@ -1571,3 +1571,7 @@ All notable changes to this project will be documented in this file.
 ## [2.6.16] - 04.05.2025
 
 - fix decipher process for in-game runtime
+
+## [2.6.17] - 08.05.2025
+
+- show proper error in case file reference cannot be resolved due to parsing error, related to in-game env
