@@ -1578,4 +1578,4 @@ All notable changes to this project will be documented in this file.
 
 ## [2.6.18] - 09.05.2025
 
-- properly handle namespace import when used in files imported via native import_code
+- properly handle namespace import when used in files imported via native import_code - thanks for reporting to [@Dixeet](https://github.com/Dixeet)
