@@ -1,7 +1,7 @@
 import vscode from 'vscode';
 import { ContextAgent, GameAgent } from "greyhack-message-hook-client";
 
-const LATEST_MESSAGE_HOOK_VERSION = '0.6.1';
+const LATEST_MESSAGE_HOOK_VERSION = '0.6.2';
 
 export function isNotOutdated(myVersion: string, minimumVersion: string = LATEST_MESSAGE_HOOK_VERSION): boolean {
   const v1 = myVersion.split(".");
@@ -73,7 +73,7 @@ async function checkGameAgentHealth(): Promise<HealthCheckResult> {
 
 function analyzeHealth(/*gameClient: HealthCheckResult,*/ contextClient: HealthCheckResult) {
   if (!isNotOutdated(contextClient.pluginVersion) && contextClient.error == null) {
-    vscode.window.showWarningMessage(`Greybel Context Agent is outdated! Version: ${contextClient.pluginVersion}, Minimum Version: ${LATEST_MESSAGE_HOOK_VERSION}`);
+    vscode.window.showWarningMessage(`Greybel Context Agent is outdated! You are currently using version "${contextClient.pluginVersion}". Please download the latest version "${LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel repository](https://github.com/ayecue/greybel-vs?tab=readme-ov-file#message-hook).`);
   }
 
   /*if (!isNotOutdated(gameClient.pluginVersion) && gameClient.error == null) {
