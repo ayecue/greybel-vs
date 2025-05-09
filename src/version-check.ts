@@ -1,7 +1,7 @@
 import vscode from 'vscode';
 import { ContextAgent, GameAgent } from "greyhack-message-hook-client";
 
-const LATEST_MESSAGE_HOOK_VERSION = '0.6.3';
+const LATEST_MESSAGE_HOOK_VERSION = '0.6.4';
 
 export function isNotOutdated(myVersion: string, minimumVersion: string = LATEST_MESSAGE_HOOK_VERSION): boolean {
   const v1 = myVersion.split(".");

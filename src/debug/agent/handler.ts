@@ -86,11 +86,13 @@ export class SessionHandler extends EventEmitter {
 
   async start(path: Uri, params: string[], debugMode: boolean, environmentVariables: Record<string, string>) {
     const content = await tryToDecode(path);
-    const breakpoints = vscode.debug.breakpoints.map((bp: SourceBreakpoint) => {
+    const breakpoints = vscode.debug.breakpoints.filter((bp: SourceBreakpoint) => {
+      return bp.enabled;
+    }).map((bp: SourceBreakpoint) => {
       return {
         filepath: bp.location.uri.fsPath,
         lineNum: bp.location.range.start.line + 1,
-      }
+      };
     });
     this._lastPath = path;
     this._basePath = vscode.workspace.getWorkspaceFolder(this._lastPath)?.uri ?? Uri.file(process.cwd());;
