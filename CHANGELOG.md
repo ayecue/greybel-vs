@@ -1568,6 +1568,25 @@ All notable changes to this project will be documented in this file.
 
 - wait for context disposal when disconnecting in order to get process properly killed in game
 
+## [2.6.16] - 04.05.2025
+
+- fix decipher process for in-game runtime
+
+## [2.6.17] - 08.05.2025
+
+- show proper error in case file reference cannot be resolved due to parsing error, related to in-game env
+
+## [2.6.18] - 09.05.2025
+
+- properly handle namespace import when used in files imported via native import_code - thanks for reporting to [@Dixeet](https://github.com/Dixeet)
+- properly support #import behaviour for in-game runtime
+
+## [2.6.19] - 10.05.2025
+
+- fix bottleneck in parser, was specifically noticable with big files exceeding 1mil characters
+- fix null pointer exception in breakpoint implementation for in-game runtime
+- ignore disabled breakpoints
+
 ## [2.7.0] - 02.04.2025
 
 - support experimental version
