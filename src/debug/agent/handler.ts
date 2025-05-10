@@ -8,6 +8,7 @@ import { DebugSessionLike } from "../types";
 import { BreakpointEvent, StoppedEvent } from "@vscode/debugadapter";
 import { DebugProtocol } from "@vscode/debugprotocol";
 import { randomString } from "../../helper/random-string";
+import { VersionManager } from "../../helper/version-manager";
 
 enum ClientMessageType {
   DecipherTimeClientRpc = 77,
@@ -85,6 +86,12 @@ export class SessionHandler extends EventEmitter {
   }
 
   async start(path: Uri, params: string[], debugMode: boolean, environmentVariables: Record<string, string>) {
+    const healthcheck = await VersionManager.performHealthCheck(this._agent);
+
+    if (!healthcheck.isSingleplayer) {
+      throw new Error('Can only start in-game debug session with singleplayer running!');
+    }
+
     const content = await tryToDecode(path);
     const breakpoints = vscode.debug.breakpoints.filter((bp: SourceBreakpoint) => {
       return bp.enabled;
@@ -94,8 +101,10 @@ export class SessionHandler extends EventEmitter {
         lineNum: bp.location.range.start.line + 1,
       };
     });
+
     this._lastPath = path;
-    this._basePath = vscode.workspace.getWorkspaceFolder(this._lastPath)?.uri ?? Uri.file(process.cwd());;
+    this._basePath = vscode.workspace.getWorkspaceFolder(this._lastPath)?.uri ?? Uri.file(process.cwd());
+
     const { value } = await this._agent.createContext(
       `params=[${params.map((it) => `"${it.replace(/"/g, '""')}"`).join(',')}];` + content,
       this._lastPath.fsPath,
