@@ -11,14 +11,14 @@ interface HealthCheckResult {
 }
 
 export class VersionManager {
-  static LATEST_MESSAGE_HOOK_VERSION: string = '0.6.4';
+  static LATEST_MESSAGE_HOOK_VERSION: string = '0.6.5';
   static RESOURCE_LINK: string = 'https://github.com/ayecue/greybel-vs?tab=readme-ov-file#message-hook';
   
   private static _lastNotification: Date | null = null;
   private static _notificationInterval: number = 1000 * 60 * 60; // 1 hours
   
   private static shouldVerify() {
-    if (this._lastNotification === null) {
+    if (this._lastNotification == null) {
       return true;
     }
   
@@ -33,7 +33,7 @@ export class VersionManager {
   }
 
   private static showNotification(message: string) {
-    if (this._lastNotification === null) {
+    if (this._lastNotification == null) {
       this._lastNotification = new Date();
       vscode.window.showWarningMessage(message);
       return;
@@ -125,9 +125,9 @@ export class VersionManager {
     const response = await this.performHealthCheck(agent);
 
     if (!this.isNotOutdated(response.pluginVersion) && response.error == null) {
-      this.showNotification(`Greybel Game Agent is outdated! You are currently using version "${response.pluginVersion}". Please download the latest version "${this.LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel repository](${this.RESOURCE_LINK}).`);
+      this.showNotification(`Greybel message-hook is outdated! You are currently using version "${response.pluginVersion}". Please download the latest version "${this.LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel repository](${this.RESOURCE_LINK}).`);
     } else if (this.isTimeoutError(response.error)) {
-      this.showNotification(`Greybel Game Agent is outdated! You are currently using version a version below "0.6.0". Please download the latest version "${this.LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel repository](${this.RESOURCE_LINK}).`);
+      this.showNotification(`Greybel message-hook is outdated! You are currently using version a version below "0.6.0". Please download the latest version "${this.LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel repository](${this.RESOURCE_LINK}).`);
     }
   }
 
