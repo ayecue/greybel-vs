@@ -7,6 +7,7 @@ import { showCustomErrorMessage } from './helper/show-custom-error';
 import { executeImport } from './build/importer';
 import { tryToDecode } from './helper/fs';
 import { getIngameDirectory } from './helper/get-ingame-directory';
+import { VersionManager } from './helper/version-manager';
 
 const getFiles = async (uri: vscode.Uri): Promise<vscode.Uri[]> => {
   const stat = await vscode.workspace.fs.stat(uri);
@@ -43,6 +44,7 @@ export function activate(context: ExtensionContext) {
 
       const targetUri = eventUri;
       const config = vscode.workspace.getConfiguration('greybel');
+      const port = config.get<number>('createIngame.port');
       const ingameDirectory = await getIngameDirectory(config);
       const filesWithContent = await Promise.all(files.map(async (file) => {
         const content = await tryToDecode(file);
@@ -61,11 +63,12 @@ export function activate(context: ExtensionContext) {
           return result;
         }, {}),
         extensionContext: context,
-        port: config
-          .get<number>('createIngame.port'),
+        port,
         autoCompile: false,
         allowImport: false
       });
+
+      VersionManager.triggerContextAgentHealthcheck(port);
     } catch (err: any) {
       showCustomErrorMessage(err);
     }

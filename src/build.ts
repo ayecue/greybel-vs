@@ -14,6 +14,7 @@ import { TranspilerResourceProvider } from './resource';
 import documentManager from './helper/document-manager';
 import { getIngameDirectory } from './helper/get-ingame-directory';
 import { parseEnvVars } from './helper/parse-env-vars';
+import { VersionManager } from './helper/version-manager';
 
 export function activate(context: ExtensionContext) {
   async function build(
@@ -120,6 +121,8 @@ export function activate(context: ExtensionContext) {
       }
 
       if (config.get<boolean>('createIngame.active')) {
+        const port = config.get<number>('createIngame.port');
+
         vscode.window.showInformationMessage('Importing files ingame.', {
           modal: false
         });
@@ -129,13 +132,14 @@ export function activate(context: ExtensionContext) {
           ingameDirectory: ingameDirectory.path,
           result,
           extensionContext: context,
-          port: config
-            .get<number>('createIngame.port'),
+          port,
           autoCompile: config
             .get<boolean>('createIngame.autoCompile'),
           allowImport: config
             .get<boolean>('createIngame.allowImport'),
         });
+
+        VersionManager.triggerContextAgentHealthcheck(port);
       }
 
       vscode.window.showInformationMessage(

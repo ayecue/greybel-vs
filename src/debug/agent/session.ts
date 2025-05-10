@@ -18,6 +18,7 @@ import { ansiProvider, useColor } from '../../helper/text-mesh-transform';
 import { getPreviewInstance } from '../../preview';
 import { DebugSessionLike } from '../types';
 import { SessionHandler } from './handler';
+import { VersionManager } from '../../helper/version-manager';
 
 interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
   program: string;
@@ -78,7 +79,9 @@ export class AgentDebugSession
       'interpreter.silenceErrorPopups'
     );
     this._runtime = new SessionHandler(this, port, hideUnsupportedTextMeshProRichTextTags);
-    this._environmentVariables = config.get<Record<string, string>>('interpreter.environmentVariables') || {}
+    this._environmentVariables = config.get<Record<string, string>>('interpreter.environmentVariables') || {};
+
+    VersionManager.triggerContextAgentHealthcheck(port);
   }
 
   /**
