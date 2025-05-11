@@ -11,7 +11,7 @@ interface HealthCheckResult {
 }
 
 export class VersionManager {
-  static LATEST_MESSAGE_HOOK_VERSION: string = '1.1.6';
+  static LATEST_MESSAGE_HOOK_VERSION: string = '1.1.7';
   static RESOURCE_LINK: string = 'https://discord.com/channels/1200249764965523496/1357040795357548554';
   
   private static _lastNotification: Date | null = null;
