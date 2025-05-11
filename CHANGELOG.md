@@ -1596,3 +1596,7 @@ All notable changes to this project will be documented in this file.
 
 - fix file transfer process for in-game runtime
 - add programName setting for in-game runtime
+
+## [2.6.22] - 11.05.2025
+
+- fix terminal going wild in a certain scenario when switching from mock to in-game env

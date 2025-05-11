@@ -17,48 +17,57 @@ export enum PseudoTerminalInputKey {
 }
 
 export default class PseudoTerminal {
+  static activeTerminal: PseudoTerminal | null;
+
+  public readonly name: string;
   public dimensions: TerminalDimensions;
   public terminal: Terminal;
   public writeEmitter: vscode.EventEmitter<string>;
   public emitter: EventEmitter;
-  public closed: boolean;
 
+  private closed: boolean;
   private previousLinesCount: number;
 
-  // eslint-disable-next-line no-use-before-define
-  static activeTerminals: Set<PseudoTerminal> = new Set<PseudoTerminal>();
-
   static getActiveTerminal(): PseudoTerminal {
-    return this.activeTerminals.values().next().value;
+    return this.activeTerminal;
   }
 
   public constructor(name: string) {
     this.emitter = new EventEmitter();
     this.writeEmitter = new vscode.EventEmitter<string>();
     this.dimensions = null;
-    this.closed = false;
+    this.terminal = null;
+    this.name = name;
+    this.previousLinesCount = 0;
+
+    this.initTerminal();
+    PseudoTerminal.activeTerminal = this;
+  }
+
+  initTerminal() {
     this.terminal = vscode.window.createTerminal({
-      name,
+      name: this.name,
       pty: {
         onDidWrite: this.writeEmitter.event,
         open: (initialDimensions: TerminalDimensions) => {
           this.dimensions = initialDimensions;
+          this.emitter.emit('ready');
         },
         setDimensions: (dimensions: TerminalDimensions) => {
           this.dimensions = dimensions;
         },
         close: () => {
-          this.closed = true;
           this.emitter.emit('close');
+
+          if (!this.closed) {
+            this.initTerminal();
+          }
         },
         handleInput: (input: string) => {
           this.emitter.emit('input', input);
         }
       }
     });
-    this.previousLinesCount = 0;
-
-    PseudoTerminal.activeTerminals.add(this);
   }
 
   waitForInput(
@@ -66,8 +75,6 @@ export default class PseudoTerminal {
     label: string,
     isPassword: boolean = false
   ): PromiseLike<string> {
-    if (this.closed) return Promise.resolve('');
-
     this.focus();
 
     return new Promise((resolve) => {
@@ -173,8 +180,6 @@ export default class PseudoTerminal {
   }
 
   waitForKeyPress(eventEmitter: EventEmitter): PromiseLike<string> {
-    if (this.closed) return Promise.resolve(String.fromCharCode(13));
-
     this.focus();
 
     return new Promise((resolve) => {
@@ -237,7 +242,10 @@ export default class PseudoTerminal {
   }
 
   dispose() {
-    PseudoTerminal.activeTerminals.delete(this);
+    if (this.closed) return;
+
+    this.closed = true;
+    PseudoTerminal.activeTerminal = null;
     this.terminal.dispose();
   }
 }
