@@ -49,6 +49,7 @@ export class AgentDebugSession
   private _restart: boolean = false;
   private _environmentVariables: Record<string, string>;
   private _programName: string;
+  private _port: number;
 
   private _useDefaultArgs: boolean = false;
   private _defaultArgs: string = '';
@@ -76,13 +77,12 @@ export class AgentDebugSession
     this._useDefaultArgs = config.get<boolean>('interpreter.useDefaultArgs');
     this._defaultArgs = config.get<string>('interpreter.defaultArgs');
     this._programName = config.get<string>('interpreter.programName');
+    this._port = port;
     this._silenceErrorPopups = config.get<boolean>(
       'interpreter.silenceErrorPopups'
     );
     this._runtime = new SessionHandler(this, port, hideUnsupportedTextMeshProRichTextTags);
     this._environmentVariables = config.get<Record<string, string>>('interpreter.environmentVariables') || {};
-
-    VersionManager.triggerContextAgentHealthcheck(port);
   }
 
   /**
@@ -162,6 +162,8 @@ export class AgentDebugSession
 
     getPreviewInstance().clear();
     me._restart = false;
+
+    await VersionManager.triggerContextAgentHealthcheck(this._port);
 
     // start the program in the runtime
     try {
