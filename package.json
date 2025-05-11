@@ -8,7 +8,7 @@
     "email": "soerenwehmeier@googlemail.com"
   },
   "icon": "icon.png",
-  "version": "2.7.9",
+  "version": "2.7.10",
   "repository": {
     "type": "git",
     "url": "git@github.com:ayecue/greybel-vs.git"
@@ -362,6 +362,12 @@
           ],
           "description": "Interpreter environment type."
         },
+        "greybel.interpreter.programName": {
+          "type": "string",
+          "default": "myprogram",
+          "description": "Program name which should be used in runtime. (Only in-game env)",
+          "scope": "resource"
+        },
         "greybel.interpreter.port": {
           "type": "number",
           "default": 7777,
@@ -578,7 +584,7 @@
     "css-color-names": "^1.0.1",
     "greybel-gh-mock-intrinsics": "~5.5.12",
     "greybel-intrinsics": "~5.5.5",
-    "greyhack-message-hook-client": "~1.1.4",
+    "greyhack-message-hook-client": "~1.1.5",
     "greybel-languageserver": "~1.14.2",
     "greybel-languageserver-browser": "~1.10.2",
     "greyscript-core": "~2.5.5",

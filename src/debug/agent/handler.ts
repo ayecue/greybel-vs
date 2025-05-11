@@ -11,6 +11,7 @@ import { randomString } from "../../helper/random-string";
 import { VersionManager } from "../../helper/version-manager";
 
 enum ClientMessageType {
+  SendFileSizeClientRpc = 73,
   DecipherTimeClientRpc = 75,
   ClearScreenClientRpc = 77,
   InputSentClientRpc = 78,
@@ -85,7 +86,7 @@ export class SessionHandler extends EventEmitter {
     return this._outputHandler;
   }
 
-  async start(path: Uri, params: string[], debugMode: boolean, environmentVariables: Record<string, string>) {
+  async start(programName: string, path: Uri, params: string[], debugMode: boolean, environmentVariables: Record<string, string>) {
     const healthcheck = await VersionManager.performHealthCheck(this._agent);
 
     if (!healthcheck.isSingleplayer) {
@@ -109,6 +110,7 @@ export class SessionHandler extends EventEmitter {
       `params=[${params.map((it) => `"${it.replace(/"/g, '""')}"`).join(',')}];` + content,
       this._lastPath.fsPath,
       this._basePath.fsPath,
+      programName,
       debugMode,
       breakpoints,
       environmentVariables
@@ -198,6 +200,11 @@ export class SessionHandler extends EventEmitter {
           await this.endDecipher();
           break;
         }
+        case ClientMessageType.SendFileSizeClientRpc: {
+          this._outputHandler.print('Transfer...');
+          await this.endDownload();
+          break;
+        }
         case ClientMessageType.ContextLoadFileRpc: {
           await this.resolveFile(response.filepath);
           break;
@@ -254,6 +261,11 @@ export class SessionHandler extends EventEmitter {
   async endDecipher() {
     if (this._instance == null) return;
     await this._instance.endDecipher();
+  }
+
+  async endDownload() {
+    if (this._instance == null) return;
+    await this._instance.endDownload();
   }
 
   async goToNextLine() {

@@ -48,11 +48,11 @@ export class AgentDebugSession
   private _breakpointIncrement: number = 0;
   private _restart: boolean = false;
   private _environmentVariables: Record<string, string>;
+  private _programName: string;
 
   private _useDefaultArgs: boolean = false;
   private _defaultArgs: string = '';
   private _silenceErrorPopups: boolean = false;
-  private 
 
   public constructor() {
     super('agent-debug.txt');
@@ -75,6 +75,7 @@ export class AgentDebugSession
     this.threadID = Math.random() * 0x7fffffff;
     this._useDefaultArgs = config.get<boolean>('interpreter.useDefaultArgs');
     this._defaultArgs = config.get<string>('interpreter.defaultArgs');
+    this._programName = config.get<string>('interpreter.programName');
     this._silenceErrorPopups = config.get<boolean>(
       'interpreter.silenceErrorPopups'
     );
@@ -173,7 +174,7 @@ export class AgentDebugSession
       const paramSegments =
         params && params.length > 0 ? params.split(' ') : [];
 
-      await me._runtime.start(uri, paramSegments, !args.noDebug, this._environmentVariables);
+      await me._runtime.start(this._programName, uri, paramSegments, !args.noDebug, this._environmentVariables);
       await me._runtime.waitForFinished();
 
       me.sendResponse(response);
