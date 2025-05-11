@@ -1586,3 +1586,8 @@ All notable changes to this project will be documented in this file.
 - fix bottleneck in parser, was specifically noticable with big files exceeding 1mil characters
 - fix null pointer exception in breakpoint implementation for in-game runtime
 - ignore disabled breakpoints
+
+## [2.6.20] - 11.05.2025
+
+- improve message-hook version checker
+- fix interpreter location context naming for default interpreter
