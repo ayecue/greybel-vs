@@ -70,11 +70,12 @@ You can also access these commands through the context menu for quick right-clic
   - **Silence Error Popups**: Silences error popups due to execution failure
   - **Port**: Select the port of the message-hook server
   - **Environment type**: Interpreter environment type
+  - **Program name**: Defines program name in runtime
 - **Transpiler**
   - **Build Type**: Default, Uglify, Beautify
   - **Beautify**
     - **Indentation**: Tab or whitespace. What should be used for indentation?
-    - **Indentation Spaces**: In case whitespace is used this will determine the amount of whitespaces.
+    - **Indentation Spaces**: In case whitespace is used this will determine the amount of whitespaces
     - **Keep Parentheses**: Will always use parentheses
   - **Literals Optimizations**: Activate/Deactivate
   - **Namespaces Optimizations**: Activate/Deactivate

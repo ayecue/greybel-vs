@@ -12,20 +12,17 @@ import transformStringToKeyEvent from '../../helper/transform-string-to-key-even
 import { getPreviewInstance } from '../../preview';
 
 export class VSOutputHandler extends OutputHandler {
-  static previousTerminal: PseudoTerminal | null;
-
   private _terminal: PseudoTerminal;
   private _hideUnsupportedTags: boolean;
 
   constructor(hideUnsupportedTags: boolean) {
     super();
 
-    VSOutputHandler.previousTerminal?.dispose();
+    PseudoTerminal.activeTerminal?.dispose();
 
     this._terminal = new PseudoTerminal('greybel');
     this._hideUnsupportedTags = hideUnsupportedTags;
-
-    VSOutputHandler.previousTerminal = this._terminal;
+    
     this._terminal.focus();
   }
 
