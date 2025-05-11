@@ -97,9 +97,9 @@ export class VersionManager {
         const response = await this.performHealthCheck(agent);
 
         if (!this.isNotOutdated(response.pluginVersion) && response.error == null) {
-          this.showNotification(`Greybel message-hook is outdated! You are currently using version "${response.pluginVersion}". Please download the latest version "${this.LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel repository](${this.RESOURCE_LINK}).`);
+          this.showNotification(`Greybel message-hook is outdated! You are currently using version "${response.pluginVersion}". Please download the latest version "${this.LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel Discord](${this.RESOURCE_LINK}).`);
         } else if (this.isTimeoutError(response.error)) {
-          this.showNotification(`Greybel message-hook is outdated! You are currently using version a version below "0.6.0". Please download the latest version "${this.LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel repository](${this.RESOURCE_LINK}).`);
+          this.showNotification(`Greybel message-hook is outdated! You are currently using version a version below "0.6.0". Please download the latest version "${this.LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel Discord](${this.RESOURCE_LINK}).`);
         }
 
         dispose();
@@ -125,9 +125,9 @@ export class VersionManager {
     const response = await this.performHealthCheck(agent);
 
     if (!this.isNotOutdated(response.pluginVersion) && response.error == null) {
-      this.showNotification(`Greybel message-hook is outdated! You are currently using version "${response.pluginVersion}". Please download the latest version "${this.LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel repository](${this.RESOURCE_LINK}).`);
+      this.showNotification(`Greybel message-hook is outdated! You are currently using version "${response.pluginVersion}". Please download the latest version "${this.LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel Discord](${this.RESOURCE_LINK}).`);
     } else if (this.isTimeoutError(response.error)) {
-      this.showNotification(`Greybel message-hook is outdated! You are currently using version a version below "0.6.0". Please download the latest version "${this.LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel repository](${this.RESOURCE_LINK}).`);
+      this.showNotification(`Greybel message-hook is outdated! You are currently using version a version below "0.6.0". Please download the latest version "${this.LATEST_MESSAGE_HOOK_VERSION}" from the [Greybel Discord](${this.RESOURCE_LINK}).`);
     }
   }
 
