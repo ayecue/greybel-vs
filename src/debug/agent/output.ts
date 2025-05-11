@@ -6,18 +6,15 @@ import { KeyEvent } from "greybel-interpreter";
 import transformStringToKeyEvent from "../../helper/transform-string-to-key-event";
 
 export class OutputHandler {
-  static previousTerminal: PseudoTerminal | null;
-
   private _sessionHandler: EventEmitter;
   private _terminal: PseudoTerminal;
   private _hideUnsupportedTags: boolean;
 
   constructor(sessionHandler: EventEmitter, hideUnsupportedTags: boolean) {
     this._sessionHandler = sessionHandler;
-    OutputHandler.previousTerminal?.dispose();
+    PseudoTerminal.activeTerminal?.dispose();
     this._terminal = new PseudoTerminal('greybel');
     this._hideUnsupportedTags = hideUnsupportedTags;
-    OutputHandler.previousTerminal = this._terminal;
     this._terminal.focus();
   }
 
