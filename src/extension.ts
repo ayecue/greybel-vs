@@ -12,7 +12,6 @@ import { activate as activateTransform } from './transform';
 import { activate as activateImport } from './import';
 import { activate as activatePreview } from './preview';
 import { activate as activateLanguageClient } from './language-client';
-import { activate as activateVersionCheck } from './version-check';
 
 export function activate(context: ExtensionContext) {
   activateRefresh(context);
@@ -30,7 +29,6 @@ export function activate(context: ExtensionContext) {
   activateShare(context);
   activateImport(context);
   activatePreview(context);
-  activateVersionCheck();
 }
 
 export function deactivate() { }
