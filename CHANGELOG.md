@@ -1600,3 +1600,8 @@ All notable changes to this project will be documented in this file.
 ## [2.6.22] - 11.05.2025
 
 - fix terminal going wild in a certain scenario when switching from mock to in-game env
+
+## [2.6.23] - 11.05.2025
+
+- fix error response in message-hook for BepInEx 5.x.x.x version
+- minor optimizations in message-hook
