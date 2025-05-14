@@ -65,6 +65,7 @@ You can also access these commands through the context menu for quick right-clic
 - **Interpreter**
   - **Default Args**: Default call arguments
   - **Environment Variables**: JSON used to define environment variables (ENVs)
+  - **Environment Variables File**: Define .env file from which environment variables should be loaded from
   - **Hide Unsupported Text Mesh Pro Rich Text Tags**: Hides unsupported rich tags in the pseudo-terminal
   - **Seed**: Seed used to generate the testing environment
   - **Silence Error Popups**: Silences error popups due to execution failure
@@ -80,6 +81,7 @@ You can also access these commands through the context menu for quick right-clic
   - **Literals Optimizations**: Activate/Deactivate
   - **Namespaces Optimizations**: Activate/Deactivate
   - **Environment Variables**: JSON used to define environment variables (ENVs)
+  - **Environment Variables File**: Define .env file from which environment variables should be loaded from
   - **Excluded Namespaces**: List of namespaces that should not be optimized
   - **In-game Directory**: Destination folder used in the game
   - **Installer**

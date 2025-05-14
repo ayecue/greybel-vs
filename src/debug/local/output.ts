@@ -8,7 +8,7 @@ import {
 
 import PseudoTerminal from '../pseudo-terminal';
 import transform from '../../helper/text-mesh-transform';
-import transformStringToKeyEvent from '../../helper/transform-string-to-key-event';
+import { transformInputToKeyEvent } from '../../helper/key-event';
 import { getPreviewInstance } from '../../preview';
 
 export class VSOutputHandler extends OutputHandler {
@@ -144,7 +144,7 @@ export class VSOutputHandler extends OutputHandler {
     return PseudoTerminal.getActiveTerminal()
       .waitForKeyPress(vm.getSignal())
       .then((key) => {
-        return transformStringToKeyEvent(key);
+        return transformInputToKeyEvent(key);
       });
   }
 

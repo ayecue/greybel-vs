@@ -19,6 +19,7 @@ import { getPreviewInstance } from '../../preview';
 import { DebugSessionLike } from '../types';
 import { SessionHandler } from './handler';
 import { VersionManager } from '../../helper/version-manager';
+import { EnvironmentVariablesManager } from '../../helper/env-mapper';
 
 interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
   program: string;
@@ -47,7 +48,7 @@ export class AgentDebugSession
   private _runtime: SessionHandler;
   private _breakpointIncrement: number = 0;
   private _restart: boolean = false;
-  private _environmentVariables: Record<string, string>;
+  private _environmentVariables: EnvironmentVariablesManager;
   private _programName: string;
   private _port: number;
 
@@ -69,7 +70,7 @@ export class AgentDebugSession
       config.get<number>(
         'interpreter.port'
       );
-
+    
     me.setDebuggerLinesStartAt1(false);
     me.setDebuggerColumnsStartAt1(false);
 
@@ -82,7 +83,7 @@ export class AgentDebugSession
       'interpreter.silenceErrorPopups'
     );
     this._runtime = new SessionHandler(this, port, hideUnsupportedTextMeshProRichTextTags);
-    this._environmentVariables = config.get<Record<string, string>>('interpreter.environmentVariables') || {};
+    this._environmentVariables = new EnvironmentVariablesManager();
   }
 
   /**
@@ -159,6 +160,16 @@ export class AgentDebugSession
   ): Promise<void> {
     const me = this;
     const uri = Uri.parse(args.program);
+    const config = vscode.workspace.getConfiguration('greybel');
+    const environmentVariables =
+      config.get<object>('interpreter.environmentVariables') || {};
+    const environmentFilepath = config.get<string>('interpreter.environmentFile');
+
+    me._environmentVariables.injectFromJSON(environmentVariables);
+    await me._environmentVariables.injectFromWorkspace(
+      uri,
+      environmentFilepath
+    );
 
     getPreviewInstance().clear();
     me._restart = false;
@@ -176,7 +187,7 @@ export class AgentDebugSession
       const paramSegments =
         params && params.length > 0 ? params.split(' ') : [];
 
-      await me._runtime.start(this._programName, uri, paramSegments, !args.noDebug, this._environmentVariables);
+      await me._runtime.start(this._programName, uri, paramSegments, !args.noDebug, this._environmentVariables.copy());
       await me._runtime.waitForFinished();
 
       me.sendResponse(response);

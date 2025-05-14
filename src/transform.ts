@@ -9,7 +9,7 @@ import vscode, {
 import { greyscriptMeta } from 'greyscript-meta';
 
 import { showCustomErrorMessage } from './helper/show-custom-error';
-import { parseEnvVars } from './helper/parse-env-vars';
+import { EnvironmentVariablesManager } from './helper/env-mapper';
 
 export enum ShareType {
   WRITE = 'write',
@@ -40,9 +40,11 @@ export function activate(context: ExtensionContext) {
       const buildTypeFromConfig = config.get('transpiler.buildType');
       const environmentVariablesFromConfig =
         config.get<object>('transpiler.environmentVariables') || {};
+      const environmentFilepath = config.get<string>('transpiler.environmentFile');
       const excludedNamespacesFromConfig =
         config.get<string[]>('transpiler.excludedNamespaces') || [];
       const obfuscation = config.get<boolean>('transpiler.obfuscation');
+      const envMapper = new EnvironmentVariablesManager();
       let buildType = BuildType.DEFAULT;
       let buildOptions: any = { isDevMode: true };
 
@@ -62,11 +64,14 @@ export function activate(context: ExtensionContext) {
         };
       }
 
+      envMapper.injectFromJSON(environmentVariablesFromConfig, true);
+      await envMapper.injectFromWorkspace(editor.document.uri, environmentFilepath);
+
       const result = new DirectTranspiler({
         code: editor.document.getText(),
         buildType: specificBuildType || buildType,
         buildOptions,
-        environmentVariables: parseEnvVars(environmentVariablesFromConfig, true),
+        environmentVariables: envMapper.toMap(),
         obfuscation,
         excludedNamespaces: [
           'params',
