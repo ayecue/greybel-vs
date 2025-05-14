@@ -1611,3 +1611,7 @@ All notable changes to this project will be documented in this file.
 - support clear message in handler for in-game runtime
 - properly send keyCode for keys such as arrow keys, space, enter etc for in-game runtime
 - support env files
+
+## [2.6.25] - 14.05.2025
+
+- handle undefined environmentFile variable, prevents possible issues after update due to addition of env file option

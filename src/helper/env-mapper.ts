@@ -77,7 +77,11 @@ export class EnvironmentVariablesManager {
     this.map = { ...parseEnvJSON(json, escape), ...this.map };
   }
 
-  async injectFromWorkspace(targetUri: Uri, relativePathToEnv: string): Promise<void> {
+  async injectFromWorkspace(targetUri: Uri, relativePathToEnv: string | undefined): Promise<void> {
+    if (relativePathToEnv == null) {
+      return;
+    }
+
     const workspaceFolder = workspace.getWorkspaceFolder(targetUri);
 
     if (workspaceFolder) {
