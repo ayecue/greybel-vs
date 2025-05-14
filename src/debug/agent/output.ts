@@ -3,7 +3,7 @@ import PseudoTerminal from "../pseudo-terminal";
 import { getPreviewInstance } from "../../preview";
 import transform from '../../helper/text-mesh-transform';
 import { KeyEvent } from "greybel-interpreter";
-import transformStringToKeyEvent from "../../helper/transform-string-to-key-event";
+import { transformInputToIngameKeyCodeValue } from "../../helper/key-event";
 
 export class OutputHandler {
   private _sessionHandler: EventEmitter;
@@ -63,7 +63,7 @@ export class OutputHandler {
     );
   }
 
-  waitForKeyPress(message: string): PromiseLike<KeyEvent> {
+  waitForKeyPress(message: string): PromiseLike<string> {
     getPreviewInstance().input(message);
 
     const transformed = transform(message, this._hideUnsupportedTags).replace(
@@ -76,7 +76,7 @@ export class OutputHandler {
     return PseudoTerminal.getActiveTerminal()
       .waitForKeyPress(this._sessionHandler)
       .then((key) => {
-        return transformStringToKeyEvent(key);
+        return transformInputToIngameKeyCodeValue(key);
       });
   }
 

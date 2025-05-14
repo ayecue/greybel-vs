@@ -72,10 +72,10 @@ export class SessionHandler extends EventEmitter {
     super();
     this.session = session;
     this._agent = new ContextAgent({
-      warn: () => { },
-      error: () => { },
-      info: () => { },
-      debug: () => { }
+      warn: () => {},
+      error: () => {},
+      info: () => {},
+      debug: () => {},
     }, port);
     this._outputHandler = new OutputHandler(this, hideUnsupportedTags);
     this._internalFileMap = {};
@@ -225,8 +225,8 @@ export class SessionHandler extends EventEmitter {
         }
         case ClientMessageType.InputSentClientRpc: {
           if (response.anyKey) {
-            const key = await this._outputHandler.waitForKeyPress(response.output);
-            this._instance.sendInput(key.code);
+            const code = await this._outputHandler.waitForKeyPress(response.output);
+            this._instance.sendInput(code);
             break;
           }
 
