@@ -385,6 +385,12 @@
           "description": "Environment variables.",
           "scope": "resource"
         },
+        "greybel.interpreter.environmentFile": {
+          "type": "string",
+          "default": ".env",
+          "description": "Environment variables file.",
+          "scope": "resource"
+        },
         "greybel.interpreter.hideUnsupportedTextMeshProRichTextTags": {
           "type": "boolean",
           "default": false,
@@ -422,6 +428,12 @@
           "type": "object",
           "default": {},
           "description": "Environment variables.",
+          "scope": "resource"
+        },
+        "greybel.transpiler.environmentFile": {
+          "type": "string",
+          "default": ".env",
+          "description": "Environment variables file.",
           "scope": "resource"
         },
         "greybel.transpiler.dlo": {

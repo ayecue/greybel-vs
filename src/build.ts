@@ -13,8 +13,8 @@ import { showCustomErrorMessage } from './helper/show-custom-error';
 import { TranspilerResourceProvider } from './resource';
 import documentManager from './helper/document-manager';
 import { getIngameDirectory } from './helper/get-ingame-directory';
-import { parseEnvVars } from './helper/parse-env-vars';
 import { VersionManager } from './helper/version-manager';
+import { EnvironmentVariablesManager } from './helper/env-mapper';
 
 export function activate(context: ExtensionContext) {
   async function build(
@@ -37,13 +37,15 @@ export function activate(context: ExtensionContext) {
     try {
       const config = vscode.workspace.getConfiguration('greybel');
       const targetUri = eventUri;
-      const buildTypeFromConfig = config.get('transpiler.buildType');
+      const buildTypeFromConfig = config.get<string>('transpiler.buildType');
       const environmentVariablesFromConfig =
         config.get<object>('transpiler.environmentVariables') || {};
+      const environmentFilepath = config.get<string>('transpiler.environmentFile');
       const excludedNamespacesFromConfig =
         config.get<string[]>('transpiler.excludedNamespaces') || [];
       const obfuscation = config.get<boolean>('transpiler.obfuscation');
       const ingameDirectory = await getIngameDirectory(config);
+      const envMapper = new EnvironmentVariablesManager();
       let buildType = BuildType.DEFAULT;
       let buildOptions: any = {
         isDevMode: false
@@ -65,12 +67,15 @@ export function activate(context: ExtensionContext) {
         };
       }
 
+      envMapper.injectFromJSON(environmentVariablesFromConfig, true);
+      await envMapper.injectFromWorkspace(targetUri, environmentFilepath);
+
       const result = await new Transpiler({
         target: targetUri.toString(),
         resourceHandler: new TranspilerResourceProvider().getHandler(),
         buildType,
         buildOptions,
-        environmentVariables: parseEnvVars(environmentVariablesFromConfig, true),
+        environmentVariables: envMapper.toMap(),
         obfuscation,
         excludedNamespaces: [
           'params',

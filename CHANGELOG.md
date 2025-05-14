@@ -1610,3 +1610,4 @@ All notable changes to this project will be documented in this file.
 
 - support clear message in handler for in-game runtime
 - properly send keyCode for keys such as arrow keys, space, enter etc
+- support env files
