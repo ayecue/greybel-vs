@@ -30,7 +30,6 @@ import { Interpreter } from 'greyscript-interpreter';
 import vscode, { Uri } from 'vscode';
 
 import { PseudoFS } from '../../helper/fs';
-import { parseEnvVars } from '../../helper/parse-env-vars';
 import { showCustomErrorMessage } from '../../helper/show-custom-error';
 import { ansiProvider, useColor } from '../../helper/text-mesh-transform';
 import { getPreviewInstance } from '../../preview';
@@ -38,6 +37,7 @@ import { InterpreterResourceProvider } from '../../resource';
 import { GrebyelDebugger, GrebyelPseudoDebugger } from './debugger';
 import { VSOutputHandler } from './output';
 import { DebugSessionLike } from '../types';
+import { EnvironmentVariablesManager } from '../../helper/env-mapper';
 
 interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
   program: string;
@@ -66,6 +66,7 @@ export class GreybelDebugSession
 
   private _runtime: Interpreter;
   private _env: GHMockIntrinsicEnv;
+  private _environmentVariables: EnvironmentVariablesManager;
   private _breakpointIncrement: number = 0;
   private _restart: boolean = false;
   private _out: VSOutputHandler;
@@ -87,9 +88,11 @@ export class GreybelDebugSession
       config.get<boolean>(
         'interpreter.hideUnsupportedTextMeshProRichTextTags'
       ) ?? false;
+    const envMapper = new EnvironmentVariablesManager();
 
     me.setDebuggerLinesStartAt1(false);
     me.setDebuggerColumnsStartAt1(false);
+    envMapper.injectFromJSON(environmentVariables);
 
     this.threadID = Math.random() * 0x7fffffff;
     this._useDefaultArgs = config.get<boolean>('interpreter.useDefaultArgs');
@@ -103,12 +106,12 @@ export class GreybelDebugSession
         resourceHandler: new InterpreterResourceProvider(),
         outputHandler: this._out
       }),
-      debugger: new GrebyelDebugger(me),
-      environmentVariables: parseEnvVars(environmentVariables)
+      debugger: new GrebyelDebugger(me)
     });
     this._env = createGHMockEnv(this._runtime, {
       seed
     });
+    this._environmentVariables = new EnvironmentVariablesManager();
 
     this._runtime.setApi(
       initIntrinsics(initGHIntrinsics(new ObjectValue(), this._env))
@@ -189,8 +192,19 @@ export class GreybelDebugSession
   ): Promise<void> {
     const me = this;
     const uri = Uri.parse(args.program);
+    const config = vscode.workspace.getConfiguration('greybel');
+    const environmentVariables =
+      config.get<object>('interpreter.environmentVariables') || {};
+    const environmentFilepath = config.get<string>('interpreter.environmentFile');
+
+    me._environmentVariables.injectFromJSON(environmentVariables);
+    await me._environmentVariables.injectFromWorkspace(
+      uri,
+      environmentFilepath
+    );
 
     getPreviewInstance().clear();
+    me._runtime.environmentVariables = this._environmentVariables.toMap();
     me._runtime.debugMode = !args.noDebug;
     me._runtime.setTarget(uri.toString());
     me._runtime.setDebugger(
