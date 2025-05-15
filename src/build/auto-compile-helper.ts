@@ -9,6 +9,21 @@ export const generateAutoCompileCode = (
   allowImport: boolean
 ): string => {
   return `
+      tryGetFile = function(pc, path, maxTries = 100)
+        handle = File(pc, path)
+        tries = 0
+        while (handle == null)
+          if (tries > maxTries) then
+            break
+          end if
+          handle = File(pc, path)
+          tries = tries + 1
+          print("Failed to get file """ + path + """. (" + tries + "/" + maxTries + " tries)")
+          wait(0.1)
+        end while
+        return handle
+      end function
+
       rootDirectory = "${rootDirectory.trim().replace(/\/$/, '')}"
       rootFilePath = "${rootFilePath}"
       filePaths = [${importPaths.map((it) => `"${it}"`).join(',')}]
@@ -16,7 +31,7 @@ export const generateAutoCompileCode = (
       myShell = get_shell
       myComputer = host_computer(myShell)
 
-      srcFile = File(myComputer, rootDirectory + rootFilePath)
+      srcFile = tryGetFile(myComputer, rootDirectory + rootFilePath)
       if srcFile == null then exit("Couldn't find source file in " + rootDirectory + rootFilePath)
 
       fileName = name(srcFile)
@@ -26,24 +41,27 @@ export const generateAutoCompileCode = (
       result = create_folder(myComputer, destination, tmpDirectory)
       if result != 1 then exit("Error when creating temporary build folder! Reason: " + result)
 
-      tmpFolder = File(myComputer, destination + "/" + tmpDirectory)
+      tmpFolder = tryGetFile(myComputer, destination + "/" + tmpDirectory)
       if tmpFolder == null then exit("Couldn't find temporary build folder in " + destination + "/" + tmpDirectory)
 
       result = copy(srcFile, tmpFolder.path, "${SHORTEST_NAME}.src")
       if result != 1 then exit("Error when moving source file into temporary build folder! Reason: " + result)
 
+      tmpFile = tryGetFile(myComputer, tmpFolder.path + "/${SHORTEST_NAME}.src")
+      if (tmpFile == null) then exit("Cannot find temporary file!")
+
       result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${allowImport ? 1 : 0
     })
       if result != "" then exit("Error when building! Reason: " + result)
 
-      binaryFile = File(myComputer, tmpFolder.path + "/${SHORTEST_NAME}")
+      binaryFile = tryGetFile(myComputer, tmpFolder.path + "/${SHORTEST_NAME}")
       if binaryFile == null then exit("Couldn't find binary file in " + tmpFolder.path + "/${SHORTEST_NAME}")
 
       remainingFolderMap = {}
 
       for filePath in filePaths
         absPath = rootDirectory + filePath
-        entity = File(myComputer, absPath)
+        entity = tryGetFile(myComputer, absPath)
 
         if not entity then
           print("Couldn't find " + absPath)
@@ -66,7 +84,7 @@ export const generateAutoCompileCode = (
           continue
         end if
 
-        folder = File(myComputer, currentFolderPath)
+        folder = tryGetFile(myComputer, currentFolderPath)
         if folder and folder.get_files.len == 0 and folder.get_folders.len == 0 then
           push(remainingFolderPaths, path(parent(folder)))
           delete(folder)
