@@ -1615,3 +1615,8 @@ All notable changes to this project will be documented in this file.
 ## [2.6.25] - 14.05.2025
 
 - handle undefined environmentFile variable, prevents possible issues after update due to addition of env file option
+
+## [2.6.26] - 15.05.2025
+
+- fixed a sporadic NullPointerException in the parser occurring during the auto-compile phase of the create-ingame process on Windows
+- improved reliability of the auto-compile script in the create-ingame process on Windows by implementing retry logic for temporary file detection. This addresses premature exits in the file copy operation that caused occasional desynchronization
