@@ -8,7 +8,7 @@
     "email": "soerenwehmeier@googlemail.com"
   },
   "icon": "icon.png",
-  "version": "2.6.26",
+  "version": "2.6.27",
   "repository": {
     "type": "git",
     "url": "git@github.com:ayecue/greybel-vs.git"
@@ -314,10 +314,11 @@
         "icon": "$(play)"
       }
     ],
-    "configuration": {
-      "title": "Greybel VS",
-      "properties": {
-        "greybel.typeAnalyzer.exclude": {
+    "configuration": [
+      {
+        "title": "Type Analyzer",
+        "properties": {
+          "greybel.typeAnalyzer.exclude": {
           "type": "string",
           "default": "",
           "description": "Glob pattern to exclude files.",
@@ -332,207 +333,228 @@
           "default": "Dependency",
           "description": "Strategy that determines which files are used for type resolver.",
           "scope": "resource"
-        },
-        "greybel.formatter": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable GreyScript formatter."
-        },
-        "greybel.autocomplete": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable Greybel autocomplete."
-        },
-        "greybel.hoverdocs": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable Greybel hover tooltips."
-        },
-        "greybel.diagnostic": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable Greybel diagnostic."
-        },
-        "greybel.interpreter.environmentType": {
-          "type": "string",
-          "default": "Mock",
-          "enum": [
-            "Mock",
-            "In-Game"
-          ],
-          "description": "Interpreter environment type."
-        },
-        "greybel.interpreter.programName": {
-          "type": "string",
-          "default": "myprogram",
-          "description": "Program name which should be used in runtime. (Only in-game env)",
-          "scope": "resource"
-        },
-        "greybel.interpreter.port": {
-          "type": "number",
-          "default": 7777,
-          "description": "Message-hook port for interpreter. (Only in-game env)",
-          "scope": "resource"
-        },
-        "greybel.interpreter.seed": {
-          "type": "string",
-          "default": "test",
-          "description": "Interpreter seed. (Only mock env)"
-        },
-        "greybel.interpreter.environmentVariables": {
-          "type": "object",
-          "default": {},
-          "description": "Environment variables.",
-          "scope": "resource"
-        },
-        "greybel.interpreter.environmentFile": {
-          "type": "string",
-          "default": ".env",
-          "description": "Environment variables file.",
-          "scope": "resource"
-        },
-        "greybel.interpreter.hideUnsupportedTextMeshProRichTextTags": {
-          "type": "boolean",
-          "default": false,
-          "description": "Hide unsupported TextMesh Pro rich text tags."
-        },
-        "greybel.interpreter.useDefaultArgs": {
-          "type": "boolean",
-          "default": false,
-          "description": "Prevent argument prompt and instead use default args.",
-          "scope": "resource"
-        },
-        "greybel.interpreter.silenceErrorPopups": {
-          "type": "boolean",
-          "default": false,
-          "description": "Silence error popups."
-        },
-        "greybel.interpreter.defaultArgs": {
-          "type": "string",
-          "default": "",
-          "description": "Default arguments used for script.",
-          "scope": "resource"
-        },
-        "greybel.transpiler.buildType": {
-          "type": "string",
-          "enum": [
-            "Default",
-            "Uglify",
-            "Beautify"
-          ],
-          "default": "Default",
-          "description": "Build type.",
-          "scope": "resource"
-        },
-        "greybel.transpiler.environmentVariables": {
-          "type": "object",
-          "default": {},
-          "description": "Environment variables.",
-          "scope": "resource"
-        },
-        "greybel.transpiler.environmentFile": {
-          "type": "string",
-          "default": ".env",
-          "description": "Environment variables file.",
-          "scope": "resource"
-        },
-        "greybel.transpiler.dlo": {
-          "type": "boolean",
-          "default": false,
-          "description": "Disable literals optimization."
-        },
-        "greybel.transpiler.dno": {
-          "type": "boolean",
-          "default": false,
-          "description": "Disable namespaces optimization."
-        },
-        "greybel.transpiler.excludedNamespaces": {
-          "type": "array",
-          "default": [],
-          "description": "Excluded namespaces regarding optimization.",
-          "scope": "resource"
-        },
-        "greybel.transpiler.obfuscation": {
-          "type": "boolean",
-          "default": false,
-          "description": "Allow special characters when uglifying."
-        },
-        "greybel.transpiler.ingameDirectoryPrompt": {
-          "type": "boolean",
-          "default": false,
-          "description": "Prompts you to select a destination for the files on each import."
-        },
-        "greybel.transpiler.ingameDirectory": {
-          "type": "string",
-          "default": "/root/",
-          "description": "Define ingame directory to where the files should be imported to."
-        },
-        "greybel.transpiler.installer.active": {
-          "type": "boolean",
-          "default": true,
-          "description": "Generate installer when building.",
-          "scope": "resource"
-        },
-        "greybel.transpiler.installer.maxChars": {
-          "type": "number",
-          "default": 155000,
-          "minimum": 1000,
-          "description": "Amount of characters allowed in one file before splitting when creating installer."
-        },
-        "greybel.transpiler.installer.autoCompile": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable auto compile feature for installer."
-        },
-        "greybel.transpiler.installer.allowImport": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable allowImport when performing auto compile in installer."
-        },
-        "greybel.transpiler.beautify.keepParentheses": {
-          "type": "boolean",
-          "default": false,
-          "description": "Always keep the parentheses."
-        },
-        "greybel.transpiler.beautify.indentation": {
-          "type": "string",
-          "enum": [
-            "Tab",
-            "Whitespace"
-          ],
-          "default": "Tab",
-          "description": "Tab or whitespace. What should be used for indentation?"
-        },
-        "greybel.transpiler.beautify.indentationSpaces": {
-          "type": "number",
-          "default": 2,
-          "description": "Define the amount of whitespaces when using whitespaces as indentation."
-        },
-        "greybel.createIngame.port": {
-          "type": "number",
-          "default": 7777,
-          "description": "Message-hook port for file upload.",
-          "scope": "resource"
-        },
-        "greybel.createIngame.active": {
-          "type": "boolean",
-          "default": false,
-          "description": "Create files automatically in-game.",
-          "scope": "resource"
-        },
-        "greybel.createIngame.autoCompile": {
-          "type": "boolean",
-          "default": false,
-          "description": "Build root file automatically.",
-          "scope": "resource"
-        },
-        "greybel.createIngame.allowImport": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable allowImport on auto compile."
+        }
+        }
+      },
+      {
+        "title": "General",
+        "properties": {
+          "greybel.formatter": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable GreyScript formatter."
+          },
+          "greybel.autocomplete": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable Greybel autocomplete."
+          },
+          "greybel.hoverdocs": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable Greybel hover tooltips."
+          },
+          "greybel.diagnostic": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable Greybel diagnostic."
+          }
+        }
+      },
+      {
+        "title": "Interpreter",
+        "properties": {
+          "greybel.interpreter.environmentType": {
+            "type": "string",
+            "default": "Mock",
+            "enum": [
+              "Mock",
+              "In-Game"
+            ],
+            "description": "Interpreter environment type."
+          },
+          "greybel.interpreter.programName": {
+            "type": "string",
+            "default": "myprogram",
+            "description": "Program name which should be used in runtime. (Only in-game env)",
+            "scope": "resource"
+          },
+          "greybel.interpreter.port": {
+            "type": "number",
+            "default": 7777,
+            "description": "Message-hook port for interpreter. (Only in-game env)",
+            "scope": "resource"
+          },
+          "greybel.interpreter.seed": {
+            "type": "string",
+            "default": "test",
+            "description": "Interpreter seed. (Only mock env)"
+          },
+          "greybel.interpreter.environmentVariables": {
+            "type": "object",
+            "default": {},
+            "description": "Environment variables.",
+            "scope": "resource"
+          },
+          "greybel.interpreter.environmentFile": {
+            "type": "string",
+            "default": ".env",
+            "description": "Environment variables file.",
+            "scope": "resource"
+          },
+          "greybel.interpreter.hideUnsupportedTextMeshProRichTextTags": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide unsupported TextMesh Pro rich text tags."
+          },
+          "greybel.interpreter.useDefaultArgs": {
+            "type": "boolean",
+            "default": false,
+            "description": "Prevent argument prompt and instead use default args.",
+            "scope": "resource"
+          },
+          "greybel.interpreter.silenceErrorPopups": {
+            "type": "boolean",
+            "default": false,
+            "description": "Silence error popups."
+          },
+          "greybel.interpreter.defaultArgs": {
+            "type": "string",
+            "default": "",
+            "description": "Default arguments used for script.",
+            "scope": "resource"
+          }
+        }
+      },
+      {
+        "title": "Transpiler",
+        "properties": {
+          "greybel.transpiler.buildType": {
+            "type": "string",
+            "enum": [
+              "Default",
+              "Uglify",
+              "Beautify"
+            ],
+            "default": "Default",
+            "description": "Build type.",
+            "scope": "resource"
+          },
+          "greybel.transpiler.environmentVariables": {
+            "type": "object",
+            "default": {},
+            "description": "Environment variables.",
+            "scope": "resource"
+          },
+          "greybel.transpiler.environmentFile": {
+            "type": "string",
+            "default": ".env",
+            "description": "Environment variables file.",
+            "scope": "resource"
+          },
+          "greybel.transpiler.dlo": {
+            "type": "boolean",
+            "default": false,
+            "description": "Disable literals optimization."
+          },
+          "greybel.transpiler.dno": {
+            "type": "boolean",
+            "default": false,
+            "description": "Disable namespaces optimization."
+          },
+          "greybel.transpiler.excludedNamespaces": {
+            "type": "array",
+            "default": [],
+            "description": "Excluded namespaces regarding optimization.",
+            "scope": "resource"
+          },
+          "greybel.transpiler.obfuscation": {
+            "type": "boolean",
+            "default": false,
+            "description": "Allow special characters when uglifying."
+          },
+          "greybel.transpiler.ingameDirectoryPrompt": {
+            "type": "boolean",
+            "default": false,
+            "description": "Prompts you to select a destination for the files on each import."
+          },
+          "greybel.transpiler.ingameDirectory": {
+            "type": "string",
+            "default": "/root/",
+            "description": "Define ingame directory to where the files should be imported to."
+          },
+          "greybel.transpiler.installer.active": {
+            "type": "boolean",
+            "default": true,
+            "description": "Generate installer when building.",
+            "scope": "resource"
+          },
+          "greybel.transpiler.installer.maxChars": {
+            "type": "number",
+            "default": 155000,
+            "minimum": 1000,
+            "description": "Amount of characters allowed in one file before splitting when creating installer."
+          },
+          "greybel.transpiler.installer.autoCompile": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable auto compile feature for installer."
+          },
+          "greybel.transpiler.installer.allowImport": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable allowImport when performing auto compile in installer."
+          },
+          "greybel.transpiler.beautify.keepParentheses": {
+            "type": "boolean",
+            "default": false,
+            "description": "Always keep the parentheses."
+          },
+          "greybel.transpiler.beautify.indentation": {
+            "type": "string",
+            "enum": [
+              "Tab",
+              "Whitespace"
+            ],
+            "default": "Tab",
+            "description": "Tab or whitespace. What should be used for indentation?"
+          },
+          "greybel.transpiler.beautify.indentationSpaces": {
+            "type": "number",
+            "default": 2,
+            "description": "Define the amount of whitespaces when using whitespaces as indentation."
+          }
+        }
+      },
+      {
+        "title": "Create Ingame",
+        "properties": {
+          "greybel.createIngame.port": {
+            "type": "number",
+            "default": 7777,
+            "description": "Message-hook port for file upload.",
+            "scope": "resource"
+          },
+          "greybel.createIngame.active": {
+            "type": "boolean",
+            "default": false,
+            "description": "Create files automatically in-game.",
+            "scope": "resource"
+          },
+          "greybel.createIngame.autoCompile": {
+            "type": "boolean",
+            "default": false,
+            "description": "Build root file automatically.",
+            "scope": "resource"
+          },
+          "greybel.createIngame.allowImport": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable allowImport on auto compile."
+          }
         }
       }
-    },
+    ],
     "breakpoints": [
       {
         "language": "greyscript"
