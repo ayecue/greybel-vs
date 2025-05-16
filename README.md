@@ -18,7 +18,7 @@ This toolkit provides essential tools for developing in GreyScript, the scriptin
 - [GreyScript Documentation](https://documentation.greyscript.org): API documentation for GreyScript.
 
 **Projects Using Greybel**
-- [gsse](https://github.com/viper-guild/gsse): GreyScript Script Extender (GSSE) is a modular library designed to enhance and expand the existing scripting capabilities of the GreyScript framework.
+- [gsse](https://github.com/viper-guild/gsse): GreyScript Script Extender is a modular library that aims to expand the current scripting framework of greyscript.
 - [minizod](https://github.com/cantemizyurek/minizod): A lightweight, Zod-inspired validation library for MiniScript.
 - [Minesweeper](https://github.com/ayecue/minesweeper-gs): A Minesweeper game created in GreyScript. (Demo project)
 - [JSON Parser](https://github.com/ayecue/json): JSON parsing functionality. (Demo project)
