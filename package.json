@@ -456,6 +456,11 @@
             "description": "Watch project files for changes and run build automatically.",
             "scope": "resource"
           },
+          "greybel.transpiler.outputFilename": {
+            "type": "string",
+            "description": "Specify the name of the main output file.",
+            "scope": "resource"
+          },
           "greybel.transpiler.environmentVariables": {
             "type": "object",
             "default": {},
