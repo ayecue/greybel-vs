@@ -15,12 +15,25 @@ import documentManager from './helper/document-manager';
 import { getIngameDirectory } from './helper/get-ingame-directory';
 import { VersionManager } from './helper/version-manager';
 import { EnvironmentVariablesManager } from './helper/env-mapper';
+import { Watcher } from './helper/watcher';
+import { getBuildOutputUri, getBuildRootUri, getBuildTargetUri } from './helper/build-uri';
 
 export function activate(context: ExtensionContext) {
   async function build(
     eventUri: Uri = vscode.window.activeTextEditor?.document?.uri
   ) {
-    const parseResult = await documentManager.open(eventUri);
+    const config = vscode.workspace.getConfiguration('greybel');
+    const targetUri = getBuildTargetUri(config.get<string>('rootFile'), eventUri);
+
+    if (targetUri === null) {
+      vscode.window.showErrorMessage(
+        'Invalid target uri.',
+        { modal: false }
+      );
+      return;
+    }
+
+    const parseResult = await documentManager.open(targetUri);
 
     if (parseResult === null) {
       vscode.window.showErrorMessage(
@@ -35,8 +48,6 @@ export function activate(context: ExtensionContext) {
     await Promise.all(dirtyFiles.map((it) => it.textDocument.save()));
 
     try {
-      const config = vscode.workspace.getConfiguration('greybel');
-      const targetUri = eventUri;
       const buildTypeFromConfig = config.get<string>('transpiler.buildType');
       const environmentVariablesFromConfig =
         config.get<object>('transpiler.environmentVariables') || {};
@@ -44,8 +55,10 @@ export function activate(context: ExtensionContext) {
       const excludedNamespacesFromConfig =
         config.get<string[]>('transpiler.excludedNamespaces') || [];
       const obfuscation = config.get<boolean>('transpiler.obfuscation');
+      const outputFilename = config.get<string>('transpiler.outputFilename');
       const ingameDirectory = await getIngameDirectory(config);
       const envMapper = new EnvironmentVariablesManager();
+      let outputUri = targetUri;
       let buildType = BuildType.DEFAULT;
       let buildOptions: any = {
         isDevMode: false
@@ -67,6 +80,10 @@ export function activate(context: ExtensionContext) {
         };
       }
 
+      if (outputFilename != null && outputFilename != '') {
+        outputUri = Uri.joinPath(Uri.joinPath(targetUri, '..'), outputFilename);
+      }
+
       envMapper.injectFromJSON(environmentVariablesFromConfig, true);
       await envMapper.injectFromWorkspace(targetUri, environmentFilepath);
 
@@ -83,16 +100,18 @@ export function activate(context: ExtensionContext) {
           ...Array.from(Object.keys(greyscriptMeta.getTypeSignature('general').getDefinitions()))
         ],
         processImportPathCallback: (path: string) => {
-          const relativePath = createBasePath(targetUri, path);
+          const relativePath = createBasePath(outputUri, path);
           return Uri.joinPath(ingameDirectory, relativePath).path;
         }
       }).parse();
 
-      const rootPath = vscode.workspace.getWorkspaceFolder(targetUri);
-      const rootPathUri = rootPath
-        ? rootPath.uri
-        : Uri.joinPath(eventUri, '..');
-      const buildPath = Uri.joinPath(rootPathUri, './build');
+      // Remove the main file from the result and replace with the output file
+      const mainContent = result[targetUri.toString()];
+      delete result[targetUri.toString()];
+      result[outputUri.toString()] = mainContent;
+
+      const rootPathUri = getBuildRootUri(outputUri);
+      const buildPath = getBuildOutputUri(rootPathUri);
 
       try {
         await vscode.workspace.fs.delete(buildPath, { recursive: true });
@@ -101,7 +120,7 @@ export function activate(context: ExtensionContext) {
       }
 
       await vscode.workspace.fs.createDirectory(buildPath);
-      await createParseResult(targetUri, buildPath, result);
+      await createParseResult(outputUri, buildPath, result);
 
       if (config.get<boolean>('transpiler.installer.active')) {
         const maxChars =
@@ -115,7 +134,7 @@ export function activate(context: ExtensionContext) {
           modal: false
         });
         await createInstaller({
-          target: targetUri,
+          target: outputUri,
           autoCompile,
           buildPath: rootPathUri,
           ingameDirectory: ingameDirectory.path,
@@ -133,7 +152,7 @@ export function activate(context: ExtensionContext) {
         });
 
         await executeImport({
-          target: targetUri,
+          target: outputUri,
           ingameDirectory: ingameDirectory.path,
           result,
           extensionContext: context,
@@ -157,6 +176,7 @@ export function activate(context: ExtensionContext) {
   }
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('greybel.build', build)
+    vscode.commands.registerCommand('greybel.build', build),
+    new Watcher(build).start()
   );
 }

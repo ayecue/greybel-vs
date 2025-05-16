@@ -18,6 +18,7 @@ This toolkit provides essential tools for developing in GreyScript, the scriptin
 - [GreyScript Documentation](https://documentation.greyscript.org): API documentation for GreyScript.
 
 **Projects Using Greybel**
+- [gsse](https://github.com/viper-guild/gsse): GreyScript Script Extender (GSSE) is a modular library designed to enhance and expand the existing scripting capabilities of the GreyScript framework.
 - [minizod](https://github.com/cantemizyurek/minizod): A lightweight, Zod-inspired validation library for MiniScript.
 - [Minesweeper](https://github.com/ayecue/minesweeper-gs): A Minesweeper game created in GreyScript. (Demo project)
 - [JSON Parser](https://github.com/ayecue/json): JSON parsing functionality. (Demo project)
@@ -53,15 +54,18 @@ You can also access these commands through the context menu for quick right-clic
 
 # Settings
 
-- **Autocomplete**: Activate/Deactivate
+- **General**
+  - **Autocomplete**: Activate/Deactivate
+  - **Diagnostic**: Activate/Deactivate
+  - **Hoverdocs**: Activate/Deactivate
+  - **Formatter**: Activate/Deactivate
+  - **File Extensions**: Define allowed file extension
+  - **Root File**: Define the root project file. If not set, the extension will automatically choose a file based on the current context. This determines which file is built or executed
 - **Create in-game**
   - **Active**: Activate/Deactivate
   - **Auto Compile**: Auto compile and delete source files
   - **Allow Import**: Enable allowImport on auto compile
   - **Port**: Select the port of the message-hook server
-- **Diagnostic**: Activate/Deactivate
-- **Hoverdocs**: Activate/Deactivate
-- **Formatter**: Activate/Deactivate
 - **Interpreter**
   - **Default Args**: Default call arguments
   - **Environment Variables**: JSON used to define environment variables (ENVs)
@@ -88,6 +92,8 @@ You can also access these commands through the context menu for quick right-clic
     - **Allow Import**: Enable allowImport when performing auto compile in installer
     - **Max Chars**: Define the maximum number of characters at which the installer should split the code
   - **Obfuscation**: Enables minification of namespaces using special characters
+  - **Watch**: Watch project files for changes and run build automatically
+  - **Output Filename**: Specify the name of the main output file.
 - **Type Analyzer**
   - **Strategy**: Specifies which files are used for type resolution. The "Dependency" strategy resolves types from all files imported into the current file. Alternatively, the "Workspace" strategy resolves types from all files within the workspace
   - **Exclude**: Specifies files to ignore based on matching glob patterns

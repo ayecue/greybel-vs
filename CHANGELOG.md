@@ -1617,6 +1617,14 @@ All notable changes to this project will be documented in this file.
 - fixed a sporadic NullPointerException in the parser occurring during the auto-compile phase of the create-ingame process on Windows
 - improved reliability of the auto-compile script in the create-ingame process on Windows by implementing retry logic for temporary file detection. This addresses premature exits in the file copy operation that caused occasional desynchronization
 
-## [2.7.0] - 02.04.2025
+## [2.6.27] - 16.05.2025
+
+- added option to define additional file extensions considered during file extension auto-resolution - thanks for the suggestion to [@EntitySeaker](https://github.com/EntitySeaker)
+- added ability to specify a root file that is built or run regardless of the current execution context
+- added watch functionality to automatically build when files change - has to be activated
+- added option to define the name of the main output file - thanks for the suggestion to [@EntitySeaker](https://github.com/EntitySeaker)
+- add categories to extension settings to get a better overview
+
+## [2.7.x] - xx.xx.2025
 
 - support experimental version
