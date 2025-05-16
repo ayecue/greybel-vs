@@ -9,6 +9,7 @@ import { BreakpointEvent, StoppedEvent } from "@vscode/debugadapter";
 import { DebugProtocol } from "@vscode/debugprotocol";
 import { randomString } from "../../helper/random-string";
 import { VersionManager } from "../../helper/version-manager";
+import { parseFileExtensions } from "../../helper/parse-file-extensions";
 
 enum ClientMessageType {
   SendFileSizeClientRpc = 75,
@@ -44,12 +45,10 @@ interface ContextBreakpoint {
   stacktrace: StackItem[];
 }
 
-async function resolveFileExtension(path: string): Promise<Uri | null> {
+async function resolveFileExtension(path: string, allowedFileExtensions: string[]): Promise<Uri | null> {
   return await findExistingPath(
     Uri.file(path),
-    Uri.file(`${path}.src`),
-    Uri.file(`${path}.gs`),
-    Uri.file(`${path}.ms`)
+    ...allowedFileExtensions.map((ext) => Uri.file(`${path}.${ext}`))
   );
 }
 
@@ -65,11 +64,15 @@ export class SessionHandler extends EventEmitter {
   private _lastBreakpoint: ContextBreakpoint;
   private _internalFileMap: Record<string, string>;
   private _temporaryPath: string;
+  private _fileExtensions: string[];
 
   private _outputHandler: OutputHandler;
 
   constructor(session: DebugSessionLike, port: number, hideUnsupportedTags: boolean) {
     super();
+
+    const config = vscode.workspace.getConfiguration('greybel');
+
     this.session = session;
     this._agent = new ContextAgent({
       warn: () => {},
@@ -80,6 +83,7 @@ export class SessionHandler extends EventEmitter {
     this._outputHandler = new OutputHandler(this, hideUnsupportedTags);
     this._internalFileMap = {};
     this._temporaryPath = "temp-" + randomString(10);
+    this._fileExtensions = parseFileExtensions(config.get<string>('fileExtensions')) || ['src', 'gs', 'ms'];
   }
 
   get outputHandler() {
@@ -133,7 +137,7 @@ export class SessionHandler extends EventEmitter {
       };
     }
 
-    const resolvedPath = await resolveFileExtension(path);
+    const resolvedPath = await resolveFileExtension(path, this._fileExtensions);
 
     return {
       resolvedPath: resolvedPath ? resolvedPath.fsPath : path,
@@ -281,7 +285,7 @@ export class SessionHandler extends EventEmitter {
 
   private async resolveFile(path: string) {
     if (this._instance == null) return;
-    const resolvedPath = await resolveFileExtension(path);
+    const resolvedPath = await resolveFileExtension(path, this._fileExtensions);
     if (resolvedPath == null) {
       await this._instance.resolvedFile(path, null);
       return;

@@ -358,6 +358,11 @@
             "type": "boolean",
             "default": true,
             "description": "Enable Greybel diagnostic."
+          },
+          "greybel.fileExtensions": {
+            "type": "string",
+            "default": "src,gs,ms",
+            "description": "Define allowed file extension."
           }
         }
       },
