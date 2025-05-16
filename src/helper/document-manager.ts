@@ -5,6 +5,7 @@ import { ASTBaseBlockWithScope } from 'miniscript-core';
 import vscode, { TextDocument, Uri } from 'vscode';
 
 import { findExistingPath, getWorkspaceFolderUri } from './fs';
+import { parseFileExtensions } from './parse-file-extensions';
 
 export interface ParseResultOptions {
   documentManager: DocumentParseQueue;
@@ -31,9 +32,11 @@ export class DocumentURIBuilder {
   }
 
   constructor(rootPath: Uri, workspaceFolderUri: Uri = null) {
+    const config = vscode.workspace.getConfiguration('greybel');
+
     this.workspaceFolderUri = workspaceFolderUri;
     this.rootPath = rootPath;
-    this.fileExtensions = ['gs', 'ms', 'src'];
+    this.fileExtensions = parseFileExtensions(config.get<string>('fileExtensions')) || ['gs', 'ms', 'src'];
   }
 
   private getFromWorkspaceFolder(path: string): Uri {

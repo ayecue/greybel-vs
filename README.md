@@ -18,6 +18,7 @@ This toolkit provides essential tools for developing in GreyScript, the scriptin
 - [GreyScript Documentation](https://documentation.greyscript.org): API documentation for GreyScript.
 
 **Projects Using Greybel**
+- [gsse](https://github.com/viper-guild/gsse): GreyScript Script Extender is a modular library that aims to expand the current scripting framework of greyscript.
 - [minizod](https://github.com/cantemizyurek/minizod): A lightweight, Zod-inspired validation library for MiniScript.
 - [Minesweeper](https://github.com/ayecue/minesweeper-gs): A Minesweeper game created in GreyScript. (Demo project)
 - [JSON Parser](https://github.com/ayecue/json): JSON parsing functionality. (Demo project)
@@ -53,15 +54,18 @@ You can also access these commands through the context menu for quick right-clic
 
 # Settings
 
-- **Autocomplete**: Activate/Deactivate
+- **General**
+  - **Autocomplete**: Activate/Deactivate
+  - **Diagnostic**: Activate/Deactivate
+  - **Hoverdocs**: Activate/Deactivate
+  - **Formatter**: Activate/Deactivate
+  - **File Extensions**: Define allowed file extension
+  - **Root File**: Define the root project file. If not set, the extension will automatically choose a file based on the current context. This determines which file is built or executed
 - **Create in-game**
   - **Active**: Activate/Deactivate
   - **Auto Compile**: Auto compile and delete source files
   - **Allow Import**: Enable allowImport on auto compile
   - **Port**: Select the port of the message-hook server
-- **Diagnostic**: Activate/Deactivate
-- **Hoverdocs**: Activate/Deactivate
-- **Formatter**: Activate/Deactivate
 - **Interpreter**
   - **Default Args**: Default call arguments
   - **Environment Variables**: JSON used to define environment variables (ENVs)
@@ -90,6 +94,8 @@ You can also access these commands through the context menu for quick right-clic
     - **Allow Import**: Enable allowImport when performing auto compile in installer
     - **Max Chars**: Define the maximum number of characters at which the installer should split the code
   - **Obfuscation**: Enables minification of namespaces using special characters
+  - **Watch**: Watch project files for changes and run build automatically
+  - **Output Filename**: Specify the name of the main output file.
 - **Type Analyzer**
   - **Strategy**: Specifies which files are used for type resolution. The "Dependency" strategy resolves types from all files imported into the current file. Alternatively, the "Workspace" strategy resolves types from all files within the workspace
   - **Exclude**: Specifies files to ignore based on matching glob patterns
@@ -153,7 +159,7 @@ The message-hook agent allows you to send messages to the game server through th
 ##### BepInEx 5.x.x
 1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/b844900715080ac191b0db59e69520da7d8f7595/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/531bb2b769be2c7ac78ddd488b90b4ae8aed7b3c/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
@@ -163,7 +169,7 @@ The message-hook agent allows you to send messages to the game server through th
 ##### BepInEx 6.x.x
 1. **Download BepInEx 6.x.x**: [BepInEx version 6.0.0-pre.2 Unity.Mono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/b844900715080ac191b0db59e69520da7d8f7595/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/531bb2b769be2c7ac78ddd488b90b4ae8aed7b3c/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`

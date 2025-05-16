@@ -11,6 +11,7 @@ import vscode, {
 
 import { AgentDebugSession } from './agent/session';
 import { GreybelDebugSession } from './local/session';
+import { getLaunchResourceUri } from '../helper/launch-uri';
 
 export enum InterpreterEnvironmentType {
   Mock = 'Mock',
@@ -38,10 +39,15 @@ export function activate(
     vscode.commands.registerCommand(
       'greybel.debug.runEditorContents',
       (resource: Uri) => {
-        let targetResource = resource;
-        if (!targetResource && vscode.window.activeTextEditor) {
-          targetResource = vscode.window.activeTextEditor.document.uri;
+        let eventResource = resource;
+
+        if (!eventResource && vscode.window.activeTextEditor) {
+          eventResource = vscode.window.activeTextEditor.document.uri;
         }
+
+        const config = vscode.workspace.getConfiguration('greybel');
+        const targetResource = getLaunchResourceUri(config.get<string>('rootFile'), eventResource);
+
         if (targetResource) {
           vscode.debug.startDebugging(
             undefined,
@@ -59,10 +65,15 @@ export function activate(
     vscode.commands.registerCommand(
       'greybel.debug.debugEditorContents',
       (resource: Uri) => {
-        let targetResource = resource;
-        if (!targetResource && vscode.window.activeTextEditor) {
-          targetResource = vscode.window.activeTextEditor.document.uri;
+        let eventResource = resource;
+
+        if (!eventResource && vscode.window.activeTextEditor) {
+          eventResource = vscode.window.activeTextEditor.document.uri;
         }
+
+        const config = vscode.workspace.getConfiguration('greybel');
+        const targetResource = getLaunchResourceUri(config.get<string>('rootFile'), eventResource);
+
         if (targetResource) {
           vscode.debug.startDebugging(undefined, {
             type: 'greyscript',
