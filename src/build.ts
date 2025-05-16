@@ -55,8 +55,10 @@ export function activate(context: ExtensionContext) {
       const excludedNamespacesFromConfig =
         config.get<string[]>('transpiler.excludedNamespaces') || [];
       const obfuscation = config.get<boolean>('transpiler.obfuscation');
+      const outputFilename = config.get<string>('transpiler.outputFilename');
       const ingameDirectory = await getIngameDirectory(config);
       const envMapper = new EnvironmentVariablesManager();
+      let outputUri = targetUri;
       let buildType = BuildType.DEFAULT;
       let buildOptions: any = {
         isDevMode: false
@@ -78,6 +80,10 @@ export function activate(context: ExtensionContext) {
         };
       }
 
+      if (outputFilename != null && outputFilename != '') {
+        outputUri = Uri.joinPath(Uri.joinPath(targetUri, '..'), outputFilename);
+      }
+
       envMapper.injectFromJSON(environmentVariablesFromConfig, true);
       await envMapper.injectFromWorkspace(targetUri, environmentFilepath);
 
@@ -94,12 +100,17 @@ export function activate(context: ExtensionContext) {
           ...Array.from(Object.keys(greyscriptMeta.getTypeSignature('general').getDefinitions()))
         ],
         processImportPathCallback: (path: string) => {
-          const relativePath = createBasePath(targetUri, path);
+          const relativePath = createBasePath(outputUri, path);
           return Uri.joinPath(ingameDirectory, relativePath).path;
         }
       }).parse();
 
-      const rootPathUri = getBuildRootUri(targetUri);
+      // Remove the main file from the result and replace with the output file
+      const mainContent = result[targetUri.toString()];
+      delete result[targetUri.toString()];
+      result[outputUri.toString()] = mainContent;
+
+      const rootPathUri = getBuildRootUri(outputUri);
       const buildPath = getBuildOutputUri(rootPathUri);
 
       try {
@@ -109,7 +120,7 @@ export function activate(context: ExtensionContext) {
       }
 
       await vscode.workspace.fs.createDirectory(buildPath);
-      await createParseResult(targetUri, buildPath, result);
+      await createParseResult(outputUri, buildPath, result);
 
       if (config.get<boolean>('transpiler.installer.active')) {
         const maxChars =
@@ -123,7 +134,7 @@ export function activate(context: ExtensionContext) {
           modal: false
         });
         await createInstaller({
-          target: targetUri,
+          target: outputUri,
           autoCompile,
           buildPath: rootPathUri,
           ingameDirectory: ingameDirectory.path,
@@ -141,7 +152,7 @@ export function activate(context: ExtensionContext) {
         });
 
         await executeImport({
-          target: targetUri,
+          target: outputUri,
           ingameDirectory: ingameDirectory.path,
           result,
           extensionContext: context,
