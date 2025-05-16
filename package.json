@@ -316,27 +316,6 @@
     ],
     "configuration": [
       {
-        "title": "Type Analyzer",
-        "properties": {
-          "greybel.typeAnalyzer.exclude": {
-          "type": "string",
-          "default": "",
-          "description": "Glob pattern to exclude files.",
-          "scope": "resource"
-        },
-        "greybel.typeAnalyzer.strategy": {
-          "type": "string",
-          "enum": [
-            "Dependency",
-            "Workspace"
-          ],
-          "default": "Dependency",
-          "description": "Strategy that determines which files are used for type resolver.",
-          "scope": "resource"
-        }
-        }
-      },
-      {
         "title": "General",
         "properties": {
           "greybel.formatter": {
@@ -363,6 +342,32 @@
             "type": "string",
             "default": "src,gs,ms",
             "description": "Define allowed file extension."
+          },
+          "greybel.rootFile": {
+            "type": "string",
+            "description": "Define the root project file. If not set, the extension will automatically choose a file based on the current context. This determines which file is built or executed.",
+            "scope": "resource"
+          }
+        }
+      },
+      {
+        "title": "Type Analyzer",
+        "properties": {
+          "greybel.typeAnalyzer.exclude": {
+            "type": "string",
+            "default": "",
+            "description": "Glob pattern to exclude files.",
+            "scope": "resource"
+          },
+          "greybel.typeAnalyzer.strategy": {
+            "type": "string",
+            "enum": [
+              "Dependency",
+              "Workspace"
+            ],
+            "default": "Dependency",
+            "description": "Strategy that determines which files are used for type resolver.",
+            "scope": "resource"
           }
         }
       },
@@ -443,6 +448,12 @@
             ],
             "default": "Default",
             "description": "Build type.",
+            "scope": "resource"
+          },
+          "greybel.transpiler.watch": {
+            "type": "boolean",
+            "default": false,
+            "description": "Watch project files for changes and run build automatically.",
             "scope": "resource"
           },
           "greybel.transpiler.environmentVariables": {
@@ -621,11 +632,11 @@
     "color-convert": "^2.0.1",
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
-    "greyhack-message-hook-client": "~0.6.7",
     "greybel-gh-mock-intrinsics": "~5.5.12",
     "greybel-intrinsics": "~5.5.5",
     "greybel-languageserver": "~1.14.2",
     "greybel-languageserver-browser": "~1.10.2",
+    "greyhack-message-hook-client": "~0.6.7",
     "greyscript-core": "~2.5.5",
     "greyscript-interpreter": "~2.5.4",
     "greyscript-meta": "~4.3.1",
