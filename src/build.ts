@@ -15,12 +15,25 @@ import documentManager from './helper/document-manager';
 import { getIngameDirectory } from './helper/get-ingame-directory';
 import { VersionManager } from './helper/version-manager';
 import { EnvironmentVariablesManager } from './helper/env-mapper';
+import { Watcher } from './helper/watcher';
+import { getBuildOutputUri, getBuildRootUri, getBuildTargetUri } from './helper/build-uri';
 
 export function activate(context: ExtensionContext) {
   async function build(
     eventUri: Uri = vscode.window.activeTextEditor?.document?.uri
   ) {
-    const parseResult = await documentManager.open(eventUri);
+    const config = vscode.workspace.getConfiguration('greybel');
+    const targetUri = getBuildTargetUri(config.get<string>('rootFile'), eventUri);
+
+    if (targetUri === null) {
+      vscode.window.showErrorMessage(
+        'Invalid target uri.',
+        { modal: false }
+      );
+      return;
+    }
+
+    const parseResult = await documentManager.open(targetUri);
 
     if (parseResult === null) {
       vscode.window.showErrorMessage(
@@ -35,8 +48,6 @@ export function activate(context: ExtensionContext) {
     await Promise.all(dirtyFiles.map((it) => it.textDocument.save()));
 
     try {
-      const config = vscode.workspace.getConfiguration('greybel');
-      const targetUri = eventUri;
       const buildTypeFromConfig = config.get<string>('transpiler.buildType');
       const environmentVariablesFromConfig =
         config.get<object>('transpiler.environmentVariables') || {};
@@ -88,11 +99,8 @@ export function activate(context: ExtensionContext) {
         }
       }).parse();
 
-      const rootPath = vscode.workspace.getWorkspaceFolder(targetUri);
-      const rootPathUri = rootPath
-        ? rootPath.uri
-        : Uri.joinPath(eventUri, '..');
-      const buildPath = Uri.joinPath(rootPathUri, './build');
+      const rootPathUri = getBuildRootUri(targetUri);
+      const buildPath = getBuildOutputUri(rootPathUri);
 
       try {
         await vscode.workspace.fs.delete(buildPath, { recursive: true });
@@ -157,6 +165,7 @@ export function activate(context: ExtensionContext) {
   }
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('greybel.build', build)
+    vscode.commands.registerCommand('greybel.build', build),
+    new Watcher(build).start()
   );
 }
