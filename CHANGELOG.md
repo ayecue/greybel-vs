@@ -1627,3 +1627,4 @@ All notable changes to this project will be documented in this file.
 - added ability to specify a root file that is built or run regardless of the current execution context
 - added watch functionality to automatically build when files change - has to be activated
 - added option to define the name of the main output file - thanks for the suggestion to [@EntitySeaker](https://github.com/EntitySeaker)
+- add categories to extension settings to get a better overview
