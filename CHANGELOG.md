@@ -1625,6 +1625,11 @@ All notable changes to this project will be documented in this file.
 - added option to define the name of the main output file - thanks for the suggestion to [@EntitySeaker](https://github.com/EntitySeaker)
 - add categories to extension settings to get a better overview
 
+## [2.6.28] - 17.05.2025
+
+- split build and run commands into separate commands, tailored to the root file and contextual files - thanks for the suggestion to [@midsubspace](https://github.com/midsubspace)
+- introduce command categories for better organization and discovery
+
 ## [2.7.x] - xx.xx.2025
 
 - support experimental version
