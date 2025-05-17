@@ -20,19 +20,8 @@ import { getBuildOutputUri, getBuildRootUri, getBuildTargetUri } from './helper/
 
 export function activate(context: ExtensionContext) {
   async function build(
-    eventUri: Uri = vscode.window.activeTextEditor?.document?.uri
+    targetUri: Uri
   ) {
-    const config = vscode.workspace.getConfiguration('greybel');
-    const targetUri = getBuildTargetUri(config.get<string>('rootFile'), eventUri);
-
-    if (targetUri === null) {
-      vscode.window.showErrorMessage(
-        'Invalid target uri.',
-        { modal: false }
-      );
-      return;
-    }
-
     const parseResult = await documentManager.open(targetUri);
 
     if (parseResult === null) {
@@ -48,6 +37,7 @@ export function activate(context: ExtensionContext) {
     await Promise.all(dirtyFiles.map((it) => it.textDocument.save()));
 
     try {
+      const config = vscode.workspace.getConfiguration('greybel');
       const buildTypeFromConfig = config.get<string>('transpiler.buildType');
       const environmentVariablesFromConfig =
         config.get<object>('transpiler.environmentVariables') || {};
@@ -175,8 +165,28 @@ export function activate(context: ExtensionContext) {
     }
   }
 
+  async function buildRootFile(eventUri: Uri = vscode.window.activeTextEditor?.document?.uri) {
+    const config = vscode.workspace.getConfiguration('greybel');
+    const targetUri = getBuildTargetUri(config.get<string>('rootFile'), eventUri);
+
+    if (targetUri === null) {
+      vscode.window.showErrorMessage(
+        'Invalid target uri.',
+        { modal: false }
+      );
+      return;
+    }
+
+    await build(targetUri);
+  }
+
+  async function buildFileFromContext(eventUri: Uri = vscode.window.activeTextEditor?.document?.uri) {
+    await build(eventUri);
+  }
+
   context.subscriptions.push(
-    vscode.commands.registerCommand('greybel.build', build),
-    new Watcher(build).start()
+    vscode.commands.registerCommand('greybel.buildFileFromContext', buildFileFromContext),
+    vscode.commands.registerCommand('greybel.buildRootFile', buildRootFile),
+    new Watcher(buildRootFile).start()
   );
 }
