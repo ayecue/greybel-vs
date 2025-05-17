@@ -1,12 +1,10 @@
 import { LoggingDebugSession } from '@vscode/debugadapter';
 import vscode, {
-  CancellationToken,
   DebugAdapterDescriptorFactory,
-  DebugConfiguration,
   ExtensionContext,
   ProviderResult,
   Uri,
-  WorkspaceFolder
+  workspace
 } from 'vscode';
 
 import { AgentDebugSession } from './agent/session';
@@ -35,54 +33,56 @@ export function activate(
   context: ExtensionContext,
   factory?: DebugAdapterDescriptorFactory
 ) {
+  const runFile = (resource: Uri | undefined, isDebug: boolean): Thenable<boolean> => {
+    if (!resource) {
+      vscode.window.showErrorMessage('Cannot run file. Resource is undefined.');
+      return Promise.resolve(false);
+    }
+
+    return vscode.debug.startDebugging(
+      workspace.getWorkspaceFolder(resource),
+      {
+        type: 'greyscript',
+        name: 'Run File',
+        request: 'launch',
+        program: resource.toString()
+      },
+      { noDebug: true }
+    );
+  };
+
+  const runFileFromContext = (resource: Uri = vscode.window.activeTextEditor.document.uri): Thenable<boolean> => {
+    return runFile(resource, false);
+  };
+
+  const runFileFromContextDebug = (resource: Uri = vscode.window.activeTextEditor.document.uri): Thenable<boolean> => {
+    return runFile(resource, true);
+  };
+
+  const runRootFile = (resource: Uri = vscode.window.activeTextEditor.document.uri): Thenable<boolean> => {
+    const config = vscode.workspace.getConfiguration('greybel');
+    const targetResource = getLaunchResourceUri(config.get<string>('rootFile'), resource);
+    return runFile(targetResource, false);
+  };
+
+  const runRootFileDebug = (resource: Uri = vscode.window.activeTextEditor.document.uri): Thenable<boolean> => {
+    const config = vscode.workspace.getConfiguration('greybel');
+    const targetResource = getLaunchResourceUri(config.get<string>('rootFile'), resource);
+    return runFile(targetResource, true);
+  };
+
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'greybel.debug.runEditorContents',
-      (resource: Uri) => {
-        let eventResource = resource;
-
-        if (!eventResource && vscode.window.activeTextEditor) {
-          eventResource = vscode.window.activeTextEditor.document.uri;
-        }
-
-        const config = vscode.workspace.getConfiguration('greybel');
-        const targetResource = getLaunchResourceUri(config.get<string>('rootFile'), eventResource);
-
-        if (targetResource) {
-          vscode.debug.startDebugging(
-            undefined,
-            {
-              type: 'greyscript',
-              name: 'Run File',
-              request: 'launch',
-              program: targetResource.toString()
-            },
-            { noDebug: true }
-          );
-        }
-      }
+      'greybel.debug.runFileFromContext', runFileFromContext
     ),
     vscode.commands.registerCommand(
-      'greybel.debug.debugEditorContents',
-      (resource: Uri) => {
-        let eventResource = resource;
-
-        if (!eventResource && vscode.window.activeTextEditor) {
-          eventResource = vscode.window.activeTextEditor.document.uri;
-        }
-
-        const config = vscode.workspace.getConfiguration('greybel');
-        const targetResource = getLaunchResourceUri(config.get<string>('rootFile'), eventResource);
-
-        if (targetResource) {
-          vscode.debug.startDebugging(undefined, {
-            type: 'greyscript',
-            name: 'Debug File',
-            request: 'launch',
-            program: targetResource.toString()
-          });
-        }
-      }
+      'greybel.debug.debugFileFromContext', runFileFromContextDebug
+    ),
+    vscode.commands.registerCommand(
+      'greybel.debug.runRootFile', runRootFile
+    ),
+    vscode.commands.registerCommand(
+      'greybel.debug.debugRootFile', runRootFileDebug
     )
   );
 
@@ -126,83 +126,15 @@ export function activate(
     )
   );
 
-  // register a configuration provider for 'mock' debug type
-  const provider = new MockConfigurationProvider();
-  context.subscriptions.push(
-    vscode.debug.registerDebugConfigurationProvider('greyscript', provider)
-  );
-
-  // register a dynamic configuration provider for 'mock' debug type
-  context.subscriptions.push(
-    vscode.debug.registerDebugConfigurationProvider(
-      'greyscript',
-      {
-        provideDebugConfigurations(
-          _folder: WorkspaceFolder | undefined
-        ): ProviderResult<DebugConfiguration[]> {
-          return [
-            {
-              name: 'Dynamic Launch',
-              request: 'launch',
-              type: 'mock',
-              program: '${file}'
-            },
-            {
-              name: 'Another Dynamic Launch',
-              request: 'launch',
-              type: 'mock',
-              program: '${file}'
-            },
-            {
-              name: 'Mock Launch',
-              request: 'launch',
-              type: 'mock',
-              program: '${file}'
-            }
-          ];
-        }
-      },
-      vscode.DebugConfigurationProviderTriggerKind.Dynamic
-    )
-  );
-
   if (!factory) {
     factory = new InlineDebugAdapterFactory();
   }
+
   context.subscriptions.push(
     vscode.debug.registerDebugAdapterDescriptorFactory('greyscript', factory)
   );
   if ('dispose' in factory) {
     context.subscriptions.push(factory as Record<'dispose', any>);
-  }
-}
-
-class MockConfigurationProvider implements vscode.DebugConfigurationProvider {
-  resolveDebugConfiguration(
-    _folder: WorkspaceFolder | undefined,
-    config: DebugConfiguration,
-    _token?: CancellationToken
-  ): ProviderResult<DebugConfiguration> {
-    // if launch.json is missing or empty
-    if (!config.type && !config.request && !config.name) {
-      const editor = vscode.window.activeTextEditor;
-      if (editor && editor.document.languageId === 'greyscript') {
-        config.type = 'greyscript';
-        config.name = 'Launch';
-        config.request = 'launch';
-        config.program = '${file}';
-      }
-    }
-
-    if (!config.program) {
-      return vscode.window
-        .showInformationMessage('Cannot find a program to debug')
-        .then((_) => {
-          return undefined;
-        });
-    }
-
-    return config;
   }
 }
 
