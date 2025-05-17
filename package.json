@@ -81,13 +81,23 @@
     "menus": {
       "editor/title/run": [
         {
-          "command": "greybel.debug.runEditorContents",
-          "when": "resourceLangId == greyscript",
+          "command": "greybel.debug.runFileFromContext",
+          "when": "resourceLangId == greyscript && config.greybel.rootFile == ''",
           "group": "navigation@1"
         },
         {
-          "command": "greybel.debug.debugEditorContents",
-          "when": "resourceLangId == greyscript",
+          "command": "greybel.debug.debugFileFromContext",
+          "when": "resourceLangId == greyscript && config.greybel.rootFile == ''",
+          "group": "navigation@2"
+        },
+        {
+          "command": "greybel.debug.runRootFile",
+          "when": "resourceLangId == greyscript && config.greybel.rootFile != ''",
+          "group": "navigation@1"
+        },
+        {
+          "command": "greybel.debug.debugRootFile",
+          "when": "resourceLangId == greyscript && config.greybel.rootFile != ''",
           "group": "navigation@2"
         }
       ],
@@ -103,9 +113,19 @@
           "group": "1_modification"
         },
         {
-          "command": "greybel.build",
+          "command": "greybel.buildFileFromContext",
           "when": "resourceLangId == greyscript",
           "group": "1_modification"
+        },
+        {
+          "command": "greybel.debug.runFileFromContext",
+          "when": "resourceLangId == greyscript",
+          "group": "z_commands"
+        },
+        {
+          "command": "greybel.debug.debugFileFromContext",
+          "when": "resourceLangId == greyscript",
+          "group": "z_commands"
         },
         {
           "command": "greybel.api",
@@ -147,28 +167,46 @@
       ],
       "explorer/context": [
         {
-          "command": "greybel.build",
+          "command": "greybel.buildFileFromContext",
           "when": "resourceLangId == greyscript",
           "group": "1_modification"
+        },
+        {
+          "command": "greybel.debug.runFileFromContext",
+          "when": "resourceLangId == greyscript",
+          "group": "z_commands"
+        },
+        {
+          "command": "greybel.debug.debugFileFromContext",
+          "when": "resourceLangId == greyscript",
+          "group": "z_commands"
         },
         {
           "command": "greybel.share",
           "when": "resourceLangId == greyscript",
-          "group": "1_modification"
+          "group": "z_commands"
         },
         {
           "command": "greybel.import",
-          "group": "1_modification"
+          "group": "z_commands"
         }
       ],
       "commandPalette": [
         {
-          "command": "greybel.debug.debugEditorContents",
+          "command": "greybel.debug.debugFileFromContext",
           "when": "resourceLangId == greyscript"
         },
         {
-          "command": "greybel.debug.runEditorContents",
+          "command": "greybel.debug.runFileFromContext",
           "when": "resourceLangId == greyscript"
+        },
+        {
+          "command": "greybel.debug.debugRootFile",
+          "when": "resourceLangId == greyscript && config.greybel.rootFile != ''"
+        },
+        {
+          "command": "greybel.debug.runRootFile",
+          "when": "resourceLangId == greyscript && config.greybel.rootFile != ''"
         },
         {
           "command": "greybel.transform.clipboard",
@@ -199,7 +237,11 @@
           "when": "resourceLangId == greyscript"
         },
         {
-          "command": "greybel.build",
+          "command": "greybel.buildRootFile",
+          "when": "resourceLangId == greyscript && config.greybel.rootFile != ''"
+        },
+        {
+          "command": "greybel.buildFileFromContext",
           "when": "resourceLangId == greyscript"
         },
         {
@@ -257,59 +299,89 @@
     "commands": [
       {
         "command": "greybel.gotoError",
+        "category": "Utility",
         "title": "Greybel: Goto Error"
       },
       {
-        "command": "greybel.build",
-        "title": "Greybel: Build"
+        "command": "greybel.buildRootFile",
+        "category": "Build",
+        "title": "Greybel: Build root file"
+      },
+      {
+        "command": "greybel.buildFileFromContext",
+        "category": "Build",
+        "title": "Greybel: Build file from context"
       },
       {
         "command": "greybel.transform.clipboard",
+        "category": "Transform",
         "title": "Greybel: Transform to clipboard"
       },
       {
         "command": "greybel.transform.write",
+        "category": "Transform",
         "title": "Greybel: Transform"
       },
       {
         "command": "greybel.uglify.write",
+        "category": "Transform",
         "title": "Greybel: Uglify"
       },
       {
         "command": "greybel.beautify.write",
+        "category": "Transform",
         "title": "Greybel: Beautify"
       },
       {
         "command": "greybel.share",
+        "category": "Utility",
         "title": "Greybel: Share"
       },
       {
         "command": "greybel.api",
+        "category": "Utility",
         "title": "Greybel: API Documentation"
       },
       {
         "command": "greybel.preview",
+        "category": "Utility",
         "title": "Greybel: Preview output"
       },
       {
         "command": "greybel.import",
+        "category": "Utility",
         "title": "Greybel: Import file into the game"
       },
       {
         "command": "greybel.snippets",
+        "category": "Utility",
         "title": "Greybel: Snippets"
       },
       {
-        "command": "greybel.debug.debugEditorContents",
-        "title": "Debug File",
-        "category": "Mock Debug",
+        "command": "greybel.debug.debugFileFromContext",
+        "title": "Greybel: Debug file from context",
+        "category": "Execution",
         "enablement": "!inDebugMode",
         "icon": "$(debug-alt)"
       },
       {
-        "command": "greybel.debug.runEditorContents",
-        "title": "Run File",
-        "category": "Mock Debug",
+        "command": "greybel.debug.runFileFromContext",
+        "title": "Greybel: Run file from context",
+        "category": "Execution",
+        "enablement": "!inDebugMode",
+        "icon": "$(play)"
+      },
+      {
+        "command": "greybel.debug.debugRootFile",
+        "title": "Greybel: Debug root file",
+        "category": "Execution",
+        "enablement": "!inDebugMode",
+        "icon": "$(debug-alt)"
+      },
+      {
+        "command": "greybel.debug.runRootFile",
+        "title": "Greybel: Run root file",
+        "category": "Execution",
         "enablement": "!inDebugMode",
         "icon": "$(play)"
       }
@@ -345,7 +417,7 @@
           },
           "greybel.rootFile": {
             "type": "string",
-            "description": "Define the root project file. If not set, the extension will automatically choose a file based on the current context. This determines which file is built or executed.",
+            "description": "Define the root project file. If not set, the extension will rely on the given context to built or execute files.",
             "scope": "resource"
           }
         }
@@ -453,7 +525,7 @@
           "greybel.transpiler.watch": {
             "type": "boolean",
             "default": false,
-            "description": "Watch project files for changes and run build automatically.",
+            "description": "Watch project files for changes and build root file automatically.",
             "scope": "resource"
           },
           "greybel.transpiler.outputFilename": {
