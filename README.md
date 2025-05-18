@@ -60,7 +60,7 @@ You can also access these commands through the context menu for quick right-clic
   - **Hoverdocs**: Activate/Deactivate
   - **Formatter**: Activate/Deactivate
   - **File Extensions**: Define allowed file extension
-  - **Root File**: Define the root project file. If not set, the extension will automatically choose a file based on the current context. This determines which file is built or executed
+  - **Root File**: Define the root project file. If not set, the extension will rely on the given context to built or execute files
 - **Create in-game**
   - **Active**: Activate/Deactivate
   - **Auto Compile**: Auto compile and delete source files
