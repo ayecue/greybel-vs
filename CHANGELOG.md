@@ -1634,3 +1634,7 @@ All notable changes to this project will be documented in this file.
 - split build and run commands into separate commands, tailored to the root file and contextual files - thanks for the suggestion to [@midsubspace](https://github.com/midsubspace)
 - introduce command categories for better organization and discovery
 - run message handling in message-hook on the Unity main thread to prevent Mono-related crashes - fixes rare, seemingly random crashes caused by background task execution
+
+## [2.6.29] - 21.05.2025
+
+- add more safety and supress log in exit process handler for app controller in message-hook related to in-game runtime
