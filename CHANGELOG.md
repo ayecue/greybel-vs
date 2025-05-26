@@ -1635,6 +1635,7 @@ All notable changes to this project will be documented in this file.
 - introduce command categories for better organization and discovery
 - run message handling in message-hook on the Unity main thread to prevent Mono-related crashes - fixes rare, seemingly random crashes caused by background task execution
 
-## [2.6.29] - 21.05.2025
+## [2.6.29] - 26.05.2025
 
 - add more safety and suppress log in exit process handler for app controller in message-hook related to in-game runtime
+- update assembly to latest version
