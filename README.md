@@ -345,7 +345,7 @@ A REPL is also available while executing the script or having an active breakpoi
 
 The Message Hook enables Greybel to communicate with the game server via the game client, extending its functionality. Features such as in-game auto-create (used for building) and the in-game interpreter environment rely on this capability. Installing it is entirely optional and not required for basic use.
 
-To use the Message Hook, you must first install BepInEx, followed by the appropriate plugin. Instructions are provided below for both [BepInEx](https://github.com/BepInEx/BepInEx) 5.x.x and 6.x.x versions.
+To use the Message Hook, you must first install [BepInEx](https://github.com/BepInEx/BepInEx), followed by the appropriate plugin. Instructions are provided below for both [BepInEx](https://github.com/BepInEx/BepInEx) 5.x.x and 6.x.x versions.
 
 ##### BepInEx 5.x.x
 1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
