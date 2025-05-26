@@ -107,7 +107,6 @@ You can also access these commands through the context menu for quick right-clic
 - [Upload](#upload)
 - [Interpreter](#interpreter)
 - [Message Hook](#message-hook)
-- [Debugger](#debugger)
 - [API Browser](#api-browser)
 - [Comment Docs](#comment-docs)
 - [Snippets](#snippets)
@@ -328,6 +327,20 @@ The key advantage of the in-game environment is that it mirrors real gameplay be
 
 **Note**: For the pseudo-terminal, Greybel will attempt to transform TextMesh Pro Rich-Text tags into ANSI codes. Due to the nature of TextMesh Pro Rich-Text tags, some formatting may be lost. If you're looking for a proper preview of your output in Grey Hack, please check out the [Preview Output feature](#preview-output).
 
+### Debugger
+
+The debugger allows you to set breakpoints, run code in a breakpoint context, and jump to the next line of execution. It's helpful for debugging your code.
+
+![Breakpoint](https://github.com/ayecue/greybel-vs/blob/main/assets/breakpoint.png?raw=true "Breakpoint")
+
+> **Note**: Make sure to set the breakpoint on a non-empty line, or it will be skipped.
+
+![Active Breakpoint](https://github.com/ayecue/greybel-vs/blob/main/assets/active-breakpoint.png?raw=true "Active breakpoint")
+
+A REPL is also available while executing the script or having an active breakpoint.
+
+![REPL](https://github.com/ayecue/greybel-vs/blob/main/assets/repl.png?raw=true "REPL")
+
 ## Message Hook
 
 The Message Hook enables Greybel to communicate with the game server via the game client, extending its functionality. Features such as in-game auto-create (used for building) and the in-game interpreter environment rely on this capability. Installing it is entirely optional and not required for basic use.
@@ -357,20 +370,6 @@ To use the Message Hook, you must first install BepInEx, followed by the appropr
 **Note**: BepInEx 6.x.x is in a pre-release state and may be less stable than 5.x.x. If you experience frequent crashes, consider switching back to version 5.x.x.
 
 **Reminder**: Grey Hack must be running for this agent to function properly.
-
-## Debugger
-
-The debugger allows you to set breakpoints, run code in a breakpoint context, and jump to the next line of execution. It's helpful for debugging your code.
-
-![Breakpoint](https://github.com/ayecue/greybel-vs/blob/main/assets/breakpoint.png?raw=true "Breakpoint")
-
-> **Note**: Make sure to set the breakpoint on a non-empty line, or it will be skipped.
-
-![Active Breakpoint](https://github.com/ayecue/greybel-vs/blob/main/assets/active-breakpoint.png?raw=true "Active breakpoint")
-
-A REPL is also available while executing the script or having an active breakpoint.
-
-![REPL](https://github.com/ayecue/greybel-vs/blob/main/assets/repl.png?raw=true "REPL")
 
 ## Preview Output
 
