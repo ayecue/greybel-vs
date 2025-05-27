@@ -1643,3 +1643,7 @@ All notable changes to this project will be documented in this file.
 ## [2.6.30] - 27.05.2025
 
 - maintain parser behaviour for native builds without imports in-game related to message-hook
+
+## [2.6.31] - 28.05.2025
+
+- fix textmate definition for meta-typing pattern
