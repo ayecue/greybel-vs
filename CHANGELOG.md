@@ -1656,3 +1656,9 @@ All notable changes to this project will be documented in this file.
 
 - use BepInEx threading helper instead of directly accessing the Unity thread to prevent race conditions in the message hook
 - update assembly to latest version
+
+## [2.6.34] - 03.06.2025
+
+- fix issue that resulted in debugMode option not being properly forwarded, causing breakpoints to not work - related to [#289](https://github.com/ayecue/greybel-vs/issues/337) - thanks for reporting to [dukeofsussex](https://github.com/dukeofsussex)
+- use fs path instead of uri path for the debugger to ensure resources are correctly found on Windows - related to [#289](https://github.com/ayecue/greybel-vs/issues/337) - thanks for reporting to [dukeofsussex](https://github.com/dukeofsussex)
+- add timeout to watcher to prevent watcher being blocked in case of no response

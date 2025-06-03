@@ -2,8 +2,21 @@ import vscode from 'vscode';
 import { parseFileExtensions } from './parse-file-extensions';
 import { getBuildOutputUri, getBuildRootUri, getPotentialBuildTargetUri } from './build-uri';
 import EventEmitter from 'events';
+import { wait } from './wait';
+
+function runWithinTime<T>(
+  promise: Promise<T>,
+  timeout: number
+): Promise<T> {
+  return Promise.race([
+    wait(timeout).then(() => Promise.reject(new Error('Exceeded time!'))),
+    promise
+  ]);
+}
 
 class SyncProcess extends EventEmitter {
+  static readonly SYNC_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+
   private _buildCommand: () => Promise<void>;
   private _delay: number;
   private _timeout: NodeJS.Timeout | null;
@@ -36,10 +49,10 @@ class SyncProcess extends EventEmitter {
       try {
         this._pending = true;
         this.emit('started');
-        await this._buildCommand();
+        await runWithinTime(this._buildCommand(), SyncProcess.SYNC_TIMEOUT);
         success = true;
       } catch (error) {
-        console.error('Error during build command execution:', error);
+        this.emit('error', error);
       } finally {
         this._pending = false;
         this._completed = true;
@@ -155,6 +168,9 @@ export class Watcher {
       this._syncProcess = new SyncProcess(this._buildCommand);
       this._syncProcess.on('started', () => {
         this._pendingChanges = 0;
+      });
+      this._syncProcess.on('error', (err) => {
+       console.error(`An error occurred during the sync process due to: ${err.message}`);
       });
       this._syncProcess.on('completed', () => {
         this._syncProcess.dispose();

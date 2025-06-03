@@ -45,9 +45,10 @@ export function activate(
         type: 'greyscript',
         name: 'Run File',
         request: 'launch',
-        program: resource.toString()
+        // Has to use fsPath since launch.json does not provide normal uri schema
+        program: resource.fsPath
       },
-      { noDebug: true }
+      { noDebug: !isDebug }
     );
   };
 
