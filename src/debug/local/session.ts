@@ -191,7 +191,7 @@ export class GreybelDebugSession
     args: ILaunchRequestArguments
   ): Promise<void> {
     const me = this;
-    const uri = Uri.parse(args.program);
+    const uri = Uri.file(args.program);
     const config = vscode.workspace.getConfiguration('greybel');
     const environmentVariables =
       config.get<object>('interpreter.environmentVariables') || {};
