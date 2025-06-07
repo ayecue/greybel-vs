@@ -1666,3 +1666,9 @@ All notable changes to this project will be documented in this file.
 ## [2.6.35] - 03.06.2025
 
 - use fs path in in-game environment debugger as well to ensure resources are correctly found on Windows - related to [#337](https://github.com/ayecue/greybel-vs/issues/337)
+
+## [2.6.36] - 07.06.2025
+
+- update current_path description to make it clear that it returns a folder
+- update get_custom_object example to show a more common usecase
+- update typeof description to include partial object types
