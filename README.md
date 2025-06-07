@@ -299,7 +299,7 @@ Greybel supports the injection of environment variables into the interpreter. Th
 
 ### Mock Environment
 
-When using this environment, Greybel will automatically generate a local setup, including simulated computers, networks, filesystems, and more—on the fly. By default, generation is based on a seed value called test. You can modify this seed using the appropriate option. Using the same seed consistently will ensure that the generated entities remain stable across sessions.
+When using this environment, Greybel will automatically generate a local setup, including simulated computers, networks, filesystems and more, on the fly. By default, generation is based on a seed value called test. You can modify this seed using the appropriate option. Using the same seed consistently will ensure that the generated entities remain stable across sessions.
 
 The local computer configuration is hardcoded, with admin credentials set to root:test. Additionally, your local machine will have crypto.so and metaxploit.so available by default.
 
@@ -317,7 +317,7 @@ myShell = get_shell("root", "test") //get local root shell
 
 This environment uses the actual in-game setup. To use it, you must have [message-hook](#message-hook) installed and the game running in singleplayer mode.
 
-The key advantage of the in-game environment is that it mirrors real gameplay behavior exactly—unlike the mock environment, which is an approximation.
+The key advantage of the in-game environment is that it mirrors real gameplay behavior exactly, unlike the mock environment, which is an approximation.
 
 ![Preview Demo](https://github.com/ayecue/greybel-vs/blob/main/assets/preview-debugger.gif?raw=true)
 
