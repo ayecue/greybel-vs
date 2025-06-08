@@ -1,5 +1,6 @@
 import vscode, { ExtensionContext, Uri } from 'vscode';
 import { PrintOptions } from 'greybel-interpreter';
+import { getContent } from './preview/generate-page';
 
 class Preview {
   private context: ExtensionContext;
@@ -35,49 +36,13 @@ class Preview {
     const loaderResource = `${process.env.GREYBEL_TERMINAL_URL}/assets/preview.loader.js`;
     const wasmResource = `${process.env.GREYBEL_TERMINAL_URL}/assets/preview.wasm`;
   
-    panel.webview.html = `<!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-          <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
-          <title>GreyHack Output Preview</title>
-      </head>
-      <body>
-        <canvas id="unity-canvas" width="100%" height="100%" tabindex="-1" style="width: 960px; height: 600px; background: #231F20"></canvas>
-        <script src="${indexScript}"></script>
-        <script src="${loaderResource}"></script>
-        <script>
-          if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-            // Mobile device style: fill the whole browser client area with the game canvas:
-            var meta = document.createElement('meta');
-            meta.name = 'viewport';
-            meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-            document.getElementsByTagName('head')[0].appendChild(meta);
-
-            var canvas = document.querySelector("#unity-canvas");
-            canvas.style.width = "100%";
-            canvas.style.height = "100%";
-            canvas.style.position = "fixed";
-
-            document.body.style.textAlign = "left";
-          }
-
-          createUnityInstance(document.querySelector("#unity-canvas"), {
-            dataUrl: "${dataResource}",
-            frameworkUrl: "${frameworkResource}",
-            codeUrl: "${wasmResource}",
-            streamingAssetsUrl: "StreamingAssets",
-            companyName: "None",
-            productName: "TerminalPreview",
-            productVersion: "1.0",
-            matchWebGLToCanvasSize: true, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-            devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays
-          }).then(onUnityInstanceLoad).catch((err) => alert(err.message));
-        </script>
-      </body>
-    </html>`;
+    panel.webview.html = getContent({
+      indexScript,
+      dataResource,
+      frameworkResource,
+      loaderResource,
+      wasmResource
+    });;
 
     this.panel = panel;
 
