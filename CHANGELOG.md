@@ -1677,3 +1677,9 @@ All notable changes to this project will be documented in this file.
 ## [2.6.37] - 12.06.2025
 
 - forcefully terminate the execution thread to prevent lingering background processes in the in-game environment - requires the message-hook to be updated
+
+## [2.6.38] - 14.06.2025
+
+- fixed display of type definitions for exported namespaces when using #import (applies to both type analyzer strategies)
+- resolved issues with nested #import statements failing to recognize exported namespaces (applies to both type analyzer strategies)
+- updated LRU cache dependency
