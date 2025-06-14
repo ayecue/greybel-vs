@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import { ASTChunkGreyScript, Parser } from 'greyscript-core';
-import LRU from 'lru-cache';
+import { LRUCache as LRU } from 'lru-cache';
 import { ASTBaseBlockWithScope } from 'miniscript-core';
 import vscode, { TextDocument, Uri } from 'vscode';
 
