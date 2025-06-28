@@ -1683,3 +1683,7 @@ All notable changes to this project will be documented in this file.
 - fixed display of type definitions for exported namespaces when using #import (applies to both type analyzer strategies)
 - resolved issues with nested #import statements failing to recognize exported namespaces (applies to both type analyzer strategies)
 - updated LRU cache dependency
+
+## [2.6.39] - 28.06.2025
+
+- use bepinex traverse to retrieve helperImport property in interpreter patch to prevent randomly occuring crashes - requires the message-hook to be updated
