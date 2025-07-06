@@ -52,6 +52,12 @@ You can also access these commands through the context menu for quick right-clic
 
 **Tip**: Make sure to [configure settings](#settings) to customize Greybel to your preferences.
 
+## Tutorial video
+
+A new tutorial video is available! :rocket: It covers how to set up the extension and install the [message-hook](#message-hook) plugin. Huge thanks to [@redit0](https://github.com/redit0) for creating it!
+
+[![Watch the video](https://img.youtube.com/vi/2Iyk4vmavaY/hqdefault.jpg)](https://www.youtube.com/watch?v=2Iyk4vmavaY)
+
 # Settings
 
 - **General**
@@ -346,6 +352,8 @@ A REPL is also available while executing the script or having an active breakpoi
 The Message Hook enables Greybel to communicate with the game server via the game client, extending its functionality. Features such as in-game auto-create (used for building) and the in-game interpreter environment rely on this capability. Installing it is entirely optional and not required for basic use.
 
 To use the Message Hook, you must first install [BepInEx](https://github.com/BepInEx/BepInEx), followed by the appropriate plugin. Instructions are provided below for both [BepInEx](https://github.com/BepInEx/BepInEx) 5.x.x and 6.x.x versions.
+
+If you prefer video over written instructions, there’s also a [tutorial](#tutorial-video) created by [@redit0](https://github.com/redit0) that walks you through the setup process.
 
 ### BepInEx 5.x.x
 1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
