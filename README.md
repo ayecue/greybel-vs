@@ -39,7 +39,8 @@ This toolkit provides essential tools for developing in GreyScript, the scriptin
 This extension automatically detects `.gs`, `.src`, and `.ms` files and provides convenient commands to streamline your workflow.
 
 Commands available (`CTRL+SHIFT+P`):
-- `Greybel: Build` - Transpile your GreyScript code. [More info](#build)
+- `Greybel: Build file from context` - Transpile/Build your GreyScript code. [More info](#build)
+- `Greybel: Run/Debug file from context` - Run your GreyScript code. [More info](#interpreter)
 - `Greybel: Share` - Share your code with others easily. [More info](#share)
 - `Greybel: API` - Open the API browser for quick reference. [More info](#api-browser)
 - `Greybel: Snippets` - Insert GreyScript snippets into your code. [More info](#snippets)
