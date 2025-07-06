@@ -47,9 +47,7 @@ Commands available (`CTRL+SHIFT+P`):
 - `Greybel: Preview output` – View a preview of the ingame like output. [More info](#preview-output)
 - `Greybel: Import file into the game` – Upload files into the game. [More info](#upload)
 
-You can also access these commands through the context menu for quick right-click access:
-
-![Context Menu](https://github.com/ayecue/greybel-vs/blob/main/assets/context-menu.png?raw=true "ContextMenu")
+You can also access these commands through the context menu for quick right-click access.
 
 **Tip**: Make sure to [configure settings](#settings) to customize Greybel to your preferences.
 
