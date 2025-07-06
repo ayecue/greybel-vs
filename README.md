@@ -39,18 +39,23 @@ This toolkit provides essential tools for developing in GreyScript, the scriptin
 This extension automatically detects `.gs`, `.src`, and `.ms` files and provides convenient commands to streamline your workflow.
 
 Commands available (`CTRL+SHIFT+P`):
-- `Greybel: Build` - Transpile your GreyScript code. [More info](#build)
+- `Greybel: Build file from context` - Transpile/Build your GreyScript code. [More info](#build)
+- `Greybel: Run/Debug file from context` - Run your GreyScript code. [More info](#interpreter)
 - `Greybel: Share` - Share your code with others easily. [More info](#share)
 - `Greybel: API` - Open the API browser for quick reference. [More info](#api-browser)
 - `Greybel: Snippets` - Insert GreyScript snippets into your code. [More info](#snippets)
 - `Greybel: Preview output` – View a preview of the ingame like output. [More info](#preview-output)
 - `Greybel: Import file into the game` – Upload files into the game. [More info](#upload)
 
-You can also access these commands through the context menu for quick right-click access:
-
-![Context Menu](https://github.com/ayecue/greybel-vs/blob/main/assets/context-menu.png?raw=true "ContextMenu")
+You can also access these commands through the context menu for quick right-click access.
 
 **Tip**: Make sure to [configure settings](#settings) to customize Greybel to your preferences.
+
+## Tutorial video
+
+A new tutorial video is available! :rocket: It covers how to set up the extension and install the [message-hook](#message-hook) plugin. Huge thanks to [@redit0](https://github.com/redit0) for creating it!
+
+[![Watch the video](https://img.youtube.com/vi/2Iyk4vmavaY/hqdefault.jpg)](https://www.youtube.com/watch?v=2Iyk4vmavaY)
 
 # Settings
 
@@ -305,6 +310,8 @@ The local computer configuration is hardcoded, with admin credentials set to roo
 
 Note that the mock environment runs locally and is independent from the actual game. As a result, some intrinsic game behaviors may not be fully supported. If you need highly accurate debugging, consider using the [In-game Environment](#ingame-environment) instead.
 
+:warning: The current mock environment used in the interpreter is outdated. There’s an [open issue](https://github.com/ayecue/greybel-vs/issues/344) tracking this. If you’re familiar with JavaScript, TypeScript, or any language that compiles to WebAssembly (WASM), your help would be greatly appreciated!
+
 #### Examples:
 ```
 metax = include_lib("/lib/metaxploit.so") //returns metaxploit interface
@@ -346,6 +353,8 @@ A REPL is also available while executing the script or having an active breakpoi
 The Message Hook enables Greybel to communicate with the game server via the game client, extending its functionality. Features such as in-game auto-create (used for building) and the in-game interpreter environment rely on this capability. Installing it is entirely optional and not required for basic use.
 
 To use the Message Hook, you must first install [BepInEx](https://github.com/BepInEx/BepInEx), followed by the appropriate plugin. Instructions are provided below for both [BepInEx](https://github.com/BepInEx/BepInEx) 5.x.x and 6.x.x versions.
+
+If you prefer video over written instructions, there’s also a [tutorial](#tutorial-video) created by [@redit0](https://github.com/redit0) that walks you through the setup process.
 
 ### BepInEx 5.x.x
 1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
