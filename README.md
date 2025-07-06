@@ -311,6 +311,8 @@ The local computer configuration is hardcoded, with admin credentials set to roo
 
 Note that the mock environment runs locally and is independent from the actual game. As a result, some intrinsic game behaviors may not be fully supported. If you need highly accurate debugging, consider using the [In-game Environment](#ingame-environment) instead.
 
+:warning: The current mock environment used in the interpreter is outdated. There’s an [open issue](https://github.com/ayecue/greybel-vs/issues/344) tracking this. If you’re familiar with JavaScript, TypeScript, or any language that compiles to WebAssembly (WASM), your help would be greatly appreciated!
+
 #### Examples:
 ```
 metax = include_lib("/lib/metaxploit.so") //returns metaxploit interface
