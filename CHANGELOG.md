@@ -1691,3 +1691,7 @@ All notable changes to this project will be documented in this file.
 ## [2.6.40] - 06.07.2025
 
 - added tutorial video on setting up the extension and installing the message-hook plugin - huge thanks to [@redit0](https://github.com/redit0)
+
+## [2.6.41] - 11.07.2025
+
+- fixed script crashing on user_input due to missing cpu usage instance initialisation, related to in-game env - requires the message-hook to be updated
