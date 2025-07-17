@@ -395,7 +395,7 @@ UnityEngine.Logger:LogException(Exception, Object)
 UnityEngine.Debug:LogException(Exception)
 ClientSteam:Start()
 ```
-You can fix this crash by deleting the `libsteam_api.dylib` file located in the game's root directory. This does not appear to impact gameplay.
+You can fix this crash by deleting the `libsteam_api.dylib` file located in the game's root directory. This crash is caused by multiple versions of `libsteam_api.dylib` being present, leading to the wrong library loading first. Deleting the duplicate `libsteam_api.dylib` in the game root prevents this conflict, allowing the correct version to load. This fix does not appear to affect gameplay or functionality.
 
 ## Preview Output
 
