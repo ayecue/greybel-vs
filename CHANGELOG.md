@@ -1695,3 +1695,8 @@ All notable changes to this project will be documented in this file.
 ## [2.6.41] - 11.07.2025
 
 - fixed script crashing on user_input due to missing cpu usage instance initialisation, related to in-game env - requires the message-hook to be updated
+
+## [2.6.42] - 17.07.2025
+
+- updated message-hook to use latest assembly and unity version - the prior message-hook version seems to work fine with the latest Grey Hack patch, therefore this update is rather optional
+- updated message-hook-client regarding login payload
