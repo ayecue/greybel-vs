@@ -1,6 +1,6 @@
 import { escapeMSString } from './escape-ms-string.js';
 import { Uri, workspace } from 'vscode';
-import { tryToDecode } from './fs.js';
+import { GlobalFileSystemManager } from './fs.js';
 
 function readVarLines(
   varLines: string[],
@@ -30,7 +30,7 @@ async function loadConfigFile(
   filepath: Uri,
   map: { [key: string]: string }
 ): Promise<{ [key: string]: string }> {
-  const content = await tryToDecode(filepath);
+  const content = await GlobalFileSystemManager.tryToDecode(filepath);
 
   if (content == null) {
     return map;

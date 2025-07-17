@@ -4,31 +4,34 @@ import {
   ResourceProvider as TranspilerResourceProviderBase
 } from 'greybel-transpiler';
 import vscode, { Uri } from 'vscode';
-import { tryToDecode, tryToGet } from './helper/fs';
 import { DocumentURIBuilder } from './helper/document-manager';
+import { FileSystemManager, FileSystemManagerWithCache } from './helper/fs';
 
-const createDocumentUriBuilder = (source: string) => {
+const createDocumentUriBuilder = (source: string, fileSystem?: FileSystemManager) => {
   const sourceUri = Uri.parse(source);
   const workspaceFolder = vscode.workspace.getWorkspaceFolder(sourceUri);
-  return new DocumentURIBuilder(Uri.joinPath(sourceUri, '..'), workspaceFolder.uri);
+  return new DocumentURIBuilder(Uri.joinPath(sourceUri, '..'), workspaceFolder.uri, fileSystem);
 };
 
 export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
   getHandler(): TranspilerResourceHandler {
+    const fileManager = new FileSystemManagerWithCache();
+
     return {
       getTargetRelativeTo: async (
         source: string,
         target: string
       ): Promise<string> => {
-        const documentUriBuilder = createDocumentUriBuilder(source);
+        const documentUriBuilder = createDocumentUriBuilder(source, fileManager);
         const result = await documentUriBuilder.getPathUseReturnOriginal(target);
         return result.toString();
       },
       has: async (target: string): Promise<boolean> => {
-        return !!(await tryToGet(Uri.parse(target)));
+        const hasItem = await fileManager.tryToGet(Uri.parse(target));
+        return !!hasItem;
       },
       get: async (target: string): Promise<string> => {
-        const result = await tryToDecode(Uri.parse(target));
+        const result = await fileManager.tryToDecode(Uri.parse(target));
         return result ?? '';
       },
       resolve: (target: string): Promise<string> => {
@@ -39,18 +42,25 @@ export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
 }
 
 export class InterpreterResourceProvider extends InterpreterResourceHandler {
+  private fileManager: FileSystemManager;
+
+  constructor() {
+    super();
+    this.fileManager = new FileSystemManagerWithCache();
+  }
+
   async getTargetRelativeTo(source: string, target: string): Promise<string> {
-    const documentUriBuilder = createDocumentUriBuilder(source);
+    const documentUriBuilder = createDocumentUriBuilder(source, this.fileManager);
     const result = await documentUriBuilder.getPathUseReturnOriginal(target);
     return result.toString();
   }
 
   async has(target: string): Promise<boolean> {
-    return !!(await tryToGet(Uri.parse(target)));
+    return !!(await this.fileManager.tryToGet(Uri.parse(target)));
   }
 
   async get(target: string): Promise<string> {
-    const result = await tryToDecode(Uri.parse(target));
+    const result = await this.fileManager.tryToDecode(Uri.parse(target));
     return result ?? '';
   }
 

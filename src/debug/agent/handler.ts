@@ -1,6 +1,6 @@
 import { ContextAgent } from "greyhack-message-hook-client";
 import vscode, { SourceBreakpoint, Uri } from 'vscode';
-import { findExistingPath, tryToDecode } from "../../helper/fs";
+import { GlobalFileSystemManager } from "../../helper/fs";
 import PseudoTerminal from "../pseudo-terminal";
 import EventEmitter from "events";
 import { OutputHandler } from "./output";
@@ -46,7 +46,7 @@ interface ContextBreakpoint {
 }
 
 async function resolveFileExtension(path: string, allowedFileExtensions: string[]): Promise<Uri | null> {
-  return await findExistingPath(
+  return await GlobalFileSystemManager.findExistingPath(
     Uri.file(path),
     ...allowedFileExtensions.map((ext) => Uri.file(`${path}.${ext}`))
   );
@@ -97,7 +97,7 @@ export class SessionHandler extends EventEmitter {
       throw new Error('Can only start in-game debug session with singleplayer running!');
     }
 
-    const content = await tryToDecode(path);
+    const content = await GlobalFileSystemManager.tryToDecode(path);
     const breakpoints = vscode.debug.breakpoints.filter((bp: SourceBreakpoint) => {
       return bp.enabled;
     }).map((bp: SourceBreakpoint) => {
@@ -290,7 +290,7 @@ export class SessionHandler extends EventEmitter {
       await this._instance.resolvedFile(path, null);
       return;
     }
-    const content = await tryToDecode(resolvedPath);
+    const content = await GlobalFileSystemManager.tryToDecode(resolvedPath);
     await this._instance.resolvedFile(resolvedPath.fsPath, content);
   }
 
