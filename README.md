@@ -356,6 +356,8 @@ To use the Message Hook, you must first install [BepInEx](https://github.com/Bep
 
 If you prefer video over written instructions, there’s also a [tutorial](#tutorial-video) created by [@redit0](https://github.com/redit0) that walks you through the setup process.
 
+**Note**: BepInEx 6.x.x is in a pre-release state and may be less stable than 5.x.x. If you experience frequent crashes, consider switching back to version 5.x.x.
+
 ### BepInEx 5.x.x
 1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) if needed.
@@ -376,9 +378,24 @@ If you prefer video over written instructions, there’s also a [tutorial](#tuto
       - **Linux**: `"/path/to/.steam/steam/steamapps/common/Grey Hack/run_bepinex.sh" || %command%`
 4. **Launch Grey Hack** via Steam to load BepInEx 6 with the plugin.
 
-**Note**: BepInEx 6.x.x is in a pre-release state and may be less stable than 5.x.x. If you experience frequent crashes, consider switching back to version 5.x.x.
+### Troubleshooting
 
-**Reminder**: Grey Hack must be running for this agent to function properly.
+#### Grey Hack is crashing on startup on macOS (Apple Silicon)
+
+Since version `0.9.5694`, Grey Hack runs natively on Apple Silicon Macs. When used with BepInEx, this can cause crashes, specifically the following error: 
+```bash
+EntryPointNotFoundException: SteamInternal_SteamAPI_Init assembly:<unknown assembly> type:<unknown type> member:(null)
+  at (wrapper managed-to-native) Steamworks.SteamAPI+Native.SteamInternal_SteamAPI_Init(string,intptr)
+  at Steamworks.SteamAPI.Init (System.String pszInternalCheckInterfaceVersions, System.String& pOutErrMsg) [0x0000e] in <6edbf121be6b4184ba49a762e217ee3b>:0 
+  at Steamworks.SteamClient.Init (System.UInt32 appid, System.Boolean asyncCallbacks) [0x000f4] in <6edbf121be6b4184ba49a762e217ee3b>:0 
+  at ClientSteam.Start () [0x0001e] in <5900bf36cb6f404fa6809df9b65e2cde>:0 
+UnityEngine.DebugLogHandler:Internal_LogException(Exception, Object)
+UnityEngine.DebugLogHandler:LogException(Exception, Object)
+UnityEngine.Logger:LogException(Exception, Object)
+UnityEngine.Debug:LogException(Exception)
+ClientSteam:Start()
+```
+You can fix this crash by deleting the `libsteam_api.dylib` file located in the game's root directory. This does not appear to impact gameplay.
 
 ## Preview Output
 
