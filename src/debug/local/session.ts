@@ -29,7 +29,7 @@ import { init as initIntrinsics } from 'greybel-intrinsics';
 import { Interpreter } from 'greyscript-interpreter';
 import vscode, { Uri } from 'vscode';
 
-import { PseudoFS } from '../../helper/fs';
+import { GlobalFileSystemManager } from '../../helper/fs';
 import { showCustomErrorMessage } from '../../helper/show-custom-error';
 import { ansiProvider, useColor } from '../../helper/text-mesh-transform';
 import { getPreviewInstance } from '../../preview';
@@ -457,7 +457,7 @@ export class GreybelDebugSession
         const sf: DebugProtocol.StackFrame = new StackFrame(
           f.index,
           f.name,
-          new Source(PseudoFS.basename(f.file), f.file),
+          new Source(GlobalFileSystemManager.basename(f.file), f.file),
           f.line,
           f.column
         );
