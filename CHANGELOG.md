@@ -1708,3 +1708,7 @@ All notable changes to this project will be documented in this file.
 - separated resource loading from dependency tree creation in transpiler
 - run resource loading for transpiler in parallel for better performance
 - optimized the transpiler to fetch metadata only when needed
+
+## [2.6.44] - 20.07.2025
+
+- show location of faulty import line when building failed due to an invalid dependency
