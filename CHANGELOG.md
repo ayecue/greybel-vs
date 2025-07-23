@@ -1709,6 +1709,8 @@ All notable changes to this project will be documented in this file.
 - run resource loading for transpiler in parallel for better performance
 - optimized the transpiler to fetch metadata only when needed
 
-## [2.6.44] - 20.07.2025
+## [2.6.44] - 23.07.2025
 
 - show location of faulty import line when building failed due to an invalid dependency
+- refactored document management in the LSP to eliminate redundant file operations
+- refactored type map merging in the LSP to avoid unnecessary merges and resolve inconsistencies caused by improperly handled type maps
