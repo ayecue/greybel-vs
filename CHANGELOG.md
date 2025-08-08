@@ -1715,3 +1715,7 @@ All notable changes to this project will be documented in this file.
 - refactored document management in the LSP to eliminate redundant file operations
 - refactored type map merging in the LSP to avoid unnecessary merges and resolve inconsistencies caused by improperly handled type maps
 - refactored static code analyser resulting in better performance and more precise types
+
+## [2.6.45] - 09.08.2025
+
+- fix default params element type in type analyser
