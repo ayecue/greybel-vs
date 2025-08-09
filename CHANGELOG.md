@@ -1734,3 +1734,4 @@ All notable changes to this project will be documented in this file.
 
 - JSDoc arguments aren't applied anymore by position but rather by their name (related to type analyser)
 - fix language server crash on invalid syntax in assignment statement (related to type analyser)
+- skip operation in case of missing metadata (requires message-hook plugin to be updated)
