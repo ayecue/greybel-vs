@@ -1744,3 +1744,8 @@ All notable changes to this project will be documented in this file.
 ## [2.6.50] - 10.08.2025
 
 - show map related intrinsic options on autocomplete for the constants globals, locals and outer if they are the base of member expression (related to type analyser)
+
+## [2.6.51] - 13.08.2025
+
+- improve binary expression type infer (related to type analyser)
+- improve for loop iterator type infer (related to type analyser)
