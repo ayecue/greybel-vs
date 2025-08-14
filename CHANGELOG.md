@@ -1727,25 +1727,30 @@ All notable changes to this project will be documented in this file.
 
 ## [2.6.47] - 09.08.2025
 
-- assume self type correctly when used in arguments and context is available (related to type analyser)
-- auto create map type if path does not yet have a map defined via virtual properties (related to type analyser)
+- assume self type correctly when used in arguments and context is available - related to type analyser
+- auto create map type if path does not yet have a map defined via virtual properties - related to type analyser
 
 ## [2.6.48] - 10.08.2025
 
-- JSDoc arguments aren't applied anymore by position but rather by their name (related to type analyser)
-- fix language server crash on invalid syntax in assignment statement (related to type analyser)
+- JSDoc arguments aren't applied anymore by position but rather by their name - related to type analyser
+- fix language server crash on invalid syntax in assignment statement - related to type analyser
 - skip operation in case of missing metadata (requires message-hook plugin to be updated)
 
 ## [2.6.49] - 10.08.2025
 
-- allow duplicate class names, properties will be merged if there are any duplicates (related to type analyser)
-- fix language server crash on path generation when components are not matching assumed usage (related to type analyser)
+- allow duplicate class names, properties will be merged if there are any duplicates - related to type analyser
+- fix language server crash on path generation when components are not matching assumed usage - related to type analyser
 
 ## [2.6.50] - 10.08.2025
 
-- show map related intrinsic options on autocomplete for the constants globals, locals and outer if they are the base of member expression (related to type analyser)
+- show map related intrinsic options on autocomplete for the constants globals, locals and outer if they are the base of member expression - related to type analyser
 
 ## [2.6.51] - 13.08.2025
 
-- improve binary expression type infer (related to type analyser)
-- improve for loop iterator type infer (related to type analyser)
+- improve binary expression type infer - related to type analyser
+- improve for loop iterator type infer - related to type analyser
+
+## [2.6.52] - 14.08.2025
+
+- properly handle import not being found within interpreter in-game env - requires the message-hook to be updated
+- show specific error message in case file cannot be read when in-game env context is getting created
