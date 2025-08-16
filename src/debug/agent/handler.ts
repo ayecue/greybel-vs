@@ -98,6 +98,11 @@ export class SessionHandler extends EventEmitter {
     }
 
     const content = await GlobalFileSystemManager.tryToDecode(path);
+
+    if (content == null) {
+      throw new Error(`Cannot read file at "${path.fsPath}". Make sure the file exists and is readable. In case this issue persists try creating a new workspace.`);
+    }
+
     const breakpoints = vscode.debug.breakpoints.filter((bp: SourceBreakpoint) => {
       return bp.enabled;
     }).map((bp: SourceBreakpoint) => {

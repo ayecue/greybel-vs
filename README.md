@@ -361,7 +361,7 @@ If you prefer video over written instructions, there’s also a [tutorial](#tuto
 ### BepInEx 5.x.x
 1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/5f6b493ce6e213c261fe64bf01628702fc45258c/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/81c3de3fc56ba9686c3da50b88c8dc6590d77999/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
@@ -371,7 +371,7 @@ If you prefer video over written instructions, there’s also a [tutorial](#tuto
 ### BepInEx 6.x.x
 1. **Download BepInEx 6.x.x**: [BepInEx version 6.0.0-pre.2 Unity.Mono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/5f6b493ce6e213c261fe64bf01628702fc45258c/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/81c3de3fc56ba9686c3da50b88c8dc6590d77999/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
@@ -411,52 +411,85 @@ The API Browser for GreyScript brings the [GreyScript API Documentation](https:/
 
 ## Comment Docs
 
-Provide signatures for your functions to show better hover tooltips. Additionally, the provided return value will be recognized by the implemented type system, resulting in context-sensitive auto-complete suggestions.
+You can add function signatures in your comments to improve the developer experience.  
+
+- **Hover tooltips** will display parameter and return type information.  
+- The **type system** can use these annotations to provide context-sensitive autocomplete suggestions.  
+
+Example:  
+
 ```js
 // Hello world
 // I am **bold**
 // @description Alternative description
 // @example test("title", 123)
-// @param {string} title - The title of the book.
-// @param {string|number} author - The author of the book.
-// @return {crypto} - Some info about return
+// @param {string} test - Some text.
+// @param {string|number} abc - Some text.
+// @returns {crypto} - Some info about the return value
 test = function(test, abc)
   print(test)
 end function
 ```
-There is also the possibility of custom types. Here an example:
+
+### Custom Types
+
+You can also define your own types and describe their properties. These types can then be used as return values or extended in other places.
 ```js
 // @type Bar
 // @property {string} virtualMoo
-// @property {string} nested.virtalMoo
+// @property {string} nested.virtualMoo
 Bar = {}
 Bar.moo = ""
 
-// Hello world
-// I am **bold**
-// @description Alternative description
-// @example test("title", 123)
-// @param {string} title - The title of the book.
-// @param {string|number} author - The author of the book.
-// @return {Bar} - Some info about return
+// @description Example with parameters
+// @param {string} test
+// @param {string|number} abc
+// @returns {Bar} - Some info about the return value
 Bar.test = function(test, abc)
-	print("test")
-	return self
+  print("test")
+  return self
 end function
 
 // @type Foo
 Foo = new Bar
-// @return {Foo}
+
+// @returns {Foo}
 Foo.New = function(message)
-	result = new Foo
-	return result
+  result = new Foo
+  return result
 end function
 
 myVar = Foo.New
 
-myVar.test // shows defined signature of Bar.test on hover
-myVar.virtualMoo // shows virtual property of type string on hover
-myVar.nested.virtalMoo // shows nested virtual property of type string on hover
+// Hover/autocomplete results:
+// myVar.test → shows signature of Bar.test
+// myVar.virtualMoo → recognized as string
+// myVar.nested.virtualMoo → recognized as string
+```
+
+### Virtual Custom Types
+
+Sometimes you want to describe types that exist only in documentation and tooling, without needing a runtime implementation. These are called virtual types.
+
+They can include properties, functions, and even inherit from other virtual types.
+```js
+// @vtype myOtherType
+// @property {map<string,string>} hallo
+
+// @vtype myCustomType
+// @extends myOtherType
+// @function foo
+  // @params {string} bar
+  // @returns {string}
+  // @description This is a custom type with a function
+  // @example Example usage of myCustomType
+// @property {number} myProperty
+
+// @define {myCustomType}
+bar = {}
+
+// Hover/autocomplete results:
+// bar.foo → shows signature of myCustomType.foo
 ```
 
 ## Share
