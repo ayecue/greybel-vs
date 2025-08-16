@@ -1754,3 +1754,4 @@ All notable changes to this project will be documented in this file.
 
 - properly handle import not being found within interpreter in-game env - requires the message-hook to be updated
 - show specific error message in case file cannot be read when in-game env context is getting created
+- add virtual types - related to type analyser
