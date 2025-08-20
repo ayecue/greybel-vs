@@ -1755,3 +1755,8 @@ All notable changes to this project will be documented in this file.
 - properly handle import not being found within interpreter in-game env - requires the message-hook to be updated
 - show specific error message in case file cannot be read when in-game env context is getting created
 - add virtual types - related to type analyser
+
+## [2.6.53] - 20.08.2025
+
+- improve transpiler to use 1/0 instead of true/false constant if using default/uglify mode
+- fix type analyser exception on cyclic dependencies - related to [#359](https://github.com/ayecue/greybel-vs/issues/359) - thanks for reporting to [@dukeofsussex](https://github.com/dukeofsussex)
