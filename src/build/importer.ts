@@ -5,6 +5,7 @@ import vscode, { ExtensionContext, Uri } from 'vscode';
 import { createBasePath } from '../helper/create-base-path';
 import { generateAutoCompileCode } from './auto-compile-helper';
 import { generateAutoGenerateFoldersCode } from './auto-generate-folders';
+import EventEmitter from 'events';
 
 enum ClientMessageType {
   CreatedBuildRpc = 1100,
@@ -111,18 +112,19 @@ class Importer {
   }
 
   private async addResources(): Promise<void> {
-    const defers: Promise<any>[] = [];
+    const items = Array.from(this.importRefs.values());
+    
+    // increase max listeners to avoid warning when importing many files
+    this.agent.buildClient.core._responseManager.setMaxListeners(items.length + 1);
 
-    for (const item of this.importRefs.values()) {
-      defers.push(
-        this._instance.addResourceToBuild(
-          this.ingameDirectory + item.ingameFilepath,
-          item.content
-        )
+    await Promise.all(items.map((item) => {
+      return this._instance.addResourceToBuild(
+        this.ingameDirectory + item.ingameFilepath,
+        item.content
       );
-    }
+    }));
 
-    await Promise.all(defers);
+    this.agent.buildClient.core._responseManager.setMaxListeners(EventEmitter.defaultMaxListeners);
   }
 
   private async addAutoCompile(): Promise<void> {
@@ -156,7 +158,6 @@ class Importer {
 
       this._instance = result.value;
 
-      console.time('Preparation Time');
       await this.addPrepareFoldersScript();
       await this.addResources();
 
@@ -164,11 +165,7 @@ class Importer {
         await this.addAutoCompile();
       }
 
-      console.timeEnd('Preparation Time');
-
-      console.time('Build Time');
       await this._instance.performBuild();
-      console.timeEnd('Build Time');
 
       const buildResult = await this._instance.waitForResponse((id) => {
         return (
