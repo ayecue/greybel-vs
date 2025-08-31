@@ -1775,3 +1775,4 @@ All notable changes to this project will be documented in this file.
 ## [2.8.0] - 31.08.2025
 
 - refactored file import and updated message-hook for latest version - requires the message-hook to be updated 
+- update meta docs for latest version
