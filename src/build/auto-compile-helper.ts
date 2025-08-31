@@ -9,21 +9,18 @@ export const generateAutoCompileCode = (
   allowImport: boolean
 ): string => {
   return `
-      tryGetFile = function(pc, path, maxTries = 100)
+      tryGetFile = function(pc, path, maxTries = 20)
         handle = File(pc, path)
         tries = 0
-
         while (handle == null)
           if (tries > maxTries) then
             break
           end if
-
           handle = File(pc, path)
           tries = tries + 1
           print("Failed to get file """ + path + """. (" + tries + "/" + maxTries + " tries)")
           wait(0.1)
         end while
-
         return handle
       end function
 
@@ -54,8 +51,8 @@ export const generateAutoCompileCode = (
       if (tmpFile == null) then exit("Cannot find temporary file!")
 
       result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${
-    allowImport ? 1 : 0
-  })
+        allowImport ? 1 : 0
+      })
 
       if result != "" then exit("Error when building! Reason: " + result)
 

@@ -1,6 +1,9 @@
 import vscode, { Uri } from 'vscode';
 
-export function getLaunchResourceUri(runRootFilePath: string | undefined, resource: Uri): Uri | null {
+export function getLaunchResourceUri(
+  runRootFilePath: string | undefined,
+  resource: Uri
+): Uri | null {
   if (runRootFilePath != null && runRootFilePath != '') {
     const rootPath = vscode.workspace.getWorkspaceFolder(resource);
 

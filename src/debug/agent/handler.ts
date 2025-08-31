@@ -12,11 +12,11 @@ import { VersionManager } from "../../helper/version-manager";
 import { parseFileExtensions } from "../../helper/parse-file-extensions";
 
 enum ClientMessageType {
-  SendFileSizeClientRpc = 75,
-  DecipherTimeClientRpc = 77,
-  ClearScreenClientRpc = 79,
-  InputSentClientRpc = 80,
-  PrintSentClientRpc = 81,
+  SendFileSizeClientRpc = 73,
+  DecipherTimeClientRpc = 75,
+  ClearScreenClientRpc = 77,
+  InputSentClientRpc = 78,
+  PrintSentClientRpc = 79,
   CreatedContextRpc = 1000,
   FinishedContextRpc = 1002,
   ContextRuntimeStateRpc = 1003,
@@ -114,7 +114,7 @@ export class SessionHandler extends EventEmitter {
 
     this._lastPath = path;
     this._basePath = vscode.workspace.getWorkspaceFolder(this._lastPath)?.uri ?? Uri.file(process.cwd());
-
+    
     const { value } = await this._agent.createContext(
       `params=[${params.map((it) => `"${it.replace(/"/g, '""')}"`).join(',')}];` + content,
       this._lastPath.fsPath,

@@ -1,5 +1,6 @@
-import { escapeMSString } from './escape-ms-string.js';
 import { Uri, workspace } from 'vscode';
+
+import { escapeMSString } from './escape-ms-string.js';
 import { GlobalFileSystemManager } from './fs.js';
 
 function readVarLines(
@@ -77,7 +78,10 @@ export class EnvironmentVariablesManager {
     this.map = { ...parseEnvJSON(json, escape), ...this.map };
   }
 
-  async injectFromWorkspace(targetUri: Uri, relativePathToEnv: string | undefined): Promise<void> {
+  async injectFromWorkspace(
+    targetUri: Uri,
+    relativePathToEnv: string | undefined
+  ): Promise<void> {
     if (relativePathToEnv == null) {
       return;
     }
@@ -90,7 +94,10 @@ export class EnvironmentVariablesManager {
     }
   }
 
-  async load(envFiles?: Uri[], envVars?: string[]): Promise<{ [key: string]: string }> {
+  async load(
+    envFiles?: Uri[],
+    envVars?: string[]
+  ): Promise<{ [key: string]: string }> {
     const me = this;
 
     if (envFiles) {
