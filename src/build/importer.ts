@@ -1,11 +1,9 @@
 import { TranspilerParseResult } from 'greybel-transpiler';
-import { GameAgent as Agent } from 'greyhack-message-hook-client';
-import path from 'path';
+import { BuildAgent as Agent } from 'greyhack-message-hook-client';
 import vscode, { ExtensionContext, Uri } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
 import { generateAutoCompileCode } from './auto-compile-helper';
-import { randomString } from '../helper/random-string';
 import { generateAutoGenerateFoldersCode } from './auto-generate-folders';
 
 export enum ErrorResponseMessage {
@@ -20,23 +18,38 @@ export enum ErrorResponseMessage {
   InvalidCommand = 'Unknown error: invalid command.'
 }
 
+enum ClientMessageType {
+  CreatedBuildRpc = 1100,
+  AddedResourceToBuildRpc = 1101,
+  AddedScriptRpc = 1102,
+  BuildStateRpc = 1103,
+  BuildFinishedRpc = 1104,
+  DisposedBuildRpc = 1110
+}
+
+enum BuildState {
+  Initial = 0,
+  Allocating = 1,
+  PreScript = 2,
+  CreatingEntities = 3,
+  PostScript = 4,
+  Closing = 5,
+  Complete = 10,
+  Failed = 20,
+  Unknown = 30
+}
+
 type ImportItem = {
   ingameFilepath: string;
   content: string;
 };
 
-export type ImportResultSuccess = {
-  path: string;
-  success: true;
+export type ImportResult = {
+  buildID: string;
+  state: BuildState;
+  errorMessage: string;
+  output: string;
 };
-
-export type ImportResultFailure = {
-  path: string;
-  success: false;
-  reason: string;
-};
-
-export type ImportResult = ImportResultSuccess | ImportResultFailure;
 
 export interface ImporterOptions {
   target: Uri;
@@ -64,6 +77,7 @@ class Importer {
   private importRefs: Map<string, ImportItem>;
   private target: Uri;
   private agent: any;
+  private _instance: any;
   private port: number;
   private ingameDirectory: string;
   private extensionContext: ExtensionContext;
@@ -80,6 +94,7 @@ class Importer {
       },
       this.port
     );
+    this._instance = null;
     this.target = options.target;
     this.port = options.port;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
@@ -108,105 +123,105 @@ class Importer {
     );
   }
 
-  private isBlockingError(message: string): boolean {
-    return Importer.BlockingErrorMessages.has(message);
-  }
-
-  private async startDefaultTerminal(): Promise<void> {
-    const bashFile = await this.agent.tryToGetFileEntitiy('/bin/bash');
-
-    if (bashFile) {
-      const tmpBashFileName = randomString(5);
-
-      await this.agent.tryToMoveFile('/bin/bash', tmpBashFileName, '/bin');
-      await this.agent.getTerminal();
-      await this.agent.tryToMoveFile(`/bin/${tmpBashFileName}`, 'bash', '/bin');
-    }
-  }
-
-  private async prepareFolders(): Promise<boolean> {
-    const ingamePaths = Array.from(this.importRefs.values()).map((it) => it.ingameFilepath);
-    const response = await this.agent.tryToEvaluate(
-      generateAutoGenerateFoldersCode(
-        this.ingameDirectory,
-        ingamePaths
-      ),
-      (output) => console.log(output)
+  private async addPrepareFoldersScript(): Promise<void> {
+    const ingamePaths = Array.from(this.importRefs.values()).map(
+      (it) => it.ingameFilepath
     );
 
-    return response.success;
+    await this._instance.addScriptToBuild(
+      10,
+      generateAutoGenerateFoldersCode(this.ingameDirectory, ingamePaths)
+    );
   }
 
-  private async processImportRefs(): Promise<ImportResult[]> {
-    const results: ImportResult[] = [];
+  private async addResources(): Promise<void> {
+    const defers: Promise<any>[] = [];
 
     for (const item of this.importRefs.values()) {
-      const response = await this.agent.tryToCreateFile(
-        this.ingameDirectory + path.posix.dirname(item.ingameFilepath),
-        path.basename(item.ingameFilepath),
-        item.content
+      defers.push(
+        this._instance.addResourceToBuild(
+          this.ingameDirectory + item.ingameFilepath,
+          item.content
+        )
       );
-
-      if (response.success) {
-        console.log(`Imported ${item.ingameFilepath} successful`);
-        results.push({ path: item.ingameFilepath, success: true });
-      } else {
-        results.push({
-          path: item.ingameFilepath,
-          success: false,
-          reason: response.message
-        });
-
-        if (this.isBlockingError(response.message)) {
-          console.log(`Importing got aborted due to ${response.message}`);
-          return results;
-        }
-
-        console.error(
-          `Importing of ${item.ingameFilepath} failed due to ${response.message}`
-        );
-      }
     }
 
-    return results;
+    await Promise.all(defers);
   }
 
-  private async executeAutoCompile(): Promise<boolean> {
+  private async addAutoCompile(): Promise<void> {
     const rootRef = this.importRefs.get(this.target.toString());
-    const ingamePaths = Array.from(this.importRefs.values()).map((it) => it.ingameFilepath);
-    const response = await this.agent.tryToEvaluate(
+    const ingamePaths = Array.from(this.importRefs.values()).map(
+      (it) => it.ingameFilepath
+    );
+    await this._instance.addScriptToBuild(
+      20,
       generateAutoCompileCode(
         this.ingameDirectory,
         rootRef.ingameFilepath,
         ingamePaths,
         this.allowImport
-      ),
-      (output) => console.log(output)
+      )
     );
-
-    return response.success;
   }
 
-  async import(): Promise<ImportResult[]> {
-    await this.startDefaultTerminal();
+  async import(): Promise<ImportResult> {
+    try {
+      const result = await this.agent.tryToCreateBuild();
 
-    const preperationResult = await this.prepareFolders();
+      if (!result.success) {
+        return {
+          buildID: null,
+          state: BuildState.Unknown,
+          errorMessage: result.message,
+          output: ''
+        };
+      }
 
-    if (!preperationResult) {
-      console.error('Failed to generate ingame directories');
+      this._instance = result.value;
+
+      console.time('Preparation Time');
+      await this.addPrepareFoldersScript();
+      await this.addResources();
+
+      if (this.autoCompile) {
+        await this.addAutoCompile();
+      }
+
+      console.timeEnd('Preparation Time');
+
+      console.time('Build Time');
+      await this._instance.performBuild();
+      console.timeEnd('Build Time');
+
+      const buildResult = await this._instance.waitForResponse((id) => {
+        return (
+          id === ClientMessageType.BuildFinishedRpc ||
+          id === ClientMessageType.DisposedBuildRpc
+        );
+      });
+
+      return {
+        buildID: buildResult.buildID,
+        state: buildResult.state as BuildState,
+        errorMessage: buildResult.errorMessage,
+        output: buildResult.output
+      };
+    } catch (e) {
+      return {
+        buildID: null,
+        state: BuildState.Unknown,
+        errorMessage: e.message,
+        output: ''
+      };
+    } finally {
+      try {
+        await this._instance.dispose();
+      } catch {}
+
+      this._instance = null;
       await this.agent.dispose();
-      return [];
     }
-
-    const importResults = await this.processImportRefs()
-
-    if (this.autoCompile) {
-      await this.executeAutoCompile()
-    }
-
-    await this.agent.dispose();
-
-    return importResults;
   }
 }
 
@@ -215,46 +230,31 @@ enum CommonImportErrorReason {
   NewGameVersion = 'A new game update is available.'
 }
 
-const reportFailure = (failedItems: ImportResultFailure[]): void => {
-  const uniqueErrorReasons = new Set(failedItems.map((it) => it.reason));
-
-  if (uniqueErrorReasons.size === 1) {
-    const singularErrorReason = failedItems[0].reason;
-
-    if (
-      singularErrorReason.indexOf(CommonImportErrorReason.NoAvailableSocket) !==
-      -1
-    ) {
-      vscode.window.showInformationMessage(`File import failed`, {
-        modal: true,
-        detail: `The issue appears to be due to the lack of an available socket. This could suggest that the BepInEx plugin is not installed correctly, or the game is not running. Double-check the plugin installation and ensure the game is running.
-
-For detailed troubleshooting steps, please consult the documentation: https://github.com/ayecue/greybel-vs?tab=readme-ov-file#message-hook.`
-      });
-      return;
-    } else if (
-      singularErrorReason.indexOf(CommonImportErrorReason.NewGameVersion) !== -1
-    ) {
-      vscode.window.showInformationMessage(`File import failed`, {
-        modal: true,
-        detail: `It seems that the game has received an update. This can sometimes cause issues with the import process. Please wait for the Greybel developers to update the extension and try again later.`
-      });
-      return;
-    }
-
+const reportFailure = (result: ImportResult): void => {
+  if (
+    result.errorMessage.indexOf(CommonImportErrorReason.NoAvailableSocket) !==
+    -1
+  ) {
     vscode.window.showInformationMessage(`File import failed`, {
       modal: true,
-      detail: `The reason seems to be unknown for now. Please either join the discord or create an issue on GitHub. Following reason was reported: ${singularErrorReason}`
-    });
+      detail: `The issue appears to be due to the lack of an available socket. This could suggest that the BepInEx plugin is not installed correctly, or the game is not running. Double-check the plugin installation and ensure the game is running.
 
+For detailed troubleshooting steps, please consult the documentation: https://github.com/ayecue/greybel-vs?tab=readme-ov-file#message-hook.`
+    });
+    return;
+  } else if (
+    result.errorMessage.indexOf(CommonImportErrorReason.NewGameVersion) !== -1
+  ) {
+    vscode.window.showInformationMessage(`File import failed`, {
+      modal: true,
+      detail: `It seems that the game has received an update. This can sometimes cause issues with the import process. Please wait for the Greybel developers to update the extension and try again later.`
+    });
     return;
   }
 
   vscode.window.showInformationMessage(`File import failed`, {
     modal: true,
-    detail: `The reason seems to be unknown for now. Please either join the discord or create an issue on GitHub. Following reasons were reported:\n${failedItems
-      .map((it) => it.reason)
-      .join('\n')}`
+    detail: result.errorMessage
   });
 };
 
@@ -262,31 +262,15 @@ export const executeImport = async (
   options: ImporterOptions
 ): Promise<boolean> => {
   const importer = new Importer(options);
-  const results = await importer.import();
+  const result = await importer.import();
 
-  const successfulItems = results.filter(
-    (item) => item.success
-  ) as ImportResultSuccess[];
-  const failedItems = results.filter(
-    (item) => !item.success
-  ) as ImportResultFailure[];
-
-  if (successfulItems.length === 0) {
-    reportFailure(failedItems);
-    return false;
-  } else if (failedItems.length > 0) {
-    vscode.window.showInformationMessage(
-      `Import was only partially successful. Only ${successfulItems.length} files got imported to ${options.ingameDirectory}!`,
-      {
-        modal: true,
-        detail: failedItems.map((it) => it.reason).join('\n')
-      }
-    );
+  if (result.state !== BuildState.Complete) {
+    reportFailure(result);
     return false;
   }
 
   vscode.window.showInformationMessage(
-    `${successfulItems.length} files got imported to ${options.ingameDirectory}!`,
+    `Files got imported to ${options.ingameDirectory}!`,
     {
       modal: false
     }

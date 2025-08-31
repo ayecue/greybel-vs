@@ -1,13 +1,15 @@
-import vscode from 'vscode';
-import { parseFileExtensions } from './parse-file-extensions';
-import { getBuildOutputUri, getBuildRootUri, getPotentialBuildTargetUri } from './build-uri';
 import EventEmitter from 'events';
+import vscode from 'vscode';
+
+import {
+  getBuildOutputUri,
+  getBuildRootUri,
+  getPotentialBuildTargetUri
+} from './build-uri';
+import { parseFileExtensions } from './parse-file-extensions';
 import { wait } from './wait';
 
-function runWithinTime<T>(
-  promise: Promise<T>,
-  timeout: number
-): Promise<T> {
+function runWithinTime<T>(promise: Promise<T>, timeout: number): Promise<T> {
   return Promise.race([
     wait(timeout).then(() => Promise.reject(new Error('Exceeded time!'))),
     promise
@@ -88,7 +90,9 @@ export class Watcher {
   constructor(buildCommand: () => Promise<void>) {
     const config = vscode.workspace.getConfiguration('greybel');
 
-    this._fileExtensions = parseFileExtensions(config.get<string>('fileExtensions')) || ['src', 'gs', 'ms'];
+    this._fileExtensions = parseFileExtensions(
+      config.get<string>('fileExtensions')
+    ) || ['src', 'gs', 'ms'];
     this._pattern = new RegExp(`\\.(${this._fileExtensions.join('|')})$`);
     this._watcher = null;
     this._watching = false;
@@ -101,7 +105,9 @@ export class Watcher {
 
   private listenForActivation(): void {
     const configChangeCallback = (event: vscode.ConfigurationChangeEvent) => {
-      const currentWatchState = vscode.workspace.getConfiguration('greybel')?.get<boolean>('transpiler.watch');
+      const currentWatchState = vscode.workspace
+        .getConfiguration('greybel')
+        ?.get<boolean>('transpiler.watch');
 
       if (currentWatchState && currentWatchState != this._watching) {
         this._watching = true;
@@ -113,7 +119,10 @@ export class Watcher {
     };
 
     vscode.workspace.onDidChangeConfiguration(configChangeCallback);
-    this._watching = vscode.workspace.getConfiguration('greybel')?.get<boolean>('transpiler.watch') ?? false;
+    this._watching =
+      vscode.workspace
+        .getConfiguration('greybel')
+        ?.get<boolean>('transpiler.watch') ?? false;
   }
 
   public start(): this {
@@ -138,7 +147,9 @@ export class Watcher {
       return;
     }
 
-    const targetFilePath = vscode.workspace.getConfiguration('greybel')?.get<string>('rootFile');
+    const targetFilePath = vscode.workspace
+      .getConfiguration('greybel')
+      ?.get<string>('rootFile');
 
     if (targetFilePath == null) {
       return;
@@ -170,7 +181,9 @@ export class Watcher {
         this._pendingChanges = 0;
       });
       this._syncProcess.on('error', (err) => {
-       console.error(`An error occurred during the sync process due to: ${err.message}`);
+        console.error(
+          `An error occurred during the sync process due to: ${err.message}`
+        );
       });
       this._syncProcess.on('completed', () => {
         this._syncProcess.dispose();

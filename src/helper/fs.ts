@@ -49,15 +49,12 @@ export class FileSystemManager {
   getWorkspaceFolderUri(source: Uri): Uri | null {
     const uris = vscode.workspace.workspaceFolders;
     return (
-      uris.find((folderUri) => source.path.startsWith(folderUri.uri.path))?.uri ??
-      null
+      uris.find((folderUri) => source.path.startsWith(folderUri.uri.path))
+        ?.uri ?? null
     );
   }
 
-  async findExistingPath(
-    mainUri: Uri,
-    ...altUris: Uri[]
-  ): Promise<Uri | null> {
+  async findExistingPath(mainUri: Uri, ...altUris: Uri[]): Promise<Uri | null> {
     const mainItem = await this.tryToGet(mainUri, true);
     if (mainItem != null) return mainUri;
 
@@ -95,7 +92,10 @@ export class FileSystemManagerWithCache extends FileSystemManager {
     this.pathResolveCache = new Map<string, Uri>();
   }
 
-  async tryToGet(targetUri: Uri, unsafe: boolean = false): Promise<Uint8Array | null> {
+  async tryToGet(
+    targetUri: Uri,
+    unsafe: boolean = false
+  ): Promise<Uint8Array | null> {
     const key = targetUri.toString();
     const result = this.fileContentCache.get(key);
 

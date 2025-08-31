@@ -7,9 +7,9 @@ import vscode, {
   workspace
 } from 'vscode';
 
+import { getLaunchResourceUri } from '../helper/launch-uri';
 import { AgentDebugSession } from './agent/session';
 import { GreybelDebugSession } from './local/session';
-import { getLaunchResourceUri } from '../helper/launch-uri';
 
 export enum InterpreterEnvironmentType {
   Mock = 'Mock',
@@ -33,7 +33,10 @@ export function activate(
   context: ExtensionContext,
   factory?: DebugAdapterDescriptorFactory
 ) {
-  const runFile = (resource: Uri | undefined, isDebug: boolean): Thenable<boolean> => {
+  const runFile = (
+    resource: Uri | undefined,
+    isDebug: boolean
+  ): Thenable<boolean> => {
     if (!resource) {
       vscode.window.showErrorMessage('Cannot run file. Resource is undefined.');
       return Promise.resolve(false);
@@ -52,38 +55,53 @@ export function activate(
     );
   };
 
-  const runFileFromContext = (resource: Uri = vscode.window.activeTextEditor.document.uri): Thenable<boolean> => {
+  const runFileFromContext = (
+    resource: Uri = vscode.window.activeTextEditor.document.uri
+  ): Thenable<boolean> => {
     return runFile(resource, false);
   };
 
-  const runFileFromContextDebug = (resource: Uri = vscode.window.activeTextEditor.document.uri): Thenable<boolean> => {
+  const runFileFromContextDebug = (
+    resource: Uri = vscode.window.activeTextEditor.document.uri
+  ): Thenable<boolean> => {
     return runFile(resource, true);
   };
 
-  const runRootFile = (resource: Uri = vscode.window.activeTextEditor.document.uri): Thenable<boolean> => {
+  const runRootFile = (
+    resource: Uri = vscode.window.activeTextEditor.document.uri
+  ): Thenable<boolean> => {
     const config = vscode.workspace.getConfiguration('greybel');
-    const targetResource = getLaunchResourceUri(config.get<string>('rootFile'), resource);
+    const targetResource = getLaunchResourceUri(
+      config.get<string>('rootFile'),
+      resource
+    );
     return runFile(targetResource, false);
   };
 
-  const runRootFileDebug = (resource: Uri = vscode.window.activeTextEditor.document.uri): Thenable<boolean> => {
+  const runRootFileDebug = (
+    resource: Uri = vscode.window.activeTextEditor.document.uri
+  ): Thenable<boolean> => {
     const config = vscode.workspace.getConfiguration('greybel');
-    const targetResource = getLaunchResourceUri(config.get<string>('rootFile'), resource);
+    const targetResource = getLaunchResourceUri(
+      config.get<string>('rootFile'),
+      resource
+    );
     return runFile(targetResource, true);
   };
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'greybel.debug.runFileFromContext', runFileFromContext
+      'greybel.debug.runFileFromContext',
+      runFileFromContext
     ),
     vscode.commands.registerCommand(
-      'greybel.debug.debugFileFromContext', runFileFromContextDebug
+      'greybel.debug.debugFileFromContext',
+      runFileFromContextDebug
     ),
+    vscode.commands.registerCommand('greybel.debug.runRootFile', runRootFile),
     vscode.commands.registerCommand(
-      'greybel.debug.runRootFile', runRootFile
-    ),
-    vscode.commands.registerCommand(
-      'greybel.debug.debugRootFile', runRootFileDebug
+      'greybel.debug.debugRootFile',
+      runRootFileDebug
     )
   );
 

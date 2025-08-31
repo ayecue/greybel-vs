@@ -4,8 +4,8 @@ import { LRUCache as LRU } from 'lru-cache';
 import { ASTBaseBlockWithScope } from 'miniscript-core';
 import vscode, { TextDocument, Uri } from 'vscode';
 
-import { parseFileExtensions } from './parse-file-extensions';
 import { FileSystemManager, GlobalFileSystemManager } from './fs';
+import { parseFileExtensions } from './parse-file-extensions';
 
 export interface ParseResultOptions {
   documentManager: DocumentParseQueue;
@@ -25,7 +25,9 @@ export class DocumentURIBuilder {
   static async fromTextDocument(
     textDocument: TextDocument
   ): Promise<DocumentURIBuilder> {
-    const workspaceFolderUri = GlobalFileSystemManager.getWorkspaceFolderUri(textDocument.uri);
+    const workspaceFolderUri = GlobalFileSystemManager.getWorkspaceFolderUri(
+      textDocument.uri
+    );
 
     return new DocumentURIBuilder(
       Uri.joinPath(textDocument.uri, '..'),
@@ -33,13 +35,19 @@ export class DocumentURIBuilder {
     );
   }
 
-  constructor(rootPath: Uri, workspaceFolderUri: Uri = null, fileManager: FileSystemManager = GlobalFileSystemManager) {
+  constructor(
+    rootPath: Uri,
+    workspaceFolderUri: Uri = null,
+    fileManager: FileSystemManager = GlobalFileSystemManager
+  ) {
     const config = vscode.workspace.getConfiguration('greybel');
 
     this.fileManager = fileManager;
     this.workspaceFolderUri = workspaceFolderUri;
     this.rootPath = rootPath;
-    this.fileExtensions = parseFileExtensions(config.get<string>('fileExtensions')) || ['gs', 'ms', 'src'];
+    this.fileExtensions = parseFileExtensions(
+      config.get<string>('fileExtensions')
+    ) || ['gs', 'ms', 'src'];
   }
 
   private getFromWorkspaceFolder(path: string): Uri {

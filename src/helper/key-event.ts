@@ -179,7 +179,7 @@ export function transformInputToKeyEvent(input: string): KeyEvent {
     .split('')
     .map((v: string) => v.charCodeAt(0))
     .join(';');
-  
+
   const keyCodeItem = keyCodes.find(
     (v: KeyCodeItem) => v.sequence === sequence
   );
@@ -201,7 +201,7 @@ export function transformInputToIngameKeyCodeValue(input: string): string {
     .split('')
     .map((v: string) => v.charCodeAt(0))
     .join(';');
-  
+
   const keyCodeItem = keyCodes.find(
     (v: KeyCodeItem) => v.sequence === sequence
   );

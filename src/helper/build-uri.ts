@@ -1,6 +1,9 @@
 import vscode, { Uri } from 'vscode';
 
-export function getBuildTargetUri(buildRootFilePath: string | undefined, eventUri: Uri): Uri {
+export function getBuildTargetUri(
+  buildRootFilePath: string | undefined,
+  eventUri: Uri
+): Uri {
   if (buildRootFilePath != null && buildRootFilePath != '') {
     const rootPath = vscode.workspace.getWorkspaceFolder(eventUri);
 
@@ -18,7 +21,10 @@ export function getBuildTargetUri(buildRootFilePath: string | undefined, eventUr
   return eventUri;
 }
 
-export function getPotentialBuildTargetUri(buildRootFilePath: string | undefined, relatedUri: Uri): Uri {
+export function getPotentialBuildTargetUri(
+  buildRootFilePath: string | undefined,
+  relatedUri: Uri
+): Uri {
   if (buildRootFilePath != null && buildRootFilePath != '') {
     const rootPath = vscode.workspace.getWorkspaceFolder(relatedUri);
 
@@ -33,10 +39,8 @@ export function getPotentialBuildTargetUri(buildRootFilePath: string | undefined
 
 export function getBuildRootUri(targetUri: Uri): Uri {
   const rootPath = vscode.workspace.getWorkspaceFolder(targetUri);
-  
-  return rootPath
-    ? rootPath.uri
-    : Uri.joinPath(targetUri, '..');
+
+  return rootPath ? rootPath.uri : Uri.joinPath(targetUri, '..');
 }
 
 export function getBuildOutputUri(rootPathUri: Uri): Uri {

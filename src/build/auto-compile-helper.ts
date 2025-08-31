@@ -51,8 +51,8 @@ export const generateAutoCompileCode = (
       if (tmpFile == null) then exit("Cannot find temporary file!")
 
       result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${
-    allowImport ? 1 : 0
-  })
+        allowImport ? 1 : 0
+      })
 
       if result != "" then exit("Error when building! Reason: " + result)
 

@@ -46,9 +46,8 @@ export const showCustomErrorMessage = (err: CustomError): void => {
       )
       .then(async (selection) => {
         if (selection === 'Go to error') {
-          const textDocument = await vscode.workspace.openTextDocument(
-            errTarget
-          );
+          const textDocument =
+            await vscode.workspace.openTextDocument(errTarget);
 
           vscode.window.showTextDocument(textDocument, {
             selection: range

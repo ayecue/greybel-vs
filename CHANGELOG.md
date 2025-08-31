@@ -1772,6 +1772,6 @@ All notable changes to this project will be documented in this file.
 - improve binary expression type infer (related to type analyser)
 - improve for loop iterator type infer (related to type analyser)
 
-## [2.7.x] - xx.xx.2025
+## [2.8.0] - 31.08.2025
 
-- support experimental version
+- refactored file import and updated message-hook for latest version - requires the message-hook to be updated 
