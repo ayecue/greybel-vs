@@ -6,18 +6,6 @@ import { createBasePath } from '../helper/create-base-path';
 import { generateAutoCompileCode } from './auto-compile-helper';
 import { generateAutoGenerateFoldersCode } from './auto-generate-folders';
 
-export enum ErrorResponseMessage {
-  OutOfRam = 'I can not open the program. There is not enough RAM available. Close some program and try again.',
-  DesktopUI = 'Error: Desktop GUI is not running.',
-  CanOnlyRunOnComputer = 'Error: this program can only be run on computers.',
-  CannotBeExecutedRemotely = 'Error: this program can not be executed remotely',
-  CannotLaunch = "Can't launch program. Permission denied.",
-  NotAttached = 'Error: script is not attached to any existing terminal',
-  DeviceNotFound = 'Error: device not found.',
-  NoInternet = 'Error: No internet connection',
-  InvalidCommand = 'Unknown error: invalid command.'
-}
-
 enum ClientMessageType {
   CreatedBuildRpc = 1100,
   AddedResourceToBuildRpc = 1101,
@@ -62,18 +50,6 @@ export interface ImporterOptions {
 }
 
 class Importer {
-  static readonly BlockingErrorMessages = new Set<string>([
-    ErrorResponseMessage.OutOfRam,
-    ErrorResponseMessage.DesktopUI,
-    ErrorResponseMessage.CanOnlyRunOnComputer,
-    ErrorResponseMessage.CannotBeExecutedRemotely,
-    ErrorResponseMessage.CannotLaunch,
-    ErrorResponseMessage.NotAttached,
-    ErrorResponseMessage.DeviceNotFound,
-    ErrorResponseMessage.NoInternet,
-    ErrorResponseMessage.InvalidCommand
-  ]);
-
   private importRefs: Map<string, ImportItem>;
   private target: Uri;
   private agent: any;
