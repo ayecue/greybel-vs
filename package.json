@@ -718,7 +718,7 @@
     "greyscript-interpreter": "~2.6.1",
     "greyscript-meta": "~4.4.0",
     "greyscript-meta-web": "~1.4.0",
-    "greyscript-textmate": "~2.0.2",
+    "greyscript-textmate": "~2.0.3",
     "greyscript-transpiler": "~1.9.1",
     "lru-cache": "^11.1.0",
     "node-json-stream": "~0.2.6",
