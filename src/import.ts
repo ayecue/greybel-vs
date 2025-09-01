@@ -8,6 +8,7 @@ import { executeImport } from './build/importer';
 import { GlobalFileSystemManager } from './helper/fs';
 import { getIngameDirectory } from './helper/get-ingame-directory';
 import { VersionManager } from './helper/version-manager';
+import { randomString } from './helper/random-string';
 
 const getFiles = async (uri: vscode.Uri): Promise<vscode.Uri[]> => {
   const stat = await vscode.workspace.fs.stat(uri);
@@ -46,6 +47,7 @@ export function activate(context: ExtensionContext) {
       const config = vscode.workspace.getConfiguration('greybel');
       const port = config.get<number>('createIngame.port');
       const ingameDirectory = await getIngameDirectory(config);
+      const resourceDirectory = Uri.joinPath(ingameDirectory, randomString(5));
       const filesWithContent = await Promise.all(files.map(async (file) => {
         const content = await GlobalFileSystemManager.tryToDecode(file);
 
@@ -57,7 +59,8 @@ export function activate(context: ExtensionContext) {
 
       await executeImport({
         target: targetUri,
-        ingameDirectory: ingameDirectory.path.replace(/\/$/i, ''),
+        ingameDirectory: ingameDirectory.path,
+        resourceDirectory: resourceDirectory.path,
         result: filesWithContent.reduce((result, item) => {
           result[item.path] = item.content;
           return result;
