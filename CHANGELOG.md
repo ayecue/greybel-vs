@@ -1780,7 +1780,8 @@ All notable changes to this project will be documented in this file.
 
 ## [2.8.1] - 01.09.2025
 
+- breaking changes for message-hook - please update your message-hook
 - rely on events rather than periodic checks for certain states - related to message-hook
-- improve error management of build - requires the message-hook to be updated
+- improve error management of build - related to message-hook
 - move files to temporary folder when auto compile is used - thanks for suggestion to [@redit0](https://github.com/redit0)
 - check if there is enough available RAM prior to creating windows - thanks for the suggestion [@midsubspace](https://github.com/midsubspace)
