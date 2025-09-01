@@ -17,6 +17,7 @@ import { VersionManager } from './helper/version-manager';
 import { EnvironmentVariablesManager } from './helper/env-mapper';
 import { Watcher } from './helper/watcher';
 import { getBuildOutputUri, getBuildRootUri, getBuildTargetUri } from './helper/build-uri';
+import { randomString } from './helper/random-string';
 
 export function activate(context: ExtensionContext) {
   async function build(
@@ -46,7 +47,10 @@ export function activate(context: ExtensionContext) {
         config.get<string[]>('transpiler.excludedNamespaces') || [];
       const obfuscation = config.get<boolean>('transpiler.obfuscation');
       const outputFilename = config.get<string>('transpiler.outputFilename');
+      const autoCompile = config.get<boolean>('greybel.autoCompile') ?? true;
       const ingameDirectory = await getIngameDirectory(config);
+      const resourceDirectory = Uri.joinPath(ingameDirectory, randomString(5));
+      const fileImportRootPath = autoCompile ? resourceDirectory : ingameDirectory;
       const envMapper = new EnvironmentVariablesManager();
       let outputUri = targetUri;
       let buildType = BuildType.DEFAULT;
@@ -91,7 +95,7 @@ export function activate(context: ExtensionContext) {
         ],
         processImportPathCallback: (path: string) => {
           const relativePath = createBasePath(outputUri, path);
-          return Uri.joinPath(ingameDirectory, relativePath).path;
+          return Uri.joinPath(fileImportRootPath, relativePath).path;
         }
       }).parse();
 
@@ -115,8 +119,6 @@ export function activate(context: ExtensionContext) {
       if (config.get<boolean>('transpiler.installer.active')) {
         const maxChars =
           config.get<number>('transpiler.installer.maxChars') || 160000;
-        const autoCompile =
-          config.get<boolean>('transpiler.installer.autoCompile') || false;
         const allowImport =
           config.get<boolean>('transpiler.installer.allowImport') || false;
 
@@ -128,6 +130,7 @@ export function activate(context: ExtensionContext) {
           autoCompile,
           buildPath: rootPathUri,
           ingameDirectory: ingameDirectory.path,
+          resourceDirectory: resourceDirectory.path,
           result,
           maxChars,
           allowImport
@@ -144,11 +147,11 @@ export function activate(context: ExtensionContext) {
         await executeImport({
           target: outputUri,
           ingameDirectory: ingameDirectory.path,
+          resourceDirectory: resourceDirectory.path,
           result,
           extensionContext: context,
           port,
-          autoCompile: config
-            .get<boolean>('createIngame.autoCompile'),
+          autoCompile,
           allowImport: config
             .get<boolean>('createIngame.allowImport'),
         });

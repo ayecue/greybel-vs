@@ -3,8 +3,8 @@ import { BuildAgent as Agent } from 'greyhack-message-hook-client';
 import vscode, { ExtensionContext, Uri } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
-import { generateAutoCompileCode } from './auto-compile-helper';
-import { generateAutoGenerateFoldersCode } from './auto-generate-folders';
+import { generateAutoCompileCode } from './scripts/auto-compile-helper';
+import { generateAutoGenerateFoldersCode } from './scripts/auto-generate-folders';
 import EventEmitter from 'events';
 
 enum ClientMessageType {
@@ -43,6 +43,7 @@ export type ImportResult = {
 export interface ImporterOptions {
   target: Uri;
   ingameDirectory: string;
+  resourceDirectory: string;
   result: TranspilerParseResult;
   port: number;
   extensionContext: ExtensionContext;
@@ -57,6 +58,7 @@ class Importer {
   private _instance: any;
   private port: number;
   private ingameDirectory: string;
+  private resourceDirectory: string;
   private extensionContext: ExtensionContext;
   private autoCompile: boolean;
   private allowImport: boolean;
@@ -75,6 +77,7 @@ class Importer {
     this.target = options.target;
     this.port = options.port;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
+    this.resourceDirectory = options.resourceDirectory.trim().replace(/\/$/i, '');
     this.importRefs = this.createImportList(options.target, options.result);
     this.extensionContext = options.extensionContext;
     this.autoCompile = options.autoCompile;
@@ -107,7 +110,7 @@ class Importer {
 
     await this._instance.addScriptToBuild(
       10,
-      generateAutoGenerateFoldersCode(this.ingameDirectory, ingamePaths)
+      generateAutoGenerateFoldersCode(ingamePaths)
     );
   }
 
@@ -119,7 +122,7 @@ class Importer {
 
     await Promise.all(items.map((item) => {
       return this._instance.addResourceToBuild(
-        this.ingameDirectory + item.ingameFilepath,
+        item.ingameFilepath,
         item.content
       );
     }));
@@ -135,7 +138,6 @@ class Importer {
     await this._instance.addScriptToBuild(
       20,
       generateAutoCompileCode(
-        this.ingameDirectory,
         rootRef.ingameFilepath,
         ingamePaths,
         this.allowImport
@@ -145,7 +147,7 @@ class Importer {
 
   async import(): Promise<ImportResult> {
     try {
-      const result = await this.agent.tryToCreateBuild();
+      const result = await this.agent.tryToCreateBuild(this.ingameDirectory, this.resourceDirectory, this.autoCompile);
 
       if (!result.success) {
         return {

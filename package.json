@@ -8,7 +8,7 @@
     "email": "soerenwehmeier@googlemail.com"
   },
   "icon": "icon.png",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "repository": {
     "type": "git",
     "url": "git@github.com:ayecue/greybel-vs.git"
@@ -419,6 +419,11 @@
             "type": "string",
             "description": "Define the root project file. If not set, the extension will rely on the given context to built or execute files.",
             "scope": "resource"
+          },
+          "greybel.autoCompile": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable auto compile."
           }
         }
       },
@@ -588,11 +593,6 @@
             "minimum": 1000,
             "description": "Amount of characters allowed in one file before splitting when creating installer."
           },
-          "greybel.transpiler.installer.autoCompile": {
-            "type": "boolean",
-            "default": false,
-            "description": "Enable auto compile feature for installer."
-          },
           "greybel.transpiler.installer.allowImport": {
             "type": "boolean",
             "default": false,
@@ -632,12 +632,6 @@
             "type": "boolean",
             "default": false,
             "description": "Create files automatically in-game.",
-            "scope": "resource"
-          },
-          "greybel.createIngame.autoCompile": {
-            "type": "boolean",
-            "default": false,
-            "description": "Build root file automatically.",
             "scope": "resource"
           },
           "greybel.createIngame.allowImport": {
@@ -711,13 +705,13 @@
     "css-color-names": "^1.0.1",
     "greybel-gh-mock-intrinsics": "~5.6.1",
     "greybel-intrinsics": "~5.6.1",
-    "greybel-languageserver": "~2.1.2",
-    "greybel-languageserver-browser": "~2.1.2",
-    "greyhack-message-hook-client": "~1.2.0",
+    "greybel-languageserver": "~2.1.3",
+    "greybel-languageserver-browser": "~2.1.3",
+    "greyhack-message-hook-client": "1.2.1",
     "greyscript-core": "~2.6.0",
     "greyscript-interpreter": "~2.6.1",
-    "greyscript-meta": "~4.4.0",
-    "greyscript-meta-web": "~1.4.0",
+    "greyscript-meta": "~4.4.1",
+    "greyscript-meta-web": "~1.4.1",
     "greyscript-textmate": "~2.0.3",
     "greyscript-transpiler": "~1.9.1",
     "lru-cache": "^11.1.0",

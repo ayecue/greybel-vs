@@ -5,7 +5,9 @@ import vscode, { Uri } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
 import { escapeMSString } from '../helper/escape-ms-string';
-import { generateAutoCompileCode } from './auto-compile-helper';
+import { generateAutoCompileCode } from './scripts/auto-compile-helper';
+import { randomString } from '../helper/random-string';
+import { generateContentHeader } from './scripts/installer-content-header';
 
 type ImportItem = {
   filepath: Uri;
@@ -14,7 +16,7 @@ type ImportItem = {
 };
 
 interface InstallerFileOptions {
-  rootDirectory: string;
+  destination: string;
   contentHeader: string;
   maxChars: number;
   previous?: InstallerFile;
@@ -23,13 +25,13 @@ interface InstallerFileOptions {
 class InstallerFile {
   readonly maxChars: number;
 
-  private rootDirectory: string;
+  private destination: string;
   private items: ImportItem[];
   private buffer: string;
   private previous: InstallerFile | null;
 
   constructor(options: InstallerFileOptions) {
-    this.rootDirectory = options.rootDirectory;
+    this.destination = options.destination;
     this.maxChars = options.maxChars;
     this.buffer = options.contentHeader;
     this.items = [];
@@ -39,7 +41,7 @@ class InstallerFile {
   insert(item: ImportItem): boolean {
     const isNew = !this.previous?.items.includes(item);
     const remaining = this.getRemainingSpace();
-    const filePath = `${this.rootDirectory}${item.ingameFilepath}`;
+    const filePath = `${this.destination}${item.ingameFilepath}`;
     let line = `m("${filePath}","${item.content}",${isNew ? '1' : '0'});d`;
 
     if (remaining > line.length) {
@@ -93,6 +95,7 @@ class InstallerFile {
 export interface InstallerOptions {
   target: Uri;
   ingameDirectory: string;
+  resourceDirectory: string;
   buildPath: Uri;
   result: TranspilerParseResult;
   maxChars: number;
@@ -104,6 +107,7 @@ class Installer {
   private importList: ImportItem[];
   private target: Uri;
   private ingameDirectory: string;
+  private resourceDirectory: string;
   private buildPath: Uri;
   private maxChars: number;
   private autoCompile: boolean;
@@ -115,6 +119,7 @@ class Installer {
   constructor(options: InstallerOptions) {
     this.target = options.target;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
+    this.resourceDirectory = options.resourceDirectory.trim().replace(/\/$/i, '');
     this.buildPath = options.buildPath;
     this.maxChars = options.maxChars;
     this.autoCompile = options.autoCompile;
@@ -122,6 +127,10 @@ class Installer {
     this.files = [];
     this.importList = this.createImportList(options.target, options.result);
     this.createdFiles = [];
+  }
+
+  private getDestination(): string {
+    return this.autoCompile ? this.resourceDirectory : this.ingameDirectory;
   }
 
   private async createInstallerFiles(): Promise<void> {
@@ -164,53 +173,12 @@ class Installer {
 
   createContentHeader(): string {
     return [
-      's = get_shell',
-      'c = s.host_computer',
-      'm = function(filePath, content, isNew)',
-      '	segments = filePath.split("/")[1 : ]',
-      '	fileName = segments.pop',
-      '	for segment in segments',
-      '		parentPath = "/" + segments[ : __segment_idx].join("/")',
-      '		folderName = segment',
-      '		if parentPath == "/" then',
-      '			folderPath = "/" + folderName',
-      '		else',
-      '			folderPath = parentPath + "/" + folderName',
-      '		end if',
-      '		folderHandle = c.File(folderPath)',
-      '		if folderHandle == null then',
-      '			result = c.create_folder(parentPath, folderName) == 1',
-      '			if result != 1 then exit("Could not create folder in """ + folderPath + """ due to: " + result)',
-      '			print("New folder """ + folderPath + """ got created.")',
-      '			folderHandle = c.File(folderPath)',
-      '		end if',
-      '		if not folderHandle.is_folder then exit("Entity at """ + folderPath + """ is not a folder. Installation got aborted.")',
-      '	end for',
-      '	parentPath = "/" + segments.join("/")',
-      '	fileEntity = c.File(filePath)',
-      '	if fileEntity == null then',
-      '		result = c.touch(parentPath, fileName)',
-      '		if result != 1 then exit("Could not create file in """ + filePath + """ due to: " + result)',
-      '		fileEntity = c.File(filePath)',
-      '	end if',
-      '	if fileEntity == null then exit("Unable to get file at """ + filePath + """. Installation got aborted.")',
-      '	if fileEntity.is_folder then exit("File at """ + filePath + """ is a folder but should be a source file. Installation got aborted.")',
-      '	if fileEntity.is_binary then exit("File at """ + filePath + """ is a binary but should be a source file. Installation got aborted.")',
-      '	if isNew then',
-      '		fileEntity.set_content(content)',
-      '		print("New file """ + filePath + """ got created.")',
-      '	else',
-      '		fileEntity.set_content(fileEntity.get_content + content)',
-      '		print("Content got appended to """ + filePath + """.")',
-      '	end if',
-      'end function',
-      'd = function',
-      '	c.File(program_path).delete',
-      'end function',
+      `BUILD_DESTINATION="${this.ingameDirectory}"`,
+      `BUILD_RESOURCE_DESTINATION="${this.resourceDirectory}"`,
+      `BUILD_AUTO_COMPILE=${this.autoCompile ? '1' : '0'}`,
+      generateContentHeader(),
       ''
-    ]
-      .map((line) => line.trim())
-      .join(';');
+    ].join(';');
   }
 
   createContentFooterAutoCompile(): string[] {
@@ -220,7 +188,6 @@ class Installer {
       );
 
       return generateAutoCompileCode(
-        this.ingameDirectory,
         rootRef.ingameFilepath,
         this.importList.map((it) => it.ingameFilepath),
         this.allowImport
@@ -231,12 +198,16 @@ class Installer {
   }
 
   createContentFooter(): string {
-    return ['d', ...this.createContentFooterAutoCompile(), ''].join(';');
+    return [
+      'd',
+      ...this.createContentFooterAutoCompile(),
+      ''
+    ].join(';');
   }
 
   async build() {
     let file = new InstallerFile({
-      rootDirectory: this.ingameDirectory,
+      destination: this.getDestination(),
       contentHeader: this.createContentHeader(),
       maxChars: this.maxChars
     });
@@ -250,7 +221,7 @@ class Installer {
 
         if (!done) {
           file = new InstallerFile({
-            rootDirectory: this.ingameDirectory,
+            destination: this.getDestination(),
             contentHeader: this.createContentHeader(),
             maxChars: this.maxChars,
             previous: file
@@ -264,7 +235,7 @@ class Installer {
 
     if (!file.appendCode(contentFooter)) {
       file = new InstallerFile({
-        rootDirectory: this.ingameDirectory,
+        destination: this.getDestination(),
         contentHeader: contentFooter,
         maxChars: this.maxChars,
         previous: file
