@@ -1786,3 +1786,8 @@ All notable changes to this project will be documented in this file.
 - move files to temporary folder when auto compile is used - thanks for suggestion to [@redit0](https://github.com/redit0)
 - check if there is enough available RAM prior to creating windows - thanks for the suggestion [@midsubspace](https://github.com/midsubspace)
 - add missing parameter to scp definition in documentation - thanks for the report [@midsubspace](https://github.com/midsubspace)
+
+## [2.8.2] - 06.09.2025
+
+- add @hidden tag to function comment docs to enable 3rd party extension to show their tooltips instead
+- update overflow description in documentation - thanks for reporting to [@redit0](https://github.com/redit0)
