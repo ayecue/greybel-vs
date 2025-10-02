@@ -18,7 +18,7 @@ jobs:
       - checkout
       - node/install-packages
       - build
-  build-and-publish: 
+  publish-ovsx: 
     docker:
       - image: cimg/node:20.18.0
     steps:
@@ -31,6 +31,16 @@ jobs:
       - run:
           name: Publish extension to Open VSX
           command: ./node_modules/.bin/ovsx publish -p ${OPEN_VSX_TOKEN}
+  publish-vsce: 
+    docker:
+      - image: cimg/node:20.18.0
+    steps:
+      - checkout
+      - node/install-packages
+      - build
+      - run:
+          name: Determining package version
+          command: echo 'export PACKAGE_VERSION=$(node -pe "require(\"./package.json\").version")' >> $BASH_ENV
       - run:
           name: Publish extension to MS Marketplace
           command: ./node_modules/.bin/vsce publish -p ${VSCE_TOKEN} ${PACKAGE_VERSION}
@@ -41,7 +51,8 @@ workflows:
       and:
         - equal: [main, << pipeline.git.branch >>]
     jobs:
-      - build-and-publish
+      - publish-ovsx
+      - publish-vsce
   test:
     jobs:
       - build
