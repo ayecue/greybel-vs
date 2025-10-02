@@ -44,7 +44,7 @@ export const keyCodes: KeyCodeItem[] = [
     sequence: [13].join(';'),
     keyCode: KeyCode.Enter,
     code: 'Enter',
-    ingameKeyCodeEnumValue: String.fromCharCode(13)
+    ingameKeyCodeEnumValue: ''
   },
   {
     sequence: [32].join(';'),
