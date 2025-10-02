@@ -1803,5 +1803,5 @@ All notable changes to this project will be documented in this file.
 
 ## [2.8.5] - 02.10.2025
 
-- add whitespace after colon sign when convering maps to strings in mock env - thanks for the report to [@smiley8D](https://github.com/smiley8D) - related to [#368](https://github.com/ayecue/greybel-vs/issues/368)
+- add whitespace after colon sign when converting maps to strings in mock env - thanks for the report to [@smiley8D](https://github.com/smiley8D) - related to [#368](https://github.com/ayecue/greybel-vs/issues/368)
 - fix input value for enter key to be empty string instead of return carriage - thanks for reporting to IDelta
