@@ -56,11 +56,13 @@ You can also access these commands through the context menu for quick right-clic
 There are two tutorial videos available that demonstrate the setup and configuration process:
 
 **Windows Setup Tutorial**
+
 The first video shows how to install the [message-hook](#message-hook) plugin on Windows. It also provides insights on configuring the extension to enable in-game import, auto-compile functionality, and changing the type analyzer strategy. Huge thanks to [@redit0](https://github.com/redit0) for creating it!
 
 [![Watch the video](https://img.youtube.com/vi/2Iyk4vmavaY/hqdefault.jpg)](https://www.youtube.com/watch?v=2Iyk4vmavaY)
 
 **Linux Setup Tutorial**
+
 The second video demonstrates how to install the [message-hook](#message-hook) plugin on Linux using Proton. Big thanks to [@0x0](https://github.com/zeroexzero) for the contribution!
 
 [![Watch the video](https://img.youtube.com/vi/V54t7w_22GY/hqdefault.jpg)](https://www.youtube.com/watch?v=V54t7w_22GY)
