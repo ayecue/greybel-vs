@@ -51,11 +51,21 @@ You can also access these commands through the context menu for quick right-clic
 
 **Tip**: Make sure to [configure settings](#settings) to customize Greybel to your preferences.
 
-## Tutorial video
+## Tutorial videos
 
-A new tutorial video is available! :rocket: It covers how to set up the extension and install the [message-hook](#message-hook) plugin. Huge thanks to [@redit0](https://github.com/redit0) for creating it!
+There are two tutorial videos available that demonstrate the setup and configuration process:
+
+**Windows Setup Tutorial**
+
+The first video shows how to install the [message-hook](#message-hook) plugin on Windows. It also provides insights on configuring the extension to enable in-game import, auto-compile functionality, and changing the type analyzer strategy. Huge thanks to [@redit0](https://github.com/redit0) for creating it!
 
 [![Watch the video](https://img.youtube.com/vi/2Iyk4vmavaY/hqdefault.jpg)](https://www.youtube.com/watch?v=2Iyk4vmavaY)
+
+**Linux Setup Tutorial**
+
+The second video demonstrates how to install the [message-hook](#message-hook) plugin on Linux using Proton. Big thanks to [@0x0](https://github.com/zeroexzero) for the contribution!
+
+[![Watch the video](https://img.youtube.com/vi/V54t7w_22GY/hqdefault.jpg)](https://www.youtube.com/watch?v=V54t7w_22GY)
 
 # Settings
 
@@ -354,7 +364,7 @@ The Message Hook enables Greybel to communicate with the game server via the gam
 
 To use the Message Hook, you must first install [BepInEx](https://github.com/BepInEx/BepInEx), followed by the appropriate plugin. Instructions are provided below for both [BepInEx](https://github.com/BepInEx/BepInEx) 5.x.x and 6.x.x versions.
 
-If you prefer video over written instructions, there’s also a [tutorial](#tutorial-video) created by [@redit0](https://github.com/redit0) that walks you through the setup process.
+If you prefer videos over written instructions, there are also [tutorial videos](#tutorial-videos) created by [@redit0](https://github.com/redit0) and [@0x0](https://github.com/zeroexzero) that walk you through the setup process.
 
 **Note**: BepInEx 6.x.x is in a pre-release state and may be less stable than 5.x.x. If you experience frequent crashes, consider switching back to version 5.x.x.
 
