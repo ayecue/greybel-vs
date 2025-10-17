@@ -1809,3 +1809,8 @@ All notable changes to this project will be documented in this file.
 ## [2.8.6] - 05.10.2025
 
 - add new tutorial video from [@0x0](https://github.com/zeroexzero) to the extension description
+
+## [2.8.7] - 17.10.2025
+
+- fix map.pop behaviour to return first item - thanks for reporting to IDelta
+- fix formatting of typeof meta description - thanks for reporting to IDelta
