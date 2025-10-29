@@ -45,6 +45,12 @@ interface ContextBreakpoint {
   stacktrace: StackItem[];
 }
 
+function normalizePathForNonWindows(path: string): string {
+  if (process.platform === 'win32') return path;
+  if (!/^[a-z]:\//i.test(path)) return path;
+  return path.slice(2);
+}
+
 async function resolveFileExtension(path: string, allowedFileExtensions: string[]): Promise<Uri | null> {
   return await GlobalFileSystemManager.findExistingPath(
     Uri.file(path),
@@ -290,7 +296,7 @@ export class SessionHandler extends EventEmitter {
 
   private async resolveFile(path: string) {
     if (this._instance == null) return;
-    const resolvedPath = await resolveFileExtension(path, this._fileExtensions);
+    const resolvedPath = await resolveFileExtension(normalizePathForNonWindows(path), this._fileExtensions);
     if (resolvedPath == null) {
       await this._instance.resolvedFile(path, null);
       return;

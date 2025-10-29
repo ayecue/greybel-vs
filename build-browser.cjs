@@ -26,6 +26,7 @@ const build = async () => {
         ],
         define: {
           'process.env.NODE_ENV': '"production"',
+          'process.platform': '"browser"',
           ...Object.entries(envObj).reduce((result, [key, value]) => {
             result[`process.env.${key}`] = `"${value}"`;
             return result;
