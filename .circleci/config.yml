@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@5.1.0
+  node: circleci/node@7.2.1
 
 commands:
   build:  
@@ -13,14 +13,14 @@ commands:
 jobs:
   build:  
     docker:
-      - image: cimg/node:20.18.0
+      - image: cimg/node:22.21.1
     steps:
       - checkout
       - node/install-packages
       - build
   publish-ovsx: 
     docker:
-      - image: cimg/node:20.18.0
+      - image: cimg/node:22.21.1
     steps:
       - checkout
       - node/install-packages
@@ -33,7 +33,7 @@ jobs:
           command: ./node_modules/.bin/ovsx publish -p ${OPEN_VSX_TOKEN}
   publish-vsce: 
     docker:
-      - image: cimg/node:20.18.0
+      - image: cimg/node:22.21.1
     steps:
       - checkout
       - node/install-packages

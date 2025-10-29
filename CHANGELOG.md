@@ -1820,3 +1820,7 @@ All notable changes to this project will be documented in this file.
 
 - fix breakpoints for in-game runtime in Windows - thanks for reporting to Ephy
 - normalize filepath properly for the extension when using in-game runtime and the game running in Proton - thanks for reporting to Satarno
+
+## [2.8.9] - 29.10.2025
+
+- republish extension due to failing signature verification
