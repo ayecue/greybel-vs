@@ -107,7 +107,7 @@ export class SessionHandler extends EventEmitter {
       return bp.enabled;
     }).map((bp: SourceBreakpoint) => {
       return {
-        filepath: bp.location.uri.fsPath,
+        filepath: bp.location.uri.fsPath.replace(/\\/g, '/'),
         lineNum: bp.location.range.start.line + 1,
       };
     });
@@ -117,8 +117,8 @@ export class SessionHandler extends EventEmitter {
     
     const { value } = await this._agent.createContext(
       `params=[${params.map((it) => `"${it.replace(/"/g, '""')}"`).join(',')}];` + content,
-      this._lastPath.fsPath,
-      this._basePath.fsPath,
+      this._lastPath.fsPath.replace(/\\/g, '/'),
+      this._basePath.fsPath.replace(/\\/g, '/'),
       programName,
       debugMode,
       breakpoints,
@@ -137,7 +137,7 @@ export class SessionHandler extends EventEmitter {
       await vscode.workspace.fs.writeFile(resolvedPath, Buffer.from(content));
 
       return {
-        resolvedPath: resolvedPath.fsPath,
+        resolvedPath: resolvedPath.fsPath.replace(/\\/g, '/'),
         originalPath: path,
       };
     }
@@ -145,7 +145,7 @@ export class SessionHandler extends EventEmitter {
     const resolvedPath = await resolveFileExtension(path, this._fileExtensions);
 
     return {
-      resolvedPath: resolvedPath ? resolvedPath.fsPath : path,
+      resolvedPath: resolvedPath ? resolvedPath.fsPath.replace(/\\/g, '/') : path,
       originalPath: path,
     };
   }
@@ -296,7 +296,7 @@ export class SessionHandler extends EventEmitter {
       return;
     }
     const content = await GlobalFileSystemManager.tryToDecode(resolvedPath);
-    await this._instance.resolvedFile(resolvedPath.fsPath, content);
+    await this._instance.resolvedFile(resolvedPath.fsPath.replace(/\\/g, '/'), content);
   }
 
   async stop() {

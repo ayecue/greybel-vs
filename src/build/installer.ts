@@ -5,8 +5,8 @@ import vscode, { Uri } from 'vscode';
 
 import { createBasePath } from '../helper/create-base-path';
 import { escapeMSString } from '../helper/escape-ms-string';
-import { generateAutoCompileCode } from './scripts/auto-compile-helper';
 import { randomString } from '../helper/random-string';
+import { generateAutoCompileCode } from './scripts/auto-compile-helper';
 import { generateContentHeader } from './scripts/installer-content-header';
 
 type ImportItem = {
@@ -119,7 +119,9 @@ class Installer {
   constructor(options: InstallerOptions) {
     this.target = options.target;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
-    this.resourceDirectory = options.resourceDirectory.trim().replace(/\/$/i, '');
+    this.resourceDirectory = options.resourceDirectory
+      .trim()
+      .replace(/\/$/i, '');
     this.buildPath = options.buildPath;
     this.maxChars = options.maxChars;
     this.autoCompile = options.autoCompile;
@@ -198,11 +200,7 @@ class Installer {
   }
 
   createContentFooter(): string {
-    return [
-      'd',
-      ...this.createContentFooterAutoCompile(),
-      ''
-    ].join(';');
+    return ['d', ...this.createContentFooterAutoCompile(), ''].join(';');
   }
 
   async build() {
