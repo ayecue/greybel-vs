@@ -1,3 +1,4 @@
+import EventEmitter from 'events';
 import { TranspilerParseResult } from 'greybel-transpiler';
 import { BuildAgent as Agent } from 'greyhack-message-hook-client';
 import vscode, { ExtensionContext, Uri } from 'vscode';
@@ -5,7 +6,6 @@ import vscode, { ExtensionContext, Uri } from 'vscode';
 import { createBasePath } from '../helper/create-base-path';
 import { generateAutoCompileCode } from './scripts/auto-compile-helper';
 import { generateAutoGenerateFoldersCode } from './scripts/auto-generate-folders';
-import EventEmitter from 'events';
 
 enum ClientMessageType {
   CreatedBuildRpc = 1100,
@@ -77,7 +77,9 @@ class Importer {
     this.target = options.target;
     this.port = options.port;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
-    this.resourceDirectory = options.resourceDirectory.trim().replace(/\/$/i, '');
+    this.resourceDirectory = options.resourceDirectory
+      .trim()
+      .replace(/\/$/i, '');
     this.importRefs = this.createImportList(options.target, options.result);
     this.extensionContext = options.extensionContext;
     this.autoCompile = options.autoCompile;
@@ -116,18 +118,24 @@ class Importer {
 
   private async addResources(): Promise<void> {
     const items = Array.from(this.importRefs.values());
-    
+
     // increase max listeners to avoid warning when importing many files
-    this.agent.buildClient.core._responseManager.setMaxListeners(items.length + 1);
+    this.agent.buildClient.core._responseManager.setMaxListeners(
+      items.length + 1
+    );
 
-    await Promise.all(items.map((item) => {
-      return this._instance.addResourceToBuild(
-        item.ingameFilepath,
-        item.content
-      );
-    }));
+    await Promise.all(
+      items.map((item) => {
+        return this._instance.addResourceToBuild(
+          item.ingameFilepath,
+          item.content
+        );
+      })
+    );
 
-    this.agent.buildClient.core._responseManager.setMaxListeners(EventEmitter.defaultMaxListeners);
+    this.agent.buildClient.core._responseManager.setMaxListeners(
+      EventEmitter.defaultMaxListeners
+    );
   }
 
   private async addAutoCompile(): Promise<void> {
@@ -147,7 +155,11 @@ class Importer {
 
   async import(): Promise<ImportResult> {
     try {
-      const result = await this.agent.tryToCreateBuild(this.ingameDirectory, this.resourceDirectory, this.autoCompile);
+      const result = await this.agent.tryToCreateBuild(
+        this.ingameDirectory,
+        this.resourceDirectory,
+        this.autoCompile
+      );
 
       if (!result.success) {
         return {
