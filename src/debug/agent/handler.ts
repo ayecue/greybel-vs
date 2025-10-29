@@ -45,10 +45,19 @@ interface ContextBreakpoint {
   stacktrace: StackItem[];
 }
 
-function normalizePathForNonWindows(path: string): string {
-  if (process.platform === 'win32') return path;
-  if (!/^[a-z]:\//i.test(path)) return path;
-  return path.slice(2);
+function isNonWindowsButRuntimeUsesWindowsPaths(path: string): boolean {
+  return process.platform !== 'win32' && /^[a-z]:\//i.test(path);
+}
+
+/*
+  Internally the message-hook normalizes windows-style paths to unix-style paths by replacing
+  backslashes with forward slashes. Therefore we can normalize all paths here to ensure consistency.
+
+  Note: The drive letter prefix (e.g. C:) is preserved as-is. There is only a workaround if the runtime
+  uses Windows-style paths on a non-Windows platform due to Wine or Proton.
+*/
+function normalizePath(path: string): string {
+  return path.replace(/\\/g, '/');
 }
 
 async function resolveFileExtension(path: string, allowedFileExtensions: string[]): Promise<Uri | null> {
@@ -113,7 +122,7 @@ export class SessionHandler extends EventEmitter {
       return bp.enabled;
     }).map((bp: SourceBreakpoint) => {
       return {
-        filepath: bp.location.uri.fsPath.replace(/\\/g, '/'),
+        filepath: normalizePath(bp.location.uri.fsPath),
         lineNum: bp.location.range.start.line + 1,
       };
     });
@@ -123,8 +132,8 @@ export class SessionHandler extends EventEmitter {
     
     const { value } = await this._agent.createContext(
       `params=[${params.map((it) => `"${it.replace(/"/g, '""')}"`).join(',')}];` + content,
-      this._lastPath.fsPath.replace(/\\/g, '/'),
-      this._basePath.fsPath.replace(/\\/g, '/'),
+      normalizePath(this._lastPath.fsPath),
+      normalizePath(this._basePath.fsPath),
       programName,
       debugMode,
       breakpoints,
@@ -143,7 +152,7 @@ export class SessionHandler extends EventEmitter {
       await vscode.workspace.fs.writeFile(resolvedPath, Buffer.from(content));
 
       return {
-        resolvedPath: resolvedPath.fsPath.replace(/\\/g, '/'),
+        resolvedPath: normalizePath(resolvedPath.fsPath),
         originalPath: path,
       };
     }
@@ -151,7 +160,7 @@ export class SessionHandler extends EventEmitter {
     const resolvedPath = await resolveFileExtension(path, this._fileExtensions);
 
     return {
-      resolvedPath: resolvedPath ? resolvedPath.fsPath.replace(/\\/g, '/') : path,
+      resolvedPath: resolvedPath ? normalizePath(resolvedPath.fsPath) : path,
       originalPath: path,
     };
   }
@@ -296,13 +305,34 @@ export class SessionHandler extends EventEmitter {
 
   private async resolveFile(path: string) {
     if (this._instance == null) return;
-    const resolvedPath = await resolveFileExtension(normalizePathForNonWindows(path), this._fileExtensions);
+    if (isNonWindowsButRuntimeUsesWindowsPaths(path)) {
+      // If the runtime is using Windows-style paths on a non-Windows platform that
+      // means the runtime is most likely running within a Windows VM.
+      //
+      // While the breakpoints, base and inital filepaths will use unix-style
+      // filepaths, since those are provided by the debugging platform, the loading of 
+      // additional files will use Windows-style paths. This is due to the usage of
+      // GetFullPath within the message-hook. Therefore we need to strip the drive letter
+      // prefix before resolving the file. It should be fine to forward the unix-style
+      // filepaths to the runtime since internally it should use the unix-style paths.
+      const withoutPrefix = path.slice(2);
+      const resolvedPath = await resolveFileExtension(withoutPrefix, this._fileExtensions);
+      if (resolvedPath == null) {
+        await this._instance.resolvedFile(path, null);
+        return;
+      }
+      const content = await GlobalFileSystemManager.tryToDecode(resolvedPath);
+      await this._instance.resolvedFile(normalizePath(resolvedPath.fsPath), content);
+      return;
+    }
+    // Normal resolution for other platforms
+    const resolvedPath = await resolveFileExtension(path, this._fileExtensions);
     if (resolvedPath == null) {
       await this._instance.resolvedFile(path, null);
       return;
     }
     const content = await GlobalFileSystemManager.tryToDecode(resolvedPath);
-    await this._instance.resolvedFile(resolvedPath.fsPath.replace(/\\/g, '/'), content);
+    await this._instance.resolvedFile(normalizePath(resolvedPath.fsPath), content);
   }
 
   async stop() {
