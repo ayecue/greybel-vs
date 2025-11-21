@@ -1824,3 +1824,8 @@ All notable changes to this project will be documented in this file.
 ## [2.8.9] - 29.10.2025
 
 - republish extension due to failing signature verification
+
+## [2.8.10] - 21.11.2025
+
+- fix transpile output for multiline comments if devMode is not active - thanks for reporting to Ephy
+- fix in-game lexer not counting lines of multiline strings and comments properly, would cause the interpreter to show the wrong lines in the debugger - thanks for the reporting to Satarno
