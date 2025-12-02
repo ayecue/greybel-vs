@@ -20,6 +20,7 @@ This toolkit provides essential tools for developing in GreyScript, the scriptin
 **Projects Using Greybel**
 - [gsse](https://github.com/viper-guild/gsse): GreyScript Script Extender is a modular library that aims to expand the current scripting framework of greyscript.
 - [minizod](https://github.com/cantemizyurek/minizod): A lightweight, Zod-inspired validation library for MiniScript.
+- [Pocket Creatures](https://github.com/ayecue/gh-pocket-creatures-demo): A Pokemon-like game created in GreyScript. (Demo project)
 - [Minesweeper](https://github.com/ayecue/minesweeper-gs): A Minesweeper game created in GreyScript. (Demo project)
 - [JSON Parser](https://github.com/ayecue/json): JSON parsing functionality. (Demo project)
 - [TEdit](https://github.com/ayecue/tedit): Text editor built with GreyScript. (Demo project)
