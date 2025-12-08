@@ -485,6 +485,7 @@ Sometimes you want to describe types that exist only in documentation and toolin
 They can include properties, functions, and even inherit from other virtual types.
 ```js
 // @vtype myOtherType
+// @extends map
 // @property {map<string,string>} hallo
 
 // @vtype myCustomType
