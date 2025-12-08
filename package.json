@@ -706,7 +706,7 @@
     "greybel-intrinsics": "~5.6.3",
     "greybel-languageserver": "~2.2.4",
     "greybel-languageserver-browser": "~2.2.4",
-    "greyhack-message-hook-client": "1.2.1",
+    "greyhack-message-hook-client": "~1.2.2",
     "greyscript-core": "~2.6.0",
     "greyscript-interpreter": "~2.6.2",
     "greyscript-meta": "~4.4.7",

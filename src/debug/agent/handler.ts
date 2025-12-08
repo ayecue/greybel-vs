@@ -10,6 +10,7 @@ import { DebugProtocol } from "@vscode/debugprotocol";
 import { randomString } from "../../helper/random-string";
 import { VersionManager } from "../../helper/version-manager";
 import { parseFileExtensions } from "../../helper/parse-file-extensions";
+import { wait } from "../../helper/wait";
 
 enum ClientMessageType {
   SendFileSizeClientRpc = 73,
@@ -17,6 +18,7 @@ enum ClientMessageType {
   ClearScreenClientRpc = 77,
   InputSentClientRpc = 78,
   PrintSentClientRpc = 79,
+  RoutersCercanosClientRpc = 84,
   CreatedContextRpc = 1000,
   FinishedContextRpc = 1002,
   ContextRuntimeStateRpc = 1003,
@@ -230,6 +232,12 @@ export class SessionHandler extends EventEmitter {
           await this.endDownload();
           break;
         }
+        case ClientMessageType.RoutersCercanosClientRpc: {
+          await wait(1000);
+          this._outputHandler.print('Read packages...');
+          await this.endAireplay();
+          break;
+        }
         case ClientMessageType.ContextLoadFileRpc: {
           await this.resolveFile(response.filepath);
           break;
@@ -291,6 +299,11 @@ export class SessionHandler extends EventEmitter {
   async endDownload() {
     if (this._instance == null) return;
     await this._instance.endDownload();
+  }
+
+  async endAireplay() {
+    if (this._instance == null) return;
+    await this._instance.endAireplay();
   }
 
   async goToNextLine() {
