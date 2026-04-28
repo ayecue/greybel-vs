@@ -1841,3 +1841,7 @@ All notable changes to this project will be documented in this file.
 ## [2.8.12] - 06.02.2026
 
 - fixed error in language server which was caused by empty string as key when resolving symbols - thanks for the reporting to [@EntitySeaker](https://github.com/EntitySeaker)
+
+## [2.8.13] - 28.04.2026
+
+- update message-hook to be compatibility with latest game version

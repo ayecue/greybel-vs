@@ -13,12 +13,12 @@ import { parseFileExtensions } from "../../helper/parse-file-extensions";
 import { wait } from "../../helper/wait";
 
 enum ClientMessageType {
-  SendFileSizeClientRpc = 73,
-  DecipherTimeClientRpc = 75,
-  ClearScreenClientRpc = 77,
-  InputSentClientRpc = 78,
-  PrintSentClientRpc = 79,
-  RoutersCercanosClientRpc = 84,
+  SendFileSizeClientRpc = 74,
+  DecipherTimeClientRpc = 76,
+  ClearScreenClientRpc = 78,
+  InputSentClientRpc = 79,
+  PrintSentClientRpc = 80,
+  RoutersCercanosClientRpc = 85,
   CreatedContextRpc = 1000,
   FinishedContextRpc = 1002,
   ContextRuntimeStateRpc = 1003,
